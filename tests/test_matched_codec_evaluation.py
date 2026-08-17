@@ -49,6 +49,7 @@ class TestMatchedCodecEvaluation(unittest.TestCase):
             }
             result_path = root / "result.json"
             result_path.write_text(json.dumps(result), encoding="utf-8")
+            loaded_result = json.loads(result_path.read_text(encoding="utf-8"))
             payload = {
                 "kind": "selected_model",
                 "config": config.to_record(),
@@ -65,7 +66,7 @@ class TestMatchedCodecEvaluation(unittest.TestCase):
                 payload=payload,
                 training_result_path=result_path,
                 training_result_sha256=sha256_path(result_path),
-                training_result=result,
+                training_result=loaded_result,
                 codec="dcae_l20",
                 family="c5p",
                 seed=1701,
@@ -80,7 +81,7 @@ class TestMatchedCodecEvaluation(unittest.TestCase):
                     payload=payload,
                     training_result_path=result_path,
                     training_result_sha256=sha256_path(result_path),
-                    training_result=result,
+                    training_result=loaded_result,
                     codec="dcae_l20",
                     family="c5p",
                     seed=1701,

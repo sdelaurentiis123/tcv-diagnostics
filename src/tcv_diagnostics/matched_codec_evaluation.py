@@ -9,6 +9,7 @@ training normalization, and E6B is mapped to the common view without clipping.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 import math
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -132,7 +133,8 @@ def validate_selected_checkpoint(
         seed=seed,
     )
     expected_config = expected.to_record()
-    if training_result.get("config") != expected_config:
+    expected_json_config = json.loads(json.dumps(expected_config))
+    if training_result.get("config") != expected_json_config:
         raise ValueError("training result configuration differs from the frozen run")
     if payload.get("config") != expected_config:
         raise ValueError("checkpoint configuration differs from the frozen run")
