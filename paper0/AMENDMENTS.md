@@ -209,3 +209,47 @@ passes, every future 88-cell ensemble member is downsampled to 81 before the
 primary nonlinear transport calculation. Direct 88-cell transport is reported
 only as a resampling sensitivity. Exact definitions and thresholds are frozen
 in `protocol/PHASE2_STATE_RESAMPLING_PROTOCOL.md` and its machine manifest.
+
+## A009 - Replace the failed stationary split with a conditional-transient development protocol
+
+**Status:** active before any new Paper 0 learning run.
+
+The original eight-block stationarity screen remains failed, and its
+tolerances and result are unchanged. Paper 0 nevertheless needs to distinguish
+whether field compression and one-step state insufficiency fail before any
+stochastic architecture is considered. Strict stationarity is not required to
+fit a local time-homogeneous transition when the changing background is
+present in the input state, but it is required for the stronger stationary
+post-decorrelation distribution interpretation originally proposed.
+
+This amendment therefore retains the chronological `[0,432)` training,
+`[432,496)` guard, and `[496,624)` validation boundaries and relabels the
+development task as **conditional-transient later-background extrapolation**.
+It authorizes matched 85604 O1 codec and O2 one-step experiments only after
+their model protocol is separately committed. Absolute time is forbidden.
+Metrics must be reported by contiguous block or predeclared slow-background
+bin, and stationary climatology, independent-window, held-out-85606,
+assimilation, and diagnostic-ranking claims remain closed.
+
+## A010 - Freeze exact and pragmatic state candidates before matched learning
+
+**Status:** active after all-frame potential/vorticity closure and before new
+codec training.
+
+The exact saved source-state candidate is
+`E6B-H1=[Ne,Pe,Pi,NVe,NVi,Vort]+Bphi`, with one current frame and
+the retained `[2,32]` radial-potential midpoint. Interior potential is
+reconstructed by the exact elliptic operator.
+
+The pragmatic primary baseline is
+`C5P-H2=[Ne,Pe,Pi,phi,Vi]` over the two most recent frames. It is paired
+with the mandatory one-frame `C5P-H1` control on identical target indices.
+This makes the value of history measurable and does not presume that history
+recovers omitted electron momentum, vorticity, or boundary state.
+
+All arms use common one-step targets `[2,432)` for training and
+`[498,624)` for validation. Direct negative `Pi` is retained, absolute
+frame number is excluded, historical codecs are not used as initialization,
+and no stochastic model is authorized. Exact rules and evidence hashes are in
+`protocol/PHASE2_CONDITIONAL_TRANSIENT_STATE_PROTOCOL.md` and
+`manifests/phase2_conditional_transient_state_85604.json`.

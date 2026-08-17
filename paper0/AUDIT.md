@@ -603,6 +603,19 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     committed state-candidate decision. It does not establish predictive
     sufficiency, stationarity, codec or rollout fidelity, authorize training,
     or read 85606.
+54. **The project now has a prospective conditional-transient state decision.**
+    The failed Phase 1 stationarity result remains failed. Without scanning for
+    a more convenient suffix, Paper 0 retains the original `[0,432)`
+    training, `[432,496)` guard, and `[496,624)` validation boundaries but
+    interprets validation as later-background extrapolation within 85604.
+    Short-horizon O1/O2 development may proceed only under a separately frozen
+    matched-model protocol; stationary post-decorrelation, assimilation,
+    ranking, and 85606 claims remain closed. The exact arm is
+    `E6B-H1=[Ne,Pe,Pi,NVe,NVi,Vort]+Bphi`. The pragmatic arm is
+    `C5P-H2=[Ne,Pe,Pi,phi,Vi]` with two ordered frames, paired with mandatory
+    `C5P-H1` on the same 430 training and 126 validation target frames. This
+    commits the scientific comparison before training; it trains no model,
+    changes no source data, and reads no 85606 file.
 
 ## Exact commands
 

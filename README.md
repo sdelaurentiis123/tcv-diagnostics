@@ -10,11 +10,21 @@ They explicitly distinguish the inherited five observable channels from a
 physically complete Markov state and keep physical time as relative cadence and
 forecast lead rather than an absolute trajectory lookup feature.
 
-The executed data findings and current go/no-go decision are in
+The executed data findings and original go/no-go decision are in
 [`paper0/PHASE1_READOUT.md`](paper0/PHASE1_READOUT.md). The 85604 trajectory has
 slow background evolution plus fast, coherently translating toroidal
-fluctuations; the data characterization is complete, but the stationary
-learning split remains blocked pending simulator-owner guidance.
+fluctuations; the data characterization is complete, and the stationary
+screen remains failed.
+
+The prospective replacement is now frozen in
+[`paper0/protocol/PHASE2_CONDITIONAL_TRANSIENT_STATE_PROTOCOL.md`](paper0/protocol/PHASE2_CONDITIONAL_TRANSIENT_STATE_PROTOCOL.md).
+It permits only short-horizon 85604 development under a
+conditional-transient, later-background-extrapolation interpretation. It
+freezes the exact `E6B-H1` source state, the pragmatic `C5P-H2` history
+baseline, and a mandatory `C5P-H1` control. It does not authorize stationary
+post-decorrelation claims, stochastic architecture selection, assimilation,
+diagnostic ranking, or any 85606 access. A separate matched O1/O2 model
+protocol remains required before training.
 
 The historical codecs have now been evaluated through the frozen O1 oracle;
 [`paper0/PHASE2_O1_READOUT.md`](paper0/PHASE2_O1_READOUT.md) records why neither
@@ -60,13 +70,13 @@ dynamics training. The active blocker is again upstream: a defensible 85604
 temporal protocol and physically sufficient forecast state must be frozen
 before O2 or any new architecture run.
 
-The exact source-state question is now narrowed in
+The evidence leading to the exact source-state decision is documented in
 [`paper0/PHASE1_STATE_TIME_DECISION_MEMO.md`](paper0/PHASE1_STATE_TIME_DECISION_MEMO.md).
 The simulator advances six volumetric fields, while potential is an elliptic
 derived field with short boundary memory. The memo distinguishes physical
 history/relative lead from an unsafe absolute-frame lookup and lays out the
-remaining deterministic state-closure tests. It is a design memo, not an
-authorization to train.
+deterministic state-closure tests. It remains a design memo; the later frozen
+conditional-transient protocol is the active decision.
 
 The first two source-state gates are now complete. The all-rank 85604 inventory
 found the six evolved fields on all 256 ranks, and both exact electron and ion
@@ -77,7 +87,8 @@ density-plus-momentum representations, but historical C5 still omits electron
 parallel state and has not passed the separate potential/vorticity boundary
 gate. Exact evidence and implications are in
 [`paper0/PHASE2_STATE_COMPLETENESS_READOUT.md`](paper0/PHASE2_STATE_COMPLETENESS_READOUT.md).
-No channel set or model architecture has been selected.
+The subsequent closure result selects the exact source-state candidate; no
+model architecture has been selected.
 
 The follow-up 85604 radial-potential guard audit is also complete. The saved
 guards satisfy the exact Hermes copy and toroidal-midpoint structure, but the
@@ -86,5 +97,6 @@ frame/y location. Guard-stripped evolved volumes are therefore not the exact
 saved state. The measured departures are reported without a post hoc
 materiality cutoff in
 [`paper0/PHASE2_PHI_BOUNDARY_STATE_READOUT.md`](paper0/PHASE2_PHI_BOUNDARY_STATE_READOUT.md).
-A paired exact elliptic solve is still required before deciding whether to
-model the 64 boundary scalars explicitly or approximate them through history.
+The paired exact elliptic solve and all-frame forward closure are now complete.
+They establish `S6+Bphi` as the exact saved-state candidate and motivate the
+matched exact-versus-history comparison frozen above.

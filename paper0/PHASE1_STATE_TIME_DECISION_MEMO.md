@@ -1,14 +1,16 @@
 # Phase 1 state and time decision memo
 
-**Status:** evidence-backed design memo, updated after the all-frame momentum
-closure; not a frozen training protocol
+**Status:** evidence-backed design memo; its temporal and state choices are now
+resolved prospectively by
+`protocol/PHASE2_CONDITIONAL_TRANSIENT_STATE_PROTOCOL.md`
 
 **Scope:** 85604 metadata, exact executed Hermes source, and already exposed
 85604 fields only
 
 **85606 accessed:** no
 
-**Training authorized by this memo:** no
+**Training authorized by this memo:** no; the later frozen protocol authorizes
+only separately specified 85604 O1/O2 development experiments
 
 ## Executive conclusion
 

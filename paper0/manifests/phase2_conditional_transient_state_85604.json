@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_before_matched_paper0_codec_or_dynamics_training",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "learning_scope": {
+    "allowed": [
+      "matched_O1_codec_training_on_85604",
+      "matched_O2_one_step_training_on_85604"
+    ],
+    "requires_separate_committed_model_protocol": true,
+    "forbidden_until_later_gate": [
+      "stochastic_architecture_selection",
+      "autonomous_stationary_distribution_claim",
+      "assimilation",
+      "diagnostic_ranking",
+      "held_out_85606_evaluation"
+    ]
+  },
+  "temporal_protocol": {
+    "interpretation": "conditional_transient_later_background_extrapolation",
+    "stationarity_screen_status": "failed_and_not_reclassified",
+    "cadence_microseconds": 3.131905426352636,
+    "absolute_frame_or_time_input_allowed": false,
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "common_one_step_training_target_frames": [2, 432],
+    "common_one_step_validation_target_frames": [498, 624],
+    "training_target_count": 430,
+    "validation_target_count": 126,
+    "validation_augmentation_allowed": false,
+    "physical_independence_claimed": false
+  },
+  "state_candidates": {
+    "exact_primary": {
+      "name": "E6B-H1",
+      "context_frames": 1,
+      "volume_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+      "boundary_field": {
+        "name": "Bphi",
+        "meaning": "retained_phi_midpoint",
+        "axes": ["radial_side", "y"],
+        "shape": [2, 32],
+        "radial_sides": ["inner", "outer"]
+      },
+      "interior_phi_policy": "exact_hash_locked_elliptic_reconstruction",
+      "source_state_claim": "exact_saved_state_candidate_given_fixed_geometry_and_sources"
+    },
+    "pragmatic_primary": {
+      "name": "C5P-H2",
+      "context_frames": 2,
+      "history_order": ["t_minus_1", "t"],
+      "relative_offsets_microseconds": [-3.131905426352636, 0.0],
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+      "omitted_independent_or_auxiliary_state": ["NVe", "Vort", "Bphi"],
+      "predictive_sufficiency_claimed_before_test": false
+    },
+    "required_history_ablation": {
+      "name": "C5P-H1",
+      "context_frames": 1,
+      "relative_offsets_microseconds": [0.0],
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+      "uses_common_target_frames": true
+    }
+  },
+  "history_rationale": {
+    "minimum_frames_for_observed_change": 2,
+    "phi_boundary_relaxation_timescale_microseconds": 1.0,
+    "one_interval_undriven_residual_weight": 0.0436346,
+    "complete_delay_embedding_claimed": false,
+    "history_value_must_be_measured_by": "C5P-H2_minus_C5P-H1"
+  },
+  "normalization": {
+    "fit_frames": [0, 432],
+    "accumulator_dtype": "float64",
+    "per_volume_channel_scalar_statistics": true,
+    "transforms": {
+      "Ne": "log(x + 1e-6)",
+      "Pe": "identity",
+      "Pi": "identity",
+      "NVe": "identity",
+      "NVi": "identity",
+      "Vort": "identity",
+      "phi": "identity",
+      "Vi": "identity"
+    },
+    "Bphi_statistics": "one_mean_and_std_per_radial_side_pooled_over_training_frames_and_y",
+    "retain_negative_Pi": true,
+    "clipping_allowed": false
+  },
+  "o1_boundary_policy": {
+    "E6B_boundary_bypasses_volumetric_codec": true,
+    "purpose": "isolate_volumetric_compression",
+    "o2_boundary_bypass_allowed": false
+  },
+  "allowed_claims": [
+    "85604_one_step_skill",
+    "85604_later_background_extrapolation",
+    "metrics_by_contiguous_time_block",
+    "metrics_by_predeclared_slow_background_bin",
+    "matched_state_and_history_ablation"
+  ],
+  "forbidden_claims": [
+    "stationary_climatology",
+    "independent_windows_or_shots",
+    "broad_cross_shot_generalization",
+    "experimental_diagnostic_realism",
+    "steering_or_control"
+  ],
+  "evidence_locks": {
+    "phase1_stationarity": {
+      "path": "paper0/results/phase1_85604_profile_6890563.json",
+      "sha256": "cf6a60c7e4c24cac42efcc1ba877e80cb04c5803e0687397fb814f7652837749"
+    },
+    "phase1_mode_coherence": {
+      "path": "paper0/results/phase1_85604_profile_6890606.json",
+      "sha256": "9ef0868a21ebbee883f154f13fe4068d50d47474017cf775ba3d5c3e51b7fc15"
+    },
+    "state_completeness": {
+      "path": "paper0/results/phase2_state_completeness_6891855.json",
+      "sha256": "565a4e27e87d4f5a3e647daf77486020ac627f43ffb5cd30a8daf74b7199cf20"
+    },
+    "phi_boundary": {
+      "path": "paper0/results/phase2_phi_boundary_state_6891890.json",
+      "sha256": "79c67709c921caa1ddf1ea3e4d8f431ce88e220adc70247527c7a8a5e5f637cc"
+    },
+    "elliptic_reconstruction": {
+      "path": "paper0/results/phase2_potential_elliptic_runtime_pressure_6892641.json",
+      "sha256": "ae0aea28efc8719c7c3c91419a8f122256f9fe7e6d64c94e6aa9e1827dd2297a"
+    },
+    "all_frame_potential_vorticity": {
+      "path": "paper0/results/phase2_potential_vorticity_all_frame_6893033.json",
+      "sha256": "cc6b00b72605c6457ae3a3b24db7e90dac16989c852df92036a57272f62eddae"
+    },
+    "historical_codec_transport": {
+      "path": "paper0/results/phase2_o1_codec_transport_6891766.json",
+      "sha256": "140bf3faabb0922edd9108af7d3e00e76c71075caa3a43e5c29760cc043b0a23"
+    }
+  }
+}

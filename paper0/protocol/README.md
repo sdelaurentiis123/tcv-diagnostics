@@ -25,6 +25,9 @@ The loader guard and release format will be implemented during Phase 1. No relea
 
 Development-only protocol locks that do not authorize held-out access include:
 
+- `PHASE2_CONDITIONAL_TRANSIENT_STATE_PROTOCOL.md`: the nonstationary 85604
+  development interpretation, exact `E6B-H1` state, pragmatic
+  `C5P-H2` state, and mandatory `C5P-H1` history control;
 - `PHASE2_STATE_COMPLETENESS_PROTOCOL.md`: all-rank 85604 evolved-state
   inventory and momentum/velocity closure;
 - `PHASE2_PHI_BOUNDARY_STATE_PROTOCOL.md`: all-frame 85604 saved radial
