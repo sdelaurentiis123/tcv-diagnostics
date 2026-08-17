@@ -1,0 +1,202 @@
+{
+  "O1_scientific_evaluation_completed": false,
+  "R1_accepted": false,
+  "audit_commit": "f49ff8dbe70fbed72a08126dddde570a1f9bf699",
+  "audit_slurm_job_id": "6894300",
+  "checkpoint_choice_frozen_before_physics_metrics": true,
+  "completed_at_utc": "2026-08-17T23:41:28.604682+00:00",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "run_count": 6,
+  "runs": [
+    {
+      "artifact_index_sha256": "91dcbc3781f5e84cd7098f67c08686e22618835b3005e8031ef9a73ee0e7ee05",
+      "config_sha256": "fc9de7a1b573680360f94466a83088c6cdcc6d8f36ed5e6b480b55fe699e643a",
+      "family": "c5p",
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_0_c5p_seed_1701/final_training_state.pt",
+        "sha256": "e16c9cb90bf417caa58ab08a27b4747666fc7479768bef2d632adbbed8c65d06"
+      },
+      "history_sha256": "8599bc06512d111f966931dbc48217bc569a0c790f39b344891d706f81a1b50e",
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_0_c5p_seed_1701",
+      "run_index": 0,
+      "seed": 1701,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_0_c5p_seed_1701/selected.pt",
+        "sha256": "646cd939a73fd6d2417d67f61309b400ac4ab2b3982241d8922769cc2f854f3f"
+      },
+      "selected_epoch": 199,
+      "selected_global_step": 5400,
+      "selected_validation_equal_channel_mae": 0.029963152036147404,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_0_c5p_seed_1701/result.json",
+        "sha256": "3925bd3210a8baa4e5764dea97c6187a57461a43f0f2875d3fe1c68d10c99bf8"
+      },
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o1r1-6893802-0",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o1r1-6893802-0"
+      },
+      "wandb_record_sha256": "c14e1a23912b14340d111d1c9c600f45e57846944bca0109a128e9e80b9c90cc"
+    },
+    {
+      "artifact_index_sha256": "5edf9108016d70611b6ea997502c966d61a3fa35e127f892b6c08eaa1b3e78a4",
+      "config_sha256": "f149bc0f866ffc37c0c37bebe8ee09f7b06b73795c4c2665e0e0ef858e47b547",
+      "family": "e6b",
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_1_e6b_seed_1701/final_training_state.pt",
+        "sha256": "26b4b6d782845414c1c3d160de4d3b3d6b14bfbaf3af6c0f329ba1191339b08d"
+      },
+      "history_sha256": "99822449bdbb219556896fc9ddf6adc8f1b2902da9c9b0d79b75fca202d61cfa",
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_1_e6b_seed_1701",
+      "run_index": 1,
+      "seed": 1701,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_1_e6b_seed_1701/selected.pt",
+        "sha256": "6ff6464a7ed516ea1c0a9b2c6b26cc044fca23ad22eca0ef149687a81a78dd26"
+      },
+      "selected_epoch": 199,
+      "selected_global_step": 5400,
+      "selected_validation_equal_channel_mae": 0.07563160875904339,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_1_e6b_seed_1701/result.json",
+        "sha256": "5021b8c3e41e7bec390ac31636ddcc36d4fb8a4ce9d2b1466ba107d2ee5a42a6"
+      },
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o1r1-6893802-1",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o1r1-6893802-1"
+      },
+      "wandb_record_sha256": "bc615d646d32efa27e8fc54c3f01da571d7497398fe3ef43d10b0f966fe2ee3d"
+    },
+    {
+      "artifact_index_sha256": "4a80ba8b80e247936dbc9aa8fc1d36f62446b1e24ca72e029e9872be82844035",
+      "config_sha256": "cb68b4250693a2604a08c08979b7ad62b3116d61a27cfca830402be7b352734f",
+      "family": "c5p",
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_2_c5p_seed_1702/final_training_state.pt",
+        "sha256": "ab65bba9396003232822cc8ee45c2d51c6aff079c9370dd36fc3755dfc330d8e"
+      },
+      "history_sha256": "3b68cefa186cab91562ed1b0ca45ad5caf5295a52b1415c8f80b0306bbefe09a",
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_2_c5p_seed_1702",
+      "run_index": 2,
+      "seed": 1702,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_2_c5p_seed_1702/selected.pt",
+        "sha256": "77b191ca4ddc8a46c726b5d7c2f66726aa926fc2c781f138ce0095eba0581072"
+      },
+      "selected_epoch": 199,
+      "selected_global_step": 5400,
+      "selected_validation_equal_channel_mae": 0.02899075648360188,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_2_c5p_seed_1702/result.json",
+        "sha256": "370c5054daa061dfbbaad638f6f622d6f093e00a5520906f8993e3ebf1197a94"
+      },
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o1r1-6893802-2",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o1r1-6893802-2"
+      },
+      "wandb_record_sha256": "ecf22bd4ab1cfc26cd2805bfd0bd11def8527730dbe250257f91e3fbbc0ef4a0"
+    },
+    {
+      "artifact_index_sha256": "ed452053a6face7cf2b886f24b5b3a07f9b06c8583ee3f1c6f37c5a5f8c6b82d",
+      "config_sha256": "bfe45fb72c4fafc831776d1f8ee3d866a5d9865c1b268a39b3160180f235200d",
+      "family": "e6b",
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_3_e6b_seed_1702/final_training_state.pt",
+        "sha256": "463a7c07b7a6c134989025cc2e4b9e8a3b0d7bd5813aaaa9e539e1be0dd8fe39"
+      },
+      "history_sha256": "c5d89e459510a81e7149d98714f37cfc33e93d4bd40d29cf6cf087d870dcf5d7",
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_3_e6b_seed_1702",
+      "run_index": 3,
+      "seed": 1702,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_3_e6b_seed_1702/selected.pt",
+        "sha256": "360fd67dfb2d793d6dde7546252e69bf567a15d18983e8d61387097b8fc5cae6"
+      },
+      "selected_epoch": 199,
+      "selected_global_step": 5400,
+      "selected_validation_equal_channel_mae": 0.07602478711937631,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_3_e6b_seed_1702/result.json",
+        "sha256": "7bb8b6b69fe014ce2b73526f7c9b5072ed0e59afb2645c129ef20db3befddd1c"
+      },
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o1r1-6893802-3",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o1r1-6893802-3"
+      },
+      "wandb_record_sha256": "d85c73bed4e6a4d3bb926a2d3c0a69577084ce24ba82e77d428777ca70e3b2b7"
+    },
+    {
+      "artifact_index_sha256": "1e2a8afc959a61f00d46aaafe66be14857d15ca1e63d87f6023c62f05327437a",
+      "config_sha256": "035331d1a4598f195b354d93f0effe75ae81046e54adaa0c11ca29666326cade",
+      "family": "c5p",
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_4_c5p_seed_1703/final_training_state.pt",
+        "sha256": "f559be7171e9a21d1b81cb9dbe7f1a584b05e86e2a77b34ff2779a0de6ac7ec4"
+      },
+      "history_sha256": "2b6dc3f50b6b4b700e209bfd80dec94d822447e8e72ae642c6318f0780098256",
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_4_c5p_seed_1703",
+      "run_index": 4,
+      "seed": 1703,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_4_c5p_seed_1703/selected.pt",
+        "sha256": "878b79715c1f08a3572341981914777124ef6966d3899653b05208e10827409e"
+      },
+      "selected_epoch": 199,
+      "selected_global_step": 5400,
+      "selected_validation_equal_channel_mae": 0.028796252138489797,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_4_c5p_seed_1703/result.json",
+        "sha256": "456ac0e9559ed9f37a25c39b2d6ca4bb891e82d9122c40d1c8c06ec42ce532cb"
+      },
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o1r1-6893802-4",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o1r1-6893802-4"
+      },
+      "wandb_record_sha256": "20dde343818be432d09f0d95e31037b5da3cb212aeeefb040a13af1f5b77008d"
+    },
+    {
+      "artifact_index_sha256": "0647f3f447e552720d94270731dbfc9ab8ebc1377290ba98d2bb12d8282e0bab",
+      "config_sha256": "75e409a30fd1cd246e44b659ab4f980c8ddd4075df945aee1e36dfac31274753",
+      "family": "e6b",
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_5_e6b_seed_1703/final_training_state.pt",
+        "sha256": "466554f6ca3d12aba13433a60e748b050616e96eafafbac737b49cb8d5f9659f"
+      },
+      "history_sha256": "1e2a4da50132e585a5fe034a235590f0a3c065e18f23a0ea58bd4a85e45195a3",
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_5_e6b_seed_1703",
+      "run_index": 5,
+      "seed": 1703,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_5_e6b_seed_1703/selected.pt",
+        "sha256": "a8b0dbca56476a056a1d0e704edfc84ec30d68ed3c53970bc9a64121099ed2be"
+      },
+      "selected_epoch": 197,
+      "selected_global_step": 5346,
+      "selected_validation_equal_channel_mae": 0.0762956715796702,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/task_5_e6b_seed_1703/result.json",
+        "sha256": "4c7936c6e5141f5a960193860ba7318d344eb0c82e3d7f9345f7a5097a731e88"
+      },
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o1r1-6893802-5",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o1r1-6893802-5"
+      },
+      "wandb_record_sha256": "3428eef85f4bfc85267ef9ce02d8033f8226cba3ba52b4eb92482d86d619a0d0"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "phase2_O1_R1_training_matrix_frozen",
+  "status": "completed_pending_scientific_O1_evaluation",
+  "training_commit": "a5adc57499239702a8b28b661357b3dcfcbaa167",
+  "training_slurm_job_id": "6893802",
+  "training_summary": {
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_6893802/training_summary.json",
+    "sha256": "e067b76504a93d37ea311e0f5509774d87e21e2dc1187539274981e5e0379429"
+  }
+}
