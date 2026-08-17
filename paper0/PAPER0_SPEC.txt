@@ -1,0 +1,712 @@
+# Codex instructions: Paper 0
+
+## Working title
+
+**Transport-faithful probabilistic emulation and diagnostic assimilation of 3D tokamak-edge turbulence**
+
+## Objective
+
+Build and rigorously validate a probabilistic emulator of the existing TCV/Hermes turbulence simulations that:
+
+1. Forecasts the joint evolution of the simulated plasma fields.
+2. Preserves transport-relevant statistics on a completely held-out simulation.
+3. Produces useful, calibrated forecast ensembles.
+4. Assimilates sparse synthetic diagnostic observations using EnKF/ETKF/EnKS.
+5. Ranks diagnostic configurations by their value for state and transport estimation.
+
+The paper is primarily a plasma-physics/SciML paper. Do not force an unsupported core-ML novelty claim. The model comparison exists to identify a working stochastic representation and establish credibility.
+
+The intended headline is:
+
+> A transport-faithful probabilistic emulator of tokamak-edge turbulence enables fast state estimation and principled diagnostic ranking.
+
+This claim must be treated as a hypothesis until the held-out evaluation supports it.
+
+---
+
+## Hard constraints
+
+* Available data consist only of two TCV/Hermes runs: **85604 and 85606**.
+* Use 85604 for training and validation.
+* Keep 85606 completely blinded until model selection, metric definitions, assimilation settings, and acceptance criteria are frozen.
+* Do not use Gkeyll, PIC, DIII-D, The Well, or other datasets in Paper 0.
+* Do not use flux, spectra, cross-phase, conservation, PDE residuals, blob labels, or other physics-derived quantities as training losses.
+* Physics quantities are evaluation metrics only.
+* Do not claim device-wide, regime-wide, or broad cross-shot generalization from two runs.
+* Do not treat temporal windows from one simulation as independent physical shots.
+* Do not claim steering or control without action-conditioned simulations.
+* Preserve all existing user changes in the repository.
+* Use existing architecture and training infrastructure wherever possible.
+
+---
+
+## Paper 0 contribution
+
+Paper 0 should answer three questions.
+
+### Q1. What makes the current emulator fail?
+
+Separate errors caused by:
+
+* field compression;
+* one-step dynamics;
+* autoregressive rollout;
+* stochastic representation;
+* ensemble calibration;
+* assimilation geometry.
+
+### Q2. Can an existing or minimally repaired deep generative model preserve transport?
+
+The decisive quantities include:
+
+* density-potential cross-phase;
+* cross-field coherence;
+* directional spectra;
+* particle and heat flux;
+* flux distributions and tails;
+* event-conditioned transport;
+* ensemble calibration of fields and transport.
+
+### Q3. Once validated, can the ensemble support diagnostic assimilation and diagnostic ranking?
+
+Use the probabilistic emulator as the forecast prior in an ensemble filter. Rank synthetic diagnostic configurations according to how much they improve:
+
+* hidden-field reconstruction;
+* transport estimation;
+* forecast horizon;
+* posterior calibration.
+
+The model sweep is supporting evidence. The paper is not titled or framed as a generic comparison of diffusion models.
+
+---
+
+# Phase 0: repository and result audit
+
+Before modifying model code:
+
+1. Read all relevant repository instructions, including `AGENTS.md`.
+2. Run `git status`.
+3. Locate:
+
+   * data loaders;
+   * normalization code;
+   * temporal-window construction;
+   * field definitions and units;
+   * tensor-axis conventions;
+   * f8 and z44 codecs;
+   * deterministic ViT3D implementation;
+   * LOLA/diffusion implementation;
+   * existing checkpoints;
+   * existing assimilation code;
+   * flux, spectrum, cross-phase, and calibration notebooks.
+4. Reproduce at least one existing forecast result and one existing assimilation result.
+5. Write `paper0/AUDIT.md` documenting:
+
+   * current model behavior;
+   * reproduced metrics;
+   * discrepancies;
+   * known failure modes;
+   * relevant checkpoints;
+   * exact commands used.
+
+Do not redesign the architecture before completing this audit.
+
+---
+
+# Phase 1: immutable data protocol
+
+## Primary split
+
+Use:
+
+* **85604:** training and contiguous validation.
+* **85606:** completely held-out final evaluation.
+
+Within 85604:
+
+1. Identify the statistically steady interval.
+2. Construct one chronological training region.
+3. Insert a guard interval longer than the maximum input-plus-target window.
+4. Construct one chronological validation region after the guard interval.
+5. Fit all normalization constants using the 85604 training region only.
+6. Do not randomly shuffle frames before constructing the split.
+
+Windows may be sampled randomly within the training region after leakage-safe boundaries have been established.
+
+## Held-out test discipline
+
+Before evaluating 85606, freeze:
+
+* model architecture;
+* checkpoint-selection rule;
+* training budget;
+* rollout horizon;
+* ensemble size;
+* diagnostic definitions;
+* observation operators;
+* observation noise;
+* filter inflation and localization;
+* diagnostic-ranking criteria;
+* plotting conventions.
+
+After opening 85606 results, do not tune based on them. Bug fixes must be documented, and any affected evaluation must be rerun consistently for all models.
+
+## Canonical manifest
+
+Create a machine-readable manifest containing:
+
+* run ID;
+* simulator;
+* device and geometry;
+* grid and coordinates;
+* field names and units;
+* cadence and time units;
+* simulated toroidal fraction;
+* boundary conditions;
+* forcing and heating metadata if available;
+* burn-in and steady-state intervals;
+* split designation;
+* blind-test flag;
+* known data-quality issues.
+
+Verify the stored cadence, currently believed to be approximately 3.1319 microseconds.
+
+Verify whether the simulated toroidal domain represents approximately one fifth of the torus and whether Fourier index (k) maps to toroidal mode number (n=5k). Never assume this mapping silently.
+
+---
+
+# Phase 2: metric validation and oracle ladder
+
+## Decorrelation time
+
+Estimate a representative decorrelation time using only the 85604 training region and a frozen procedure.
+
+Report forecast horizons in:
+
+* frames;
+* microseconds;
+* estimated decorrelation times.
+
+Before decorrelation, emphasize trajectory accuracy and calibration. After decorrelation, emphasize distributions, spectra, transport, and invariant statistical behavior.
+
+## Oracle ladder
+
+Implement and evaluate:
+
+* **O0: Diagnostic oracle.** Validate every metric on synthetic fields with known answers.
+* **O1: Codec reconstruction.** Ground truth through encoder and decoder.
+* **O2: Teacher-forced one-step forecast.**
+* **O3: Fixed (K)-step forecast block.**
+* **O4: Autonomous free rollout.**
+* **O5: Periodic state or latent reset using encoded ground truth.**
+
+This ladder determines where transport information is lost.
+
+If the codec does not reconstruct cross-phase and flux adequately, stop dynamics development and repair or replace the representation first.
+
+## Required metric tests
+
+Add automated tests for:
+
+* normalization round trips;
+* axis and time ordering;
+* split leakage;
+* known Fourier modes;
+* toroidal mode-number mapping;
+* known cross-phase;
+* known coherence;
+* trusted flux calculation;
+* geometry-region masks;
+* ensemble tensor shape;
+* member-wise nonlinear diagnostics;
+* fair CRPS;
+* no use of future truth during forecasting;
+* no use of 85606 in model selection.
+
+---
+
+# Phase 3: baseline set
+
+Use a shared forecasting interface:
+
+```python
+forecast = model.predict(context, horizon, ensemble_size)
+```
+
+Return a tensor with canonical semantics:
+
+```text
+[batch, ensemble_member, future_time, channel, spatial_axes...]
+```
+
+## B0: trivial references
+
+Implement where meaningful:
+
+* persistence;
+* climatology;
+* linear autoregression;
+* spectral resampling or phase-randomized statistical baseline.
+
+## B1: current deterministic ViT3D
+
+Reproduce the current deterministic model and document freezing, smoothing, and spectral decay.
+
+## B2: current LOLA/diffusion model
+
+Reproduce the current diffusion model with the existing codec and training setup.
+
+Measure:
+
+* sharpness;
+* diversity;
+* underdispersion;
+* spectral behavior;
+* cross-phase;
+* flux;
+* iterative inference cost.
+
+## B3: FGN-style functional generative model
+
+Port the functional-generative mechanism into the strongest deterministic backbone.
+
+Do not reproduce the entire weather-specific architecture. Introduce low-dimensional global noise through parameter-shared conditional normalization such as AdaLN, conditional LayerNorm, or FiLM.
+
+Primary configuration:
+
+* sample global (z_t);
+* use the same (z_t) across spatial positions and network layers through shared conditioning;
+* resample aleatoric noise at each autoregressive step;
+* train using fair CRPS on marginal forecasts;
+* use two ensemble samples per training example if memory requires;
+* start with one model seed;
+* use three independently trained model seeds for final results if computationally feasible.
+
+Required FGN ablations:
+
+* noise disabled;
+* global functional noise;
+* matched input noise;
+* matched output noise;
+* spatially independent noise;
+* per-step versus trajectory-constant noise;
+* one model versus deep ensemble where feasible.
+
+Report:
+
+* within-model aleatoric spread;
+* between-model spread;
+* combined spread;
+* single-pass inference cost.
+
+## B4: PDE-Refiner
+
+Implement or port PDE-Refiner using a comparable backbone and compute budget.
+
+Determine whether iterative refinement repairs the loss of non-dominant spectral modes and improves free rollout.
+
+## B5: deterministic mean plus joint stochastic residual
+
+Use:
+
+[
+x_{\mathrm{future}}
+===================
+
+\mu_\theta(\mathrm{context})
++
+r_\phi(\mathrm{context},\mu_\theta,\epsilon).
+]
+
+Procedure:
+
+1. Train or reuse the strongest deterministic mean predictor.
+2. Freeze it initially.
+3. Construct residual targets jointly across all fields and future times.
+4. Train a conditional diffusion or flow model on the joint residual.
+5. Fine-tune end to end only after the frozen-residual experiment works.
+
+Prefer field-space residual generation. Use latent-space residual generation only if the residual codec passes the oracle tests.
+
+Independent per-field residual generators are an ablation, not the primary method.
+
+---
+
+# Phase 4: select the forecast model
+
+Use 85604 validation only.
+
+Select the simplest model that satisfies the forecast requirements. Do not select exclusively by RMSE.
+
+Evaluate:
+
+## Field metrics
+
+* RMSE;
+* MAE;
+* bias;
+* variance;
+* anomaly correlation;
+* error versus horizon.
+
+## Spectral metrics
+
+* directional spectra;
+* spectral slopes;
+* coherent-band power;
+* mode lifetimes;
+* high-mode decay;
+* the known useful band around (n\approx20) to (35).
+
+## Cross-field metrics
+
+For fields (a) and (b), calculate:
+
+[
+S_{ab}(k)=\langle a_k b_k^*\rangle,
+]
+
+[
+\gamma_{ab}^2(k)
+================
+
+\frac{|S_{ab}(k)|^2}{S_{aa}(k)S_{bb}(k)},
+]
+
+[
+\phi_{ab}(k)=\arg S_{ab}(k).
+]
+
+## Transport metrics
+
+Use the authoritative geometry-aware particle and heat-flux implementations.
+
+Report:
+
+* mean radial profiles;
+* sign;
+* temporal distributions;
+* probability tails;
+* regional contributions;
+* event-conditioned transport;
+* error versus forecast horizon.
+
+Compute nonlinear quantities separately for every ensemble member. Never compute flux only from the ensemble-mean fields.
+
+## Calibration metrics
+
+Report:
+
+* CRPS;
+* spread-skill relationship;
+* empirical coverage;
+* PIT or rank histograms;
+* calibration of important modes;
+* calibration of particle and heat flux.
+
+## Spatial regions
+
+Use authoritative masks for:
+
+* confined edge;
+* outboard midplane;
+* separatrix;
+* scrape-off layer;
+* X-point neighborhood;
+* divertor legs.
+
+Do not infer these regions from image coordinates alone.
+
+---
+
+# Forecast acceptance gate
+
+Do not proceed to diagnostic-ranking claims until the selected emulator:
+
+1. Passes codec reconstruction checks.
+2. Beats persistence and the deterministic baseline over meaningful short horizons.
+3. Preserves the relevant spectral band materially better than the current failed rollout.
+4. Preserves cross-phase and coherence sufficiently to reproduce the sign and approximate magnitude/distribution of transport.
+5. Produces non-collapsed forecast ensembles.
+6. Is not catastrophically miscalibrated.
+7. Shows the same qualitative conclusions on held-out 85606 without tuning.
+
+If no model passes, report the failure honestly and do not use its ensemble covariance to make strong diagnostic-design claims.
+
+---
+
+# Phase 5: synthetic diagnostic assimilation
+
+## Observation model
+
+Define:
+
+[
+y_t = H(x_t) + \nu_t,
+\qquad
+\nu_t\sim\mathcal N(0,R).
+]
+
+Implement observation operators only for diagnostics that can be defined credibly from the simulated fields.
+
+Possible diagnostic families include:
+
+* point or localized measurements;
+* field-specific measurements of density, potential, or temperature;
+* line-integrated or chord-like measurements;
+* camera-like spatial projections;
+* combinations of diagnostic families.
+
+Clearly label every diagnostic as synthetic. Do not claim direct experimental realism unless Ben confirms the observation operator, cadence, resolution, and noise model.
+
+## Filter baselines
+
+Compare:
+
+* no assimilation;
+* persistence with assimilation where meaningful;
+* latent ETKF/EnKF;
+* field-space EnKF if computationally feasible;
+* EnKS for offline smoothing;
+* periodic oracle resets as an upper bound.
+
+Use the generative emulator ensemble as the forecast prior.
+
+Tune only on 85604 validation:
+
+* inflation;
+* localization;
+* observation-noise assumptions;
+* update cadence;
+* ensemble size;
+* latent versus field update choices.
+
+Freeze all settings before 85606.
+
+## Assimilation metrics
+
+Measure:
+
+* posterior field RMSE;
+* posterior transport error;
+* forecast error after each update;
+* time until forecast divergence;
+* posterior spread and coverage;
+* filter stability;
+* effective ensemble rank;
+* update magnitude by latent or field direction;
+* recovery of unobserved fields from observed fields.
+
+Test whether a diagnostic can improve the target transport quantity even when it does not directly observe every field entering that quantity.
+
+---
+
+# Phase 6: diagnostic ranking
+
+This is a central Paper 0 deliverable.
+
+## Fair comparison
+
+Compare diagnostic configurations under matched budgets:
+
+* same number of measurements;
+* same update cadence;
+* comparable noise assumptions;
+* comparable spatial coverage or an explicitly stated cost model.
+
+Evaluate multiple sensor budgets rather than only one arbitrary configuration.
+
+## Ranking criteria
+
+Rank diagnostics separately by:
+
+1. Full-state posterior accuracy.
+2. Particle-flux posterior accuracy.
+3. Heat-flux posterior accuracy.
+4. Extension of useful forecast horizon.
+5. Posterior calibration.
+6. Robustness across temporal blocks and model seeds.
+7. Information gained per measurement or per assumed diagnostic cost.
+
+Do not collapse everything into one undocumented scalar score.
+
+Produce:
+
+* rankings for each objective;
+* a Pareto frontier across state accuracy, transport accuracy, and measurement cost;
+* uncertainty intervals on rankings;
+* sensitivity to assumed noise and cadence.
+
+An important possible result is that the diagnostic best for pixelwise state reconstruction is not the diagnostic best for transport inference.
+
+Because there is only one held-out run, describe the final ranking as a held-out TCV/Hermes case study, not a universal experimental-design result.
+
+---
+
+# Phase 7: steering readiness
+
+Do not claim active steering from the present autonomous data.
+
+Check whether the dataset includes explicit variation in:
+
+* heating;
+* fueling;
+* source terms;
+* boundary actuation;
+* other controllable inputs.
+
+If it does not, the model is:
+
+[
+p_\theta(x_{t+1}\mid x_t),
+]
+
+not:
+
+[
+p_\theta(x_{t+1}\mid x_t,u_t).
+]
+
+In this case:
+
+* implement clean interfaces for future control inputs;
+* document which additional simulations would be required;
+* do not interpret arbitrary state perturbations as causal actions;
+* do not report MPC or RL results as valid control.
+
+If genuinely action-conditioned trajectories become available later, steering becomes a subsequent paper or extension using ensemble MPC and risk-sensitive objectives.
+
+---
+
+# Statistical protocol
+
+The physical unit of independence is the simulation run, not the temporal window.
+
+With one training run and one held-out run:
+
+* use block bootstrap intervals within 85606;
+* choose block lengths longer than the measured autocorrelation time;
+* report intervals conditional on the held-out run;
+* include at least three model-training seeds when computationally feasible;
+* distinguish temporal sampling uncertainty from model-seed uncertainty;
+* do not report window counts as independent sample sizes.
+
+A reverse-shot experiment may be performed only after the primary 85604-to-85606 result is frozen. Treat it as a sensitivity analysis, not an independent confirmation.
+
+---
+
+# Compute fairness
+
+For every learned baseline report:
+
+* parameter count;
+* training steps;
+* training examples;
+* accelerator type;
+* accelerator hours;
+* peak memory;
+* inference time;
+* ensemble size;
+* number of diffusion/refinement function evaluations;
+* forecast cost per physical microsecond.
+
+The FGN-versus-diffusion comparison must explicitly report the tradeoff between ensemble quality and iterative inference cost.
+
+---
+
+# Reproducibility
+
+Each experiment directory must contain:
+
+* configuration;
+* data manifest;
+* normalization statistics;
+* git commit and dirty-state record;
+* checkpoint;
+* random seeds;
+* forecast manifest;
+* raw metric tables;
+* metrics by time block;
+* compute accounting;
+* logs;
+* generated figures.
+
+Create one command that reproduces each final table and figure from stored forecasts without rerunning training.
+
+---
+
+# Required paper figures
+
+1. **Problem and pipeline:** Hermes trajectory → emulator ensemble → synthetic diagnostics → ensemble update → diagnostic ranking.
+2. **Current failure:** visually plausible forecasts with incorrect cross-phase or transport.
+3. **Oracle ladder:** codec, one-step, rollout, and reset errors.
+4. **Model comparison:** deterministic, current diffusion, FGN, PDE-Refiner, and joint residual.
+5. **Held-out spectral fidelity:** spectra, coherence, and cross-phase on 85606.
+6. **Held-out transport:** particle and heat-flux profiles and distributions.
+7. **Calibration:** field, mode, and flux calibration.
+8. **Assimilation:** prior and posterior state/transport errors through time.
+9. **Diagnostic ranking:** objective-specific ranking with uncertainty.
+10. **Diagnostic Pareto plot:** transport information versus measurement budget or cost.
+11. **Held-out summary:** all primary forecast and assimilation results for 85606.
+
+Do not include a run-count scaling law because only two runs exist.
+
+---
+
+# Claims and scope
+
+## Physics claim
+
+If supported:
+
+> A data-only probabilistic emulator trained on one 3D TCV/Hermes simulation preserves transport-relevant joint statistics on a second held-out simulation.
+
+## Assimilation claim
+
+If supported:
+
+> The emulator’s forecast ensemble can serve as an effective transition prior for sparse diagnostic assimilation, improving estimation of both fields and turbulent transport.
+
+## Diagnostic-design claim
+
+If supported:
+
+> Synthetic diagnostic families differ substantially in their ability to constrain hidden fields and transport, and ranking them by downstream transport information produces different conclusions than ranking them by field reconstruction alone.
+
+## Limited ML insight
+
+If supported:
+
+> Sharp forecasts, low field error, and marginal calibration do not guarantee preservation of the joint cross-field distribution required for nonlinear scientific functionals and ensemble assimilation.
+
+Do not claim a generally new probabilistic forecasting architecture unless a genuinely new method is implemented and validated beyond this dataset.
+
+## Explicit limitations
+
+State clearly:
+
+* only two TCV/Hermes runs;
+* one train/validation run and one held-out run;
+* simulation-to-simulation evaluation;
+* synthetic diagnostics;
+* no experimental TCV measurements;
+* no demonstrated causal steering;
+* no broad device or operating-regime generalization.
+
+---
+
+# Decision rules
+
+* If the codec fails, repair representation before dynamics.
+* If PDE-Refiner solves the spectral and transport failure, use it.
+* If FGN works, prefer it over more expensive diffusion unless diffusion provides a material benefit.
+* If FGN is calibrated marginally but transport remains wrong, conclude that marginal CRPS is insufficient here.
+* If joint residual generation beats independent residual generation, emphasize cross-field jointness.
+* If all forecast models fail, stop before strong diagnostic-ranking claims and write the result as a benchmark/failure analysis.
+* If forecast ensembles pass but EnKF fails, investigate ensemble covariance, observation geometry, localization, and latent observability.
+* If diagnostic rankings are unstable across time blocks or noise assumptions, report the instability instead of presenting a definitive ranking.
+* Do not begin Gkeyll/PIC pretraining, novel object-token architectures, or RL inside Paper 0.
+
+The end state of Paper 0 is not “we ran ablations.” It is:
+
+> a validated transport-faithful emulator, an honest held-out evaluation, a working assimilation system, and a defensible ranking of which synthetic diagnostics best constrain the plasma quantities we care about.
