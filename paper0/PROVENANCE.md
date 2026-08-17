@@ -298,6 +298,25 @@ before any partial JSON existed. The tracked no-result record is
 only `--mem=4G` to each shard step, exactly partitioning the existing 64 GB
 allocation across 16 processes.
 
+With the corrected resource request, job `6891571` started all 16 shards from
+clean commit `f5d4541`; it was externally preempted after 11:39 before any
+partial JSON was complete. No scientific statistic is accepted from that
+attempt. Its immutable no-result record is
+`paper0/results/phase2_pressure_closure_6891571.json`.
+
+The identical clean revision was then submitted on the non-preemptible `gen`
+partition as job `6891583`. All shards completed, the reducer verified every
+rank and processor coordinate exactly once, and the job exited `0:0` after
+13:32. The full strict result has SHA-256
+`db340843ba77fe4d06da2842561ced77ac2814bfd084224baa85b4485ad840c2`.
+It accounts for 624 frames and 103,514,112 native cells per field, and confirms
+that 85606 was not accessed. `Ni = Ne` and `Pe = Ne*Te` pass throughout;
+negative evolved `Pi` produces 3,412 ion-pressure closure discrepancies,
+including 1,421 in `y=1..30`. The tracked accepted record is
+`paper0/results/phase2_pressure_closure_6891583.json` and the full immutable
+root is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891583`.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

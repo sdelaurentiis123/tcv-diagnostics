@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_85604_all_frame_pressure_closure_audit",
+  "paper0_commit": "f5d4541e7f048a43948ba00d6fd828e0d05141e9",
+  "slurm": {
+    "job_id": 6891583,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "start": "2026-08-17T05:12:47-04:00",
+    "end": "2026-08-17T05:26:19-04:00",
+    "elapsed": "00:13:32",
+    "time_limit": "00:45:00",
+    "partition": "gen",
+    "qos": "gen",
+    "node": "worker5570",
+    "shard_count": 16,
+    "largest_shard_max_rss_kib": 2612716
+  },
+  "data_scope": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "frame_count": 624,
+    "shape_per_field": [624, 64, 32, 81],
+    "zperiod": 5,
+    "rank_file_count": 256,
+    "unique_processor_coordinates": 256,
+    "total_points_per_field": 103514112,
+    "interior_points_per_field": 97044480,
+    "target_row_points_per_field": 6469632,
+    "all_fields_finite": true
+  },
+  "integrity": {
+    "all_shards_completed_before_merge": true,
+    "partial_json_count": 16,
+    "rank_indices_complete_and_unique": true,
+    "processor_coordinates_complete_and_unique": true,
+    "manifest_sha256": "fcd91e8dae1e4f8307ea157a88af4c112035683c0ef0a0db618584f77ef3b71b",
+    "full_result_sha256": "db340843ba77fe4d06da2842561ced77ac2814bfd084224baa85b4485ad840c2",
+    "artifact_sha256_manifest_sha256": "7e2926c58b464fab6be7a677fa5cc28760037ece6d020a767b6c50123907c621",
+    "job_log_sha256": "afe044746f8ae4d4690841260747212d84e3357e7ba8815182822fbe5e948511",
+    "slurm_log_sha256": "afe044746f8ae4d4690841260747212d84e3357e7ba8815182822fbe5e948511",
+    "commands_sha256": "db85b96b5ef1060c935b36eb8b696bd0a567c2766d158a26c5b7c8be64c65922",
+    "environment_sha256": "d8593c8d3b8f7e00868809708fb215ad42e9c5cf07a7c4449eabd7ddd7c565a5"
+  },
+  "value_findings": {
+    "fields_without_negative_values": ["Ne", "Ni", "Pe", "Te"],
+    "Pi": {
+      "full_negative_count": 3412,
+      "full_negative_fraction": 0.000032961689320196265,
+      "interior_negative_count": 1421,
+      "interior_negative_fraction": 0.000014642769995779255,
+      "target_row_negative_count": 1991,
+      "target_row_negative_fraction": 0.0003077454791864514,
+      "full_minimum": -0.0234714551052543,
+      "full_minimum_location_txyz": [223, 7, 31, 74],
+      "interior_minimum": -0.0030234356601813125,
+      "interior_minimum_location_txyz": [223, 7, 30, 54],
+      "negative_count_by_y": {
+        "27": 25,
+        "28": 103,
+        "29": 298,
+        "30": 995,
+        "31": 1991
+      },
+      "negative_count_by_temporal_block": [0, 116, 1812, 86, 67, 69, 1262, 0]
+    },
+    "Ti": {
+      "full_negative_count": 1074,
+      "interior_negative_count": 444,
+      "full_minimum": -4.86799826955161e-16,
+      "interpretation": "roundoff-scale values around the zero floor; these do not reconstruct negative evolved Pi"
+    }
+  },
+  "closure_findings": {
+    "tolerance": {
+      "atol": 1e-12,
+      "rtol": 1e-12
+    },
+    "Ni_equals_Ne": {
+      "full_failed_frames": 0,
+      "full_point_discrepancy_count": 0,
+      "maximum_absolute_error": 1.9984014443252818e-15
+    },
+    "Pe_equals_Ne_times_Te": {
+      "full_failed_frames": 0,
+      "full_point_discrepancy_count": 0,
+      "maximum_absolute_error": 5.773159728050814e-15
+    },
+    "Pi_equals_Ne_times_Ti": {
+      "full_failed_frames": 72,
+      "full_point_discrepancy_count": 3412,
+      "interior_failed_frames": 47,
+      "interior_point_discrepancy_count": 1421,
+      "target_row_failed_frames": 72,
+      "target_row_point_discrepancy_count": 1991,
+      "negative_reference_discrepancy_count": 3412,
+      "nonnegative_reference_discrepancy_count": 0,
+      "maximum_full_absolute_error": 0.0234714551052543,
+      "maximum_full_error_location_txyz": [223, 7, 31, 74],
+      "maximum_interior_absolute_error": 0.0030234356601813125,
+      "maximum_interior_error_location_txyz": [223, 7, 30, 54]
+    },
+    "Pi_equals_Ni_times_Ti": {
+      "identical_discrepancy_support_to_Pi_equals_Ne_times_Ti": true
+    }
+  },
+  "scientific_findings": {
+    "all_fields_finite": true,
+    "exact_full_state_compatibility": false,
+    "temperature_state_reproduces_guard_independent_pressure_transport": false,
+    "pressure_undershoots_present": true,
+    "target_only_pressure_undershoots": false,
+    "pressure_closure_discrepancies_confined_to_targets": false,
+    "recommendation": "prefer_direct_evolved_pressure_or_define_and_validate_floor_policy",
+    "automatic_channel_change_authorized": false
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891583",
+    "full_result": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891583/pressure_closure_audit.json",
+    "artifact_digest_manifest": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891583/artifact_sha256.txt",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_pressure_closure_6891583.log"
+  }
+}

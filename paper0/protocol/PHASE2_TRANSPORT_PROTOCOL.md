@@ -499,15 +499,22 @@ absence of a transport result is a documented blocker, not a zero or a pass.
 
 ## 10. Immediate decision
 
-No architecture work or training is justified by this audit yet. The
-manufactured operator ladder through combined radial-flow conservation and the
-native real-state operator subgate have passed. The next safe step is a
-prospectively frozen, 85604-only prevalence audit of negative evolved pressure
-and pressure--temperature closure over all 624 frames. That audit will inform
-an explicit choice between evolved pressure and floor-derived temperature as
-the canonical learned state; it will not silently alter the state definition.
-After that decision, the native-81 versus resampled-88 sensitivity remains the
-next transport rung. If the remaining exact ladder cannot be completed, Paper
-0 must retain cross-spectrum and cross-phase as validated joint-field metrics
-and omit strong physical-transport claims rather than promote the historical
-proxy.
+No architecture work or training is justified by the operator audit alone.
+The manufactured operator ladder through combined radial-flow conservation
+and the native real-state operator subgate have passed. The prospectively
+frozen 85604 prevalence audit has now also completed as job `6891583`.
+
+That audit found 3,412 negative evolved-`Pi` points, of which 1,421 occur in
+the fixed `y=1..30` operator interior. Every ion-pressure closure discrepancy
+is on that exact negative support; electron pressure and quasineutral density
+close everywhere. Therefore the legacy temperature-only state cannot be used
+as an exact ion-pressure transport state. Direct evolved pressure is the
+leading state candidate unless an explicit, source-matched floor policy is
+prospectively adopted and validated. This conclusion does not retroactively
+rename a historical channel or open 85606.
+
+After the state policy is frozen, the native-81 versus resampled-88
+sensitivity is the next transport rung. If the remaining exact ladder cannot
+be completed, Paper 0 must retain cross-spectrum and cross-phase as validated
+joint-field metrics and omit strong physical-transport claims rather than
+promote the historical proxy.

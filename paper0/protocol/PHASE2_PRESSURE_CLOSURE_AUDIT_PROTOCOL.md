@@ -1,7 +1,7 @@
 # Phase 2 all-frame pressure-closure audit protocol
 
-**Status:** frozen before reading any 85604 state values beyond the five frames
-already selected by native-frame oracle job `6891379`
+**Status:** executed without changing the frozen rules; accepted job `6891583`
+completed from clean commit `f5d4541`
 
 **Development run:** TCV/Hermes `85604` only
 
@@ -199,3 +199,21 @@ still inherited the full 64 GB as step memory, again allowing only shard zero
 to launch. It was cancelled after 48 seconds, with no partial JSON. The next
 launcher adds `--mem=4G` per shard, partitioning the existing 64 GB request
 across 16 exclusive steps. This changes no audit input, statistic, or rule.
+
+Job `6891571` then started all 16 corrected shards from clean commit `f5d4541`
+on the preemptible partition. Slurm preempted the healthy allocation after
+11:39, before any shard finished; no partial JSON or scientific statistic was
+accepted. The same clean commit and command were resubmitted on the
+non-preemptible `gen` partition without changing an audit rule.
+
+Job `6891583` completed all 16 shards and the strict reducer with exit code
+`0:0` in 13:32. All 256 rank indices and processor coordinates were complete
+and unique, all six fields were finite, and 85606 was not read. `Ne = Ni` and
+`Pe = Ne * Te` passed all 624 frames. Both ion-pressure relations failed at
+3,412 negative direct-`Pi` points over 72 frames, including 1,421 points over
+47 frames in the fixed `y=1..30` interior. The frozen recommendation is
+therefore to prefer direct evolved pressure or explicitly define and validate
+a floor policy; an automatic channel change remains unauthorized. The compact
+record and readable interpretation are
+`paper0/results/phase2_pressure_closure_6891583.json` and
+`paper0/PHASE2_PRESSURE_CLOSURE_READOUT.md`.

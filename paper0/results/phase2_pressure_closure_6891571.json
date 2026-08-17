@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_85604_all_frame_pressure_closure_audit_attempt",
+  "paper0_commit": "f5d4541e7f048a43948ba00d6fd828e0d05141e9",
+  "slurm": {
+    "job_id": 6891571,
+    "state": "PREEMPTED",
+    "exit_code": "0:0",
+    "batch_state": "CANCELLED",
+    "batch_exit_code": "0:15",
+    "start": "2026-08-17T04:59:44-04:00",
+    "end": "2026-08-17T05:11:23-04:00",
+    "elapsed": "00:11:39",
+    "time_limit": "00:45:00",
+    "partition": "preempt",
+    "qos": "preempt",
+    "node": "worker5592",
+    "started_shard_step_count": 16
+  },
+  "data_access": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "provenance_gates_passed": true,
+    "complete_shard_coverage_established": false,
+    "partial_json_count": 0,
+    "scientific_result_written": false
+  },
+  "outcome": {
+    "classification": "no_result_external_preemption",
+    "reason": "Slurm preempted the healthy sixteen-shard audit before any shard completed",
+    "observation": {
+      "all_expected_shard_steps_started": true,
+      "largest_shard_max_rss_kib": 1857484,
+      "per_shard_memory_limit_gib": 4,
+      "observation_was_read_only": true
+    },
+    "scientific_statistics_accepted": false,
+    "protocol_or_tolerance_changed": false,
+    "planned_correction": "resubmit the identical clean commit and command on the non-preemptible gen partition"
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891571",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_pressure_closure_6891571.log",
+    "artifact_digests": {
+      "commands.sh": "ec143f981dd6b293b492f0aa37e4240dba9fccb1f26936fedcfbfa6fa422b7cb",
+      "environment.txt": "a6e1403fd669805b15bad024814f87295a3b4153af20064e5f01bcb767224d4c",
+      "job.log": "8ee2b32b3edfd6793801f928af82928c5b659d752b6186681aa0f19237a94e04",
+      "slurm_log": "64f837d8dd1ebae3a10832e283ba5beafc4d504797239c8c82a2131daaac7a43"
+    }
+  }
+}

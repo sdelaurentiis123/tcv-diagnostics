@@ -26,6 +26,12 @@ PARALLEL_NO_RESULT = (
 MEMORY_NO_RESULT = (
     ROOT / "paper0" / "results" / "phase2_pressure_closure_6891570.json"
 )
+PREEMPTED_NO_RESULT = (
+    ROOT / "paper0" / "results" / "phase2_pressure_closure_6891571.json"
+)
+COMPLETE_RESULT = (
+    ROOT / "paper0" / "results" / "phase2_pressure_closure_6891583.json"
+)
 
 
 def load_module(name: str, path: Path):
@@ -288,6 +294,42 @@ class PressureClosureAuditImplementationTests(unittest.TestCase):
         self.assertFalse(attempt["outcome"]["scientific_statistics_accepted"])
         self.assertFalse(attempt["outcome"]["protocol_or_tolerance_changed"])
         self.assertFalse(attempt["data_access"]["held_out_85606_read"])
+
+    def test_preempted_parallel_attempt_is_tracked_as_no_result(self) -> None:
+        attempt = json.loads(PREEMPTED_NO_RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(attempt["paper0_commit"], "f5d4541e7f048a43948ba00d6fd828e0d05141e9")
+        self.assertEqual(attempt["slurm"]["job_id"], 6891571)
+        self.assertEqual(attempt["slurm"]["state"], "PREEMPTED")
+        self.assertEqual(attempt["slurm"]["started_shard_step_count"], 16)
+        self.assertEqual(attempt["data_access"]["partial_json_count"], 0)
+        self.assertFalse(attempt["data_access"]["scientific_result_written"])
+        self.assertFalse(attempt["outcome"]["scientific_statistics_accepted"])
+        self.assertFalse(attempt["outcome"]["protocol_or_tolerance_changed"])
+        self.assertFalse(attempt["data_access"]["held_out_85606_read"])
+
+    def test_complete_result_records_frozen_decision(self) -> None:
+        result = json.loads(COMPLETE_RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(result["paper0_commit"], "f5d4541e7f048a43948ba00d6fd828e0d05141e9")
+        self.assertEqual(result["slurm"]["job_id"], 6891583)
+        self.assertEqual(result["slurm"]["state"], "COMPLETED")
+        self.assertEqual(result["slurm"]["partition"], "gen")
+        self.assertFalse(result["data_scope"]["held_out_85606_read"])
+        self.assertEqual(result["data_scope"]["shape_per_field"], [624, 64, 32, 81])
+        self.assertEqual(result["data_scope"]["zperiod"], 5)
+        self.assertTrue(result["integrity"]["all_shards_completed_before_merge"])
+        self.assertEqual(result["integrity"]["partial_json_count"], 16)
+        self.assertEqual(result["value_findings"]["Pi"]["full_negative_count"], 3412)
+        self.assertEqual(result["value_findings"]["Pi"]["interior_negative_count"], 1421)
+        ion = result["closure_findings"]["Pi_equals_Ne_times_Ti"]
+        self.assertEqual(ion["full_failed_frames"], 72)
+        self.assertEqual(ion["interior_failed_frames"], 47)
+        self.assertEqual(ion["negative_reference_discrepancy_count"], 3412)
+        self.assertEqual(ion["nonnegative_reference_discrepancy_count"], 0)
+        self.assertFalse(
+            result["scientific_findings"]
+            ["temperature_state_reproduces_guard_independent_pressure_transport"]
+        )
+        self.assertFalse(result["scientific_findings"]["automatic_channel_change_authorized"])
 
 
 if __name__ == "__main__":

@@ -38,3 +38,10 @@ the prospectively required full-domain five-channel closure failed at one
 negative ion-pressure point. The exact split result and its implications for
 the emulator state are recorded in
 [`paper0/PHASE2_NATIVE_FRAME_READOUT.md`](paper0/PHASE2_NATIVE_FRAME_READOUT.md).
+
+The follow-up all-frame 85604 audit is complete. It shows that negative evolved
+ion pressure is rare by cell count but reaches the fixed transport interior in
+47 of 624 frames, so the legacy ion-temperature channel cannot exactly recover
+the pressure used by the conservative operator. The accepted evidence and
+explicitly limited state recommendation are in
+[`paper0/PHASE2_PRESSURE_CLOSURE_READOUT.md`](paper0/PHASE2_PRESSURE_CLOSURE_READOUT.md).

@@ -346,6 +346,24 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     partial JSON or scientific result and no 85606 access. The correction adds
     `--mem=4G` to each shard step, partitioning the already requested 64 GB
     allocation without changing code or scientific settings.
+35. **The corrected audit survived only after moving off the preemptible
+    partition.** Job `6891571`, from clean commit `f5d4541`, started all 16
+    one-CPU, 4-GB shards and remained below the resource limits. Slurm
+    preempted it at 11:39 before any shard finished. No partial JSON or
+    scientific result exists. Resubmitting the identical commit and command on
+    `gen` changes execution reliability only, not the frozen audit.
+36. **Negative evolved ion pressure reaches the transport interior.** Job
+    `6891583` completed all 16 shards and strict merge over every one of the
+    624 native 85604 frames. All six fields were finite; `Ni = Ne` and
+    `Pe = Ne*Te` had zero point discrepancies. Direct `Pi` was negative at
+    3,412 of 103,514,112 cells, and every one of those points failed both
+    temperature-to-ion-pressure closures. Crucially, 1,421 points across 47
+    frames lie in the predeclared `y=1..30` interior; the largest interior
+    miss is `0.00302343566`. Thus the legacy temperature state does not exactly
+    reproduce pressure for the accepted radial operator scope. Paper 0 must
+    forecast evolved ion pressure or declare and validate a floor policy
+    before transport scoring. No automatic channel change was made, and 85606
+    remained untouched.
 
 ## Exact commands
 
