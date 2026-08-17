@@ -46,3 +46,24 @@ sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase1_profile_85604.sbatch
 The unique result directory is
 `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase1_85604_profile/job_<id>`.
 No learned model is launched by this job.
+
+## Phase 2 exact BOUT++ transport-oracle build
+
+`build_bout_transport_oracle.sbatch` builds the exact BOUT++ revision embedded
+in the 85604 simulation together with its pinned netCDF C++ dependency. The
+source and submodule revisions and all transport-critical BOUT++ files are
+hash-checked before compilation. The build is CPU-only, reads no shot data,
+uses no GPU, and refuses an existing output directory.
+
+The external source caches are intentionally outside Git under
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external`. Submit from the Rocky 9
+login node only after the launcher itself is committed and synced:
+
+```bash
+export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/build_bout_transport_oracle.sbatch
+```
+
+This build does not release the transport metric. It only supplies the exact
+BOUT++ dependency required to validate shifted `DDY` and the later full
+Hermes face-flow oracle.
