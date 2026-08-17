@@ -14,5 +14,10 @@ dependencies = [
   "scipy>=1.10",
 ]
 
+[project.optional-dependencies]
+models = [
+  "torch>=2.5",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
