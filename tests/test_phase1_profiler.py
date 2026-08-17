@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 import tempfile
 import unittest
@@ -58,6 +59,7 @@ class RawMetadataTests(unittest.TestCase):
                     # The actual BOUT output stores this scalar in a length-one
                     # attribute array, which must be unwrapped explicitly.
                     dataset.attrs["conversion"] = np.asarray([conversion])
+                    dataset.attrs["object_reference"] = dataset.ref
                 handle.create_dataset("Vort", shape=(624, 1, 1, 5))
 
             expected = {
@@ -82,6 +84,10 @@ class RawMetadataTests(unittest.TestCase):
             self.assertIn("Vort", result["field_metadata"])
             self.assertEqual(result["missing_additional_candidates"], ["Ve"])
             self.assertTrue(result["required_field_checks"]["phi"]["units_match"])
+            reference = result["field_metadata"]["Ne"]["attrs"]["object_reference"]
+            self.assertEqual(reference["hdf5_reference_type"], "object")
+            # The complete metadata record must remain strict JSON.
+            json.dumps(result, allow_nan=False)
 
     def test_bout_settings_flags_are_scoped_to_the_correct_sections(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

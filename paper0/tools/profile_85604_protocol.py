@@ -58,12 +58,24 @@ def parse_args() -> argparse.Namespace:
 
 
 def _jsonable(value: Any) -> Any:
+    if isinstance(value, h5py.RegionReference):
+        return {
+            "hdf5_reference_type": "region",
+            "is_null": not bool(value),
+        }
+    if isinstance(value, h5py.Reference):
+        return {
+            "hdf5_reference_type": "object",
+            "is_null": not bool(value),
+        }
     if isinstance(value, bytes):
         return value.decode("utf-8")
     if isinstance(value, np.ndarray):
         return [_jsonable(item) for item in value.tolist()]
     if isinstance(value, np.generic):
         return _jsonable(value.item())
+    if isinstance(value, (list, tuple)):
+        return [_jsonable(item) for item in value]
     if isinstance(value, float) and not math.isfinite(value):
         return {"nonfinite_float": repr(value)}
     return value
@@ -562,10 +574,13 @@ def main() -> None:
         "decorrelation": decorrelation,
         "phase1_learning_gate_open": bool(steady["passes"]),
     }
+    # Complete standard-JSON serialization before creating the target. This
+    # prevents a late unsupported metadata type from leaving a partial result
+    # that could be mistaken for a completed profile.
+    payload = json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n"
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open("x", encoding="utf-8") as handle:
-        json.dump(result, handle, indent=2, sort_keys=True, allow_nan=False)
-        handle.write("\n")
+        handle.write(payload)
     print(json.dumps({
         "output": str(output),
         "split_status": split_status,
