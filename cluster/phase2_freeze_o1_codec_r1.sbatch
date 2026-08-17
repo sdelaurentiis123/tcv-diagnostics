@@ -60,7 +60,7 @@ if [[ "${VERSION_ID%%.*}" != "9" ]]; then
   echo "This artifact freeze requires Rocky 9" >&2
   exit 2
 fi
-check_sha256 "d326a5b4e77cbca199245b9352833db62612d65406abc13fe47a02d9f237d70b" "${FREEZER}"
+check_sha256 "22db9b6e79f1f03241c9924c17ddadf76afcf2ac99cc9f5bf68a99c77ee7af55" "${FREEZER}"
 check_sha256 "57b40c3d1be4b065c71d1598876fe2edb69e76f25fe6ce4e87c6dea08d9a6690" "${PAPER0_ROOT}/src/tcv_diagnostics/codec_training.py"
 check_sha256 "3312d6ac093e7b9c6ad69a3d7b97fe6aa06695f03c2f10bed7a75f6095795416" "${PAPER0_ROOT}/src/tcv_diagnostics/model_data.py"
 

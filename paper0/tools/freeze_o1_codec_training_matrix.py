@@ -177,7 +177,7 @@ def freeze_run(
         "wandb_record_sha256": hashes["wandb.json"],
         "artifact_index_sha256": sha256_path(paths["artifact_sha256.txt"]),
         "selected_epoch": selected_epoch,
-        "selected_global_step": int(result["selected_global_step"]),
+        "selected_global_step": int(history[selected_epoch]["global_step"]),
         "selected_validation_equal_channel_mae": selected_loss,
         "wandb": {
             "run_id": expected_run_id,

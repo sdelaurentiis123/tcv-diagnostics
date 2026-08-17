@@ -31,6 +31,7 @@ def _write_run(root: Path) -> Path:
             {
                 "epoch": epoch,
                 "examples": 432,
+                "global_step": (epoch + 1) * 27,
                 "validation_equal_channel_mae": 1.0 - epoch / 1000.0,
             }
         )
@@ -50,7 +51,6 @@ def _write_run(root: Path) -> Path:
         "checkpoint_reload_bitwise_exact": True,
         "config": config,
         "selected_epoch": 199,
-        "selected_global_step": 5400,
         "selected_validation_equal_channel_mae": history[199][
             "validation_equal_channel_mae"
         ],
@@ -91,6 +91,7 @@ def test_freeze_run_rederives_earliest_best_epoch_and_hashes() -> None:
             training_slurm_job_id="6893802",
         )
         assert result["selected_epoch"] == 199
+        assert result["selected_global_step"] == 5400
         assert result["selected_checkpoint"]["sha256"] == sha256_path(
             run / "selected.pt"
         )
