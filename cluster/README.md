@@ -67,3 +67,8 @@ sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/build_bout_transport_oracle.s
 This build does not release the transport metric. It only supplies the exact
 BOUT++ dependency required to validate shifted `DDY` and the later full
 Hermes face-flow oracle.
+
+The accepted dependency build is Slurm job `6890722`, produced from Paper 0
+commit `e298337918582293b682cc3c0465175634f29da3`. Its compact tracked index is
+`paper0/results/phase2_bout_build_6890722.json`; the immutable install is under
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890722`.

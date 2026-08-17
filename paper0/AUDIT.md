@@ -224,6 +224,14 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     data were read. The immutable attempt remains under
     `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890720`;
     the launcher now loads the Rocky 9 `hdf5/1.14.5` module explicitly.
+21. **The exact BOUT++ dependency is now reproducibly built.** CPU job
+    `6890722` completed with exit code `0:0` from clean Paper 0 commit
+    `e298337918582293b682cc3c0465175634f29da3`. The installed BOUT++ reports
+    version `5.2.1`, and `libbout++.so.5.2.0` has SHA-256
+    `fa11368c90e5c392b20290910d5856b39c122154cbcf3b814a1e98ed65f9a6ce`.
+    It read no shot data. This resolves only the build dependency; the shifted
+    derivative and full Hermes transport gates remain closed pending compiled
+    oracle agreement.
 
 ## Exact commands
 

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_transport_oracle_dependency",
+  "purpose": "Exact BOUT++ dependency build for compiled shifted-DDY and Hermes transport-oracle comparisons",
+  "paper0_commit": "e298337918582293b682cc3c0465175634f29da3",
+  "slurm": {
+    "job_id": 6890722,
+    "job_name": "p2_bout_oracle_build",
+    "partition": "preempt",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "start": "2026-08-17T01:46:13-04:00",
+    "end": "2026-08-17T01:49:03-04:00",
+    "elapsed": "00:02:50",
+    "node": "worker5592",
+    "allocated_cpus_reported_by_slurm": 128,
+    "requested_memory": "32G"
+  },
+  "source_revisions": {
+    "bout_dev": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+    "netcdf_cxx4": "a43d6d4d415d407712c246faca553bd951730dc1",
+    "cpptrace": "027f9aee2d34dbe1c98f26224e1fbe1654cb4aae",
+    "fmt": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+    "mpark_variant": "23cb94f027d4ef33bf48133acc2695c7e5c6f1e7"
+  },
+  "built_version": "5.2.1",
+  "environment": {
+    "os_submission": "Rocky 9",
+    "gcc": "13.3.0",
+    "openmpi": "4.1.8",
+    "cmake": "3.31.6",
+    "ninja": "1.12.1",
+    "hdf5": "1.14.5",
+    "netcdf_c": "4.9.2",
+    "fftw": "3.3.10"
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890722",
+    "install_prefix": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890722/install",
+    "sha256": {
+      "install/lib64/libbout++.so.5.2.0": "fa11368c90e5c392b20290910d5856b39c122154cbcf3b814a1e98ed65f9a6ce",
+      "install/bin/bout-config": "aa20fd55d7da46f31e87c8bc09b8a725c4ba3a94abe73215d4e06f4c55c6a480",
+      "job.log": "53d3fd797e65b265eacdcb4541468e423a39ec16b90a94f2a8633e168d9d66df",
+      "build_environment.txt": "9e46a597c6d18fad43b28061c72761f68595a1a33f44507c0597793d16331900",
+      "configure_netcdf_cxx.sh": "20a7bb689248346ef3322755310da7f9ce0fc3f705d93f2a574bcfb9458c2796",
+      "configure_bout.sh": "84730d32a2e04d563b4457daa6b3f9edc20570d26175a9a9fd3ee6d1dbd54f50",
+      "bout_version.txt": "4e001f5f34a8940927b497e5657a1bba9a35094b2c1f992de2fbee40af237d5b"
+    }
+  },
+  "data_access": {
+    "shot_data_read": false,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "dependency_build_only",
+  "gate_effect": "Does not release the transport metric; enables a compiled BOUT++ comparison of the candidate shifted-DDY implementation."
+}

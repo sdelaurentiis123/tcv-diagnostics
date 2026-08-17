@@ -60,6 +60,15 @@ environment. It likewise read no shot data and did not compile BOUT++. The
 launcher correction adds only the `hdf5/1.14.5` Rocky 9 module; the unique
 failed-attempt directory is retained.
 
+The third attempt, job `6890722`, completed successfully from clean Paper 0
+commit `e298337918582293b682cc3c0465175634f29da3` on Rocky 9. It built and
+installed BOUT++ `5.2.1` at the exact embedded revision and read no shot data.
+The immutable external install, environment, Slurm accounting, source locks,
+and artifact hashes are indexed by
+`paper0/results/phase2_bout_build_6890722.json`. This is a dependency result,
+not a transport result: it enables the compiled shifted-`DDY` comparison but
+does not release the transport gate.
+
 The candidate shifted-derivative transcription in
 `src/tcv_diagnostics/transport.py` follows the hash-locked BOUT++ FFT phase,
 default centered `C2` stencil, single-null logical connections, and
