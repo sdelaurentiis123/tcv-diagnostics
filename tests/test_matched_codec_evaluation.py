@@ -13,6 +13,7 @@ import torch
 from tcv_diagnostics.codec_training import CodecRunConfig, sha256_path
 from tcv_diagnostics.matched_codec_evaluation import (
     COMMON_FIELDS,
+    derive_e6b_common_components,
     derive_e6b_common_physical,
     native81_candidate_fields,
     native_view_spec,
@@ -100,6 +101,18 @@ class TestMatchedCodecEvaluation(unittest.TestCase):
         state[:, 0, 0, 0, 0] = 0.0
         with self.assertRaisesRegex(ValueError, "non-positive"):
             derive_e6b_common_physical(state, phi)
+
+    def test_e6b_common_components_need_no_unused_e6b_channels(self) -> None:
+        shape = (2, *VOLUME_SHAPE)
+        common = derive_e6b_common_components(
+            ne=np.full(shape, 2.0, dtype=np.float32),
+            pe=np.full(shape, 3.0, dtype=np.float32),
+            pi=np.full(shape, 4.0, dtype=np.float32),
+            nvi=np.full(shape, 12.0, dtype=np.float32),
+            phi=np.full(shape, 5.0, dtype=np.float32),
+        )
+        self.assertEqual(common.shape, (2, 5, *VOLUME_SHAPE))
+        np.testing.assert_array_equal(common[:, 4], 3.0)
 
     def test_native81_fields_follow_family_contract(self) -> None:
         state = np.ones((1, 5, *VOLUME_SHAPE), dtype=np.float32)

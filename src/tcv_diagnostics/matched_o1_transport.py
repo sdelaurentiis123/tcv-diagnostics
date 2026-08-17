@@ -19,7 +19,213 @@ from .transport import SingleNullTopology, toroidal_wedge_spacing
 
 
 NATIVE_SHAPE = (64, 32, 81)
+MODEL_SHAPE = (64, 32, 88)
 NATIVE_TRUTH_FIELDS = ("Ne", "Pe", "Pi", "Vort", "phi")
+CANDIDATE_NATIVE_FIELDS = {
+    "c5p": ("Ne", "Pe", "Pi", "phi"),
+    "e6b": ("Ne", "Pe", "Pi", "Vort"),
+}
+E6B_COMMON_COMPONENTS = ("Ne", "Pe", "Pi", "NVi")
+
+
+def _text_attribute(value: Any) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8")
+    return str(value)
+
+
+class MatchedCandidateArtifact:
+    """Hash-checked access to one codec reconstruction split artifact."""
+
+    def __init__(
+        self,
+        path: Path,
+        *,
+        sha256: str,
+        family: str,
+        codec: str,
+        seed: int,
+        checkpoint_sha256: str,
+        frames: Sequence[int],
+    ) -> None:
+        if family not in CANDIDATE_NATIVE_FIELDS:
+            raise ValueError(f"unsupported matched candidate family {family!r}")
+        self.path = Path(path)
+        assert_development_path(self.path)
+        if not self.path.is_file():
+            raise FileNotFoundError(self.path)
+        self.sha256 = sha256_path(self.path)
+        if self.sha256 != str(sha256):
+            raise ValueError("matched candidate artifact hash differs")
+        self.family = family
+        self.codec = codec
+        self.seed = int(seed)
+        self.checkpoint_sha256 = str(checkpoint_sha256)
+        self.frames = tuple(int(frame) for frame in frames)
+        if not self.frames or self.frames != tuple(
+            range(self.frames[0], self.frames[-1] + 1)
+        ):
+            raise ValueError("matched candidate frames must be contiguous")
+        self._verify_schema()
+
+    def _verify_schema(self) -> None:
+        count = len(self.frames)
+        with h5py.File(self.path, "r") as handle:
+            expected_attributes = {
+                "schema_version": 1,
+                "development_run": "85604",
+                "held_out_85606_read": False,
+                "family": self.family,
+                "codec": self.codec,
+                "seed": self.seed,
+                "checkpoint_sha256": self.checkpoint_sha256,
+                "zperiod": 5,
+            }
+            for name, expected in expected_attributes.items():
+                actual = handle.attrs.get(name)
+                if isinstance(expected, str):
+                    actual = _text_attribute(actual)
+                elif isinstance(expected, bool):
+                    actual = bool(actual)
+                else:
+                    actual = int(actual)
+                if actual != expected:
+                    raise ValueError(f"matched candidate attribute {name} differs")
+            if tuple(int(value) for value in handle.attrs["native_shape"]) != NATIVE_SHAPE:
+                raise ValueError("matched candidate native shape differs")
+            stored_frames = np.asarray(
+                handle["coordinates/frame_index"][:], dtype=np.int64
+            )
+            if not np.array_equal(stored_frames, self.frames):
+                raise ValueError("matched candidate frame coordinates differ")
+            candidate = handle["candidate"]
+            required_native = CANDIDATE_NATIVE_FIELDS[self.family]
+            if set(candidate.keys()) != set(required_native):
+                raise ValueError("matched candidate native fields differ")
+            for field in required_native:
+                dataset = candidate[field]
+                if dataset.shape != (count, *NATIVE_SHAPE) or dataset.dtype != np.dtype(
+                    "f4"
+                ):
+                    raise ValueError(f"matched candidate {field} schema differs")
+            if self.family == "c5p":
+                if "boundary" in handle or "model88" in handle:
+                    raise ValueError("C5P candidate contains forbidden E6B side state")
+            else:
+                boundary = handle["boundary/Bphi"]
+                if boundary.shape != (count, 2, 32) or boundary.dtype != np.dtype("f4"):
+                    raise ValueError("matched E6B boundary schema differs")
+                if _text_attribute(boundary.attrs.get("policy")) != (
+                    "exact_bypass_from_model_dataset"
+                ):
+                    raise ValueError("matched E6B boundary policy differs")
+                model = handle["model88"]
+                if set(model.keys()) != set(E6B_COMMON_COMPONENTS):
+                    raise ValueError("matched E6B common components differ")
+                for field in E6B_COMMON_COMPONENTS:
+                    dataset = model[field]
+                    if dataset.shape != (count, *MODEL_SHAPE) or dataset.dtype != np.dtype(
+                        "f4"
+                    ):
+                        raise ValueError(f"matched E6B model88 {field} schema differs")
+
+    def _indices(self, start: int, stop: int) -> tuple[int, int]:
+        if start < self.frames[0] or stop > self.frames[-1] + 1 or stop <= start:
+            raise ValueError("matched candidate read leaves its frame interval")
+        return start - self.frames[0], stop - self.frames[0]
+
+    def read_native(self, start: int, stop: int) -> dict[str, np.ndarray]:
+        local_start, local_stop = self._indices(start, stop)
+        with h5py.File(self.path, "r") as handle:
+            return {
+                field: np.asarray(
+                    handle[f"candidate/{field}"][local_start:local_stop],
+                    dtype=np.float64,
+                )
+                for field in CANDIDATE_NATIVE_FIELDS[self.family]
+            }
+
+    def read_model88(self, start: int, stop: int) -> dict[str, np.ndarray]:
+        if self.family != "e6b":
+            raise ValueError("only E6B candidates contain model88 components")
+        local_start, local_stop = self._indices(start, stop)
+        with h5py.File(self.path, "r") as handle:
+            return {
+                field: np.asarray(
+                    handle[f"model88/{field}"][local_start:local_stop],
+                    dtype=np.float64,
+                )
+                for field in E6B_COMMON_COMPONENTS
+            }
+
+    def read_boundary(self, start: int, stop: int) -> np.ndarray:
+        if self.family != "e6b":
+            raise ValueError("only E6B candidates contain a boundary bypass")
+        local_start, local_stop = self._indices(start, stop)
+        with h5py.File(self.path, "r") as handle:
+            return np.asarray(
+                handle["boundary/Bphi"][local_start:local_stop],
+                dtype=np.float32,
+            )
+
+
+class MatchedPhiArtifact:
+    """Hash-checked exact E6B potential reconstructed on the native grid."""
+
+    def __init__(
+        self,
+        path: Path,
+        *,
+        sha256: str,
+        source_candidate_sha256: str,
+        frames: Sequence[int],
+    ) -> None:
+        self.path = Path(path)
+        assert_development_path(self.path)
+        if not self.path.is_file():
+            raise FileNotFoundError(self.path)
+        self.sha256 = sha256_path(self.path)
+        if self.sha256 != str(sha256):
+            raise ValueError("matched phi artifact hash differs")
+        self.source_candidate_sha256 = str(source_candidate_sha256)
+        self.frames = tuple(int(frame) for frame in frames)
+        if not self.frames or self.frames != tuple(
+            range(self.frames[0], self.frames[-1] + 1)
+        ):
+            raise ValueError("matched phi frames must be contiguous")
+        with h5py.File(self.path, "r") as handle:
+            if (
+                int(handle.attrs.get("schema_version", -1)) != 1
+                or _text_attribute(handle.attrs.get("development_run")) != "85604"
+                or bool(handle.attrs.get("held_out_85606_read"))
+                or int(handle.attrs.get("zperiod", -1)) != 5
+                or bool(handle.attrs.get("truth_layout"))
+                or _text_attribute(handle.attrs.get("source_input_sha256"))
+                != self.source_candidate_sha256
+            ):
+                raise ValueError("matched phi artifact attributes differ")
+            stored_frames = np.asarray(handle["frame_index"][:], dtype=np.int64)
+            if not np.array_equal(stored_frames, self.frames):
+                raise ValueError("matched phi frame coordinates differ")
+            dataset = handle["phi"]
+            if dataset.shape != (len(self.frames), *NATIVE_SHAPE) or dataset.dtype != np.dtype(
+                "f8"
+            ):
+                raise ValueError("matched phi dataset schema differs")
+
+    def read(self, start: int, stop: int) -> np.ndarray:
+        if start < self.frames[0] or stop > self.frames[-1] + 1 or stop <= start:
+            raise ValueError("matched phi read leaves its frame interval")
+        with h5py.File(self.path, "r") as handle:
+            values = np.asarray(
+                handle["phi"][
+                    start - self.frames[0] : stop - self.frames[0]
+                ],
+                dtype=np.float64,
+            )
+        if not np.all(np.isfinite(values)):
+            raise ValueError("matched phi contains non-finite values")
+        return values
 
 
 @dataclass(frozen=True)

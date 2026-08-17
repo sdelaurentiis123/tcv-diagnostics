@@ -252,14 +252,50 @@ def derive_e6b_common_physical(
         raise ValueError("E6B state must have axes [T,6,64,32,88]")
     if potential.shape != expected:
         raise ValueError("derived potential must have axes [T,64,32,88]")
-    if not np.all(np.isfinite(state)) or not np.all(np.isfinite(potential)):
+    return derive_e6b_common_components(
+        ne=state[:, 0],
+        pe=state[:, 1],
+        pi=state[:, 2],
+        nvi=state[:, 4],
+        phi=potential,
+    )
+
+
+def derive_e6b_common_components(
+    *,
+    ne: np.ndarray,
+    pe: np.ndarray,
+    pi: np.ndarray,
+    nvi: np.ndarray,
+    phi: np.ndarray,
+) -> np.ndarray:
+    """Build the common view from only the E6B components it requires."""
+
+    components = {
+        "Ne": np.asarray(ne, dtype=np.float64),
+        "Pe": np.asarray(pe, dtype=np.float64),
+        "Pi": np.asarray(pi, dtype=np.float64),
+        "NVi": np.asarray(nvi, dtype=np.float64),
+        "phi": np.asarray(phi, dtype=np.float64),
+    }
+    shapes = {value.shape for value in components.values()}
+    shape = next(iter(shapes), ())
+    if len(shapes) != 1 or len(shape) != 4 or shape[1:] != VOLUME_SHAPE:
+        raise ValueError("E6B common-view components must have axes [T,64,32,88]")
+    if not all(np.all(np.isfinite(value)) for value in components.values()):
         raise ValueError("E6B common-view inputs contain non-finite values")
-    density = state[:, 0]
+    density = components["Ne"]
     if np.any(density <= 0.0):
         raise ValueError("E6B common view refuses non-positive decoded density")
-    ion_velocity = state[:, 4] / (2.0 * density)
+    ion_velocity = components["NVi"] / (2.0 * density)
     result = np.stack(
-        [density, state[:, 1], state[:, 2], potential, ion_velocity],
+        [
+            density,
+            components["Pe"],
+            components["Pi"],
+            components["phi"],
+            ion_velocity,
+        ],
         axis=1,
     )
     if not np.all(np.isfinite(result)):
