@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_before_first_paired_elliptic_reconstruction_of_raw_85604_state",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "training_allowed": false,
+    "prior_reads": {
+    "all_frame_guard_stripped_fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "Vort",
+      "phi"
+    ],
+    "all_frame_radial_phi_guards": "phase2 boundary-state job 6891890",
+    "selected_frames_previously_extracted": [
+      0,
+      156,
+      312,
+      467,
+      623
+    ],
+        "paired_elliptic_solutions_previously_evaluated": false
+    },
+    "provenance_locks": {
+        "value_independent_frame_selection": {
+            "path": "paper0/manifests/phase2_native_frame_oracle.json",
+            "sha256": "f99c540e00b1f8f99ae0712a3b161e851b2b72199cff4ad609a7026b27b0ee5e"
+        },
+        "all_frame_phi_boundary_audit": {
+            "path": "paper0/results/phase2_phi_boundary_state_6891890.json",
+            "sha256": "79c67709c921caa1ddf1ea3e4d8f431ce88e220adc70247527c7a8a5e5f637cc",
+            "rusty_job_id": 6891890
+        }
+    },
+  "frame_selection": {
+    "total_frames": 624,
+    "rule": "reuse nearest-half-up indices at fractions 0, 1/4, 1/2, 3/4, and 1 of inclusive archive interval 0:623",
+    "selection_predates_boundary_amplitude_result": true,
+    "fractions": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "indices": [
+      0,
+      156,
+      312,
+      467,
+      623
+    ],
+    "expected_normalized_times": [
+      285000.0,
+      331800.0,
+      378600.0,
+      425100.0,
+      471900.0
+    ],
+    "expected_relative_microseconds": [
+      0.0,
+      488.5772465110112,
+      977.1544930220224,
+      1462.5998341066809,
+      1951.1770806176921
+    ],
+    "posthoc_boundary_maximum_frames_excluded_from_selection_rule": [
+      586,
+      591
+    ],
+    "physical_independence_claimed": false
+  },
+  "raw_archive": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604",
+    "expected_rank_file_count": 256,
+    "rank_file_pattern": "BOUT.dmp.<rank>.nc",
+    "rank_dimensions": {
+      "t": 624,
+      "x": 8,
+      "y": 6,
+      "z": 81
+    },
+    "mpi_decomposition": {
+      "NXPE": 16,
+      "NYPE": 16,
+      "MXSUB": 4,
+      "MYSUB": 2,
+      "MXG": 2,
+      "MYG": 2
+    },
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "bout_revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+    "slope_limiter": "MC",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "bout_input_sha256": "c1f7f63a4210b35680f338289916f6a588dcc7881928f26066a9af2e09fb95ad",
+    "bout_settings_sha256": "57148a0f3d829b72192363d4d6e5da9fc1ce8aa2bff63359491bdb0b9a075d57",
+    "geometry_sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+  },
+  "source_lock": {
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "bout_revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+    "hermes_main_sha256": "843ea048baa90b4a55ead6aa6ed546c6746e81c2718a8ade3ed977381364f65a",
+    "vorticity_source_sha256": "7643af10d23ce4efebf58b835fbb27cb8a7d7ed11545d450182916013f3a002a",
+    "vorticity_header_sha256": "276a90682298e2b20594fc52b241518f197aa1a3310ada47fb9f7852b3deaded",
+    "bout_laplacian_header_sha256": "858752dd39c55caf7afd00fa84583b5e1c7944763f6497f6ffaa2530ba0e1fc3",
+    "bout_laplacian_wrapper_sha256": "47c2cbe674c61e510cc96835823ba8a7b55f2a9b6c2a5c1f93d730c8dba5d157",
+    "bout_cyclic_source_sha256": "568faa3c9bcf17732779868f28aa219f5e8beea2ad4f98c490b233ce9552d38a",
+    "bout_cyclic_header_sha256": "1309f7eebf5fe076663224b1a66a08b1a3ae6ce7526d0f0b595d6537db5bf296"
+  },
+  "bout_dependency": {
+    "build_job_id": 6890766,
+    "version": "5.2.1",
+    "install_prefix": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890766/install",
+    "shared_library_relative_path": "lib64/libbout++.so.5.2.0",
+    "shared_library_sha256": "9e4ae1f46c01418711515cda63fd92513712705655c5623d932297e5d8c53333",
+    "hdf5_version": "1.12.3",
+    "mixed_hdf5_abi_detected": false
+  },
+  "run_options": {
+    "diamagnetic_polarisation": true,
+    "average_atomic_mass": 2.0,
+    "split_n0": false,
+    "phi_boundary_relax": true,
+    "phi_boundary_timescale_microseconds": 1.0,
+    "phi_core_averagey": false,
+    "electron_atomic_mass": {
+      "numerator": 1,
+      "denominator": 1836
+    },
+    "electron_charge": -1.0,
+    "ion_atomic_mass": 2.0,
+    "ion_charge": 1.0
+  },
+  "normalization": {
+    "Bnorm_tesla": 1.0,
+    "rho_s0_meters": 0.0007224847664314034,
+    "phi_conversion_volts": 50.0,
+    "normalise_metric": true,
+    "requires_exact_hermes_metric_normalization_block": true
+  },
+  "elliptic_equation": {
+    "pressure_correction": "Pi_hat = Pi - Pe / 3672",
+    "unknown": "u = phi + Pi_hat",
+    "coefficient_C": "2 / Bxy^2",
+    "right_hand_side": "Vort * Bxy^2 / 2",
+    "operator": "laplacian_perp(u) + (1/C) * grad_perp(C) dot grad_perp(u)",
+    "returned_potential": "phi = u - Pi_hat",
+    "solver_type": "cyclic",
+    "inner_boundary_flags": "INVERT_SET",
+    "outer_boundary_flags": "INVERT_SET",
+    "source_half_cell_adjustment_required": true,
+    "solves_independent_xz_plane_per_y": true
+  },
+  "canonical_extraction": {
+    "volume_fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "Vort",
+      "phi"
+    ],
+    "volume_dtype": "float64",
+    "volume_shape_per_field": [
+      5,
+      64,
+      32,
+      81
+    ],
+    "volume_axes": [
+      "selected_frame",
+      "x",
+      "y",
+      "z"
+    ],
+    "boundary_sides": [
+      "inner",
+      "outer"
+    ],
+    "boundary_arrays": [
+      "saved_midpoint",
+      "instantaneous_target",
+      "midpoint_departure"
+    ],
+    "boundary_dtype": "float64",
+    "boundary_shape_per_array": [
+      5,
+      2,
+      32
+    ],
+    "boundary_axes": [
+      "selected_frame",
+      "side",
+      "y"
+    ],
+    "strip_volume_guards_before_assembly": true,
+    "retain_raw_radial_guards_only_to_calculate_boundary_arrays": true,
+    "global_assembly_key": [
+      "PE_XIND",
+      "PE_YIND"
+    ],
+    "write_array_digests": true,
+    "write_canonical_file_digest": true,
+    "refuse_overwrite": true
+  },
+  "paired_arms": {
+    "retained": {
+      "boundary_midpoint": "saved_midpoint",
+      "role": "source reconstruction and reference arm"
+    },
+    "instantaneous": {
+      "boundary_midpoint": "instantaneous_target from stored adjacent-interior phi",
+      "role": "one-step fixed-target counterfactual",
+      "self_consistent_iterated_neumann_claimed": false
+    },
+    "fixed_between_arms": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "Vort",
+      "stored interior phi used only for boundary construction",
+      "geometry",
+      "metric normalization",
+      "solver type",
+      "solver coefficients",
+      "MPI layout",
+      "gauge policy"
+    ]
+  },
+  "compiled_layout": {
+    "mpi_ranks": 4,
+    "NXPE": 1,
+    "NYPE": 4,
+    "MYSUB": 8,
+    "global_x": 64,
+    "global_y": 32,
+    "native_z": 81,
+    "zperiod": 5
+  },
+  "source_reconstruction_gate": {
+    "required_before_paired_effect_interpretation": true,
+    "input_echo_requires_bitwise_equality": true,
+    "boundary_echo_requires_bitwise_equality": true,
+    "requires_all_values_finite": true,
+    "primary_error": "raw retained-solve phi minus stored phi",
+    "constant_shift_aligned_error_is_diagnostic_only": true,
+    "continuous_formula": "max_abs_error <= 5e-10 + 5e-10 * max_abs_reference",
+    "continuous_atol": 5e-10,
+    "continuous_rtol": 5e-10,
+    "requires_every_selected_frame": true,
+    "scopes": [
+      "full_physical_domain",
+      "guard_independent_transport_interior"
+    ],
+    "failure_action": "block paired-effect interpretation and resolve source equation, normalization, half-cell boundary, timing, decomposition, or dump semantics without changing the tolerance"
+  },
+  "paired_effect_metrics": {
+    "potential": [
+      "relative_l2",
+      "rmse",
+      "bias",
+      "correlation",
+      "maximum_absolute_difference_and_location",
+      "radial_rms_profile",
+      "geometry_regions",
+      "per_selected_frame",
+      "pooled"
+    ],
+    "transport_quantities": {
+      "particle": "radial_exb_face_flow(Ne, phi)",
+      "electron_internal_energy": "1.5 * radial_exb_face_flow(Pe, phi)",
+      "ion_internal_energy": "1.5 * radial_exb_face_flow(Pi, phi)",
+      "total_internal_energy": "electron plus ion"
+    },
+    "transport_statistics": [
+      "strict_face_relative_l2",
+      "strict_face_rmse",
+      "strict_face_bias",
+      "strict_face_correlation",
+      "strict_face_sign_error",
+      "integrated_confined_separatrix_difference",
+      "geometry_region_summaries",
+      "per_selected_frame",
+      "pooled"
+    ],
+    "internal_energy_called_total_heat_flux": false,
+    "posthoc_materiality_threshold_allowed": false
+  },
+  "decision_rules": {
+    "reconstruction_failure": "standalone inversion is not validated; do not interpret the counterfactual",
+    "reconstruction_pass": "selected-frame source equation, metric, solver, and retained-boundary implementation are validated",
+    "selected_frame_pass_establishes_all_frame_stability": false,
+    "selected_frame_pass_may_authorize_unchanged_all_frame_extension": true,
+    "automatic_model_state_change_authorized": false,
+    "automatic_training_authorized": false,
+    "exact_source_state_candidate": "S6+Bphi",
+    "pragmatic_candidates_remain_open": [
+      "S6+phi",
+      "history-conditioned observed state"
+    ]
+  },
+  "scientific_scope": {
+    "evaluates_learned_model": false,
+    "evaluates_calibration": false,
+    "evaluates_assimilation": false,
+    "evaluates_diagnostics": false,
+    "establishes_all_frame_materiality": false,
+    "establishes_held_out_generalization": false,
+    "establishes_control": false
+  }
+}

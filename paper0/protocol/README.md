@@ -29,6 +29,9 @@ Development-only protocol locks that do not authorize held-out access include:
   inventory and momentum/velocity closure;
 - `PHASE2_PHI_BOUNDARY_STATE_PROTOCOL.md`: all-frame 85604 saved radial
   potential-boundary state and exact instantaneous-Neumann classification;
+- `PHASE2_POTENTIAL_ELLIPTIC_PROTOCOL.md`: selected-frame 85604 source
+  reconstruction and paired saved-versus-instantaneous radial-boundary
+  elliptic solve;
 - `PHASE2_PRESSURE_CLOSURE_AUDIT_PROTOCOL.md`: all-frame 85604 pressure and
   temperature closure;
 - `PHASE2_O1_CODEC_PROTOCOL.md` and `PHASE2_O1_TRANSPORT_PROTOCOL.md`: frozen
