@@ -1,0 +1,32 @@
+{
+  "O1_scientific_gate_evaluated": false,
+  "codec": "dcae_l20",
+  "held_out_85606_read": false,
+  "paper0_commit": "b2465d5b2480d489daf9425c8692c0ed46a70e91",
+  "rocky_major": 9,
+  "runs": {
+    "c5p": {
+      "checkpoint_reload_bitwise_exact": true,
+      "parameter_count": 123007365,
+      "peak_cuda_bytes": 5978285056,
+      "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_gpu_smoke/job_6893745/c5p/result.json",
+      "result_sha256": "565b6e420a39ec8068568e16498d283cc11f1c5f400105b8420ac7455bda7edd",
+      "selected_validation_equal_channel_mae": 2.354576740338744,
+      "wall_seconds": 6.790630350995343
+    },
+    "e6b": {
+      "checkpoint_reload_bitwise_exact": true,
+      "parameter_count": 123010822,
+      "peak_cuda_bytes": 5981825024,
+      "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_gpu_smoke/job_6893745/e6b/result.json",
+      "result_sha256": "22c96e9a55602e34dcdc1f6003f5df6ad984dd15def83adb221b5c2ddd9cf8ca",
+      "selected_validation_equal_channel_mae": 0.7640987577530387,
+      "wall_seconds": 7.161847202980425
+    }
+  },
+  "schema_version": 1,
+  "scope": "bounded_non_scientific_O1_codec_gpu_smoke",
+  "seed": 1701,
+  "slurm_job_id": "6893745",
+  "training_result_accepted": false
+}
