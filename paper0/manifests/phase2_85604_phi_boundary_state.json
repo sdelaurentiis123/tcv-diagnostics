@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_before_first_all_frame_raw_phi_guard_value_read",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "prior_reads": {
+    "guard_stripped_phi": "all-frame C5 profiling and codec/transport evaluations",
+    "selected_native_frames": [0, 156, 312, 467, 623],
+    "current_freeze_read": "source text and representative metadata only; no all-frame raw radial phi guards"
+  },
+  "raw_archive": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604",
+    "expected_rank_file_count": 256,
+    "rank_dimensions": {"t": 624, "x": 8, "y": 6, "z": 81},
+    "mpi_decomposition": {"NXPE": 16, "NYPE": 16, "MXSUB": 4, "MYSUB": 2, "MXG": 2, "MYG": 2},
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "slope_limiter": "MC",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "bout_input_sha256": "c1f7f63a4210b35680f338289916f6a588dcc7881928f26066a9af2e09fb95ad",
+    "bout_settings_sha256": "57148a0f3d829b72192363d4d6e5da9fc1ce8aa2bff63359491bdb0b9a075d57",
+    "geometry_sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+  },
+  "source_lock": {
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "vorticity_cxx_sha256": "7643af10d23ce4efebf58b835fbb27cb8a7d7ed11545d450182916013f3a002a",
+    "vorticity_hxx_sha256": "276a90682298e2b20594fc52b241518f197aa1a3310ada47fb9f7852b3deaded"
+  },
+  "frame_scope": {
+    "first_index": 0,
+    "last_index": 623,
+    "frame_count": 624,
+    "expected_first_normalized_time": 285000.0,
+    "expected_last_normalized_time": 471900.0,
+    "expected_normalized_cadence": 300.0,
+    "omega_ci_per_second": 95788333.03066081,
+    "physical_cadence_microseconds": 3.131905426352636,
+    "selection_uses_field_values": false
+  },
+  "source_boundary_policy": {
+    "phi_boundary_relax": true,
+    "phi_boundary_timescale_microseconds": 1.0,
+    "phi_core_averagey": false,
+    "homogeneous_saved_frame_memory_weight": 0.043634575521405435,
+    "weight_interpretation": "exp(-saved_frame_cadence/timescale); not an empirical lag-one prediction"
+  },
+  "boundary_rank_scope": {
+    "selection_uses_field_values": false,
+    "inner": {"PE_XIND": 0, "PE_YIND_inclusive": [0, 15], "outermost_guard_x": 0, "adjacent_guard_x": 1, "adjacent_interior_x": 2},
+    "outer": {"PE_XIND": 15, "PE_YIND_inclusive": [0, 15], "outermost_guard_x": 7, "adjacent_guard_x": 6, "adjacent_interior_x": 5},
+    "local_physical_y_slice": [2, 4],
+    "expected_selected_rank_count": 32,
+    "expected_global_y_coverage": [0, 31]
+  },
+  "phi_metadata": {
+    "dimensions": ["t", "x", "y", "z"],
+    "dtype": "float64",
+    "cell_location": "CELL_CENTRE",
+    "time_dimension": "t",
+    "source": "vorticity",
+    "units": "V",
+    "conversion_volts": 50.0
+  },
+  "temporal_blocks": {
+    "rule": "eight contiguous nonoverlapping blocks of 78 frames",
+    "inclusive_index_ranges": [[0, 77], [78, 155], [156, 233], [234, 311], [312, 389], [390, 467], [468, 545], [546, 623]]
+  },
+  "observable_definitions": {
+    "midpoint": "0.5 * (adjacent_guard + adjacent_interior)",
+    "target": "mean over native toroidal index of adjacent_interior",
+    "departure": "midpoint - target",
+    "interior_toroidal_fluctuation": "adjacent_interior - target",
+    "amplitude_ratio": "RMS(departure) / RMS(interior_toroidal_fluctuation)",
+    "absolute_percentiles": [50, 90, 95, 99, 100],
+    "report_by": ["side", "global_y", "temporal_block"]
+  },
+  "exact_checks": {
+    "atol": 1e-12,
+    "rtol": 1e-12,
+    "outer_guard_copy": "abs(outermost-adjacent) <= atol + rtol*abs(adjacent)",
+    "midpoint_toroidal_constancy": "max_abs(midpoint-mean_z(midpoint)) <= atol + rtol*max_abs(midpoint)",
+    "instantaneous_neumann": "abs(mean_z(midpoint)-target) <= atol + rtol*abs(target)",
+    "instantaneous_neumann_is_materiality_threshold": false
+  },
+  "completion_requirements": {
+    "all_256_rank_filenames_and_controls_verified": true,
+    "exact_32_boundary_rank_values_read": true,
+    "all_624_times_verified_on_each_selected_rank": true,
+    "complete_unique_side_and_global_y_coverage": true,
+    "stream_digests_recorded": true,
+    "output_is_strict_json_without_nan_or_infinity": true,
+    "result_directory_is_immutable_and_refuses_overwrite": true,
+    "scientific_findings_do_not_change_process_exit_status": true
+  },
+  "decision_rules": {
+    "nonzero_saved_boundary_state": "outer copy and midpoint constancy pass, but instantaneous Neumann fails at one or more side/frame/y points",
+    "exact_guard_stripped_markov_state": "instantaneous Neumann passes everywhere; this does not complete potential/vorticity closure",
+    "materiality_requires_paired_elliptic_solve": true,
+    "potential_vorticity_closure_is_separate": true,
+    "automatic_state_or_channel_change_authorized": false,
+    "posthoc_materiality_threshold_authorized": false
+  },
+  "scientific_scope": {
+    "characterizes_85604_only": true,
+    "selects_channels": false,
+    "trains_a_model": false,
+    "evaluates_forecasts": false,
+    "evaluates_transport": false,
+    "establishes_cross_shot_generalization": false
+  }
+}
