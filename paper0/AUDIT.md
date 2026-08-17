@@ -241,6 +241,12 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     setting `HDF5_DISABLE_VERSION_CHECK`; it writes a new immutable job
     directory and must pass runtime validation before becoming the oracle
     dependency.
+23. **The corrected dependency has one consistent HDF5 ABI.** Build job
+    `6890766` completed from clean commit `b70ec7e`. Dynamic-link inspection
+    resolves `libhdf5.so.200` and `libhdf5_hl.so.200` only from HDF5 `1.12.3`,
+    matching `netcdf-c/4.9.2`; no HDF5 `1.14` library appears. This clears the
+    ABI blocker but not the shifted-derivative or transport gates. The exact
+    numerical comparison must run unchanged against this install.
 
 ## Exact commands
 

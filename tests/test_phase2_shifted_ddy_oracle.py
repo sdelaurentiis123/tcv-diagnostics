@@ -36,7 +36,8 @@ class CompiledShiftedDdyOracleTests(unittest.TestCase):
         for required in (
             "PAPER0_EXPECTED_COMMIT",
             "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8",
-            "fa11368c90e5c392b20290910d5856b39c122154cbcf3b814a1e98ed65f9a6ce",
+            "9e4ae1f46c01418711515cda63fd92513712705655c5623d932297e5d8c53333",
+            "hdf5/1.12.3",
             "zperiod = 5",
             "--atol 5e-10",
             "--rtol 5e-10",
@@ -100,4 +101,3 @@ class CompiledShiftedDdyOracleTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

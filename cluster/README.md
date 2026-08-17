@@ -76,6 +76,12 @@ runtime is `paper0/results/phase2_shifted_ddy_6890751.json`. The launcher now
 uses HDF5 `1.12.3`, matching the Rocky 9 `netcdf-c/4.9.2` ABI. Never suppress
 the HDF5 version check.
 
+The ABI-correct dependency is build job `6890766`, indexed by
+`paper0/results/phase2_bout_build_6890766.json`. Its install lives under
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890766`
+and resolves only HDF5 `1.12.3`. The compiled shifted-DDY launcher is pinned to
+that install and its artifact hashes.
+
 ## Phase 2 compiled shifted-DDY oracle
 
 `phase2_shifted_ddy_oracle.sbatch` compiles a four-case manufactured-field

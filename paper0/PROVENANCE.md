@@ -72,6 +72,15 @@ failure are indexed by `paper0/results/phase2_bout_build_6890722.json` and
 The corrected build uses the matching HDF5 `1.12.3` ABI in a new result
 directory.
 
+The corrected fourth build, job `6890766`, completed from clean Paper 0 commit
+`b70ec7ea608c89451a4e3f269b4f11ace4a87269`. Dynamic-link inspection resolves
+both `libhdf5.so.200` and `libhdf5_hl.so.200` exclusively from the Rocky 9
+HDF5 `1.12.3` module, with no mixed ABI and no version-check bypass. Its exact
+environment, Slurm record, revisions, install, and hashes are tracked in
+`paper0/results/phase2_bout_build_6890766.json`. It is an ABI-validated
+dependency build; the scientific shifted-`DDY` gate still requires the
+unchanged runtime comparison.
+
 The candidate shifted-derivative transcription in
 `src/tcv_diagnostics/transport.py` follows the hash-locked BOUT++ FFT phase,
 default centered `C2` stencil, single-null logical connections, and

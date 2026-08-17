@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_transport_oracle_dependency",
+  "purpose": "ABI-compatible exact BOUT++ dependency for the compiled shifted-DDY and Hermes transport-oracle comparisons",
+  "paper0_commit": "b70ec7ea608c89451a4e3f269b4f11ace4a87269",
+  "slurm": {
+    "job_id": 6890766,
+    "job_name": "p2_bout_oracle_build",
+    "partition": "preempt",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "start": "2026-08-17T02:11:16-04:00",
+    "end": "2026-08-17T02:13:57-04:00",
+    "elapsed": "00:02:41",
+    "node": "worker5594",
+    "allocated_cpus_reported_by_slurm": 128,
+    "requested_memory": "32G"
+  },
+  "source_revisions": {
+    "bout_dev": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+    "netcdf_cxx4": "a43d6d4d415d407712c246faca553bd951730dc1",
+    "cpptrace": "027f9aee2d34dbe1c98f26224e1fbe1654cb4aae",
+    "fmt": "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
+    "mpark_variant": "23cb94f027d4ef33bf48133acc2695c7e5c6f1e7"
+  },
+  "built_version": "5.2.1",
+  "environment": {
+    "os_submission": "Rocky 9",
+    "gcc": "13.3.0",
+    "openmpi": "4.1.8",
+    "cmake": "3.31.6",
+    "ninja": "1.12.1",
+    "hdf5": "1.12.3",
+    "netcdf_c": "4.9.2",
+    "fftw": "3.3.10"
+  },
+  "runtime_linkage_validation": {
+    "libbout_hdf5_high_level": "libhdf5_hl.so.200 from hdf5/1.12.3",
+    "libbout_hdf5": "libhdf5.so.200 from hdf5/1.12.3",
+    "mixed_hdf5_abi_detected": false,
+    "unsafe_version_check_bypass_used": false
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890766",
+    "install_prefix": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890766/install",
+    "artifact_digests": {
+      "install/lib64/libbout++.so.5.2.0": "9e4ae1f46c01418711515cda63fd92513712705655c5623d932297e5d8c53333",
+      "install/bin/bout-config": "b5d86b8adedf11f3fab2783cbc75fd7b1064e87d91c7df596437fd7d26dd11e6",
+      "job.log": "0061323b48040745f59d09275d9c40152718a340c036084defc16398bfed0be4",
+      "build_environment.txt": "30f56ae551ec092acca42e1d35640c3ca0176543f6ba66919ec661c790fb4d02",
+      "configure_netcdf_cxx.sh": "5f738d882dab886055c6d475e71cdb84df1246b234578bb0c80844524cc7626b",
+      "configure_bout.sh": "ca3615d3499589f64d17321295a5ab2400037da1b0c358b46611b522af5fb64b",
+      "bout_version.txt": "4e001f5f34a8940927b497e5657a1bba9a35094b2c1f992de2fbee40af237d5b"
+    }
+  },
+  "data_access": {
+    "shot_data_read": false,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "abi_validated_dependency_build_only",
+  "gate_effect": "Does not release the transport metric; it is the dependency used for the unchanged compiled shifted-DDY runtime comparison."
+}

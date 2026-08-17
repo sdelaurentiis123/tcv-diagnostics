@@ -16,7 +16,7 @@ set -euo pipefail
 : "${PAPER0_EXPECTED_COMMIT:?submit with PAPER0_EXPECTED_COMMIT set to the committed launcher revision}"
 
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
-readonly BOUT_INSTALL="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890722/install"
+readonly BOUT_INSTALL="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890766/install"
 readonly GRID="/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc"
 readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_shifted_ddy"
 readonly OUTDIR="${RESULT_BASE}/job_${SLURM_JOB_ID}"
@@ -68,15 +68,15 @@ if [[ "${VERSION_ID%%.*}" != "9" ]]; then
 fi
 
 check_sha256 "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8" "${GRID}"
-check_sha256 "fa11368c90e5c392b20290910d5856b39c122154cbcf3b814a1e98ed65f9a6ce" "${BOUT_INSTALL}/lib64/libbout++.so.5.2.0"
-check_sha256 "aa20fd55d7da46f31e87c8bc09b8a725c4ba3a94abe73215d4e06f4c55c6a480" "${BOUT_INSTALL}/bin/bout-config"
+check_sha256 "9e4ae1f46c01418711515cda63fd92513712705655c5623d932297e5d8c53333" "${BOUT_INSTALL}/lib64/libbout++.so.5.2.0"
+check_sha256 "b5d86b8adedf11f3fab2783cbc75fd7b1064e87d91c7df596437fd7d26dd11e6" "${BOUT_INSTALL}/bin/bout-config"
 
 module purge
 module load gcc/13.3.0
 module load openmpi/4.1.8
 module load cmake/3.31.6
 module load ninja/1.12.1
-module load hdf5/1.14.5
+module load hdf5/1.12.3
 module load netcdf-c/4.9.2
 module load fftw/3.3.10
 
