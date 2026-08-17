@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_o1_codec_transport_85604",
+  "status": "frozen_before_first_codec_transport_evaluation",
+  "development_run": "85604",
+  "sequestered_runs": ["85606"],
+  "held_out_85606_access_allowed": false,
+  "sources": {
+    "native_81": [
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_85604/data/train/TCV_85604_train.hdf5",
+        "sha256": "843f9ae99d08fbcdabce977b53e4f6b49be05641a82a387d100b237224b77777",
+        "global_start_inclusive": 0,
+        "global_stop_exclusive": 500
+      },
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_85604/data/valid/TCV_85604_valid.hdf5",
+        "sha256": "a17b536856c6b8108c0553c300200e074e41407129e47ef402a4de51882ea1ba",
+        "global_start_inclusive": 500,
+        "global_stop_exclusive": 624
+      }
+    ],
+    "legacy_c5t_88": [
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/train/TCV_c5_train.hdf5",
+        "sha256": "f4aae5c13ecd944f51cec0c3539f57ff669cb0bb0405cb813c3f50ff6cb83817",
+        "global_start_inclusive": 0,
+        "global_stop_exclusive": 500
+      },
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/valid/TCV_c5_valid.hdf5",
+        "sha256": "eed18a7f7a356a4f8d437647b73d4f8078a5309e1e8583a1089e622196ce4d43",
+        "global_start_inclusive": 500,
+        "global_stop_exclusive": 624
+      }
+    ],
+    "geometry": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+      "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+    },
+    "prior_o1_compact": {
+      "path": "paper0/results/phase2_o1_codec_6890650.json",
+      "sha256": "957464ad2510ac47bdf882d419db3061fa60d4455d6bc5242bc05baa9a410bf6",
+      "raw_result_sha256": "d9440ecf7182c434976b67a33118d8c3dcb81b0fcec9a16f89745a5398aa850e"
+    },
+    "codecs": {
+      "f8": {
+        "run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/ae/w24x2ybf_tcv_c5_dcae_3d_tcv_f8c64",
+        "config_sha256": "66509d2b0c9a1aaa03959e0e33691d443f39fa24bbad93a0dbb41e291176e776",
+        "checkpoint_sha256": "9f65dc523b8ee32ea5dd87842b99075de15f9aae86d2e71a5da55bc37091a44e",
+        "preliminary_status": "fail"
+      },
+      "z44": {
+        "run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/ae/z44c6604191_tcv_c5_dcae_3d_tcv_f8z2c64",
+        "config_sha256": "5d868c1cfc5a17ce26c2f6ce86ced50d7b55525c6967c5b599b1074058b67284",
+        "checkpoint_sha256": "095d25f9b6e867103d4cfb946cc9ea8a172a5a6db5b28e5726428c4c57e4979d",
+        "preliminary_status": "fail"
+      }
+    },
+    "lola_package_composite_sha256": "3fb6e6be7649e86fc0626f5d847adf13649e213c82b543c714ae258332bfdf7d"
+  },
+  "data": {
+    "frames": [0, 624],
+    "frame_stop_is_exclusive": true,
+    "frame_count": 624,
+    "temporal_blocks": [[0,78],[78,156],[156,234],[234,312],[312,390],[390,468],[468,546],[546,624]],
+    "native_shape": [64,32,81],
+    "codec_shape": [64,32,88],
+    "zperiod": 5,
+    "mode_mapping": "n=5*k",
+    "codec_fields": ["Ne","Te","Ti","phi","Vi"],
+    "native_fields": ["Ne","Te","Ti","Pe","Pi","phi","Vi"],
+    "physical_independence_unit": "simulation_run_not_frame_or_window"
+  },
+  "state_paths": {
+    "P0": "native81_direct_Ne_Pe_Pi_phi",
+    "P1": "native81_Ne_NeTimesTe_NeTimesTi_phi_float64_products",
+    "P2": "downsampled_codec_input_C5T_then_float64_pressure_products",
+    "R": "decoded_downsampled_C5T_then_float64_pressure_products"
+  },
+  "comparisons": {
+    "P0_vs_P1_state_gap": ["P0", "P1"],
+    "P1_vs_P2_input_roundtrip": ["P1", "P2"],
+    "P2_vs_R_codec_only": ["P2", "R"],
+    "P0_vs_R_authoritative": ["P0", "R"]
+  },
+  "transport": {
+    "particle": "Q(Ne,phi)",
+    "electron_internal_energy": "1.5*Q(Pe,phi)",
+    "ion_internal_energy": "1.5*Q(Pi,phi)",
+    "total_internal_energy": "electron_internal_energy+ion_internal_energy",
+    "operator_grid": "native81",
+    "positive_reconstruction": true,
+    "face_left_indices_inclusive": [1,61],
+    "operator_y_inclusive": [1,30],
+    "primary_face_mask": "both_adjacent_cells_penalty_mask_equal_zero",
+    "confined_separatrix_face_left_x": 15,
+    "confined_separatrix_y_inclusive": [8,23],
+    "toroidal_convention": "simulated_one_fifth_wedge",
+    "particle_scale_per_s": 3.612423832157018e17,
+    "pressure_flow_scale_W": 2.893870527993356
+  },
+  "metrics": [
+    "relative_l2",
+    "normalized_bias",
+    "rms_ratio",
+    "pearson_correlation",
+    "weighted_sign_disagreement",
+    "absolute_value_p95_ratio",
+    "absolute_value_p99_ratio"
+  ],
+  "acceptance_gates": {
+    "input_field_max_per_frame_relative_l2": 2e-6,
+    "input_roundtrip_face_relative_l2": 1e-4,
+    "input_roundtrip_surface_relative_l2": 1e-4,
+    "state_gap_particle_electron_relative_l2": 1e-10,
+    "state_gap_ion_total_relative_l2": 0.05,
+    "codec_face": {
+      "relative_l2_max": 0.25,
+      "rms_ratio": [0.75,1.25],
+      "pearson_correlation_min": 0.85,
+      "weighted_sign_disagreement_max": 0.15
+    },
+    "codec_surface": {
+      "relative_l2_max": 0.20,
+      "absolute_normalized_bias_max": 0.10,
+      "rms_ratio": [0.80,1.20],
+      "pearson_correlation_min": 0.90,
+      "weighted_sign_disagreement_max": 0.10
+    },
+    "codec_surface_block": {
+      "relative_l2_max": 0.30,
+      "absolute_normalized_bias_max": 0.15,
+      "pearson_correlation_min": 0.80,
+      "weighted_sign_disagreement_max": 0.15,
+      "required_passing_blocks": 7
+    }
+  },
+  "decision_rules": {
+    "full_acceptance_requires_prior_preliminary_pass": true,
+    "full_acceptance_requires_state_adequacy": true,
+    "full_acceptance_requires_authoritative_transport": true,
+    "matched_retraining_required_for_causal_latent_resolution_claim": true,
+    "learning_gate_reopened": false,
+    "automatic_architecture_change": false
+  },
+  "training_loss_use": false
+}
