@@ -48,7 +48,7 @@ class RawMetadataTests(unittest.TestCase):
                     "Te": ("eV", 50.0),
                     "Ti": ("eV", 50.0),
                     "phi": ("V", 50.0),
-                    "Vi": ("m/s", 69205.61141651045),
+                    "Vi": ("m / s", 69205.61141651045),
                 }
                 for field, (units, conversion) in expected_meta.items():
                     dataset = handle.create_dataset(

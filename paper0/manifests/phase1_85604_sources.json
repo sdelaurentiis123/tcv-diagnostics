@@ -73,7 +73,7 @@
       "Te": {"units": "eV", "conversion": 50.0},
       "Ti": {"units": "eV", "conversion": 50.0},
       "phi": {"units": "V", "conversion": 50.0},
-      "Vi": {"units": "m/s", "conversion": 69205.61141651045}
+      "Vi": {"units": "m / s", "conversion": 69205.61141651045}
     },
     "additional_state_candidates": [
       "Vort",
@@ -101,4 +101,3 @@
   },
   "blind_test_accessed": false
 }
-
