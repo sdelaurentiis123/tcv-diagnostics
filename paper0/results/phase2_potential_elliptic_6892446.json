@@ -1,0 +1,888 @@
+{
+  "artifacts": {
+    "bout_output_sha256": {
+      "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/run/BOUT.dmp.0.nc": "257a7c5f7de493ca69bd82848820d0d1362cc02f2a1604d35265e58e53b31c96",
+      "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/run/BOUT.dmp.1.nc": "1a51c5efbac37dc70c25c3132f7ea385fd38d3f96a2fad1ddb7768a2952d9abe",
+      "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/run/BOUT.dmp.2.nc": "37ffe7f77ac77a844dcdf2c7797927355be711d3e69a83853a3d47642b739cd5",
+      "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/run/BOUT.dmp.3.nc": "8d6e7264c66cc7e363246544990f910f15d49acdba0e13fbe3eff8cdc744966c"
+    },
+    "bout_outputs": [
+      "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/run/BOUT.dmp.0.nc",
+      "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/run/BOUT.dmp.1.nc",
+      "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/run/BOUT.dmp.2.nc",
+      "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/run/BOUT.dmp.3.nc"
+    ],
+    "canonical": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/canonical_potential_inputs.nc",
+    "canonical_sha256": "e090b3a23fa6eedf8c37e74421c08bafd3eb513039fa7621b5d612a7e1cbba3e",
+    "comparison_arrays": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/comparison_arrays.npz",
+    "comparison_arrays_sha256": "16a6fcfcb8f4be9719e9c858fb2a2fa3da016b20130aaa5491a7060494cdbe28",
+    "extraction_record": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/extraction_record.json",
+    "extraction_record_sha256": "e30e4f14dddfdff369387f9e8657b31a3e56bb4dc628c1e9ef5d86bd5bfd68be",
+    "geometry": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+    "geometry_sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8",
+    "manifest": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/manifests/phase2_potential_elliptic_85604.json",
+    "manifest_sha256": "29feca35c73d8eeac24cf1b6da0e93473d1fec33a79b014a4ea91875f742af48"
+  },
+  "decision": {
+    "automatic_state_change_authorized": false,
+    "automatic_training_authorized": false,
+    "paired_effect_interpretable": false,
+    "selected_frames_establish_all_frame_stability": false
+  },
+  "development_run": "85604",
+  "equation": {
+    "coefficient_C": "2 / Bxy^2",
+    "pressure_correction": "Pi_hat = Pi - Pe / 3672",
+    "radial_boundary_flags": "INVERT_SET",
+    "right_hand_side": "Vort * Bxy^2 / 2",
+    "solver_type": "cyclic",
+    "split_n0": false
+  },
+  "frame_indices": [
+    0,
+    156,
+    312,
+    467,
+    623
+  ],
+  "held_out_85606_read": false,
+  "native_z_samples": 81,
+  "paired_boundary_effect": {
+    "materiality_label_assigned": false,
+    "potential": null,
+    "status": "blocked_by_source_reconstruction_gate",
+    "transport": null
+  },
+  "paper0_commit": "47737c7f807aa16b74e556aaaef3fba45edec8ab",
+  "phase": "phase2_potential_elliptic_85604_paired_oracle",
+  "physical_independence_claimed_for_frames": false,
+  "schema_version": 1,
+  "slurm_job_id": 6892446,
+  "source_reconstruction_gate": {
+    "all_frame_reconstructions_passed": false,
+    "boundary_input_echoes": {
+      "f000": {
+        "instantaneous_target_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "instantaneous_target_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        }
+      },
+      "f156": {
+        "instantaneous_target_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "instantaneous_target_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        }
+      },
+      "f312": {
+        "instantaneous_target_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "instantaneous_target_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        }
+      },
+      "f467": {
+        "instantaneous_target_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "instantaneous_target_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        }
+      },
+      "f623": {
+        "instantaneous_target_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "instantaneous_target_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_inner": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        },
+        "saved_midpoint_outer": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 2048,
+          "shape": [
+            64,
+            32
+          ]
+        }
+      }
+    },
+    "boundary_input_echoes_passed": true,
+    "constant_shift_alignment_can_change_gate": false,
+    "continuous_atol": 5e-10,
+    "continuous_rtol": 5e-10,
+    "passed": false,
+    "per_frame_reconstruction": {
+      "f000": {
+        "constant_shift_aligned_full_diagnostic": {
+          "bias": 1.4399078906830518e-16,
+          "correlation": 1.0,
+          "diagnostic_only": true,
+          "max_abs_reference": 4.465290956570976,
+          "maximum_absolute_difference": 2.398081733190338e-13,
+          "maximum_location": {
+            "x": 23,
+            "y": 12,
+            "z": 66
+          },
+          "nonfinite_count": 0,
+          "point_count": 165888,
+          "relative_l2": 1.850559975157041e-14,
+          "removed_candidate_minus_reference_constant": -6.0271346787879536e-15,
+          "rmse": 5.570959638904506e-14
+        },
+        "passed": true,
+        "raw_full_physical_domain": {
+          "acceptance_tolerance": 2.732645478285488e-09,
+          "bias": -6.0271346787879536e-15,
+          "correlation": 0.9999999999999999,
+          "max_abs_reference": 4.465290956570976,
+          "maximum_absolute_difference": 2.3359092438113294e-13,
+          "maximum_location": {
+            "x": 23,
+            "y": 12,
+            "z": 66
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "relative_l2": 1.8613230162319164e-14,
+          "rmse": 5.6033608948621315e-14
+        },
+        "raw_guard_independent_transport_interior": {
+          "acceptance_tolerance": 2.732645478285488e-09,
+          "bias": -7.521815859026384e-15,
+          "correlation": 1.0,
+          "max_abs_reference": 4.465290956570976,
+          "maximum_absolute_difference": 2.3359092438113294e-13,
+          "maximum_location": {
+            "x": 23,
+            "y": 12,
+            "z": 66
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 155520,
+          "relative_l2": 1.8904079541926686e-14,
+          "rmse": 5.768036442568868e-14
+        }
+      },
+      "f156": {
+        "constant_shift_aligned_full_diagnostic": {
+          "bias": -1.2490775363916063e-16,
+          "correlation": 1.0,
+          "diagnostic_only": true,
+          "max_abs_reference": 4.857523483457126,
+          "maximum_absolute_difference": 2.5490720645393594e-13,
+          "maximum_location": {
+            "x": 19,
+            "y": 12,
+            "z": 28
+          },
+          "nonfinite_count": 0,
+          "point_count": 165888,
+          "relative_l2": 1.8738298872561895e-14,
+          "removed_candidate_minus_reference_constant": -6.376721298686911e-15,
+          "rmse": 6.098563056555962e-14
+        },
+        "passed": true,
+        "raw_full_physical_domain": {
+          "acceptance_tolerance": 2.928761741728563e-09,
+          "bias": -6.376721298686911e-15,
+          "correlation": 0.9999999999999998,
+          "max_abs_reference": 4.857523483457126,
+          "maximum_absolute_difference": 2.4868995751603507e-13,
+          "maximum_location": {
+            "x": 19,
+            "y": 12,
+            "z": 28
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "relative_l2": 1.8840789596247094e-14,
+          "rmse": 6.13191966727912e-14
+        },
+        "raw_guard_independent_transport_interior": {
+          "acceptance_tolerance": 2.928761741728563e-09,
+          "bias": -7.730795878686442e-15,
+          "correlation": 1.0,
+          "max_abs_reference": 4.857523483457126,
+          "maximum_absolute_difference": 2.4868995751603507e-13,
+          "maximum_location": {
+            "x": 19,
+            "y": 12,
+            "z": 28
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 155520,
+          "relative_l2": 1.9160370069229092e-14,
+          "rmse": 6.32038285355015e-14
+        }
+      },
+      "f312": {
+        "constant_shift_aligned_full_diagnostic": {
+          "bias": 1.4688540000675802e-16,
+          "correlation": 0.9999999999999926,
+          "diagnostic_only": true,
+          "max_abs_reference": 4.402820937702817,
+          "maximum_absolute_difference": 5.7994780302217386e-05,
+          "maximum_location": {
+            "x": 6,
+            "y": 31,
+            "z": 73
+          },
+          "nonfinite_count": 0,
+          "point_count": 165888,
+          "relative_l2": 5.0017163778241305e-08,
+          "removed_candidate_minus_reference_constant": 3.49597888426769e-10,
+          "rmse": 1.42391062599169e-07
+        },
+        "passed": false,
+        "raw_full_physical_domain": {
+          "acceptance_tolerance": 2.7014104688514083e-09,
+          "bias": 3.49597888426769e-10,
+          "correlation": 0.9999999999999926,
+          "max_abs_reference": 4.402820937702817,
+          "maximum_absolute_difference": 5.7995129900123565e-05,
+          "maximum_location": {
+            "x": 6,
+            "y": 31,
+            "z": 73
+          },
+          "nonfinite_count": 0,
+          "passed": false,
+          "point_count": 165888,
+          "relative_l2": 5.0017314529504546e-08,
+          "rmse": 1.4239149176449827e-07
+        },
+        "raw_guard_independent_transport_interior": {
+          "acceptance_tolerance": 2.7014104688514083e-09,
+          "bias": -7.558760358262214e-15,
+          "correlation": 1.0000000000000002,
+          "max_abs_reference": 4.402820937702817,
+          "maximum_absolute_difference": 2.424727085781342e-13,
+          "maximum_location": {
+            "x": 19,
+            "y": 12,
+            "z": 28
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 155520,
+          "relative_l2": 2.078444720268232e-14,
+          "rmse": 6.000977714796177e-14
+        }
+      },
+      "f467": {
+        "constant_shift_aligned_full_diagnostic": {
+          "bias": 1.0971356409900731e-17,
+          "correlation": 1.0,
+          "diagnostic_only": true,
+          "max_abs_reference": 4.602389482031921,
+          "maximum_absolute_difference": 2.5002222514558525e-13,
+          "maximum_location": {
+            "x": 23,
+            "y": 12,
+            "z": 8
+          },
+          "nonfinite_count": 0,
+          "point_count": 165888,
+          "relative_l2": 1.986926737975442e-14,
+          "removed_candidate_minus_reference_constant": -5.788854893115757e-15,
+          "rmse": 5.893905225034924e-14
+        },
+        "passed": true,
+        "raw_full_physical_domain": {
+          "acceptance_tolerance": 2.8011947410159605e-09,
+          "bias": -5.788854893115757e-15,
+          "correlation": 1.0000000000000002,
+          "max_abs_reference": 4.602389482031921,
+          "maximum_absolute_difference": 2.4424906541753444e-13,
+          "maximum_location": {
+            "x": 23,
+            "y": 12,
+            "z": 8
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "relative_l2": 1.9972084960048e-14,
+          "rmse": 5.9244044408407e-14
+        },
+        "raw_guard_independent_transport_interior": {
+          "acceptance_tolerance": 2.8011947410159605e-09,
+          "bias": -7.221223219261794e-15,
+          "correlation": 0.9999999999999999,
+          "max_abs_reference": 4.602389482031921,
+          "maximum_absolute_difference": 2.4424906541753444e-13,
+          "maximum_location": {
+            "x": 23,
+            "y": 12,
+            "z": 8
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 155520,
+          "relative_l2": 2.028826050051164e-14,
+          "rmse": 6.10228199728864e-14
+        }
+      },
+      "f623": {
+        "constant_shift_aligned_full_diagnostic": {
+          "bias": -9.050457338270215e-17,
+          "correlation": 1.0,
+          "diagnostic_only": true,
+          "max_abs_reference": 5.357730686930398,
+          "maximum_absolute_difference": 2.8110846983508964e-13,
+          "maximum_location": {
+            "x": 22,
+            "y": 12,
+            "z": 71
+          },
+          "nonfinite_count": 0,
+          "point_count": 165888,
+          "relative_l2": 1.9469246466063104e-14,
+          "removed_candidate_minus_reference_constant": -6.337944860690605e-15,
+          "rmse": 6.558020774527904e-14
+        },
+        "passed": true,
+        "raw_full_physical_domain": {
+          "acceptance_tolerance": 3.178865343465199e-09,
+          "bias": -6.337944860690605e-15,
+          "correlation": 1.0,
+          "max_abs_reference": 5.357730686930398,
+          "maximum_absolute_difference": 2.7489122089718876e-13,
+          "maximum_location": {
+            "x": 22,
+            "y": 12,
+            "z": 71
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "relative_l2": 1.9560417800805365e-14,
+          "rmse": 6.588730925962034e-14
+        },
+        "raw_guard_independent_transport_interior": {
+          "acceptance_tolerance": 3.178865343465199e-09,
+          "bias": -7.807774581811143e-15,
+          "correlation": 0.9999999999999999,
+          "max_abs_reference": 5.357730686930398,
+          "maximum_absolute_difference": 2.7489122089718876e-13,
+          "maximum_location": {
+            "x": 22,
+            "y": 12,
+            "z": 71
+          },
+          "nonfinite_count": 0,
+          "passed": true,
+          "point_count": 155520,
+          "relative_l2": 1.9874996781366176e-14,
+          "rmse": 6.789454823450602e-14
+        }
+      }
+    },
+    "volume_input_echoes": {
+      "f000": {
+        "Ne": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pe": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Vort": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "phi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        }
+      },
+      "f156": {
+        "Ne": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pe": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Vort": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "phi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        }
+      },
+      "f312": {
+        "Ne": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pe": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Vort": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "phi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        }
+      },
+      "f467": {
+        "Ne": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pe": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Vort": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "phi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        }
+      },
+      "f623": {
+        "Ne": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pe": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Pi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "Vort": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        },
+        "phi": {
+          "bitwise_mismatch_count": 0,
+          "nonfinite_candidate_count": 0,
+          "nonfinite_reference_count": 0,
+          "passed": true,
+          "point_count": 165888,
+          "shape": [
+            64,
+            32,
+            81
+          ]
+        }
+      }
+    },
+    "volume_input_echoes_passed": true
+  },
+  "training_performed": false,
+  "zperiod": 5
+}

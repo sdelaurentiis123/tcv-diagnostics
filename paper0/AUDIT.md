@@ -478,6 +478,38 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     These amplitudes do not establish interior materiality: the paired exact
     elliptic solve and potential/vorticity forward closure remain required.
     No state was changed, no model was trained, and 85606 was not read.
+46. **The first potential-oracle launches produced no scientific result and
+    are retained as execution failures.** Rocky 9 job `6892220` was preempted
+    during read-only extraction. The first nonpreempting submission requested
+    an unauthorized QoS and was rejected before Slurm created a job. Job
+    `6892235`, from clean commit `aa0ea3c`, completed the canonical extraction
+    and every provenance check but failed compilation because the driver used
+    the nonexistent public member `mesh->NYPE` rather than this BOUT++
+    revision's `mesh->getNYPE()` accessor. Commit `47737c7` changes only that
+    accessor, its hash lock, and a regression assertion; all 246 tests and a
+    separate Rocky 9 compile/link smoke check passed before relaunch. No
+    failed attempt was overwritten, no result gate was changed, and 85606 was
+    not read.
+47. **The first completed potential replay exposes a raw-versus-runtime
+    pressure error in the frozen equation contract.** CPU-only Rocky 9 job
+    `6892446`, from clean commit `47737c7`, verified every locked input and
+    source hash, extracted the five frozen 85604 frames, compiled, linked, and
+    ran the exact BOUT++ cyclic solver. Every volume and radial-boundary echo
+    is bitwise exact. Frames `0`, `156`, `467`, and `623` reproduce stored
+    `phi` to maximum absolute error below `2.75e-13`; frame `312` also does so
+    over the complete guard-independent `y=1..30` transport interior. The
+    unchanged full-domain gate nevertheless fails at exactly one point,
+    `(x,y,z)=(6,31,73)`: replay minus stored potential is
+    `+5.7995129900123565e-05`, while raw evolved `Pi` there is
+    `-5.799512988032478e-05`. The pre-run protocol incorrectly treated raw
+    evolved `Pi` as the pressure consumed by vorticity. Locked
+    `EvolvePressure` instead publishes `floor(P,0)` as runtime species
+    pressure before `Vorticity::calculatePihat` reads it. The comparator
+    correctly blocks every paired-boundary effect and exits nonzero. This
+    failed result is evidence for a separately frozen source-contract
+    correction, not permission to relax the tolerance or reinterpret the
+    counterfactual. No model was trained, no state was changed, and 85606
+    remained untouched.
 
 ## Exact commands
 

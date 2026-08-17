@@ -121,7 +121,17 @@ class DataAuditTests(unittest.TestCase):
             if isinstance(value, dict):
                 for key, child in value.items():
                     if key.endswith("sha256"):
-                        hashes.append(child)
+                        if isinstance(child, str):
+                            hashes.append(child)
+                        elif isinstance(child, dict):
+                            self.assertTrue(child, key)
+                            self.assertTrue(
+                                all(isinstance(item, str) for item in child.values()),
+                                key,
+                            )
+                            hashes.extend(child.values())
+                        else:
+                            self.fail(f"{key} must contain a hash or hash mapping")
                     collect(child)
             elif isinstance(value, list):
                 for child in value:
