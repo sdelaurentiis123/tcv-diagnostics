@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_before_first_native_oracle_state_value_read",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "new_state_value_reads_during_protocol_freeze": false,
+  "frame_selection": {
+    "total_frames": 624,
+    "rule": "nearest-half-up indices at fractions 0, 1/4, 1/2, 3/4, and 1 of the inclusive 0:623 archive",
+    "fractions": [0.0, 0.25, 0.5, 0.75, 1.0],
+    "indices": [0, 156, 312, 467, 623],
+    "expected_normalized_times": [285000.0, 331800.0, 378600.0, 425100.0, 471900.0],
+    "expected_relative_microseconds": [
+      0.0,
+      488.5772465110112,
+      977.1544930220224,
+      1462.5998341066809,
+      1951.1770806176921
+    ],
+    "selection_uses_field_values": false
+  },
+  "raw_archive": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604",
+    "expected_rank_file_count": 256,
+    "rank_file_pattern": "BOUT.dmp.<rank>.nc",
+    "rank_dimensions": {
+      "t": 624,
+      "x": 8,
+      "y": 6,
+      "z": 81
+    },
+    "mpi_decomposition": {
+      "NXPE": 16,
+      "NYPE": 16,
+      "MXSUB": 4,
+      "MYSUB": 2,
+      "MXG": 2,
+      "MYG": 2
+    },
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "slope_limiter": "MC",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "bout_input_sha256": "c1f7f63a4210b35680f338289916f6a588dcc7881928f26066a9af2e09fb95ad",
+    "bout_settings_sha256": "57148a0f3d829b72192363d4d6e5da9fc1ce8aa2bff63359491bdb0b9a075d57",
+    "geometry_sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+  },
+  "source_lock": {
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "div_ops_sha256": "458eeecbd6da1afb882d0de2b652271fc2c2ca142c39a636a52f3adc5c16ef3f",
+    "evolve_density_sha256": "3c766083078ec17d737a7ac595868adf1706e0596a9e614bb3ac73f071c1834d",
+    "evolve_pressure_sha256": "d3abc5e32cdad3ea9c42faf432dcaed465070ee5792cb62e550b9baaad9953e6",
+    "div_ops_header_sha256": "61c6d5ecf1afe20a64d75821c912558e956c932a39661332187d710973c907c5"
+  },
+  "canonical_extraction": {
+    "stored_variables": ["Ne", "Ni", "Te", "Ti", "Pe", "Pi", "phi"],
+    "dtype": "float64",
+    "shape_per_variable": [5, 64, 32, 81],
+    "axes": ["selected_frame", "x", "y", "z"],
+    "strip_guards_before_assembly": true,
+    "global_assembly_key": ["PE_XIND", "PE_YIND"],
+    "write_per_variable_digests": true,
+    "write_canonical_file_digest": true
+  },
+  "advected_variables": {
+    "particle": {
+      "direct_q": "Ne",
+      "potential": "phi",
+      "source_component": "evolve_density"
+    },
+    "electron_pressure_advection": {
+      "direct_q": "Pe",
+      "five_channel_reconstruction": "Ne * Te",
+      "potential": "phi",
+      "source_component": "evolve_pressure"
+    },
+    "ion_pressure_advection": {
+      "direct_q": "Pi",
+      "five_channel_reconstruction": "Ne * Ti after verifying Ni == Ne",
+      "potential": "phi",
+      "source_component": "evolve_pressure"
+    },
+    "advected_internal_energy": {
+      "electron": "1.5 * face_flow(Pe, phi)",
+      "ion": "1.5 * face_flow(Pi, phi)",
+      "total": "1.5 * (face_flow(Pe, phi) + face_flow(Pi, phi))",
+      "released_as_total_heat_flux": false
+    }
+  },
+  "closure_acceptance": {
+    "relations": ["Ni == Ne", "Pe == Ne * Te", "Pi == Ni * Ti", "Pi == Ne * Ti"],
+    "formula": "max_abs_error <= 1e-12 + 1e-12 * max_abs_reference",
+    "atol": 1e-12,
+    "rtol": 1e-12,
+    "requires_every_selected_frame": true,
+    "requires_no_nonfinite_values": true
+  },
+  "operator_acceptance": {
+    "continuous_formula": "max_abs_error <= 5e-10 + 5e-10 * max_abs_reference",
+    "continuous_atol": 5e-10,
+    "continuous_rtol": 5e-10,
+    "conservation_formula": "max_abs_residual <= 5e-12 + 5e-12 * max_abs_face_difference",
+    "conservation_atol": 5e-12,
+    "conservation_rtol": 5e-12,
+    "canonical_input_echo_requires_exact_equality": true,
+    "component_sum_requires_exact_equality": true,
+    "requires_every_frame_advected_variable_quantity_and_region": true,
+    "requires_no_nonfinite_values": true,
+    "requires_nonconstant_inputs_and_nonzero_total_flow": true,
+    "input_peak_to_peak_minimum": 1e-12,
+    "total_flow_maximum_absolute_minimum": 1e-12
+  },
+  "spatial_scope": {
+    "model_x_grid_slice": [2, 66],
+    "safe_model_left_face_indices": [1, 62],
+    "safe_model_cell_indices": [2, 62],
+    "evaluated_y_slice": [1, 31],
+    "target_dependent_y_cells_excluded": [0, 31]
+  },
+  "scientific_scope": {
+    "proves_native_dynamic_range_operator_agreement": true,
+    "proves_resampling_fidelity": false,
+    "proves_surface_integrated_transport": false,
+    "proves_si_units": false,
+    "proves_member_wise_ensemble_semantics": false,
+    "evaluates_a_learned_model": false,
+    "evaluates_diagnostics": false
+  }
+}

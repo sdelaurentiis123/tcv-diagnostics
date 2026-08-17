@@ -464,6 +464,12 @@ The full metric remains blocked until all of the following pass:
 
 7. **Native-grid oracle:** selected raw 81-cell 85604 frames match the
    hash-locked Hermes/BOUT++ calculation to a prospectively set tolerance.
+
+   The complete value-independent frame rule, raw-archive/source hashes,
+   five-channel pressure closures, exact fields, regions, and unchanged
+   tolerances are frozen in
+   `paper0/protocol/PHASE2_NATIVE_FRAME_PROTOCOL.md` and its machine-readable
+   manifest before the first state-value read performed for this oracle.
 8. **Resampling sensitivity:** truth transport on native 81 cells is compared
    with the 88-cell Fourier-resampled evaluation; the discrepancy is reported
    and cannot be tuned away.
