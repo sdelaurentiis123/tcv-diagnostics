@@ -510,6 +510,25 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     correction, not permission to relax the tolerance or reinterpret the
     counterfactual. No model was trained, no state was changed, and 85606
     remained untouched.
+48. **The source-corrected potential replay passes and bounds the retained-
+    boundary sensitivity on the five frozen frames.** CPU-only Rocky 9 job
+    `6892641`, from clean commit `df7fa7d`, first reproduced Hermes'
+    `EvolvePressure` runtime transformation and only then reran the unchanged
+    potential gate. The single negative raw-`Pi` point at frame `312` maps to
+    zero runtime pressure exactly; runtime `Pe` and `Pi` are bitwise exact,
+    `Pi_hat` differs by at most `4.441e-16`, and all five stored potentials are
+    reconstructed to maximum absolute error below `2.82e-13`. The now-
+    interpretable paired comparison changes normalized potential by
+    `0.004268` relative L2 overall (`0.6605 V` RMS and `3.521 V` maximum);
+    private flux is the most sensitive named region at `0.03199` relative L2.
+    The strict-face particle-transport change is much smaller: `2.3425e-4`
+    relative L2, with `0.1471%` facewise sign disagreement. Across the five
+    confined-separatrix wedges, the instantaneous-minus-retained particle
+    transport ranges from `-0.1019%` to `+0.1672%` of the retained value.
+    These measurements establish an exact source-matched replay and indicate
+    a small sampled transport sensitivity; no post-hoc materiality label is
+    assigned, and five selected frames do not establish all-frame stability.
+    No model was trained, no state was changed, and 85606 remained untouched.
 
 ## Exact commands
 
