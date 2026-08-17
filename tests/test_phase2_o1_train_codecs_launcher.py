@@ -17,7 +17,7 @@ class TestO1TrainCodecsLauncher(unittest.TestCase):
 
     def test_rocky9_nonpreemptible_four_h100_request_is_explicit(self) -> None:
         self.assertIn("#SBATCH --partition=gpuxl", self.source)
-        self.assertIn("#SBATCH --qos=gpuxl", self.source)
+        self.assertIn("#SBATCH --qos=gen", self.source)
         self.assertIn("#SBATCH --gres=gpu:h100:4", self.source)
         self.assertIn("#SBATCH --constraint=h100", self.source)
         self.assertIn("#SBATCH --no-requeue", self.source)

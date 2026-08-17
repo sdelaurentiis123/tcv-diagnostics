@@ -4,7 +4,7 @@
 # This job trains codecs only; it cannot accept R1 or advance to O2.
 #SBATCH --job-name=p2_o1_r1_codec
 #SBATCH --partition=gpuxl
-#SBATCH --qos=gpuxl
+#SBATCH --qos=gen
 #SBATCH --gres=gpu:h100:4
 #SBATCH --constraint=h100
 #SBATCH --nodes=1
@@ -91,7 +91,7 @@ if nvidia-smi --query-gpu=name --format=csv,noheader | grep -vq "H100"; then
   exit 2
 fi
 
-check_sha256 "724c7c1f5da11acbd64d4eff5a99fcc2d6a24ef1dda9ebe75243fb20a254ef05" "${RUN_MANIFEST}"
+check_sha256 "10039ec1d13b78754c526716324ca4bc6b45aecfc2c84e8001a67531d486a2aa" "${RUN_MANIFEST}"
 check_sha256 "6cbbf991e311565ab2cc2d3ae0eb4f1d2572f4c23fb804723c990d5b2401c562" "${MATCHED_MANIFEST}"
 check_sha256 "2148880b998f71b309e553d0712170b2f25a0d5c69c204ea1a089a1407a03de4" "${PROTOCOL}"
 check_sha256 "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18" "${DATA_RESULT}"

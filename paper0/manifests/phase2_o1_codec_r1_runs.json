@@ -50,7 +50,8 @@
   "execution": {
     "os_major": 9,
     "partition": "gpuxl",
-    "qos": "gpuxl",
+    "qos": "gen",
+    "user_qos_association_verified": "gen,gpupreempt,preempt,request",
     "accelerator_constraint": "h100",
     "gpu_type": "h100",
     "gpus_per_slurm_job": 4,

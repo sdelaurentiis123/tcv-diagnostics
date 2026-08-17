@@ -71,7 +71,8 @@ class TestO1CodecR1RunManifest(unittest.TestCase):
         execution = self.manifest["execution"]
         self.assertEqual(execution["os_major"], 9)
         self.assertEqual(execution["partition"], "gpuxl")
-        self.assertEqual(execution["qos"], "gpuxl")
+        self.assertEqual(execution["qos"], "gen")
+        self.assertIn("gen", execution["user_qos_association_verified"].split(","))
         self.assertEqual(execution["accelerator_constraint"], "h100")
         self.assertEqual(execution["gpus_per_slurm_job"], 4)
         self.assertEqual(execution["gpuxl_minimum_gpus_per_job_verified"], 4)
