@@ -45,3 +45,8 @@ ion pressure is rare by cell count but reaches the fixed transport interior in
 the pressure used by the conservative operator. The accepted evidence and
 explicitly limited state recommendation are in
 [`paper0/PHASE2_PRESSURE_CLOSURE_READOUT.md`](paper0/PHASE2_PRESSURE_CLOSURE_READOUT.md).
+
+Before any new data conversion or training, the resulting `C5T` versus `C5P`
+state distinction and the native-81 transport scoring rule are frozen in
+[`paper0/protocol/PHASE2_STATE_RESAMPLING_PROTOCOL.md`](paper0/protocol/PHASE2_STATE_RESAMPLING_PROTOCOL.md).
+The next oracle tests the complete 85604 trajectory and keeps 85606 prohibited.

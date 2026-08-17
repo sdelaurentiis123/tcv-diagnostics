@@ -185,3 +185,27 @@ definition and validation ladder. It permits an explicitly named partial
 gate closed until shifted topology, native-grid agreement, geometry masks,
 resampling sensitivity, sign, and units are validated. No failed or missing
 transport value may be silently recorded as zero.
+
+## A008 - Separate the transport target from the legacy temperature baseline
+
+**Status:** frozen after all-frame pressure closure and before resampling code.
+
+Job `6891583` established that direct electron pressure closes through `Ne*Te`
+throughout 85604, while negative evolved ion pressure cannot be reconstructed
+from floor-derived `Ti` at 3,412 points, including 1,421 in the accepted
+operator interior. Paper 0 therefore names two states rather than silently
+changing the old one:
+
+- `C5T = [Ne, Te, Ti, phi, Vi]` remains the legacy baseline;
+- `C5P = [Ne, Pe, Pi, phi, Vi]` is the leading transport-target candidate.
+
+Direct negative `Pi` is retained. Temperature diagnostics use the explicit
+Hermes floor convention. Neither state is presumed Markov-complete, absolute
+frame number remains excluded, and no new training split is accepted here.
+
+The same amendment makes native-81 transport primary even when a model uses an
+88-cell convenience grid. If the prospectively gated 81-to-88-to-81 round trip
+passes, every future 88-cell ensemble member is downsampled to 81 before the
+primary nonlinear transport calculation. Direct 88-cell transport is reported
+only as a resampling sensitivity. Exact definitions and thresholds are frozen
+in `protocol/PHASE2_STATE_RESAMPLING_PROTOCOL.md` and its machine manifest.

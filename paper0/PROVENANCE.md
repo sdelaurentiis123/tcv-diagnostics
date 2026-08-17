@@ -317,6 +317,21 @@ including 1,421 in `y=1..30`. The tracked accepted record is
 root is
 `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891583`.
 
+The subsequent state/resampling protocol traces the legacy public-transform
+semantics to predecessor commit
+`24fdb7df11bad5dc6d7b0436afb938ecd09308e9`, file
+`src/data/build_c5_fast.py`, Git blob
+`ffbb23f917244e3ed847c2568f038533a6d9df76`, without importing or modifying
+that file. The native 85604 source shards have SHA-256
+`843f9ae99d08fbcdabce977b53e4f6b49be05641a82a387d100b237224b77777`
+and `a17b536856c6b8108c0553c300200e074e41407129e47ef402a4de51882ea1ba`.
+Read-only design probes on the five already fixed raw-oracle frames established
+that the native arrays equal the raw arrays after float32 cast and that the
+public SciPy transform reproduces all five legacy z88 fields bit-for-bit. Those
+known structural observations are disclosed in the protocol manifest and will
+be rerun as execution gates. No round-trip or resampling-transport metric was
+calculated before its thresholds were frozen.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

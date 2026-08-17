@@ -364,6 +364,18 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     forecast evolved ion pressure or declare and validate a floor policy
     before transport scoring. No automatic channel change was made, and 85606
     remained untouched.
+37. **The next state and grid decision is frozen before transport-sensitivity
+    evaluation.** `C5T=[Ne,Te,Ti,phi,Vi]` remains the historical comparison,
+    while `C5P=[Ne,Pe,Pi,phi,Vi]` is the direct-pressure candidate. The primary
+    proposed score for an 88-cell forecast is now explicit: downsample each
+    member to native 81 and apply the validated native operator. Direct
+    88-cell operator values are a separately reported noncommutation
+    sensitivity. Read-only source tracing had already verified exact selected-
+    frame float32 provenance and legacy SciPy-resampling reproduction; those
+    facts are disclosed rather than presented as unseen results. No round-trip
+    field or transport metric was inspected before the gates in
+    `PHASE2_STATE_RESAMPLING_PROTOCOL.md` were committed, and 85606 remains
+    prohibited.
 
 ## Exact commands
 

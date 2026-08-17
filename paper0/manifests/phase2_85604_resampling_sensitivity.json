@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_85604_native81_resampled88_sensitivity",
+  "status": "frozen_before_round_trip_or_transport_sensitivity_evaluation",
+  "development_run": "85604",
+  "sequestered_runs": ["85606"],
+  "held_out_85606_access_allowed": false,
+  "state_policy": {
+    "legacy_baseline": {
+      "name": "C5T",
+      "ordered_channels": ["Ne", "Te", "Ti", "phi", "Vi"]
+    },
+    "transport_candidate": {
+      "name": "C5P",
+      "ordered_channels": ["Ne", "Pe", "Pi", "phi", "Vi"],
+      "complete_markov_state_claimed": false
+    },
+    "negative_Pi_target_policy": "preserve_direct_evolved_value_without_clipping",
+    "derived_Ti": "maximum(Pi,0)/Ne",
+    "derived_Te": "Pe/Ne",
+    "phi_gauge_for_marginal_metrics": "subtract_each_frame_spatial_mean",
+    "training_transforms": {
+      "Ne": "ln(x+1e-6)",
+      "Pe": "identity",
+      "Pi": "identity",
+      "phi": "gauge_fix_then_identity",
+      "Vi": "identity"
+    },
+    "normalization_fit_by_this_oracle": false,
+    "absolute_frame_number_model_input": false,
+    "relative_lead_recorded": true,
+    "delta_t_input_only_if_multiple_cadences": true
+  },
+  "sources": {
+    "native_81": [
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_85604/data/train/TCV_85604_train.hdf5",
+        "sha256": "843f9ae99d08fbcdabce977b53e4f6b49be05641a82a387d100b237224b77777",
+        "global_start_inclusive": 0,
+        "global_stop_exclusive": 500,
+        "file_label_is_not_paper0_split": true
+      },
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_85604/data/valid/TCV_85604_valid.hdf5",
+        "sha256": "a17b536856c6b8108c0553c300200e074e41407129e47ef402a4de51882ea1ba",
+        "global_start_inclusive": 500,
+        "global_stop_exclusive": 624,
+        "file_label_is_not_paper0_split": true
+      }
+    ],
+    "legacy_c5t_88": [
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/train/TCV_c5_train.hdf5",
+        "sha256": "f4aae5c13ecd944f51cec0c3539f57ff669cb0bb0405cb813c3f50ff6cb83817",
+        "global_start_inclusive": 0,
+        "global_stop_exclusive": 500
+      },
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/valid/TCV_c5_valid.hdf5",
+        "sha256": "eed18a7f7a356a4f8d437647b73d4f8078a5309e1e8583a1089e622196ce4d43",
+        "global_start_inclusive": 500,
+        "global_stop_exclusive": 624
+      }
+    ],
+    "raw_float64_selected_frames": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_hermes_native_frames/job_6891379/canonical_frames.nc",
+      "sha256": "61dee30a92bb1a3eefcece80faa42d143271bfe200f4024b9747aeb06747bc21",
+      "frame_indices": [0, 156, 312, 467, 623]
+    },
+    "geometry": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+      "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+    },
+    "predecessor_converter_evidence": {
+      "repository": "/Users/stanislavdelaurentiis/tcv-gaot-3d",
+      "commit": "24fdb7df11bad5dc6d7b0436afb938ecd09308e9",
+      "path": "src/data/build_c5_fast.py",
+      "git_blob": "ffbb23f917244e3ed847c2568f038533a6d9df76",
+      "sha256": "f446c0d6f068de0c4d190c77292467efa7312731343239082cf7a5920aa595a3",
+      "imported_or_modified": false
+    }
+  },
+  "data": {
+    "global_frame_indices": [0, 624],
+    "frame_stop_is_exclusive": true,
+    "frame_count": 624,
+    "native_shape_per_frame": [64, 32, 81],
+    "resampled_shape_per_frame": [64, 32, 88],
+    "native_dtype": "float32",
+    "raw_oracle_dtype": "float64",
+    "axis_order": ["x", "y", "z"],
+    "zperiod": 5,
+    "wedge_length_radians": 1.2566370614359172,
+    "mode_mapping": "n=5*k",
+    "native_nonnegative_k": [0, 40],
+    "resampled_padding_k": [41, 44],
+    "cadence_microseconds": 3.131905426352636,
+    "temporal_blocks_inclusive": [[0,77],[78,155],[156,233],[234,311],[312,389],[390,467],[468,545],[546,623]]
+  },
+  "resampling": {
+    "implementation": "scipy.signal.resample",
+    "forward_call": "resample(x,88,axis=-1,window=None,domain='time')",
+    "inverse_call": "resample(x,81,axis=-1,window=None,domain='time')",
+    "output_cast": "float32",
+    "window": null,
+    "smoothing": false,
+    "coordinate_interpolation": false,
+    "phase_shift": false
+  },
+  "transport": {
+    "advected_fields": ["Ne", "Pe", "Pi"],
+    "potential": "phi",
+    "particle_flow": "Q(Ne,phi)",
+    "electron_internal_energy_flow": "1.5*Q(Pe,phi)",
+    "ion_internal_energy_flow": "1.5*Q(Pi,phi)",
+    "total_internal_energy_flow": "1.5*(Q(Pe,phi)+Q(Pi,phi))",
+    "native_dz": "2*pi/(5*81)",
+    "resampled_dz": "2*pi/(5*88)",
+    "positive_reconstruction": true,
+    "safe_left_face_indices_inclusive": [1, 61],
+    "safe_divergence_cell_indices_inclusive": [2, 61],
+    "safe_y_indices_inclusive": [1, 30],
+    "surface_integrated_physical_flux_claimed": false,
+    "si_transport_claimed": false
+  },
+  "paths_compared": {
+    "native": "Q_81(x_81)",
+    "round_trip": "Q_81(D(U(x_81)))",
+    "direct_88": "Q_88(U(x_81))",
+    "aligned_native_88": "U(Q_81(x_81))"
+  },
+  "protocol_design_observations": {
+    "observed_before_freeze": true,
+    "selected_raw_equals_native_after_float32_cast": {
+      "frames": [0, 156, 312, 467, 623],
+      "fields": ["Ne", "Pe", "Pi", "phi"],
+      "passed": true
+    },
+    "selected_legacy_c5t_resampling_bitwise_exact": {
+      "frames": [0, 156, 312, 467, 623],
+      "fields": ["Ne", "Te", "Ti", "phi", "Vi"],
+      "passed": true
+    },
+    "round_trip_field_metric_observed": false,
+    "raw64_vs_float32_transport_metric_observed": false,
+    "direct_88_transport_metric_observed": false,
+    "role": "disclosed_structural_provenance_checks_rerun_as_execution_gates"
+  },
+  "metrics": [
+    "relative_l2",
+    "normalized_bias",
+    "rms_ratio",
+    "pearson_correlation",
+    "weighted_sign_disagreement",
+    "toroidal_mean_profile_relative_l2",
+    "absolute_value_p95_ratio",
+    "absolute_value_p99_ratio"
+  ],
+  "quantile_convention": "numpy.quantile_method_linear",
+  "acceptance_gates": {
+    "complete_unique_frame_coverage": true,
+    "all_inputs_and_valid_outputs_finite": true,
+    "selected_raw_equals_native_after_float32_cast": true,
+    "selected_legacy_c5t_resampling_bitwise_exact": true,
+    "field_round_trip_max_per_frame_relative_l2": 0.000002,
+    "transport_round_trip_max_aggregate_relative_l2": 0.0001,
+    "transport_round_trip_max_p99_per_frame_relative_l2": 0.001,
+    "selected_raw64_vs_float32_transport_max_aggregate_relative_l2": 0.00001
+  },
+  "direct_88_materiality_labels": {
+    "negligible": [0.0, 0.01],
+    "small": [0.01, 0.05],
+    "material": [0.05, 0.10],
+    "severe": [0.10, null],
+    "interval_convention": "lower_inclusive_upper_exclusive"
+  },
+  "decision_rules": {
+    "round_trip_failure": "block_88_transport_scoring_and_use_native_grid_or_frozen_higher_precision_transform",
+    "round_trip_pass": "downsample_each_88_cell_truth_or_forecast_member_to_81_before_primary_transport_evaluation",
+    "direct_88_role": "reported_sensitivity_not_primary_transport_score",
+    "automatic_architecture_change": false,
+    "automatic_channel_change": false
+  },
+  "training_loss_use": false,
+  "ensemble_policy": "resample_and_compute_nonlinear_transport_member_wise",
+  "physical_independence_unit": "simulation_run_not_frame_or_window"
+}
