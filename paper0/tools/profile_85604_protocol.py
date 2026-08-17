@@ -41,6 +41,7 @@ from tcv_diagnostics.data_protocol import (  # noqa: E402
     representative_decorrelation,
     standardize,
     summarize_autocorrelation,
+    toroidal_variability_decomposition,
 )
 from tcv_diagnostics.well import VirtualWellTrajectory  # noqa: E402
 
@@ -408,13 +409,15 @@ def compute_decorrelation(
     chunk_frames: int,
 ) -> dict[str, Any]:
     per_field: dict[str, Any] = {}
+    toroidal_residual_per_field: dict[str, Any] = {}
+    variability_energy: dict[str, Any] = {}
     for field in C5_FIELDS:
         frames = trajectory.read_field(
             field,
             DEFAULT_SPLIT.train.start,
             DEFAULT_SPLIT.train.stop,
             chunk_frames=chunk_frames,
-            strides=(4, 2, 4),
+            strides=(4, 2, 1),
         )
         transformed = model_transform(field, np.asarray(frames, dtype=np.float64))
         normalized = standardize(
@@ -422,8 +425,18 @@ def compute_decorrelation(
             float(normalization[field]["mean"]),
             float(normalization[field]["std"]),
         )
-        curve = pattern_autocorrelation(normalized, max_lag=108)
-        per_field[field] = summarize_autocorrelation(curve, cadence_microseconds)
+        full_curve = pattern_autocorrelation(normalized[..., ::4], max_lag=108)
+        per_field[field] = summarize_autocorrelation(
+            full_curve, cadence_microseconds
+        )
+        toroidal_residual, energy = toroidal_variability_decomposition(normalized)
+        residual_curve = pattern_autocorrelation(
+            toroidal_residual[..., ::4], max_lag=108
+        )
+        toroidal_residual_per_field[field] = summarize_autocorrelation(
+            residual_curve, cadence_microseconds
+        )
+        variability_energy[field] = energy
     return {
         "definition": "uniform-grid Eulerian fluctuation-pattern autocorrelation",
         "training_indices": [
@@ -436,6 +449,19 @@ def compute_decorrelation(
         "representative": representative_decorrelation(
             per_field, cadence_microseconds
         ),
+        "toroidal_residual": {
+            "definition": (
+                "model-coordinate field minus per-frame toroidal mean at each x,y; "
+                "stored k>0 equals full-torus n>0 because zperiod=5"
+            ),
+            "construction_spatial_strides_xyz": [4, 2, 1],
+            "autocorrelation_spatial_strides_xyz": [4, 2, 4],
+            "per_field": toroidal_residual_per_field,
+            "representative": representative_decorrelation(
+                toroidal_residual_per_field, cadence_microseconds
+            ),
+        },
+        "temporal_variability_energy_by_field": variability_energy,
     }
 
 
@@ -453,6 +479,7 @@ def label_decorrelation_scope(
         ),
         "learning_or_split_selection_authorized": bool(steady_state_passes),
         "amendment": None if steady_state_passes else "A002",
+        "amendments": [] if steady_state_passes else ["A002", "A003"],
     }
 
 
@@ -528,7 +555,9 @@ def main() -> None:
             "frozen_rule_commit": manifest["protocol_commit"],
             "execution_commit": state["commit"],
             "active_amendment": (
-                None if steady["passes"] else "A002_diagnostic_only_decorrelation"
+                None
+                if steady["passes"]
+                else "A002_A003_diagnostic_only_decorrelation"
             ),
         },
         "execution": {
@@ -614,6 +643,9 @@ def main() -> None:
         "steady_state_failures": steady["failures"],
         "decorrelation_representative": (
             decorrelation["representative"]
+        ),
+        "toroidal_residual_decorrelation_representative": (
+            decorrelation["toroidal_residual"]["representative"]
         ),
     }, indent=2, allow_nan=False))
 

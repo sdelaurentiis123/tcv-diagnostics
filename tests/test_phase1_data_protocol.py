@@ -28,6 +28,7 @@ from tcv_diagnostics.data_protocol import (  # noqa: E402
     standardize,
     summarize_autocorrelation,
     summarize_stationarity_series,
+    toroidal_variability_decomposition,
 )
 from tcv_diagnostics.well import VirtualWellTrajectory  # noqa: E402
 
@@ -152,7 +153,26 @@ class StatisticsTests(unittest.TestCase):
             summary["one_over_e_crossing_microseconds"], crossing * 3.0
         )
 
+    def test_toroidal_decomposition_removes_k_zero_and_partitions_energy(self) -> None:
+        time = np.arange(6, dtype=np.float64)[:, None, None]
+        axisymmetric = time * np.ones((1, 2, 4), dtype=np.float64)
+        alternating = np.asarray([1.0, -1.0, 1.0, -1.0])[None, None, :]
+        nonaxisymmetric = (
+            0.5 * time * alternating * np.ones((1, 2, 1), dtype=np.float64)
+        )
+        frames = axisymmetric + nonaxisymmetric
+
+        residual, energy = toroidal_variability_decomposition(frames)
+        np.testing.assert_allclose(np.mean(residual, axis=-1), 0.0, atol=1e-14)
+        np.testing.assert_allclose(residual, nonaxisymmetric, atol=1e-14)
+        self.assertAlmostEqual(
+            energy["axisymmetric_fraction"]
+            + energy["nonaxisymmetric_fraction"],
+            1.0,
+            places=14,
+        )
+        self.assertAlmostEqual(energy["orthogonality_cross_term"], 0.0, places=12)
+
 
 if __name__ == "__main__":
     unittest.main()
-

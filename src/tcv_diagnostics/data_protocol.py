@@ -339,6 +339,55 @@ def pattern_autocorrelation(frames: np.ndarray, max_lag: int) -> np.ndarray:
     return result
 
 
+def toroidal_variability_decomposition(
+    frames: np.ndarray,
+) -> tuple[np.ndarray, dict[str, float]]:
+    """Return the toroidal residual and an orthogonal variability-energy split.
+
+    The last axis is the stored periodic toroidal coordinate. Energy fractions
+    are calculated after removing each cell's temporal mean, so they describe
+    time-varying signal rather than the static background magnitude.
+    """
+
+    array = np.asarray(frames, dtype=np.float64)
+    if array.ndim < 2 or array.shape[-1] < 2:
+        raise ValueError("frames must have time and a nontrivial toroidal axis")
+    if not np.all(np.isfinite(array)):
+        raise ValueError("toroidal decomposition input contains non-finite values")
+
+    toroidal_residual = array - np.mean(array, axis=-1, keepdims=True)
+    time_centered = array - np.mean(array, axis=0, keepdims=True)
+    axisymmetric = np.mean(time_centered, axis=-1, keepdims=True)
+    nonaxisymmetric = time_centered - axisymmetric
+
+    toroidal_cells = array.shape[-1]
+    axisymmetric_energy = float(
+        np.sum(axisymmetric * axisymmetric, dtype=np.float64) * toroidal_cells
+    )
+    nonaxisymmetric_energy = float(
+        np.sum(nonaxisymmetric * nonaxisymmetric, dtype=np.float64)
+    )
+    total_energy = axisymmetric_energy + nonaxisymmetric_energy
+    if total_energy <= 0:
+        raise ValueError("toroidal decomposition has zero temporal variability")
+    cross_term = float(
+        2.0
+        * np.sum(
+            nonaxisymmetric * axisymmetric,
+            dtype=np.float64,
+        )
+    )
+    return toroidal_residual, {
+        "axisymmetric_energy": axisymmetric_energy,
+        "nonaxisymmetric_energy": nonaxisymmetric_energy,
+        "total_decomposed_energy": total_energy,
+        "axisymmetric_fraction": axisymmetric_energy / total_energy,
+        "nonaxisymmetric_fraction": nonaxisymmetric_energy / total_energy,
+        "orthogonality_cross_term": cross_term,
+        "toroidal_cells": int(toroidal_cells),
+    }
+
+
 def first_threshold_crossing(curve: np.ndarray, threshold: float) -> float | None:
     """Return the linearly interpolated first downward threshold crossing."""
 
@@ -418,4 +467,3 @@ def representative_decorrelation(
         "maximum_one_over_e_frames": maximum,
         "maximum_one_over_e_microseconds": maximum * cadence_microseconds,
     }
-
