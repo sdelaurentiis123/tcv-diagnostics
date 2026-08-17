@@ -289,6 +289,15 @@ JSON existed. Its no-result record is
 adds `srun --exact` to each one-CPU exclusive step. No Python statistic, input,
 or scientific rule changes.
 
+Job `6891570` from clean commit `347495f` then confirmed that exact CPU
+allocation was not sufficient: `scontrol` reported shard zero as
+`TRES=cpu=1,mem=64G,node=1`, so its inherited full-allocation memory prevented
+the other exclusive steps from launching. It was cancelled after 48 seconds,
+before any partial JSON existed. The tracked no-result record is
+`paper0/results/phase2_pressure_closure_6891570.json`. The next launcher adds
+only `--mem=4G` to each shard step, exactly partitioning the existing 64 GB
+allocation across 16 processes.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_85604_all_frame_pressure_closure_audit_attempt",
+  "paper0_commit": "347495f0f4f09461dc47567331df31df7f785ca8",
+  "slurm": {
+    "job_id": 6891570,
+    "state": "CANCELLED",
+    "batch_exit_code": "0:15",
+    "start": "2026-08-17T04:56:43-04:00",
+    "end": "2026-08-17T04:57:31-04:00",
+    "elapsed": "00:00:48",
+    "time_limit": "00:45:00",
+    "node": "worker5592",
+    "batch_max_rss_kib": 53900,
+    "started_shard_step_count": 1
+  },
+  "data_access": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "provenance_gates_passed": true,
+    "complete_shard_coverage_established": false,
+    "partial_json_count": 0,
+    "scientific_result_written": false
+  },
+  "outcome": {
+    "classification": "no_result_slurm_step_memory_allocation_failure",
+    "reason": "srun --exclusive --exact limited shard zero to one CPU but inherited the allocation's full 64 GB step memory, blocking the other fifteen exclusive steps",
+    "observation": {
+      "active_steps": ["6891570.0"],
+      "expected_active_shard_steps": 16,
+      "step_zero_tres": "cpu=1,mem=64G,node=1",
+      "observation_was_read_only": true
+    },
+    "scientific_statistics_accepted": false,
+    "protocol_or_tolerance_changed": false,
+    "planned_correction": "add srun --mem=4G so sixteen exclusive one-CPU shards partition the 64 GB allocation"
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891570",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_pressure_closure_6891570.log",
+    "artifact_digests": {
+      "commands.sh": "ebfc476d75326dd48d1dcf13fdf4f90709dd090c6552963375cea904fad84d06",
+      "environment.txt": "951d338a61c8d6a3327e5e01553c98dd089586c30cd08d43af004cf325617bc1",
+      "job.log": "89cdfc3393e35300ee38bf798d2d619d6ba9e7f0ab1816ac854826579c3626b1",
+      "slurm_log": "408da23b5627aa8443a44c0055d1457b3f500fe596247c545bc2a0f42d104e51"
+    }
+  }
+}

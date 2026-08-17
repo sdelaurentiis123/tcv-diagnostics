@@ -23,6 +23,9 @@ NO_RESULT = ROOT / "paper0" / "results" / "phase2_pressure_closure_6891417.json"
 PARALLEL_NO_RESULT = (
     ROOT / "paper0" / "results" / "phase2_pressure_closure_6891530.json"
 )
+MEMORY_NO_RESULT = (
+    ROOT / "paper0" / "results" / "phase2_pressure_closure_6891570.json"
+)
 
 
 def load_module(name: str, path: Path):
@@ -64,6 +67,7 @@ class PressureClosureAuditImplementationTests(unittest.TestCase):
             "srun",
             "--exclusive",
             "--exact",
+            "--mem=4G",
         ):
             self.assertIn(required, text)
         self.assertNotIn("--gres=gpu", text)
@@ -268,6 +272,17 @@ class PressureClosureAuditImplementationTests(unittest.TestCase):
         self.assertEqual(attempt["paper0_commit"], "b672d69bcadcf411ddf9549a4e52a23294d5d0f3")
         self.assertEqual(attempt["slurm"]["job_id"], 6891530)
         self.assertEqual(attempt["slurm"]["started_shard_step_count"], 1)
+        self.assertEqual(attempt["data_access"]["partial_json_count"], 0)
+        self.assertFalse(attempt["data_access"]["scientific_result_written"])
+        self.assertFalse(attempt["outcome"]["scientific_statistics_accepted"])
+        self.assertFalse(attempt["outcome"]["protocol_or_tolerance_changed"])
+        self.assertFalse(attempt["data_access"]["held_out_85606_read"])
+
+    def test_parallel_memory_attempt_is_tracked_as_no_result(self) -> None:
+        attempt = json.loads(MEMORY_NO_RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(attempt["paper0_commit"], "347495f0f4f09461dc47567331df31df7f785ca8")
+        self.assertEqual(attempt["slurm"]["job_id"], 6891570)
+        self.assertEqual(attempt["outcome"]["observation"]["step_zero_tres"], "cpu=1,mem=64G,node=1")
         self.assertEqual(attempt["data_access"]["partial_json_count"], 0)
         self.assertFalse(attempt["data_access"]["scientific_result_written"])
         self.assertFalse(attempt["outcome"]["scientific_statistics_accepted"])

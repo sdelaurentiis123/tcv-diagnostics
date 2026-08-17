@@ -338,6 +338,14 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     cancelled after 49 seconds; no partial JSON or scientific result existed,
     and 85606 was not read. The correction adds only `srun --exact`, forcing
     each exclusive shard step to consume precisely its requested one CPU.
+34. **Exact CPU allocation still required explicit step memory.** Job
+    `6891570`, from clean commit `347495f`, confirmed that `--exact` limited
+    shard zero to one CPU, but `scontrol` reported its step TRES as
+    `cpu=1,mem=64G,node=1`. That full-memory inheritance again blocked the
+    other 15 exclusive steps. The job was cancelled after 48 seconds with no
+    partial JSON or scientific result and no 85606 access. The correction adds
+    `--mem=4G` to each shard step, partitioning the already requested 64 GB
+    allocation without changing code or scientific settings.
 
 ## Exact commands
 

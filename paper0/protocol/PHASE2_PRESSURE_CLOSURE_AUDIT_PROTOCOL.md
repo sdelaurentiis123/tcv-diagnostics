@@ -193,3 +193,9 @@ shard step zero became active and no partial JSON was written. This is another
 no-result execution finding. The corrected launcher adds `srun --exact`, so
 each exclusive shard receives exactly the one CPU it requests. No scientific
 choice above changes.
+
+Job `6891570` from clean commit `347495f` showed that exact CPU allocation
+still inherited the full 64 GB as step memory, again allowing only shard zero
+to launch. It was cancelled after 48 seconds, with no partial JSON. The next
+launcher adds `--mem=4G` per shard, partitioning the existing 64 GB request
+across 16 exclusive steps. This changes no audit input, statistic, or rule.

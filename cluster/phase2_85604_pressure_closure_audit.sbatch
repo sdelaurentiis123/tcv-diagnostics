@@ -95,7 +95,7 @@ module load netcdf-c/4.9.2
 
 {
   for ((shard = 0; shard < SHARD_COUNT; shard++)); do
-    echo "srun --exclusive --exact --ntasks=1 --cpus-per-task=1 ${PYTHON} ${AUDITOR} --manifest ${MANIFEST} --raw-root ${RAW_ROOT} --output ${PARTIAL_DIR}/shard_${shard}.json --paper0-commit ${PAPER0_COMMIT} --slurm-job-id ${SLURM_JOB_ID} --shard-index ${shard} --shard-count ${SHARD_COUNT}"
+    echo "srun --exclusive --exact --ntasks=1 --cpus-per-task=1 --mem=4G ${PYTHON} ${AUDITOR} --manifest ${MANIFEST} --raw-root ${RAW_ROOT} --output ${PARTIAL_DIR}/shard_${shard}.json --paper0-commit ${PAPER0_COMMIT} --slurm-job-id ${SLURM_JOB_ID} --shard-index ${shard} --shard-count ${SHARD_COUNT}"
   done
   printf '%s' "${PYTHON} ${MERGER} --manifest ${MANIFEST} --partial-output"
   for ((shard = 0; shard < SHARD_COUNT; shard++)); do
@@ -121,6 +121,7 @@ for ((shard = 0; shard < SHARD_COUNT; shard++)); do
     --exact \
     --ntasks=1 \
     --cpus-per-task=1 \
+    --mem=4G \
     "${PYTHON}" \
     "${AUDITOR}" \
     --manifest "${MANIFEST}" \
