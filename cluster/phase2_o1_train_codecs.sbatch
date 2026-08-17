@@ -18,12 +18,12 @@
 set -euo pipefail
 
 : "${PAPER0_EXPECTED_COMMIT:?submit with PAPER0_EXPECTED_COMMIT set to the committed launcher revision}"
-: "${SLURM_TMPDIR:?Slurm node-local storage is required}"
 
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
 readonly MODEL_DATA_SOURCE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525"
-readonly MODEL_DATA_STAGED="${SLURM_TMPDIR}/phase2_model_dataset_85604"
+readonly NODE_LOCAL_ROOT="/tmp/${USER}/tcv_diagnostics_${SLURM_JOB_ID}"
+readonly MODEL_DATA_STAGED="${NODE_LOCAL_ROOT}/phase2_model_dataset_85604"
 readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_r1"
 readonly JOB_ROOT="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly RUN_MANIFEST="${PAPER0_ROOT}/paper0/manifests/phase2_o1_codec_r1_runs.json"
@@ -43,6 +43,10 @@ readonly WANDB_GROUP="o1-dcae-l20-r1"
 
 if [[ -e "${JOB_ROOT}" ]]; then
   echo "Refusing to overwrite existing result directory: ${JOB_ROOT}" >&2
+  exit 2
+fi
+if [[ -e "${NODE_LOCAL_ROOT}" ]]; then
+  echo "Refusing to reuse existing node-local directory: ${NODE_LOCAL_ROOT}" >&2
   exit 2
 fi
 mkdir -p "${JOB_ROOT}"
@@ -91,7 +95,7 @@ if nvidia-smi --query-gpu=name --format=csv,noheader | grep -vq "H100"; then
   exit 2
 fi
 
-check_sha256 "10039ec1d13b78754c526716324ca4bc6b45aecfc2c84e8001a67531d486a2aa" "${RUN_MANIFEST}"
+check_sha256 "22bda830182e9869769e8212fca5e0e50ef6c4314910e6e251249b317bd8c721" "${RUN_MANIFEST}"
 check_sha256 "6cbbf991e311565ab2cc2d3ae0eb4f1d2572f4c23fb804723c990d5b2401c562" "${MATCHED_MANIFEST}"
 check_sha256 "2148880b998f71b309e553d0712170b2f25a0d5c69c204ea1a089a1407a03de4" "${PROTOCOL}"
 check_sha256 "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18" "${DATA_RESULT}"

@@ -62,6 +62,8 @@
     "wall_time": "08:00:00",
     "no_requeue": true,
     "node_local_dataset_staging": true,
+    "node_local_root_template": "/tmp/{user}/tcv_diagnostics_{slurm_job_id}",
+    "node_local_overwrite_allowed": false,
     "output_root_template": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_{slurm_job_id}/task_{run_index}_{family}_seed_{seed}"
   },
   "tracking": {

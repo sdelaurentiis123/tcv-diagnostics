@@ -34,7 +34,9 @@ class TestO1TrainCodecsLauncher(unittest.TestCase):
 
     def test_data_are_staged_and_every_shard_is_verified(self) -> None:
         self.assertIn("MODEL_DATA_STAGED", self.source)
-        self.assertIn("SLURM_TMPDIR", self.source)
+        self.assertIn('NODE_LOCAL_ROOT="/tmp/${USER}/tcv_diagnostics_${SLURM_JOB_ID}"', self.source)
+        self.assertIn("Refusing to reuse existing node-local directory", self.source)
+        self.assertNotIn("SLURM_TMPDIR", self.source)
         self.assertIn('verified_shards=$((verified_shards + 1))', self.source)
         self.assertIn('"${verified_shards}" -ne 8', self.source)
         self.assertIn("artifact_sha256.txt", self.source)
