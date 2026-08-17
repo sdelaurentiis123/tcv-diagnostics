@@ -185,6 +185,14 @@ arrays have SHA-256 `c024ab47a82e1cdbb59a032b97593e4e5ecdecfa13dea228384b24264de
 and `bfa42628c536cd6833a3ccd8aeb235d83bd5e934caea27d5b96194777f382c13`.
 This accepts only the guard-independent shifted-`xy` radial face component.
 
+`radial_exb_face_flow_candidate_partial` now forms the pointwise sum of the
+separately validated `xz` and shifted-`xy` face components on their common
+guard-independent mask. Its companion divergence uses consecutive radial faces
+and the source volume factor `J*dx`. Synthetic tests verify exact component
+addition, constant-potential zero flow, and volume-weighted telescoping for
+batched fields. Both APIs retain `candidate_partial` pending a compiled Hermes
+comparison of each component, their sum, and their divergence.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

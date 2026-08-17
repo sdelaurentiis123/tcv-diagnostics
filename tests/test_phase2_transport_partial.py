@@ -16,10 +16,12 @@ if str(SRC) not in sys.path:
 from tcv_diagnostics.transport import (  # noqa: E402
     PartialRadialFaceFlow,
     SingleNullTopology,
+    divergence_from_radial_face_flow_candidate_partial,
     divergence_from_xz_face_flow_partial,
     fromm_radial_face_states_partial,
     mc_radial_face_states_partial,
     monotonized_central_slope,
+    radial_exb_face_flow_candidate_partial,
     radial_exb_xy_face_flow_partial,
     radial_exb_xz_face_flow_partial,
     shifted_ddy_single_null_partial,
@@ -484,6 +486,121 @@ class ShiftedFaceFlowTests(unittest.TestCase):
                 np.zeros(n_x),
                 **kwargs,
             )
+
+
+class CandidateCombinedFaceFlowTests(unittest.TestCase):
+    @staticmethod
+    def topology() -> SingleNullTopology:
+        return SingleNullTopology(
+            separatrix_x_index=0,
+            core_lower_y=8,
+            core_upper_y=23,
+            pfr_lower_y=7,
+            pfr_upper_y=24,
+        )
+
+    def test_combined_flow_is_exact_component_sum_on_valid_cells(self) -> None:
+        rng = np.random.default_rng(85604)
+        n_x, n_y, n_z = 8, 32, 11
+        q = rng.uniform(0.4, 2.0, size=(2, n_x, n_y, n_z))
+        phi = rng.normal(size=q.shape)
+        jacobian = rng.uniform(0.8, 1.4, size=(n_x, n_y))
+        g11 = rng.uniform(0.7, 1.3, size=(n_x, n_y))
+        g23 = rng.uniform(-0.4, 0.4, size=(n_x, n_y))
+        bxy = rng.uniform(0.9, 1.5, size=(n_x, n_y))
+        z_shift = rng.uniform(-0.1, 0.1, size=(n_x, n_y))
+        dy = rng.uniform(0.2, 0.6, size=(n_x, n_y))
+        result = radial_exb_face_flow_candidate_partial(
+            q,
+            phi,
+            jacobian,
+            g11,
+            g23,
+            bxy,
+            z_shift,
+            dy,
+            np.zeros(n_x),
+            dz=toroidal_wedge_spacing(n_z),
+            topology=self.topology(),
+            positive=True,
+        )
+        valid = np.broadcast_to(
+            result.valid_mask.reshape(1, *result.valid_mask.shape, 1),
+            result.flow.shape,
+        )
+        np.testing.assert_allclose(
+            result.flow[valid],
+            (result.xz_flow + result.xy_flow)[valid],
+            rtol=0.0,
+            atol=0.0,
+        )
+        self.assertTrue(np.all(np.isnan(result.flow[..., (0, -1), :])))
+        self.assertIn("candidate", result.component)
+
+    def test_combined_divergence_telescopes_in_volume_weighted_form(self) -> None:
+        rng = np.random.default_rng(44)
+        n_x, n_y, n_z = 9, 32, 13
+        q = rng.uniform(0.5, 1.8, size=(n_x, n_y, n_z))
+        phi = rng.normal(size=q.shape)
+        jacobian = rng.uniform(0.7, 1.7, size=(n_x, n_y))
+        dx = rng.uniform(0.2, 0.5, size=(n_x, n_y))
+        faces = radial_exb_face_flow_candidate_partial(
+            q,
+            phi,
+            jacobian,
+            np.ones((n_x, n_y)),
+            rng.uniform(-0.3, 0.3, size=(n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.zeros((n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.zeros(n_x),
+            dz=toroidal_wedge_spacing(n_z),
+            topology=self.topology(),
+            positive=True,
+        )
+        divergence = divergence_from_radial_face_flow_candidate_partial(
+            faces,
+            jacobian,
+            dx=dx,
+        )
+        self.assertTrue(np.all(divergence.valid_mask[:, 1:-1]))
+        self.assertFalse(np.any(divergence.valid_mask[:, (0, -1)]))
+        weighted = divergence.divergence[:, 1:-1] * (
+            jacobian[divergence.cell_indices, 1:-1]
+            * dx[divergence.cell_indices, 1:-1]
+        )[..., None]
+        np.testing.assert_allclose(
+            np.sum(weighted, axis=0),
+            faces.flow[-1, 1:-1] - faces.flow[0, 1:-1],
+            rtol=2e-14,
+            atol=2e-14,
+        )
+
+    def test_constant_potential_gives_zero_combined_flow_and_divergence(self) -> None:
+        n_x, n_y, n_z = 7, 32, 9
+        q = np.ones((n_x, n_y, n_z))
+        phi = np.full_like(q, 3.5)
+        geometry = np.ones((n_x, n_y))
+        faces = radial_exb_face_flow_candidate_partial(
+            q,
+            phi,
+            geometry,
+            geometry,
+            geometry,
+            geometry,
+            np.zeros_like(geometry),
+            geometry,
+            np.zeros(n_x),
+            dz=toroidal_wedge_spacing(n_z),
+            topology=self.topology(),
+        )
+        np.testing.assert_array_equal(faces.flow[:, 1:-1], 0.0)
+        divergence = divergence_from_radial_face_flow_candidate_partial(
+            faces,
+            geometry,
+            dx=geometry,
+        )
+        np.testing.assert_array_equal(divergence.divergence[:, 1:-1], 0.0)
 
 
 if __name__ == "__main__":

@@ -101,6 +101,28 @@ class PartialShiftedRadialFaceFlow:
     component: str = "radial_exb_xy_component_partial"
 
 
+@dataclass(frozen=True)
+class CandidateCombinedRadialFaceFlow:
+    """Candidate sum of the validated ``xz`` and shifted-``xy`` face terms."""
+
+    flow: np.ndarray
+    xz_flow: np.ndarray
+    xy_flow: np.ndarray
+    valid_mask: np.ndarray
+    left_cell_indices: np.ndarray
+    component: str = "radial_exb_xz_plus_xy_candidate_partial"
+
+
+@dataclass(frozen=True)
+class CandidateCombinedRadialDivergence:
+    """Volume-normalized divergence of the candidate combined face flow."""
+
+    divergence: np.ndarray
+    valid_mask: np.ndarray
+    cell_indices: np.ndarray
+    component: str = "radial_exb_xz_plus_xy_divergence_candidate_partial"
+
+
 def _real_finite(name: str, values: np.ndarray) -> np.ndarray:
     array = np.asarray(values)
     if np.iscomplexobj(array):
@@ -632,6 +654,138 @@ def radial_exb_xy_face_flow_partial(
         positivity_clipped_mask=positivity_clipped,
         valid_mask=valid_mask,
         left_cell_indices=left_indices,
+    )
+
+
+def radial_exb_face_flow_candidate_partial(
+    advected: np.ndarray,
+    potential: np.ndarray,
+    jacobian: np.ndarray,
+    g11: np.ndarray,
+    g23: np.ndarray,
+    bxy: np.ndarray,
+    z_shift: np.ndarray,
+    dy: np.ndarray,
+    shift_angle: np.ndarray,
+    *,
+    dz: np.ndarray | float,
+    topology: SingleNullTopology,
+    zperiod: int = 5,
+    positive: bool = True,
+) -> CandidateCombinedRadialFaceFlow:
+    """Sum the source-matched radial ``xz`` and shifted-``xy`` face terms.
+
+    The result is restricted to faces and target-independent ``y`` cells for
+    which both source stencils are available. Although both component
+    primitives have passed isolated oracles, the combined result remains a
+    candidate until its face sum and divergence pass the compiled-Hermes
+    conservation oracle.
+    """
+
+    xz = radial_exb_xz_face_flow_partial(
+        advected,
+        potential,
+        jacobian,
+        dz=dz,
+    )
+    xy = radial_exb_xy_face_flow_partial(
+        advected,
+        potential,
+        jacobian,
+        g11,
+        g23,
+        bxy,
+        z_shift,
+        dy,
+        shift_angle,
+        topology=topology,
+        zperiod=zperiod,
+        positive=positive,
+    )
+    if not np.array_equal(xz.left_cell_indices, xy.left_cell_indices):
+        raise ValueError("xz and xy components disagree on safe radial faces")
+    leading_singletons = (1,) * (xz.flow.ndim - 3)
+    valid_shape = (
+        *leading_singletons,
+        xy.left_cell_indices.size,
+        xy.valid_mask.shape[1],
+        1,
+    )
+    valid_broadcast = xy.valid_mask.reshape(valid_shape)
+    flow = np.where(valid_broadcast, xz.flow + xy.flow, np.nan)
+    return CandidateCombinedRadialFaceFlow(
+        flow=flow,
+        xz_flow=np.where(valid_broadcast, xz.flow, np.nan),
+        xy_flow=xy.flow,
+        valid_mask=xy.valid_mask,
+        left_cell_indices=xy.left_cell_indices,
+    )
+
+
+def divergence_from_radial_face_flow_candidate_partial(
+    face_result: CandidateCombinedRadialFaceFlow,
+    jacobian: np.ndarray,
+    *,
+    dx: np.ndarray | float,
+) -> CandidateCombinedRadialDivergence:
+    """Return the conservative divergence of consecutive combined faces."""
+
+    flow = np.asarray(face_result.flow)
+    if np.iscomplexobj(flow) or not np.issubdtype(flow.dtype, np.number):
+        raise TypeError("combined face flow must be real numeric")
+    flow = np.asarray(flow, dtype=np.float64)
+    if flow.ndim < 3:
+        raise ValueError("combined face flow needs trailing axes [face, y, z]")
+    indices = np.asarray(face_result.left_cell_indices)
+    if indices.ndim != 1 or indices.size != flow.shape[-3]:
+        raise ValueError("left-cell indices do not match the face axis")
+    if indices.size < 2 or not np.array_equal(
+        np.diff(indices), np.ones(indices.size - 1, dtype=np.int64)
+    ):
+        raise ValueError("at least two consecutive radial faces are required")
+    face_valid = np.asarray(face_result.valid_mask, dtype=bool)
+    if face_valid.shape != flow.shape[-3:-1]:
+        raise ValueError("combined valid mask must have shape [face, y]")
+    leading_singletons = (1,) * (flow.ndim - 3)
+    face_valid_broadcast = face_valid.reshape(
+        (*leading_singletons, *face_valid.shape, 1)
+    )
+    full_face_valid = np.broadcast_to(face_valid_broadcast, flow.shape)
+    if not np.all(np.isfinite(flow[full_face_valid])):
+        raise ValueError("combined face flow is non-finite on a declared valid face")
+
+    jacobian_array = np.asarray(jacobian)
+    if np.iscomplexobj(jacobian_array):
+        raise ValueError("jacobian must be real-valued")
+    if not np.issubdtype(jacobian_array.dtype, np.number):
+        raise TypeError("jacobian must have a numeric dtype")
+    jacobian_array = np.asarray(jacobian_array, dtype=np.float64)
+    if jacobian_array.ndim != 2 or jacobian_array.shape[1] != flow.shape[-2]:
+        raise ValueError("jacobian must have shape [x, y] matching the face flow")
+    n_x, n_y = jacobian_array.shape
+    if not np.all(np.isfinite(jacobian_array)):
+        raise ValueError("jacobian contains non-finite values")
+    dx_array = _cell_geometry(
+        "dx", dx, n_x=n_x, n_y=n_y, require_positive=True
+    )
+    cell_indices = indices[1:]
+    if cell_indices[-1] >= n_x:
+        raise ValueError("face indices exceed the supplied geometry")
+    denominator = jacobian_array[cell_indices] * dx_array[cell_indices]
+    if np.any(denominator == 0.0):
+        raise ValueError("jacobian times dx must be nonzero")
+    cell_valid = face_valid[1:] & face_valid[:-1]
+    cell_valid_shape = (*leading_singletons, cell_indices.size, n_y, 1)
+    cell_valid_broadcast = cell_valid.reshape(cell_valid_shape)
+    denominator_shape = (*leading_singletons, cell_indices.size, n_y, 1)
+    divergence = (flow[..., 1:, :, :] - flow[..., :-1, :, :]) / denominator.reshape(
+        denominator_shape
+    )
+    divergence = np.where(cell_valid_broadcast, divergence, np.nan)
+    return CandidateCombinedRadialDivergence(
+        divergence=divergence,
+        valid_mask=cell_valid,
+        cell_indices=cell_indices,
     )
 
 
