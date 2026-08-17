@@ -587,6 +587,22 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     temporary staged copy before proceeding. This keeps one raw-archive byte
     traversal, one simultaneous 818-MB staged file, exact value/timestamp
     checks, bounded memory, and every frozen scientific rule unchanged.
+53. **The all-frame source-matched potential/vorticity closure passes with a
+    large numerical margin.** CPU-only Rocky 9 job `6893033`, from clean
+    commit `d3c7323`, completed in 18:44 after staging each of the 256 immutable
+    raw rank files exactly once through job-owned node-local storage. All eight
+    78-frame replays, all ordered gates, all 624 frames, every named geometry
+    region, and every native Fourier index `k=0..40` (`n=5k`) pass. Across
+    103,514,112 values, forward versus stored vorticity has pooled relative L2
+    `6.503e-13`, RMSE `2.517e-14`, and maximum absolute error `6.106e-13` at
+    frame 169. The worst per-frame error/tolerance ratio is only
+    `7.981e-4` at frame 494. Runtime pressures are exact, the frozen 3,412
+    negative raw-`Pi` cells are reproduced, and all nested artifact hashes
+    revalidate. Together with inverse job `6892641`, this establishes the
+    complete-archive bidirectional source identity and permits a separately
+    committed state-candidate decision. It does not establish predictive
+    sufficiency, stationarity, codec or rollout fidelity, authorize training,
+    or read 85606.
 
 ## Exact commands
 
