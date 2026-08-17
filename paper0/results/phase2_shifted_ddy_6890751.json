@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_shifted_ddy_compiled_oracle",
+  "paper0_commit": "9c308f4688b9b886d7204f4e2dfe91e9d90b7765",
+  "slurm": {
+    "job_id": 6890751,
+    "state": "FAILED",
+    "exit_code": "6:0",
+    "start": "2026-08-17T02:07:15-04:00",
+    "end": "2026-08-17T02:07:31-04:00",
+    "elapsed": "00:00:16",
+    "node": "worker5594"
+  },
+  "failure": {
+    "stage": "geometry_file_open_before_operator_evaluation",
+    "classification": "dependency_abi_mismatch",
+    "observed": "HDF5 headers 1.12.3 but runtime library 1.14.5",
+    "root_cause": "The first compiled BOUT++ install linked both the HDF5 1.12 and 1.14 ABIs because netcdf-c/4.9.2 is built against 1.12.3 while the build launcher explicitly loaded 1.14.5.",
+    "operator_evaluated": false,
+    "candidate_compared": false,
+    "numerical_acceptance_rule_changed": false,
+    "hdf5_disable_version_check_used": false
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_shifted_ddy/job_6890751",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_shifted_ddy_6890751.log",
+    "artifact_digests": {
+      "slurm_log": "918b123da5953c90039c09b2d910ae12b632e312ef4823ded0606737c4b74634",
+      "job.log": "918b123da5953c90039c09b2d910ae12b632e312ef4823ded0606737c4b74634",
+      "build/shifted_ddy_oracle": "e3dd2120c449bacda0f1a4833601cb522f3055464452c7a3a824990a61e3e2d4",
+      "run/BOUT.inp": "2f74cc0a5248b40af6225e1f8c79e25d341371147abc2845f29d9a36d4c98fe6",
+      "run/BOUT.settings": "81f354e5b52d0ba2968796a36bcd63c3aa770ca2719b0895fce5fc2233ee2968"
+    }
+  },
+  "data_access": {
+    "run_id": "85604_geometry_only",
+    "geometry_file_opened_successfully": false,
+    "plasma_state_frames_read": 0,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "no_result_environment_failure"
+}

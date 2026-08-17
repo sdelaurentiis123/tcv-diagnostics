@@ -51,6 +51,13 @@
     "shot_data_read": false,
     "held_out_85606_read": false
   },
-  "scientific_status": "dependency_build_only",
-  "gate_effect": "Does not release the transport metric; enables a compiled BOUT++ comparison of the candidate shifted-DDY implementation."
+  "runtime_validation": {
+    "job_id": 6890751,
+    "state": "FAILED",
+    "failure_stage": "geometry_file_open_before_operator_evaluation",
+    "cause": "netcdf-c/4.9.2 requires the HDF5 1.12.3 ABI, while this build also linked HDF5 1.14.5; HDF5 aborted on the header/library version mismatch",
+    "unsafe_bypass_used": false
+  },
+  "scientific_status": "superseded_runtime_abi_mismatch",
+  "gate_effect": "Does not release any metric and must not be used by the compiled oracle; a clean rebuild against HDF5 1.12.3 is required."
 }

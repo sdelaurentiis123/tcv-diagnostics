@@ -104,7 +104,7 @@ module load gcc/13.3.0
 module load openmpi/4.1.8
 module load cmake/3.31.6
 module load ninja/1.12.1
-module load hdf5/1.14.5
+module load hdf5/1.12.3
 module load netcdf-c/4.9.2
 module load fftw/3.3.10
 

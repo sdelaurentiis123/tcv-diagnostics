@@ -60,14 +60,17 @@ environment. It likewise read no shot data and did not compile BOUT++. The
 launcher correction adds only the `hdf5/1.14.5` Rocky 9 module; the unique
 failed-attempt directory is retained.
 
-The third attempt, job `6890722`, completed successfully from clean Paper 0
-commit `e298337918582293b682cc3c0465175634f29da3` on Rocky 9. It built and
-installed BOUT++ `5.2.1` at the exact embedded revision and read no shot data.
-The immutable external install, environment, Slurm accounting, source locks,
-and artifact hashes are indexed by
-`paper0/results/phase2_bout_build_6890722.json`. This is a dependency result,
-not a transport result: it enables the compiled shifted-`DDY` comparison but
-does not release the transport gate.
+The third attempt, job `6890722`, completed compilation from clean Paper 0
+commit `e298337918582293b682cc3c0465175634f29da3` on Rocky 9 and installed
+BOUT++ `5.2.1` at the exact embedded revision. Runtime job `6890751` then
+proved that install unusable: `netcdf-c/4.9.2` requires HDF5 `1.12.3`, while
+the build launcher had also linked HDF5 `1.14.5`. HDF5 correctly aborted on
+the header/library mismatch before opening the geometry or evaluating `DDY`.
+No unsafe version-check bypass was used. The immutable build and runtime
+failure are indexed by `paper0/results/phase2_bout_build_6890722.json` and
+`paper0/results/phase2_shifted_ddy_6890751.json`; the install is superseded.
+The corrected build uses the matching HDF5 `1.12.3` ABI in a new result
+directory.
 
 The candidate shifted-derivative transcription in
 `src/tcv_diagnostics/transport.py` follows the hash-locked BOUT++ FFT phase,
