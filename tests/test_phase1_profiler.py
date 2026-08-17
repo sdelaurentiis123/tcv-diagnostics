@@ -55,7 +55,9 @@ class RawMetadataTests(unittest.TestCase):
                         field, shape=(624, 1, 1, 5), dtype=np.float32
                     )
                     dataset.attrs["units"] = units
-                    dataset.attrs["conversion"] = conversion
+                    # The actual BOUT output stores this scalar in a length-one
+                    # attribute array, which must be unwrapped explicitly.
+                    dataset.attrs["conversion"] = np.asarray([conversion])
                 handle.create_dataset("Vort", shape=(624, 1, 1, 5))
 
             expected = {
@@ -112,4 +114,3 @@ exb_advection_simplified = false
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -69,6 +69,17 @@ def _jsonable(value: Any) -> Any:
     return value
 
 
+def _singleton_attribute(value: Any, *, name: str) -> Any:
+    """Unwrap scalar or length-one HDF5 attributes without hiding ambiguity."""
+
+    current = value
+    while isinstance(current, (list, tuple)):
+        if len(current) != 1:
+            raise ValueError(f"attribute {name} must be scalar, got {current!r}")
+        current = current[0]
+    return current
+
+
 def _read_json(path: Path) -> dict[str, Any]:
     with path.open("r", encoding="utf-8") as handle:
         return json.load(
@@ -210,8 +221,12 @@ def inspect_raw(
         if field not in metadata:
             raise ValueError(f"raw representative file lacks required C5 field {field}")
         attrs = metadata[field]["attrs"]
-        actual_units = attrs.get("units")
-        actual_conversion = attrs.get("conversion")
+        actual_units = _singleton_attribute(
+            attrs.get("units"), name=f"{field}.units"
+        )
+        actual_conversion = _singleton_attribute(
+            attrs.get("conversion"), name=f"{field}.conversion"
+        )
         units_ok = actual_units == expectation["units"]
         conversion_ok = actual_conversion is not None and math.isclose(
             float(actual_conversion), float(expectation["conversion"]), rel_tol=1e-12
