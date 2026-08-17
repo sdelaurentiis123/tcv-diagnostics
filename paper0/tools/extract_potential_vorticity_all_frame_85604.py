@@ -4,10 +4,12 @@
 from __future__ import annotations
 
 import argparse
-from contextlib import ExitStack
+from collections.abc import Iterator
+from contextlib import contextmanager, ExitStack
 import json
 import math
 from pathlib import Path
+import shutil
 import sys
 from typing import Any
 
@@ -39,6 +41,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--raw-root", type=Path, required=True)
+    parser.add_argument("--scratch-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--record", type=Path, required=True)
     parser.add_argument("--paper0-commit", required=True)
@@ -95,6 +98,24 @@ def discrepancy_count(
 
 def canonical_path(output_dir: Path, shard_index: int) -> Path:
     return output_dir / f"canonical_shard_{shard_index}.nc"
+
+
+@contextmanager
+def staged_rank_file(source: Path, scratch_dir: Path) -> Iterator[Path]:
+    """Stage exactly one immutable raw rank file into node-local storage."""
+
+    destination = scratch_dir / source.name
+    if destination.exists():
+        raise FileExistsError(f"refusing to overwrite staged rank {destination}")
+    if shutil.disk_usage(scratch_dir).free < source.stat().st_size:
+        raise OSError(f"insufficient node-local scratch for {source.name}")
+    try:
+        shutil.copyfile(source, destination)
+        if destination.stat().st_size != source.stat().st_size:
+            raise ValueError(f"staged rank size differs for {source.name}")
+        yield destination
+    finally:
+        destination.unlink(missing_ok=True)
 
 
 def create_canonical_files(
@@ -296,6 +317,13 @@ def main() -> int:
     if [rank_number(path) for path in paths] != list(range(expected_rank_count)):
         raise ValueError("rank filenames must cover exactly 0 through 255")
 
+    scratch_dir = args.scratch_dir.absolute()
+    if scratch_dir.exists():
+        raise FileExistsError(f"refusing existing scratch directory {scratch_dir}")
+    if raw_root == scratch_dir or raw_root in scratch_dir.parents:
+        raise ValueError("node-local scratch may not be inside the raw archive")
+    scratch_dir.mkdir(parents=True, exist_ok=False)
+
     args.output_dir.mkdir(parents=True, exist_ok=False)
     times = expected_times(manifest["frame_scope"])
     coverage = np.zeros((16, 16), dtype=np.int64)
@@ -339,7 +367,9 @@ def main() -> int:
         )
         metadata_written = False
         for path in paths:
-            with netCDF4.Dataset(path, "r") as source:
+            with staged_rank_file(path, scratch_dir) as staged_path, netCDF4.Dataset(
+                staged_path, "r"
+            ) as source:
                 pe_x, pe_y = validate_rank_metadata(
                     source, path=path, archive=archive
                 )
@@ -512,6 +542,8 @@ def main() -> int:
                 if side is not None:
                     boundary_coverage[side][y0:y1] += 1
 
+        scratch_dir.rmdir()
+
         if not np.array_equal(coverage, np.ones_like(coverage)):
             raise ValueError("processor-coordinate coverage is incomplete or duplicated")
         for side in phi_boundary.SIDES:
@@ -594,6 +626,10 @@ def main() -> int:
         "manifest": str(manifest_path),
         "manifest_sha256": sha256_file(manifest_path),
         "raw_root": str(raw_root),
+        "node_local_scratch": str(scratch_dir),
+        "raw_rank_staged_sequentially_once": True,
+        "maximum_simultaneous_staged_rank_files": 1,
+        "staged_rank_files_retained": False,
         "rank_file_count": len(paths),
         "rank_files_traversed_once": True,
         "raw_rank_read_order": [*VOLUME_FIELDS, "t"],

@@ -20,7 +20,7 @@ LOCAL_LOCKS = (
     ROOT / "paper0/tools/merge_potential_vorticity_all_frame_shards.py",
 )
 LAUNCHER_SHA256 = (
-    "f8672e4b32aa79f8d263b903539c4c6e9aa408286bf9063cd9000e2bf545deea"
+    "03211e88f396792fc9d1be20b809003c9a1c547cc03c716694b190ec42614f38"
 )
 
 
@@ -62,6 +62,8 @@ class PotentialVorticityAllFrameLauncherTests(unittest.TestCase):
         self.assertIn("rank_files_traversed_once", (
             ROOT / "paper0/tools/extract_potential_vorticity_all_frame_85604.py"
         ).read_text(encoding="utf-8"))
+        self.assertIn("/tmp/tcv_diagnostics_phase2_vort_all_", self.source)
+        self.assertIn('--scratch-dir "${LOCAL_STAGE}"', self.source)
         self.assertIn("Shard comparator statuses", self.source)
 
     def test_refuses_ambiguous_or_overwriting_execution(self) -> None:

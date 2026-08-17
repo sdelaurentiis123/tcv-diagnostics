@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_potential_vorticity_all_frame_85604_attempt",
+  "paper0_commit": "8b062c0d28ccf1f2aed60c1009da029703ed80e2",
+  "slurm": {
+    "job_id": 6893017,
+    "state": "CANCELLED",
+    "batch_exit_code": "0:15",
+    "submit": "2026-08-17T14:01:14-04:00",
+    "start": "2026-08-17T14:01:15-04:00",
+    "end": "2026-08-17T14:03:22-04:00",
+    "elapsed": "00:02:07",
+    "time_limit": "01:00:00",
+    "node": "worker5582",
+    "batch_max_rss_kib": 651916
+  },
+  "data_access": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "provenance_gates_passed": true,
+    "canonical_extraction_completed": false,
+    "compiled_oracle_started": false,
+    "shard_replay_count": 0,
+    "scientific_result_written": false
+  },
+  "outcome": {
+    "classification": "no_result_small_chunk_ceph_latency_failure",
+    "reason": "native-order access removed backward scans, but hundreds of 31 KiB HDF5 chunk reads still incurred enough Ceph latency that rank zero could not complete inside a viable all-rank schedule",
+    "read_only_rate_observation": {
+      "elapsed": "00:01:26",
+      "batch_max_disk_read_bytes": 357392824,
+      "batch_max_disk_write_bytes": 487101,
+      "completed_raw_rank_count": 0,
+      "canonical_volume_chunks_written": 0
+    },
+    "partial_canonical_file_count": 8,
+    "partial_canonical_apparent_bytes_each": 18523,
+    "partial_job_directory_du": "174K",
+    "scientific_statistics_accepted": false,
+    "protocol_or_tolerance_changed": false,
+    "planned_correction": "sequentially stage exactly one immutable 818 MB raw rank file into job-owned node-local scratch, perform the unchanged time-major semantic extraction locally, remove only that temporary copy, and then stage the next rank"
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893017",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_vort_all_6893017.log",
+    "artifact_digests": {
+      "commands.sh": "cf86f695cbb1ead2f2923d004fc5151fcc5e22664611dff34c9c8c7e85bf2808",
+      "environment.txt": "09be1f7a85cd7275eba9ff78e699fa15ee8216455f122456d56bb9a0c3ccec2a",
+      "modules.txt": "b383f226b959e93aab38ad41ee079f5e3f71158c337a80b142a0683610907ce7",
+      "slurm_job.txt": "9e8d73d531a88ee4d5fa670172284816f4e2ea7be68e830171f303defefa1b97",
+      "job.log": "282c367c5198ff852e70990a1e771e24837bae68690aca272188acc1bb67b5a4",
+      "slurm_log": "711f9570bbe3e8292635cbd891ac15bc9ca6048a231d764e0702316c0a2ad80f"
+    }
+  }
+}

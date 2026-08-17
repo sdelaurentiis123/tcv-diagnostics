@@ -20,6 +20,7 @@ from paper0.tools.extract_potential_vorticity_all_frame_85604 import (
     create_canonical_files,
     discrepancy_count,
     expected_times,
+    staged_rank_file,
     update_pressure_inventory,
 )
 from paper0.tools.merge_potential_vorticity_all_frame_shards import (
@@ -49,7 +50,7 @@ SELECTED_DRIVER_SHA256 = (
 FILE_HASHES = {
     DRIVER: "79daf7925cb6a8b7d8751eee51f3fa9f5e6139289700654999d659a8bce6d254",
     CMAKE: "b2ac21ea37793e24417320b7fef8c143f0db6a1ff80f65a0e6663328f019169e",
-    EXTRACTOR: "4a47c94dd761e918746790f0408817624f9a59ae802e8b266d842d3bdb63a292",
+    EXTRACTOR: "285102f4164090552aad9ead9acac9d95a856f70a21fb840a5a978b407d853bf",
     COMPARATOR: "ffd5efbb59abb0eef3bd9a187431f85d5a9c9700fd976627c1d9b89c8b64e967",
     MERGER: "3bedce322efbf22e4942afc84101422f807b179e82c9fa739f1c6800ab4e6fa6",
 }
@@ -60,6 +61,19 @@ def sha256(path: Path) -> str:
 
 
 class AllFrameExtractionTests(unittest.TestCase):
+    def test_rank_staging_preserves_source_and_removes_only_scratch_copy(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "BOUT.dmp.7.nc"
+            source.write_bytes(b"immutable-rank-bytes")
+            scratch = root / "scratch"
+            scratch.mkdir()
+            with staged_rank_file(source, scratch) as staged:
+                self.assertEqual(staged.read_bytes(), source.read_bytes())
+                self.assertTrue(source.exists())
+            self.assertTrue(source.exists())
+            self.assertFalse((scratch / source.name).exists())
+
     def test_canonical_chunk_matches_rank_write_slab_and_round_trips(self) -> None:
         try:
             import netCDF4
@@ -285,6 +299,8 @@ class AllFrameCompiledImplementationTests(unittest.TestCase):
         self.assertIn("rank_files_traversed_once", source)
         self.assertIn('"raw_rank_read_order": [*VOLUME_FIELDS, "t"]', source)
         self.assertIn('"time_major_local_rank_buffer_frames": 78', source)
+        self.assertIn("with staged_rank_file(path, scratch_dir)", source)
+        self.assertIn('"maximum_simultaneous_staged_rank_files": 1', source)
         self.assertIn("chunksizes=(78, 4, 2, 81)", source)
         self.assertIn('"canonical_volume_chunks": [78, 4, 2, 81]', source)
         self.assertIn("refusing to overwrite all-frame extraction artifacts", source)

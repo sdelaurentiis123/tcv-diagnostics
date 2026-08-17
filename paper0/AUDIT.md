@@ -574,6 +574,19 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     local-rank slab. It preserves the one-open traversal, every timestamp and
     value check, canonical content, memory bound, equation, tolerance, replay
     order, and decision rule.
+52. **Native-order semantics alone do not overcome small-chunk Ceph latency.**
+    CPU-only Rocky 9 job `6893017`, from clean commit `8b062c0`, passed all
+    provenance gates and read the required variables per frame in verified
+    on-disk order. At 1:26 it had issued 357,392,824 bytes of reads without
+    completing raw rank zero or writing one canonical volume chunk. The job
+    was cancelled at 2:07 with no completed extraction, compile, replay,
+    scientific JSON, accepted statistic, or 85606 access; its partial files
+    remain immutable. The next execution-only correction sequentially stages
+    one raw rank file at a time into a unique node-local job directory, runs
+    the unchanged time-major semantic read there, and removes only that
+    temporary staged copy before proceeding. This keeps one raw-archive byte
+    traversal, one simultaneous 818-MB staged file, exact value/timestamp
+    checks, bounded memory, and every frozen scientific rule unchanged.
 
 ## Exact commands
 

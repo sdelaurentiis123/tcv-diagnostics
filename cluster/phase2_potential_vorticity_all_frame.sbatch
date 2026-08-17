@@ -25,6 +25,7 @@ readonly HERMES_SOURCE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/he
 readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame"
 readonly OUTDIR="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly CANONICAL_DIR="${OUTDIR}/canonical"
+readonly LOCAL_STAGE="/tmp/tcv_diagnostics_phase2_vort_all_${SLURM_JOB_ID}"
 readonly SHARD_BASE="${OUTDIR}/shards"
 readonly BUILD_DIR="${OUTDIR}/build"
 readonly ORACLE_SOURCE="${PAPER0_ROOT}/paper0/oracles/potential_vorticity_all_frame"
@@ -100,7 +101,7 @@ fi
 
 check_sha256 "a8adb03a5ea6633b114fdb2442739c928f2cb846da9c4a6de43b6355900ef333" "${MANIFEST}"
 check_sha256 "b52816365f78755c3433c56af6b71931805a839d9958bdd711e91c4b0b378723" "${PROTOCOL}"
-check_sha256 "4a47c94dd761e918746790f0408817624f9a59ae802e8b266d842d3bdb63a292" "${EXTRACTOR}"
+check_sha256 "285102f4164090552aad9ead9acac9d95a856f70a21fb840a5a978b407d853bf" "${EXTRACTOR}"
 check_sha256 "79daf7925cb6a8b7d8751eee51f3fa9f5e6139289700654999d659a8bce6d254" "${DRIVER}"
 check_sha256 "b2ac21ea37793e24417320b7fef8c143f0db6a1ff80f65a0e6663328f019169e" "${ORACLE_SOURCE}/CMakeLists.txt"
 check_sha256 "ffd5efbb59abb0eef3bd9a187431f85d5a9c9700fd976627c1d9b89c8b64e967" "${COMPARATOR}"
@@ -143,7 +144,7 @@ module list 2> "${OUTDIR}/modules.txt"
 scontrol show job -dd "${SLURM_JOB_ID}" > "${OUTDIR}/slurm_job.txt"
 
 {
-  echo "${PYTHON} ${EXTRACTOR} --manifest ${MANIFEST} --raw-root ${RAW_ROOT} --output-dir ${CANONICAL_DIR} --record ${EXTRACTION_RECORD} --paper0-commit ${PAPER0_COMMIT} --slurm-job-id ${SLURM_JOB_ID}"
+  echo "${PYTHON} ${EXTRACTOR} --manifest ${MANIFEST} --raw-root ${RAW_ROOT} --scratch-dir ${LOCAL_STAGE} --output-dir ${CANONICAL_DIR} --record ${EXTRACTION_RECORD} --paper0-commit ${PAPER0_COMMIT} --slurm-job-id ${SLURM_JOB_ID}"
   echo "cmake -S ${ORACLE_SOURCE} -B ${BUILD_DIR} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${BOUT_INSTALL}"
   echo "cmake --build ${BUILD_DIR} --parallel ${SLURM_CPUS_PER_TASK}"
   for ((shard = 0; shard < 8; shard++)); do
@@ -167,6 +168,7 @@ scontrol show job -dd "${SLURM_JOB_ID}" > "${OUTDIR}/slurm_job.txt"
   "${EXTRACTOR}" \
   --manifest "${MANIFEST}" \
   --raw-root "${RAW_ROOT}" \
+  --scratch-dir "${LOCAL_STAGE}" \
   --output-dir "${CANONICAL_DIR}" \
   --record "${EXTRACTION_RECORD}" \
   --paper0-commit "${PAPER0_COMMIT}" \
