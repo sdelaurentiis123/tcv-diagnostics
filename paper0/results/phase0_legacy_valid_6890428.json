@@ -1,0 +1,98 @@
+{
+  "schema_version": "0.1.0",
+  "result_class": "legacy_reproduction_control",
+  "status": "completed_with_numerical_discrepancy",
+  "blind_test_accessed": false,
+  "failed_preflight_attempt": {
+    "slurm_job_id": "6890410",
+    "paper0_commit": "d97223fcd11c8e930ceb0bf0f9d076bacfe08904",
+    "state": "FAILED",
+    "exit_code": "2:0",
+    "elapsed_seconds": 26,
+    "failure": "The expected validation-file SHA-256 was missing its leading 'eed' characters.",
+    "model_inference_started": false
+  },
+  "successful_attempt": {
+    "slurm_job_id": "6890428",
+    "paper0_commit": "7e2b5d268b2d5176a5b26cba9ac129e3caf317b5",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 190,
+    "max_rss_kib": 2821980,
+    "host": "workergpu221.cm.cluster",
+    "operating_system": "Rocky Linux 9.8",
+    "gpu": "NVIDIA H100 95830 MiB",
+    "python": "/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python",
+    "torch": "2.5.1+cu124",
+    "cuda": "12.4",
+    "h5py": "3.11.0"
+  },
+  "protocol": {
+    "data": "85604 legacy validation",
+    "trajectory_index": 0,
+    "start_frame": 24,
+    "horizon_frames": 48,
+    "physical_cadence_microseconds": 3.131905426352636,
+    "maximum_evaluated_lead_frames": 47,
+    "maximum_evaluated_lead_microseconds": 147.1995550385739,
+    "context_frames": 1,
+    "ensemble_members": 64,
+    "sampler": "Adams-Bashforth",
+    "sampler_steps": 16,
+    "seed": 0,
+    "update": "ETKF filter",
+    "assimilation_every_frames": 4,
+    "assimilation_every_microseconds": 12.527621705410544,
+    "observation_layout": "iter",
+    "observation_semantics": "69 idealized direct-state point channels: 54 Ne and 15 phi on z=0",
+    "observation_std_standardized_space": 0.05,
+    "inflation": 1.0,
+    "common_random_numbers": true,
+    "analysis_count": 11
+  },
+  "exact_command": "python -u /mnt/home/sdelaurentiis/tcv-gaot-3d/lola_ext/experiments/da_anchored_rollout.py run=/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/idllqvqe_tcv_c5_f8c64_vit_small target=state_best grid=/mnt/home/sdelaurentiis/ceph/lola_tcv/grid_85604.npz split=valid index=0 start=24 horizon=48 context=1 samples=64 steps=16 algorithm=ab update=etkf analysis_mode=filter layout=iter assim_every=4 assim_start=0 obs_std=0.05 observation_noise_policy=frame_keyed inflation=1.0 inflate=off init_temp=1.0 churn=1.0 seed=0 index_coordinates=state ixsep=16 edge_x0=16 source_commit=predecessor-b367d8b-src3b70e4e outdir=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428/da",
+  "metrics": {
+    "space": "legacy standardized five-field model space",
+    "codec_reconstruction_rmse_floor": 0.034976765909727585,
+    "free_mean_rmse": 0.2049902282813762,
+    "anchored_mean_rmse": 0.18001283689382228,
+    "absolute_mean_rmse_improvement": 0.02497739138755392,
+    "relative_mean_rmse_improvement_percent": 12.184674165672497,
+    "free_final_rmse": 0.25927722454071045,
+    "anchored_final_rmse": 0.21331951022148132,
+    "free_mean_spread": 0.10540196362962113,
+    "anchored_mean_spread": 0.0782927487917403,
+    "mean_rmse_by_field": {
+      "Ne": {"free": 0.14727518548990817, "anchored": 0.15882752930864374},
+      "Te": {"free": 0.1687765654889827, "anchored": 0.1484731434983142},
+      "Ti": {"free": 0.22900994439074335, "anchored": 0.2372528406533789},
+      "phi": {"free": 0.2813986455030898, "anchored": 0.18874256780489962},
+      "Vi": {"free": 0.14622074207092853, "anchored": 0.14599374554892805}
+    },
+    "edge_mean_rmse_by_field": {
+      "Ne": {"free": 0.09412297899735735, "anchored": 0.09664151730372551},
+      "Te": {"free": 0.15524037301223328, "anchored": 0.12456411464100188},
+      "Ti": {"free": 0.18457346251036258, "anchored": 0.18056426799677788},
+      "phi": {"free": 0.28352303160948955, "anchored": 0.1672927162590179},
+      "Vi": {"free": 0.14266241215010908, "anchored": 0.1382102885461868}
+    }
+  },
+  "historical_comparison": {
+    "historical_free_mean_rmse": 0.2011699302399412,
+    "historical_anchored_mean_rmse": 0.17706738111186535,
+    "frozen_absolute_tolerance": 0.001,
+    "free_delta": 0.003820298041434994,
+    "anchored_delta": 0.0029454557819569294,
+    "status": "numerical_discrepancy",
+    "cause": "not established; no rerun or tuning was performed to erase the discrepancy"
+  },
+  "rusty_artifacts": {
+    "directory": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428",
+    "reproduction_summary": {"sha256": "1abbde6500ea03bd8a62cb9a5eb746b61341fb2d0a47030dc54d98d73ab0a227", "size_bytes": 4995},
+    "data_audit": {"sha256": "1df4fb4be12941444503203c8f3e44ad4210f37401001db0cb3fa4e4885387b0", "size_bytes": 8109},
+    "python_environment": {"sha256": "a1c22d99362bf34ed745c4b49bf609a602ab67099328c4a9c1a4fe9d4a223337", "size_bytes": 183},
+    "command": {"sha256": "113e079417184b7ae9494bea10ab4a5307a9ca7dc6725a3313518687b7697002", "size_bytes": 695},
+    "raw_da_summary": {"sha256": "26e2215754f59847c3812169a02c4f9f003b031611989051a7389cfc6831b888", "size_bytes": 88951}
+  },
+  "interpretation_limit": "This establishes executable provenance and a narrow legacy ETKF control. It does not validate transport fidelity, physical diagnostic realism, diagnostic ranking, or held-out 85606 performance."
+}

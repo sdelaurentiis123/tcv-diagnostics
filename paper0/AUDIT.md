@@ -1,6 +1,6 @@
 # Phase 0 repository and result audit
 
-**Status:** in progress
+**Status:** complete
 
 **Audit date:** 2026-08-16
 
@@ -141,32 +141,37 @@ Codec run:
 - Config SHA-256: `66509d2b0c9a1aaa03959e0e33691d443f39fa24bbad93a0dbb41e291176e776`
 - Five fields are compressed jointly from `[64, 32, 88]` to a latent spatial grid `[8, 4, 11]` with 64 latent channels.
 
-Other historical families to inventory before Phase 0 closes:
+### Other historical families
 
-- z44 codec/diffusion
-- z22 continuation
-- matched-budget f8-short continuation
-- actual-sampled rollout-CRPS fine-tune
-- deterministic Walrus/ViT3D baselines
+The exact paths, hashes, training histories, and comparison blockers are recorded in `paper0/manifests/legacy_model_families.json`.
+
+- The deterministic Walrus/ViT3D artifact used four C4 fields (`Ne`, `Te`, `Vort`, `phi`), `log10(Ne)`, six context frames, sample-wise reversible normalization, one-step delta prediction, and MAE. Its selected epoch-236 checkpoint has validation MAE `0.0220873`, but that number is not comparable to the five-field standardized LOLA errors. The nearest saved rollout artifact is epoch 230 rather than the selected checkpoint; it contains one aggregate batch, its full-field freeze ratio falls from `0.8852` to `0.1427`, and its reported standard deviation is `NaN`.
+- The z22 diffusion artifact is a continuation using a separately trained z22 codec.
+- The z44 codec is itself a non-strict continuation from z22 with an added multiscale-increment term, and its diffusion model is another continuation. It is not an isolated latent-resolution ablation.
+- The f8-short artifact is also a continuation, so its total exposure is not a clean matched-budget control.
+- The rollout-CRPS model is a 40-epoch fine-tune of the primary f8 checkpoint, not a from-scratch retraining. Fair CRPS, absolute anchored error, and ETKF gain select epochs 7, 4, and 18 respectively. The frozen history's best-fair-CRPS checkpoint (`0.143996`) does not beat the parent (`0.143918`), and no joint-dependence loss was active. Its requested latent band edges `[1, 6, 16]` collapse to the single effective split `[1]` on the f8 latent grid, so it did not separately supervise the physical `n ≈ 20–35` range.
+
+These artifacts are retained only as historical evidence and initialization candidates. Paper 0 will rebuild the actual baseline comparison using one shared data protocol, field set, preprocessing definition, training budget, and validation rule.
 
 ## Forecast reproduction
 
-Pending a fresh 85604-validation execution on Rocky 9. The selected legacy driver produces an autonomous free-rollout arm in the same invocation as the ETKF arm.
+Job `6890428` completed on Rocky Linux 9.8 with one NVIDIA H100 in 190 seconds. It used Paper 0 commit `7e2b5d268b2d5176a5b26cba9ac129e3caf317b5`, verified every source/config/checkpoint hash, and accessed only the legacy 85604 validation region.
 
-Historical reference only, not yet a Paper 0 reproduction:
-
-- Split: 85604 legacy validation
 - Start frame: 24
-- Horizon: 48
+- Rollout tensor: 48 frames including the lead-zero state; maximum evaluated lead: 47 cadence intervals = `147.1996 microseconds`
 - Ensemble: 64
-- Sampler: AB, 16 steps
-- Mean free-rollout RMSE: `0.2011699302399412` in standardized legacy model space
+- Sampler: Adams-Bashforth, 16 steps
+- Seed: 0
+- Codec reconstruction RMSE floor: `0.0349768`
+- Mean free-rollout RMSE: `0.2049902`
+- Final free-rollout RMSE: `0.2592772`
+- Mean free ensemble spread: `0.1054020`
+
+The historical free-RMSE reference was `0.2011699`. The fresh value differs by `0.0038203`, outside the frozen `0.001` numerical tolerance. The reproduction is therefore recorded as a numerical discrepancy; its cause is not established and no tuning or repeated sampling was used to erase it.
 
 ## Assimilation reproduction
 
-Pending the same fresh 85604-validation execution.
-
-Historical reference only:
+The same job produced the free and ETKF arms with paired random numbers:
 
 - Synthetic layout: `iter`
 - Observation operator: 69 direct-state point samples on toroidal plane `z=0`
@@ -175,7 +180,15 @@ Historical reference only:
 - ETKF cadence: every 4 frames
 - Observation standard deviation: 0.05 in standardized model space
 - Inflation: 1.0
-- Historical mean anchored RMSE: `0.17706738111186535`
+- Mean anchored RMSE: `0.1800128`
+- Final anchored RMSE: `0.2133195`
+- Mean anchored ensemble spread: `0.0782927`
+- Absolute mean-RMSE reduction: `0.0249774`
+- Relative mean-RMSE reduction: `12.1847%`
+
+The old control improves aggregate error, but its effect is not uniform across fields. Mean global RMSE improves for `Te` (`0.16878 -> 0.14847`) and especially `phi` (`0.28140 -> 0.18874`), is essentially unchanged for `Vi` (`0.14622 -> 0.14599`), and worsens for `Ne` (`0.14728 -> 0.15883`) and `Ti` (`0.22901 -> 0.23725`). ETKF also contracts the average ensemble spread. This is a useful forecast/assimilation smoke test, not a physical diagnostic-ranking result.
+
+The historical anchored-RMSE reference was `0.1770674`; the fresh value differs by `0.0029455`, also outside the frozen tolerance. Full metrics and artifact hashes are in `paper0/results/phase0_legacy_valid_6890428.json`.
 
 ## Discrepancies and known failure modes
 
@@ -192,20 +205,35 @@ Historical reference only:
 11. **Physical geometry does not imply a physical channel response.** Corrected target, reflectometry, and GPI supports exist, but the prior ranked channels are largely direct-state proxies. The acceptance ledger in `protocol/OBSERVATION_OPERATORS.md` prevents those proxies from entering final diagnostic claims.
 12. **The six legacy labels are not physical time.** They are constant boundary-condition codes. Cadence is implicit, and absolute frame time is absent.
 13. **Four cache rows are augmentation copies.** Random toroidal rolls of one run must never be counted as independent physical trajectories; validation augmentation also needs removal in the new protocol.
+14. **The first locked launch failed before inference due to a transcription error.** Job `6890410` correctly stopped at the integrity gate because the expected validation hash was only 61 characters. Commit `7e2b5d2` restored the leading `eed` and added a regression test requiring complete 64-character hashes and manifest/launcher agreement.
+15. **The fresh legacy result has small numerical drift.** Job `6890428` preserves the qualitative and absolute ETKF gain but does not reproduce the historical free and anchored RMSE within the predeclared `0.001` tolerance. The cause remains unknown.
+16. **The deterministic artifact is not an apples-to-apples baseline.** It uses C4 rather than C5, a different density logarithm, different normalization, six context frames, and a different validation objective. It must be retrained under the common protocol.
+17. **The historical representation sweep is confounded.** z22, z44, and f8-short have different parentage, codec losses, and training exposure. No latent-resolution conclusion is accepted from those artifacts.
+18. **The historical CRPS fine-tune did not establish a calibration solution.** Its best-fair-CRPS score is slightly worse than the parent in the frozen history; separate objectives select separate epochs; and it does not validate cross-field transport statistics.
 
 ## Exact commands
 
-The first locked reproduction launcher will be added under `cluster/`. It will:
+The locked launcher is `cluster/phase0_reproduce_legacy_valid.sbatch`. It:
 
-- run only `split=valid` from 85604;
-- set `update=etkf` explicitly;
-- verify source/config/checkpoint hashes before allocating model state;
-- use a unique output directory;
-- print Paper 0 commit, dirty state, host OS, GPU, and exact arguments;
-- produce both free and assimilated metrics in `da_summary.json`.
+- runs only `split=valid` from 85604;
+- sets `update=etkf` explicitly;
+- verifies source/config/checkpoint hashes before allocating model state;
+- uses a unique output directory;
+- prints Paper 0 commit, dirty state, host OS, GPU, and exact arguments;
+- produces both free and assimilated metrics in `da_summary.json`.
+
+It was submitted from Rocky 9 with:
+
+```bash
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT=7e2b5d268b2d5176a5b26cba9ac129e3caf317b5 cluster/phase0_reproduce_legacy_valid.sbatch
+```
+
+The exact model command, including every override, is stored directly in `paper0/results/phase0_legacy_valid_6890428.json`. That record also contains the hashes of the immutable Rusty `command.sh`, raw metric summary, environment record, and data audit.
 
 The machine-readable evidence inventory is `paper0/manifests/legacy_phase0_inventory.json`.
 
 ## Phase 0 exit decision
 
-Not yet reached. Phase 0 closes only after the primary forecast/assimilation result is freshly reproduced, the deterministic baseline artifacts are located, remaining checkpoint families are inventoried, discrepancies are recorded, and exact commands are committed.
+**Phase 0 is complete with documented discrepancies.** The predecessor forecast and ETKF paths execute on Rocky 9; the fresh result and its numerical drift are preserved; deterministic and stochastic checkpoint families are located and hashed; data, preprocessing, time, toroidal-mode, geometry, and observation-operator hazards are explicit; and 85606 remained untouched.
+
+No historical score is accepted for Paper 0 model selection. Phase 1 begins from the raw 85604 timeline and creates a guarded chronological protocol with training-only normalization and deterministic validation behavior.

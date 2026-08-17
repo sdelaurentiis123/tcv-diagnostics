@@ -1,0 +1,203 @@
+{
+  "schema_version": "0.1.0",
+  "audit_date": "2026-08-16",
+  "scope": "historical_85604_artifact_inventory_only",
+  "blind_test_accessed": false,
+  "selection_use": "none",
+  "global_limitations": [
+    "These artifacts use the legacy adjacent 85604 train/validation split with no guard interval.",
+    "The model families do not share a from-scratch training budget or a single checkpoint-selection rule.",
+    "The deterministic Walrus run uses a four-field C4 dataset and log10 density, whereas the LOLA runs use a five-field C5 dataset and natural-log density.",
+    "No metric in this manifest is evidence about the sequestered 85606 evaluation.",
+    "All models must be rebuilt under the Paper 0 protocol before an apples-to-apples comparison is made."
+  ],
+  "families": {
+    "legacy_deterministic_walrus_c4": {
+      "role": "historical deterministic baseline locator, not a Paper 0 baseline result",
+      "run": "/mnt/home/sdelaurentiis/ceph/walrus_runs/vit_c4_nojit-TCVc4-delta-Isotr[Space-Adapt-]-AdamW-0.001/0",
+      "data": {
+        "dataset": "TCV_c4_z88",
+        "fields": ["Ne", "Te", "Vort", "phi"],
+        "density_transform": "log10(Ne)",
+        "input_frames": 6,
+        "output_frames": 1,
+        "dt_stride": 1
+      },
+      "training": {
+        "prediction_type": "delta",
+        "loss": "MAE",
+        "normalization": "sample-wise reversible instance normalization",
+        "optimizer": "AdamW",
+        "learning_rate": 0.001,
+        "gradient_accumulation": 4,
+        "maximum_epochs": 400,
+        "validation_frequency_epochs": 2,
+        "rollout_validation_frequency_epochs": 10,
+        "checkpoint_selection": "one-step validation MAE"
+      },
+      "architecture": {
+        "family": "Walrus IsotropicModel",
+        "hidden_dim": 256,
+        "projection_dim": 96,
+        "intermediate_dim": 192,
+        "processor_blocks": 6,
+        "attention_heads": 8,
+        "causal_in_time": true
+      },
+      "best_checkpoint": {
+        "epoch": 236,
+        "validation_mae": 0.02208733558654785,
+        "checkpoint_sha256": "7b8b47344e76bd986c9f81499e97d6cea670a38e452f36e07fbd65b2e54fcaff",
+        "metadata_sha256": "82423ea59aa65908fb1e981877f0cc6ae8d23fbbba77114ecf57a96fb0877376",
+        "config_sha256": "bb0b67d0a0ab28574caebcc92cb17b62c4532cd9ae4e69c3e940b623c31bfed0"
+      },
+      "nearest_saved_rollout_artifact": {
+        "epoch": 230,
+        "time_vector_length": 21,
+        "full_nrmse_first": 0.2293764352798462,
+        "full_nrmse_last": 0.3155955970287323,
+        "full_mae_first": 0.01926162652671337,
+        "full_mae_last": 0.07449831068515778,
+        "full_freeze_ratio_first": 0.8852326273918152,
+        "full_freeze_ratio_last": 0.14271019399166107,
+        "sampling_note": "The saved aggregate represents one rollout-validation batch: mean equals median and standard deviation is NaN.",
+        "selection_note": "Epoch 230 is the nearest saved rollout artifact, not the selected epoch-236 checkpoint."
+      },
+      "comparison_blocker": "Different fields, density transform, normalization, context length, objective, and validation protocol from C5 LOLA."
+    },
+    "legacy_lola_f8_base": {
+      "role": "primary legacy stochastic control reproduced in Phase 0",
+      "codec_latent_shape": [64, 8, 4, 11],
+      "diffusion_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/idllqvqe_tcv_c5_f8c64_vit_small",
+      "codec_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/ae/w24x2ybf_tcv_c5_dcae_3d_tcv_f8c64",
+      "trajectory_frames": 5,
+      "training": {
+        "epochs": 300,
+        "examples_per_epoch": 2048,
+        "batch_size": 16
+      },
+      "diffusion_checkpoint_sha256": "5d8e14807b62e81e928628c8413c2563d00884bf339f50e9b221bd758c02e759",
+      "diffusion_config_sha256": "b7ce08657d142cf9d7139798dff0aec847697dd4b198e41d79b6e03ea85a35a5",
+      "codec_checkpoint_sha256": "9f65dc523b8ee32ea5dd87842b99075de15f9aae86d2e71a5da55bc37091a44e",
+      "codec_config_sha256": "66509d2b0c9a1aaa03959e0e33691d443f39fa24bbad93a0dbb41e291176e776"
+    },
+    "legacy_lola_z22_continuation": {
+      "role": "historical representation experiment",
+      "codec_latent_shape": [64, 8, 4, 22],
+      "codec_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/ae/z22f6602371_tcv_c5_dcae_3d_tcv_f8z4c64",
+      "diffusion_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/z22dmcont6791660_tcv_c5_f8z4c64_vit_small",
+      "codec_training": {
+        "from_scratch": true,
+        "epochs": 50,
+        "examples_per_epoch": 2048,
+        "loss": "MAE"
+      },
+      "diffusion_training": {
+        "continuation": true,
+        "continuation_parent": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/z22dm6791369_tcv_c5_f8z4c64_vit_small",
+        "additional_epochs": 40,
+        "examples_per_epoch": 1024
+      },
+      "codec_config_sha256": "a15dab9d7a5ef7a6b39361f9a3200eedb855985e1be1d90cf8ded59d927ae064",
+      "codec_checkpoint_sha256": "2954ff665c0559142b49b7261ed647292b21f3a92e1e456d5009b74f1c984f67",
+      "diffusion_config_sha256": "514c6507d3d99cefbb5760c6ec6542ac459662d03e53f7e9906249d5a7d21247",
+      "diffusion_checkpoint_sha256": "aa1fff7ac89f78aee09a5d55659b82b9a0b3f27842b33b0da3ee23c3fad0ae53",
+      "comparison_blocker": "Continuation training and codec budget differ from f8 and z44."
+    },
+    "legacy_lola_z44_continuation": {
+      "role": "historical representation experiment",
+      "codec_latent_shape": [64, 8, 4, 44],
+      "codec_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/ae/z44c6604191_tcv_c5_dcae_3d_tcv_f8z2c64",
+      "diffusion_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/wgehitby_tcv_c5_f8z2c64_vit_small_zpair",
+      "codec_training": {
+        "continuation": true,
+        "continuation_parent": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/ae/z22f6602371_tcv_c5_dcae_3d_tcv_f8z4c64",
+        "strict_load": false,
+        "additional_epochs": 12,
+        "examples_per_epoch": 1024,
+        "losses": {"MAE": 1.0, "multiscale_increment": 0.03}
+      },
+      "diffusion_training": {
+        "continuation": true,
+        "continuation_parent": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/a652oomp_tcv_c5_f8z2c64_vit_small_zpair",
+        "additional_epochs": 40,
+        "examples_per_epoch": 1024
+      },
+      "codec_config_sha256": "5d868c1cfc5a17ce26c2f6ce86ced50d7b55525c6967c5b599b1074058b67284",
+      "codec_checkpoint_sha256": "095d25f9b6e867103d4cfb946cc9ea8a172a5a6db5b28e5726428c4c57e4979d",
+      "diffusion_config_sha256": "cd3c54f3651b5a6979413892b284b21ab56352d5bb100cf7b7700bd611d35742",
+      "diffusion_checkpoint_sha256": "6f0b1e10fa4887dc733fbdd75867eec09d3d16ef81e9d71636a5627db66d20a7",
+      "comparison_blocker": "Both codec and diffusion are continuations with unmatched budgets; the codec also changes its loss."
+    },
+    "legacy_lola_f8_short_continuation": {
+      "role": "historical budget-control attempt",
+      "codec_latent_shape": [64, 8, 4, 11],
+      "diffusion_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/f8shortcont6791711_tcv_c5_f8c64_vit_small",
+      "continuation_parent": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/f8short6791706_tcv_c5_f8c64_vit_small",
+      "additional_epochs": 40,
+      "examples_per_epoch": 1024,
+      "config_sha256": "6af88232d5f972dc4d51747b8d8a626ff6ef5c61e377bc4a6aa8bbf7d695330b",
+      "checkpoint_sha256": "fe900bde10e0503c3d3cf554da7c6f9de412bb54e53b436db9e7256efc7d3495",
+      "comparison_blocker": "The total parent-plus-continuation exposure is not matched to the other representation runs."
+    },
+    "legacy_lola_f8_rollout_crps_finetune": {
+      "role": "historical calibration fine-tune",
+      "run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/rcrpsda_6791994_tcv_c5_f8c64_vit_small_rcrps",
+      "parent": {
+        "run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/idllqvqe_tcv_c5_f8c64_vit_small",
+        "target": "state_best"
+      },
+      "training": {
+        "fine_tune": true,
+        "rollout_blocks": 2,
+        "ensemble_members_per_training_example": 4,
+        "validation_members": 8,
+        "sampler_steps": 16,
+        "backpropagation": "full",
+        "fair_crps_weight": 0.95,
+        "band_crps_weight": 0.3,
+        "requested_band_edges": [1, 6, 16],
+        "effective_band_edges": [1],
+        "learning_rate": 0.00001,
+        "batch_size": 2,
+        "gradient_accumulation": 4,
+        "examples_per_epoch": 128,
+        "epochs": 40,
+        "toroidal_roll_augmentation": true,
+        "joint_dependence_losses_enabled": false
+      },
+      "validation_history": {
+        "parent_epoch_minus_1": {
+          "fair_crps": 0.14391787629574537,
+          "rollout_rmse": 0.2731208223849535,
+          "spread": 0.1983866924419999,
+          "spread_skill_ratio": 0.7263697096019335
+        },
+        "best_fair_crps": {
+          "epoch": 7,
+          "fair_crps": 0.14399557188153267,
+          "rollout_rmse": 0.27340907230973244,
+          "spread": 0.19819468166679144,
+          "spread_skill_ratio": 0.72490162814446,
+          "checkpoint_sha256": "556818a76b04be71e5c851b14a31d63f95eed5eac7f9cf7f6f4a4abc77e9b47a"
+        },
+        "best_absolute_anchored_error": {
+          "epoch": 4,
+          "two_window_free_rmse": 0.18827909912834775,
+          "two_window_anchored_rmse": 0.179306298494339,
+          "checkpoint_sha256": "d86273d30329353eec7246bfcf5130bdd2c2a6f3ee1fc13d9a0b990f6f37952b"
+        },
+        "best_etkf_gain": {
+          "epoch": 18,
+          "two_window_free_rmse": 0.21009290606734599,
+          "two_window_anchored_rmse": 0.1860582964058886,
+          "gain_ratio": 1.1307223369078756,
+          "checkpoint_sha256": "674a7a8f987c2b8df598baeea71c243e6b23dacac1060629112dce17b49c21a4"
+        }
+      },
+      "config_sha256": "2ef0b0bb48458f87b449128b34e74ee9245a79db74f1c4578e844e30d40e0286",
+      "history_sha256": "2955f9301a65922a9144ef06cbe8b7db0fd0f40d1d10373ad853cb81e3db27d1",
+      "interpretation": "The fine-tune did not improve the frozen fair-CRPS selection metric over its parent in this history. Different objectives selected different epochs, and no joint cross-field transport score was trained or validated."
+    }
+  }
+}

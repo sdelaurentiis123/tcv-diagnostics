@@ -109,7 +109,7 @@ class DataAuditTests(unittest.TestCase):
             self.assertTrue(boundary["matches_raw_frame_count"])
             self.assertTrue(boundary["matches_raw_endpoints"])
 
-    def test_inventory_hashes_are_complete_and_launcher_matches(self) -> None:
+    def test_recorded_json_and_hashes_are_valid(self) -> None:
         manifest_path = ROOT / "paper0/manifests/legacy_phase0_inventory.json"
         launcher_path = ROOT / "cluster/phase0_reproduce_legacy_valid.sbatch"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -127,7 +127,18 @@ class DataAuditTests(unittest.TestCase):
                 for child in value:
                     collect(child)
 
-        collect(manifest)
+        record_paths = sorted((ROOT / "paper0/manifests").glob("*.json"))
+        record_paths += sorted((ROOT / "paper0/results").glob("*.json"))
+        self.assertTrue(record_paths)
+        for path in record_paths:
+            record = json.loads(
+                path.read_text(encoding="utf-8"),
+                parse_constant=lambda value: (_ for _ in ()).throw(
+                    ValueError(f"non-standard JSON constant {value} in {path}")
+                ),
+            )
+            collect(record)
+
         self.assertTrue(hashes)
         for digest in hashes:
             self.assertRegex(digest, re.compile(r"^[0-9a-f]{64}$"))

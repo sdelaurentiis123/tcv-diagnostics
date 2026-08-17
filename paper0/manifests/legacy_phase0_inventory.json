@@ -199,6 +199,14 @@
     "observation_std_standardized_space": 0.05,
     "inflation": 1.0,
     "seed": 0,
-    "paper0_reproduced": false
+    "paper0_reproduced": true,
+    "paper0_reproduction": {
+      "slurm_job_id": "6890428",
+      "paper0_commit": "7e2b5d268b2d5176a5b26cba9ac129e3caf317b5",
+      "status": "numerical_discrepancy",
+      "free_mean_rmse": 0.2049902282813762,
+      "anchored_mean_rmse": 0.18001283689382228,
+      "result_record": "paper0/results/phase0_legacy_valid_6890428.json"
+    }
   }
 }
