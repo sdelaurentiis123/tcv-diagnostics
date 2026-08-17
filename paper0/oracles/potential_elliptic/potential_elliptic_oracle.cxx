@@ -13,6 +13,7 @@
 #include <bout/invert_laplace.hxx>
 #include <netcdf.h>
 
+#include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstddef>
@@ -37,6 +38,7 @@ constexpr BoutReal BNORM_T = 1.0;
 constexpr BoutReal FROZEN_RHO_S0_M = 0.0007224847664314034;
 constexpr BoutReal PHI_TO_VOLTS = 50.0;
 constexpr BoutReal ELECTRON_PRESSURE_DENOMINATOR = 3672.0;
+constexpr BoutReal PRESSURE_DENSITY_FLOOR = 1.0e-7;
 constexpr std::array<int, FRAME_COUNT> EXPECTED_FRAMES{0, 156, 312, 467, 623};
 constexpr std::array<const char*, 5> INPUT_FIELDS{"Ne", "Pe", "Pi", "Vort",
                                                   "phi"};
@@ -300,6 +302,35 @@ std::unique_ptr<Laplacian> create_phi_solver(Options& options) {
   return solver;
 }
 
+#ifdef PAPER0_RUNTIME_PRESSURE_CORRECTION
+Field3D runtime_species_pressure(const Field3D& evolved_pressure,
+                                 const Field3D& density) {
+  using bout::globals::mesh;
+  Field3D runtime_pressure{0.0};
+  for (int x = 0; x < mesh->LocalNx; ++x) {
+    for (int y = 0; y < mesh->LocalNy; ++y) {
+      for (int z = 0; z < mesh->LocalNz; ++z) {
+        const BoutReal raw_density = density(x, y, z);
+        const BoutReal nonnegative_density = std::max(raw_density, 0.0);
+        const BoutReal soft_density =
+            nonnegative_density
+            + PRESSURE_DENSITY_FLOOR
+                  * std::exp(-nonnegative_density / PRESSURE_DENSITY_FLOOR);
+        const BoutReal nonnegative_pressure =
+            std::max(evolved_pressure(x, y, z), 0.0);
+        const BoutReal temperature = nonnegative_pressure / soft_density;
+        runtime_pressure(x, y, z) = raw_density * temperature;
+        if (!std::isfinite(runtime_pressure(x, y, z))) {
+          throw std::runtime_error(
+              "runtime species pressure transformation is non-finite");
+        }
+      }
+    }
+  }
+  return runtime_pressure;
+}
+#endif
+
 Field3D solve_arm(
     Laplacian& solver, const Field3D& stored_phi, const Field3D& pi_hat,
     const Field3D& vorticity,
@@ -395,7 +426,14 @@ int main(int argc, char** argv) {
     const Field3D vorticity = input.load_field("Vort", position);
     const Field3D stored_phi = input.load_field("phi", position);
 
+#ifdef PAPER0_RUNTIME_PRESSURE_CORRECTION
+    const Field3D runtime_pe = runtime_species_pressure(pe, ne);
+    const Field3D runtime_pi = runtime_species_pressure(pi, ne);
+    Field3D pi_hat =
+        runtime_pi - runtime_pe / ELECTRON_PRESSURE_DENOMINATOR;
+#else
     Field3D pi_hat = pi - pe / ELECTRON_PRESSURE_DENOMINATOR;
+#endif
     pi_hat.applyBoundary("neumann");
     mesh->communicate(pi_hat);
 
@@ -420,6 +458,10 @@ int main(int argc, char** argv) {
     output["input_Pi_" + label] = pi;
     output["input_Vort_" + label] = vorticity;
     output["input_phi_" + label] = stored_phi;
+#ifdef PAPER0_RUNTIME_PRESSURE_CORRECTION
+    output["runtime_Pe_" + label] = runtime_pe;
+    output["runtime_Pi_" + label] = runtime_pi;
+#endif
     output["pi_hat_" + label] = pi_hat;
     output["retained_phi_" + label] = retained;
     output["instantaneous_phi_" + label] = instantaneous;
@@ -444,6 +486,12 @@ int main(int argc, char** argv) {
   output["paper0_phi_conversion_volts"] = PHI_TO_VOLTS;
   output["paper0_pressure_correction_denominator"] =
       ELECTRON_PRESSURE_DENOMINATOR;
+#ifdef PAPER0_RUNTIME_PRESSURE_CORRECTION
+  output["paper0_runtime_pressure_correction"] = 1;
+  output["paper0_pressure_density_floor"] = PRESSURE_DENSITY_FLOOR;
+#else
+  output["paper0_runtime_pressure_correction"] = 0;
+#endif
   bout::writeDefaultOutputFile(output);
 
   bout::checkForUnusedOptions();
