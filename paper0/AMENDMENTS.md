@@ -126,3 +126,24 @@ use the verifying frame. They cannot be supplied to a forecast, used as a
 training target or loss, select the split, or open the learning gate. Their
 purpose is to decide whether future architectures need to represent coherent
 phase transport or genuinely stochastic re-sampling at the saved cadence.
+
+## A005 - Deterministic GPU numerics for the O1 codec oracle
+
+**Status:** active before any O1 checkpoint inference.
+
+`PHASE2_O1_CODEC_PROTOCOL.md` freezes deterministic, noise-free codec inference
+but does not name the CUDA precision flags. O1 therefore fixes the following
+execution details before either real-data reconstruction is run:
+
+1. inputs, parameters, and outputs use float32;
+2. TF32 is disabled for CUDA matrix multiplication and cuDNN;
+3. cuDNN benchmarking is disabled and deterministic mode is enabled;
+4. PyTorch deterministic algorithms are required rather than merely warned;
+5. CPU and CUDA random seeds are zero, although no stochastic layer is active
+   under `eval()` and `decode(noisy=False)`;
+6. each codec is loaded and evaluated separately, using the same chronological
+   input chunks.
+
+The result records the exact PyTorch, CUDA, cuDNN, driver, and GPU identities.
+This amendment changes no data selection, metric, band, threshold, checkpoint,
+or scientific claim.
