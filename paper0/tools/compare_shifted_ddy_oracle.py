@@ -182,6 +182,37 @@ def error_metrics(
     }
 
 
+def manufactured_input_metrics(field: np.ndarray, case: str) -> dict[str, Any]:
+    """Reject a missing/zero FieldFactory input before judging a derivative."""
+
+    finite = np.isfinite(field)
+    nonfinite_count = int(field.size - np.count_nonzero(finite))
+    if np.any(finite):
+        minimum = float(np.min(field[finite]))
+        maximum = float(np.max(field[finite]))
+        peak_to_peak = float(maximum - minimum)
+    else:
+        minimum = float("inf")
+        maximum = float("inf")
+        peak_to_peak = 0.0
+    if case == "constant":
+        max_abs_expected_error = (
+            float(np.max(np.abs(field[finite] - 2.5))) if np.any(finite) else float("inf")
+        )
+        passed = bool(nonfinite_count == 0 and max_abs_expected_error <= 1.0e-13)
+    else:
+        max_abs_expected_error = None
+        passed = bool(nonfinite_count == 0 and peak_to_peak > 1.0e-6)
+    return {
+        "nonfinite_count": nonfinite_count,
+        "minimum": minimum,
+        "maximum": maximum,
+        "peak_to_peak": peak_to_peak,
+        "constant_max_abs_expected_error": max_abs_expected_error,
+        "passed": passed,
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--bout-output", type=Path, nargs="+", required=True)
@@ -278,6 +309,7 @@ def main() -> int:
                 zperiod=5,
             )
             candidate = candidate_result.values
+            input_validation = manufactured_input_metrics(field, case)
             metrics_by_region = {
                 name: error_metrics(
                     candidate,
@@ -288,9 +320,12 @@ def main() -> int:
                 )
                 for name, mask in regions.items()
             }
-            case_passed = all(item["passed"] for item in metrics_by_region.values())
+            case_passed = input_validation["passed"] and all(
+                item["passed"] for item in metrics_by_region.values()
+            )
             case_metrics[case] = {
                 "passed": case_passed,
+                "input_validation": input_validation,
                 "regions": metrics_by_region,
             }
             arrays[f"input_{case}"] = field

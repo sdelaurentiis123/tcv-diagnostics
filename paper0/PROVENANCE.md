@@ -108,6 +108,18 @@ nodes. No comparison was accepted. The narrow correction calls
 global unused-option checking or modify an input, operator, mask, or tolerance.
 The no-result artifact is `paper0/results/phase2_shifted_ddy_6890792.json`.
 
+Job `6890796` exposed a deeper harness issue before comparison. On a
+file-backed mesh, `mesh->get` warned and substituted zero rather than using the
+GridFromOptions expression fallback assumed from BOUT++'s small synthetic
+test. It also showed that the authoritative grid stores finite `ShiftAngle`
+only for `grid_x < ixseps1=18` and NaN in the SOL, where BOUT++ never uses the
+value. The job is an explicit no-result artifact at
+`paper0/results/phase2_shifted_ddy_6890796.json`. The corrected driver reads
+each exact tracked expression and calls BOUT++ `FieldFactory::create3D`; the
+comparator now rejects collapsed manufactured inputs. The NumPy candidate
+requires finite branch shifts only for model `x < 16` and replaces only the
+topology-unused outer entries. No numerical error tolerance changed.
+
 The compiled comparison harness under
 `paper0/oracles/bout_shifted_ddy/` uses the initialization, mesh-load,
 communication, derivative, and default-output pattern from BOUT++

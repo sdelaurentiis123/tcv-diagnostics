@@ -208,6 +208,26 @@ class ShiftedDerivativeTests(unittest.TestCase):
                 topology=topology,
             )
 
+    def test_shift_angle_nan_is_allowed_only_outside_twisted_core(self) -> None:
+        field = np.ones((2, 32, 9))
+        topology = self.topology(separatrix_x_index=1)
+        result = shifted_ddy_single_null_partial(
+            field,
+            np.zeros((2, 32)),
+            np.ones((2, 32)),
+            np.asarray([0.2, np.nan]),
+            topology=topology,
+        )
+        np.testing.assert_allclose(result.values[:, 1:-1], 0.0)
+        with self.assertRaisesRegex(ValueError, "inner branch"):
+            shifted_ddy_single_null_partial(
+                field,
+                np.zeros((2, 32)),
+                np.ones((2, 32)),
+                np.asarray([np.nan, 0.0]),
+                topology=topology,
+            )
+
 
 class PartialFaceFlowTests(unittest.TestCase):
     def test_constant_potential_gives_zero_flow(self) -> None:

@@ -350,6 +350,19 @@ The full metric remains blocked until all of the following pass:
    concatenates four 8-cell blocks into the original 32-cell domain before any
    numerical comparison. This execution correction does not alter the fields,
    masks, tolerance, or candidate implementation.
+
+   On the file-backed geometry, the driver must construct the four tracked
+   expressions explicitly through BOUT++ `FieldFactory`; `mesh->get` is not an
+   accepted loader because missing grid variables become zero. Before any
+   derivative score is accepted, the constant case must equal `2.5` within
+   `1e-13`, and every nonconstant case must be finite with peak-to-peak range
+   greater than `1e-6`.
+
+   The authoritative `ShiftAngle` array is finite only inside `ixseps1` and
+   NaN in the SOL, where BOUT++ does not apply a twist shift. Paper 0 requires
+   finite values for all used model cells `x<16`; topology-unused outer entries
+   are replaced by zero only after this check. A non-finite used entry is a
+   hard failure.
 5. **Conservation:** face-flow differences reproduce the source operator's
    volume-weighted divergence on manufactured fields.
 6. **Native-grid oracle:** selected raw 81-cell 85604 frames match the

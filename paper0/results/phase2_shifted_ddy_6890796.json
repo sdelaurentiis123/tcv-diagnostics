@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_shifted_ddy_compiled_oracle",
+  "paper0_commit": "1afc54fb089bc3a4b40cdc0ae2b8928e5bff3c66",
+  "slurm": {
+    "job_id": 6890796,
+    "state": "FAILED",
+    "exit_code": "1:0",
+    "start": "2026-08-17T02:27:04-04:00",
+    "end": "2026-08-17T02:27:18-04:00",
+    "elapsed": "00:00:14",
+    "node": "worker5594"
+  },
+  "failure": {
+    "stage": "precomparison_input_and_geometry_validation",
+    "classification": "invalid_manufactured_field_loader_and_topology_scoped_nan",
+    "observed": "File-backed mesh->get substituted zero for every manufactured expression; the comparator then rejected outer-SOL NaNs in ShiftAngle before computing metrics.",
+    "root_cause": "GridFile does not use the BOUT.inp FieldFactory fallback used by GridFromOptions, and Hypnotoad defines ShiftAngle only for radial cells inside ixseps1.",
+    "operator_evaluated_on_intended_inputs": false,
+    "candidate_compared": false,
+    "result_accepted": false,
+    "numerical_acceptance_rule_changed": false
+  },
+  "correction": {
+    "manufactured_fields": "Read each tracked expression as a string and construct it explicitly with BOUT++ FieldFactory::create3D.",
+    "shift_angle": "Require finite values on the inner twisted branch and replace only topology-unused outer entries before the candidate call.",
+    "new_input_noncollapse_gate": true
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_shifted_ddy/job_6890796",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_shifted_ddy_6890796.log",
+    "artifact_digests": {
+      "slurm_log": "038af75d175551641673c6e2e65af330001e158ae56ef37990233f78fe8ce67f",
+      "job.log": "038af75d175551641673c6e2e65af330001e158ae56ef37990233f78fe8ce67f",
+      "build/shifted_ddy_oracle": "0d445c04cd6402f6f01e90147c412c32ee1caa12ba1b61ede393df06e52859ec",
+      "run/BOUT.inp": "65ebec7b12f4f63d441d96651096e15810670cd0b03f9bc3937619c4f7f26d53",
+      "run/BOUT.settings": "d170e27422059ea1a46de1642a43470a345168bb4d021d104a9280a2a2619a54",
+      "run/BOUT.dmp.0.nc": "af7ca57d35c39c3823c103841e87f7502e558fbc5d620876b2dff76f9619af4e",
+      "run/BOUT.dmp.1.nc": "808e5b8e9c27e7f66b1c585443adedb90c5d6c00d27a047b3e56e1023fefc499",
+      "run/BOUT.dmp.2.nc": "8d71221c4a7529187be316409373beafa4c0af0d0ec4a78e48621eb45e0932ab",
+      "run/BOUT.dmp.3.nc": "660371ac020fd6ea1f609d60d9f0192a88b807516779770d838999e56d0f4ff6"
+    }
+  },
+  "data_access": {
+    "run_id": "85604_geometry_only",
+    "plasma_state_frames_read": 0,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "no_result_invalid_oracle_inputs"
+}

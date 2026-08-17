@@ -216,9 +216,23 @@ def shifted_ddy_single_null_partial(
     dy_array = _cell_geometry(
         "dy", dy, n_x=n_x, n_y=n_y, require_positive=True
     )
-    shift_angle_array = _real_finite("shift_angle", shift_angle)
+    shift_angle_array = np.asarray(shift_angle)
+    if np.iscomplexobj(shift_angle_array):
+        raise ValueError("shift_angle must be real-valued")
+    if not np.issubdtype(shift_angle_array.dtype, np.number):
+        raise TypeError("shift_angle must have a numeric dtype")
+    shift_angle_array = np.asarray(shift_angle_array, dtype=np.float64)
     if shift_angle_array.shape != (n_x,):
         raise ValueError(f"shift_angle must have shape {(n_x,)}")
+    # Hypnotoad stores ShiftAngle only where the core branch exists; the
+    # executed 85604 grid therefore contains NaN for every SOL radial cell.
+    # Those entries are never used by BOUT++ fixZShiftGuards. Require finite
+    # values on the inner branch and replace only topology-unused outer values.
+    used_shift_angle = shift_angle_array[: topology.separatrix_x_index]
+    if not np.all(np.isfinite(used_shift_angle)):
+        raise ValueError("shift_angle contains non-finite values in the inner branch")
+    shift_angle_array = shift_angle_array.copy()
+    shift_angle_array[topology.separatrix_x_index :] = 0.0
 
     minus_y, plus_y, valid = single_null_y_neighbors(n_x, n_y, topology)
     minus_standard = _gather_y(phi, minus_y)

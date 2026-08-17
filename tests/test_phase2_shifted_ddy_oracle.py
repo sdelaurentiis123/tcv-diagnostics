@@ -59,10 +59,8 @@ class CompiledShiftedDdyOracleTests(unittest.TestCase):
             self.assertIn(f'"{case}"', source)
         self.assertIn('DDY(input, CELL_CENTRE, "C2")', source)
         self.assertIn("mesh->communicate(input)", source)
-        self.assertIn(
-            'Options::root()["mesh"]["input_" + name].setConditionallyUsed()',
-            source,
-        )
+        self.assertIn('Options::root()["mesh"]["input_" + name].as<std::string>()', source)
+        self.assertIn("FieldFactory::get()->create3D", source)
         self.assertNotIn("error_on_unused_options", source)
 
     def test_canonical_reader_reorders_axes_and_selects_last_time(self) -> None:
@@ -119,6 +117,27 @@ class CompiledShiftedDdyOracleTests(unittest.TestCase):
         )
         self.assertFalse(rejected["passed"])
         self.assertEqual(rejected["nonfinite_count"], 1)
+
+    def test_manufactured_input_validation_rejects_zero_fallback(self) -> None:
+        constant = MODULE.manufactured_input_metrics(
+            np.full((2, 3, 4), 2.5), "constant"
+        )
+        self.assertTrue(constant["passed"])
+        self.assertFalse(
+            MODULE.manufactured_input_metrics(np.zeros((2, 3, 4)), "constant")[
+                "passed"
+            ]
+        )
+        self.assertTrue(
+            MODULE.manufactured_input_metrics(
+                np.arange(24, dtype=np.float64).reshape(2, 3, 4), "mixed"
+            )["passed"]
+        )
+        self.assertFalse(
+            MODULE.manufactured_input_metrics(np.zeros((2, 3, 4)), "mixed")[
+                "passed"
+            ]
+        )
 
 
 if __name__ == "__main__":

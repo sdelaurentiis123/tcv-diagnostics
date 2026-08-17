@@ -120,14 +120,19 @@ PYTHONPATH="${PAPER0_ROOT}/src" \
 readonly COMPARISON_STATUS=$?
 set -e
 
-sha256sum \
-  "${OUTDIR}/commands.sh" \
-  "${RUN_DIR}/BOUT.inp" \
-  "${BUILD_DIR}/shifted_ddy_oracle" \
-  "${BOUT_OUTPUTS[@]}" \
-  "${OUTDIR}/oracle_comparison.json" \
-  "${OUTDIR}/comparison_arrays.npz" \
-  > "${OUTDIR}/artifact_sha256.txt"
+HASH_ARTIFACTS=(
+  "${OUTDIR}/commands.sh"
+  "${RUN_DIR}/BOUT.inp"
+  "${BUILD_DIR}/shifted_ddy_oracle"
+  "${BOUT_OUTPUTS[@]}"
+)
+if [[ -f "${OUTDIR}/oracle_comparison.json" ]]; then
+  HASH_ARTIFACTS+=("${OUTDIR}/oracle_comparison.json")
+fi
+if [[ -f "${OUTDIR}/comparison_arrays.npz" ]]; then
+  HASH_ARTIFACTS+=("${OUTDIR}/comparison_arrays.npz")
+fi
+sha256sum "${HASH_ARTIFACTS[@]}" > "${OUTDIR}/artifact_sha256.txt"
 
 echo "Phase 2 compiled shifted-DDY oracle finished at $(date --iso-8601=seconds)"
 echo "Comparison exit status: ${COMPARISON_STATUS}"

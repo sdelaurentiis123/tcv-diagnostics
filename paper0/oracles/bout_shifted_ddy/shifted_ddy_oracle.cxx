@@ -6,6 +6,7 @@
 
 #include <bout/bout.hxx>
 #include <bout/derivs.hxx>
+#include <bout/field_factory.hxx>
 
 #include <array>
 #include <string>
@@ -15,9 +16,10 @@ namespace {
 void evaluate_case(const std::string& name, Options& output) {
   using bout::globals::mesh;
 
-  Field3D input;
-  mesh->get(input, "input_" + name);
-  Options::root()["mesh"]["input_" + name].setConditionallyUsed();
+  const auto expression =
+      Options::root()["mesh"]["input_" + name].as<std::string>();
+  Field3D input = FieldFactory::get()->create3D(
+      expression, Options::getRoot(), mesh, CELL_CENTRE);
 
   // This mirrors the state of an evolved Hermes field before DDY: physical
   // boundary guards are present and logical/MPI connections are communicated.

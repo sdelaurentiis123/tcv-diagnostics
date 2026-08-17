@@ -261,6 +261,18 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     `mesh->get` did not mark their `Options` nodes. The output is not accepted
     or compared. The fix marks exactly those four nodes conditionally used and
     retains global unused-option validation.
+26. **A file-backed mesh does not inherit the synthetic test's expression
+    fallback.** Job `6890796` made BOUT++'s warning visible: `mesh->get` could
+    not read any `input_*` variable from the geometry file and substituted
+    zero. Those rank outputs are invalid even though `DDY` executed. The
+    corrected driver explicitly constructs each tracked expression with
+    BOUT++ `FieldFactory`, and the comparator independently rejects a constant
+    zero fallback.
+27. **`ShiftAngle` is topology-scoped.** The 85604 grid contains finite values
+    only through `grid_x=17` and NaN for `grid_x>=18`, exactly where no inner
+    core twist connection exists. After the model crop, only `x<16` uses the
+    branch shift. Paper 0 now requires those 16 values to be finite and ignores
+    non-finite outer values only because the topology proves they are unused.
 
 ## Exact commands
 
