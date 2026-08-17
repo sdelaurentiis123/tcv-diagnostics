@@ -1,0 +1,70 @@
+{
+  "result_type": "phase2_o0_synthetic_known_answer_metric_oracles",
+  "status": "pass",
+  "executed_at_utc": "2026-08-17T04:25:06Z",
+  "code_commit": "750405bdf1c8d641f53255ecac4be1dfc8b4aafe",
+  "protocol_commit": "132e39a",
+  "dirty_state_before_run": false,
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v",
+  "environment": {
+    "python": "3.10.17",
+    "numpy": "1.24.4",
+    "platform": "macOS-15.7.4-arm64-arm-64bit"
+  },
+  "inputs": {
+    "simulation_files_read": false,
+    "shot_85604_accessed": false,
+    "shot_85606_accessed": false,
+    "synthetic_arrays_only_for_phase2_oracles": true,
+    "random_seed": 20260817
+  },
+  "test_summary": {
+    "repository_test_methods_run": 26,
+    "repository_test_methods_passed": 26,
+    "phase2_metric_test_methods_run": 9,
+    "phase2_metric_test_methods_passed": 9,
+    "elapsed_seconds_reported_by_unittest": 0.038
+  },
+  "phase2_checks": {
+    "canonical_forecast_axes": "pass",
+    "forecast_truth_shape_and_finiteness_guards": "pass",
+    "stored_k_to_full_torus_n_mapping_with_zperiod_5": "pass",
+    "known_fourier_modes": "pass",
+    "parseval_even_and_odd_toroidal_grids": "pass",
+    "known_cross_phase_sign_and_unit_coherence": "pass",
+    "zero_power_coherence_is_undefined": "pass",
+    "ordinary_crps_hand_calculation": "pass",
+    "fair_crps_hand_calculation": "pass",
+    "optimized_crps_matches_direct_pairwise_definition": "pass",
+    "one_member_crps_reduces_to_absolute_error": "pass",
+    "one_member_fair_crps_rejected": "pass",
+    "known_central_interval_coverage": "pass",
+    "known_spread_skill_ratio": "pass",
+    "memberwise_nonlinear_diagnostic": "pass"
+  },
+  "sha256": {
+    "paper0/protocol/PHASE2_METRIC_PROTOCOL.md": "3070bae464ef005a63a3b581bed1e4ebbcf1e9e2be356a2e291921204847462d",
+    "src/tcv_diagnostics/metrics.py": "0a7540a3e1b9698dea2293e729fd1f956986924cb3be6cc15a546add98521b64",
+    "tests/test_phase2_metrics.py": "93cd4afa63c8cc2a684b34d15e194fa0a932adc5bd58fe7a83202ee8092735d1"
+  },
+  "scope": {
+    "establishes": [
+      "the implemented metric formulas agree with frozen synthetic known answers",
+      "the finite-ensemble ordinary and fair CRPS definitions are distinct and tested",
+      "the ensemble member axis is preserved before nonlinear reduction"
+    ],
+    "does_not_establish": [
+      "forecast skill",
+      "transport fidelity",
+      "field or transport calibration of any model",
+      "geometry-aware particle or heat flux correctness",
+      "readiness to access shot 85606"
+    ]
+  },
+  "blocked_metrics": [
+    "geometry-aware particle flux",
+    "geometry-aware heat flux",
+    "authoritative TCV/Hermes region masks",
+    "PIT and randomized rank histograms"
+  ]
+}
