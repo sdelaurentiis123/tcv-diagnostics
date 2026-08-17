@@ -60,6 +60,14 @@ environment. It likewise read no shot data and did not compile BOUT++. The
 launcher correction adds only the `hdf5/1.14.5` Rocky 9 module; the unique
 failed-attempt directory is retained.
 
+The candidate shifted-derivative transcription in
+`src/tcv_diagnostics/transport.py` follows the hash-locked BOUT++ FFT phase,
+default centered `C2` stencil, single-null logical connections, and
+`fixZShiftGuards` branch signs. Synthetic tests cover phase shifts, inverse
+shifts, core and private-flux neighbor maps, nonzero `ShiftAngle`, and an
+analytic field-aligned gradient. It remains explicitly `partial` and is not an
+accepted source oracle until its arrays match the compiled BOUT++ harness.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

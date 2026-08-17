@@ -15,10 +15,14 @@ if str(SRC) not in sys.path:
 
 from tcv_diagnostics.transport import (  # noqa: E402
     PartialRadialFaceFlow,
+    SingleNullTopology,
     divergence_from_xz_face_flow_partial,
     mc_radial_face_states_partial,
     monotonized_central_slope,
     radial_exb_xz_face_flow_partial,
+    shifted_ddy_single_null_partial,
+    single_null_y_neighbors,
+    spectral_shift_z,
     toroidal_wedge_spacing,
 )
 
@@ -56,6 +60,153 @@ class LimiterTests(unittest.TestCase):
         np.testing.assert_array_equal(left_indices, np.asarray([1, 2]))
         np.testing.assert_allclose(from_left[:, 0, 0], [1.5, 2.75])
         np.testing.assert_allclose(from_right[:, 0, 0], [1.25, 2.5])
+
+
+class ShiftedDerivativeTests(unittest.TestCase):
+    @staticmethod
+    def topology(separatrix_x_index: int) -> SingleNullTopology:
+        return SingleNullTopology(
+            separatrix_x_index=separatrix_x_index,
+            core_lower_y=8,
+            core_upper_y=23,
+            pfr_lower_y=7,
+            pfr_upper_y=24,
+        )
+
+    def test_fourier_shift_recovers_known_mode_phase_and_inverse(self) -> None:
+        n_z = 81
+        stored_k = 4
+        shift = 0.071
+        z_index = np.arange(n_z, dtype=np.float64)
+        signal = np.cos(2.0 * math.pi * stored_k * z_index / n_z)
+        shifted = spectral_shift_z(signal, shift, zperiod=5)
+        expected = np.cos(
+            2.0 * math.pi * stored_k * z_index / n_z
+            + 5.0 * stored_k * shift
+        )
+        np.testing.assert_allclose(shifted, expected, rtol=1e-13, atol=1e-13)
+        np.testing.assert_allclose(
+            spectral_shift_z(shifted, -shift, zperiod=5),
+            signal,
+            rtol=1e-13,
+            atol=1e-13,
+        )
+
+    def test_single_null_neighbor_map_separates_core_pfr_and_sol(self) -> None:
+        minus, plus, valid = single_null_y_neighbors(
+            3, 32, self.topology(separatrix_x_index=2)
+        )
+        self.assertEqual(int(minus[0, 8]), 23)
+        self.assertEqual(int(plus[0, 23]), 8)
+        self.assertEqual(int(plus[0, 7]), 24)
+        self.assertEqual(int(minus[0, 24]), 7)
+        self.assertEqual(int(minus[2, 8]), 7)
+        self.assertEqual(int(plus[2, 23]), 24)
+        self.assertFalse(bool(valid[1, 0]))
+        self.assertFalse(bool(valid[1, 31]))
+        self.assertTrue(bool(valid[1, 1]))
+
+    def test_open_sol_manufactured_aligned_gradient_is_recovered(self) -> None:
+        n_x, n_y, n_z = 2, 32, 81
+        stored_k = 3
+        full_torus_n = 5 * stored_k
+        z = np.arange(n_z, dtype=np.float64) * toroidal_wedge_spacing(n_z)
+        y = np.arange(n_y, dtype=np.float64)
+        dy = np.broadcast_to(np.asarray([0.2, 0.35])[:, None], (n_x, n_y)).copy()
+        z_shift = (
+            0.03 * np.arange(n_x, dtype=np.float64)[:, None]
+            + 0.002 * y[None, :]
+        )
+        aligned_amplitude = y[None, :] * dy
+        potential = aligned_amplitude[..., None] * np.cos(
+            full_torus_n * (z[None, None, :] - z_shift[..., None])
+        )
+        result = shifted_ddy_single_null_partial(
+            potential,
+            z_shift,
+            dy,
+            np.zeros(n_x),
+            topology=self.topology(separatrix_x_index=1),
+            zperiod=5,
+        )
+        expected = np.cos(
+            full_torus_n * (z[None, :] - z_shift[1, :, None])
+        )
+        np.testing.assert_allclose(
+            result.values[1, 1:-1],
+            expected[1:-1],
+            rtol=2e-13,
+            atol=2e-13,
+        )
+        self.assertTrue(np.all(np.isnan(result.values[:, (0, -1), :])))
+        self.assertIn("partial", result.component)
+
+    def test_core_branch_shift_angle_signs_match_source_guard_correction(self) -> None:
+        n_x, n_y, n_z = 1, 32, 81
+        stored_k = 2
+        full_torus_n = 5 * stored_k
+        branch_shift = 0.09
+        z = np.arange(n_z, dtype=np.float64) * toroidal_wedge_spacing(n_z)
+        mode = np.cos(full_torus_n * z)
+        potential = np.broadcast_to(mode, (n_x, n_y, n_z)).copy()
+        result = shifted_ddy_single_null_partial(
+            potential,
+            np.zeros((n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.asarray([branch_shift]),
+            topology=self.topology(separatrix_x_index=1),
+        )
+        expected_lower = 0.5 * (
+            np.cos(full_torus_n * z)
+            - np.cos(full_torus_n * (z - branch_shift))
+        )
+        expected_upper = 0.5 * (
+            np.cos(full_torus_n * (z + branch_shift))
+            - np.cos(full_torus_n * z)
+        )
+        np.testing.assert_allclose(
+            result.values[0, 8], expected_lower, rtol=2e-13, atol=2e-13
+        )
+        np.testing.assert_allclose(
+            result.values[0, 23], expected_upper, rtol=2e-13, atol=2e-13
+        )
+
+    def test_y_code_exposes_all_four_inner_connection_stencils(self) -> None:
+        n_x, n_y, n_z = 1, 32, 9
+        y_code = np.arange(n_y, dtype=np.float64)[None, :, None]
+        potential = np.broadcast_to(y_code, (n_x, n_y, n_z)).copy()
+        result = shifted_ddy_single_null_partial(
+            potential,
+            np.zeros((n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.asarray([0.0]),
+            topology=self.topology(separatrix_x_index=1),
+        )
+        self.assertAlmostEqual(float(result.values[0, 7, 0]), 9.0)
+        self.assertAlmostEqual(float(result.values[0, 24, 0]), 9.0)
+        self.assertAlmostEqual(float(result.values[0, 8, 0]), -7.0)
+        self.assertAlmostEqual(float(result.values[0, 23, 0]), -7.0)
+        self.assertAlmostEqual(float(result.values[0, 12, 0]), 1.0)
+
+    def test_shifted_derivative_geometry_errors_fail_loudly(self) -> None:
+        field = np.ones((2, 32, 9))
+        topology = self.topology(separatrix_x_index=1)
+        with self.assertRaisesRegex(ValueError, "z_shift"):
+            shifted_ddy_single_null_partial(
+                field,
+                np.zeros((2, 31)),
+                np.ones((2, 32)),
+                np.zeros(2),
+                topology=topology,
+            )
+        with self.assertRaisesRegex(ValueError, "shift_angle"):
+            shifted_ddy_single_null_partial(
+                field,
+                np.zeros((2, 32)),
+                np.ones((2, 32)),
+                np.zeros(1),
+                topology=topology,
+            )
 
 
 class PartialFaceFlowTests(unittest.TestCase):
