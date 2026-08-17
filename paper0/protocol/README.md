@@ -25,6 +25,10 @@ The loader guard and release format will be implemented during Phase 1. No relea
 
 Development-only protocol locks that do not authorize held-out access include:
 
+- `PHASE2_MODEL_DATASET_PROTOCOL.md`: the shared, hash-locked 85604
+  native-81 to model-88 conversion, boundary-state storage, training-only
+  normalization, and hard integrity gates required before matched O1/O2
+  learning;
 - `PHASE2_CONDITIONAL_TRANSIENT_STATE_PROTOCOL.md`: the nonstationary 85604
   development interpretation, exact `E6B-H1` state, pragmatic
   `C5P-H2` state, and mandatory `C5P-H1` history control;

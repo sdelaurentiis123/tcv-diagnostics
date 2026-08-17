@@ -26,6 +26,15 @@ post-decorrelation claims, stochastic architecture selection, assimilation,
 diagnostic ranking, or any 85606 access. A separate matched O1/O2 model
 protocol remains required before training.
 
+The shared engineering input to that comparison is now prospectively frozen
+in
+[`paper0/protocol/PHASE2_MODEL_DATASET_PROTOCOL.md`](paper0/protocol/PHASE2_MODEL_DATASET_PROTOCOL.md).
+It requires all three state views to come from the same eight-field 85604
+source union, the same exact saved `Bphi` boundary record, the same
+`zperiod=5` Fourier resampling, and normalization fit only on frames
+`[0,432)`. The converter and its hard validation gate are the next execution
+step; no model training has started.
+
 The historical codecs have now been evaluated through the frozen O1 oracle;
 [`paper0/PHASE2_O1_READOUT.md`](paper0/PHASE2_O1_READOUT.md) records why neither
 passes the spectral/cross-field representation gate. The exact-source

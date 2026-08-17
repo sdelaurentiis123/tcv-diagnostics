@@ -253,3 +253,31 @@ frame number is excluded, historical codecs are not used as initialization,
 and no stochastic model is authorized. Exact rules and evidence hashes are in
 `protocol/PHASE2_CONDITIONAL_TRANSIENT_STATE_PROTOCOL.md` and
 `manifests/phase2_conditional_transient_state_85604.json`.
+
+## A011 - Require one verified shared dataset before matched state learning
+
+**Status:** frozen before converter implementation and before any new codec or
+dynamics training.
+
+The exact `E6B-H1` arm and pragmatic `C5P-H2/H1` arms require different
+views of the state, but they must not use different source, frame, resampling,
+precision, or normalization paths. Paper 0 therefore requires one immutable
+85604 dataset containing the union
+`[Ne,Pe,Pi,NVe,NVi,Vort,phi,Vi]` on the frozen 88-cell periodic grid plus
+the exact retained `Bphi` boundary state.
+
+The converter reads the already audited native-81 Well files and the
+hash-locked boundary extraction from job `6893033`; it does not traverse raw
+rank files again. It preserves all direct pressure values, uses the exact
+SciPy Fourier resampling already attributed to the historical C5T path, and
+fits normalization only on frames `[0,432)`. Complete frame coverage,
+source and array hashes, writer/reopen equality, legacy z88 equality,
+81-to-88-to-81 error, boundary casting, and independent normalization
+recomputation are prospective hard gates.
+
+Passing this conversion establishes common engineering provenance only. It
+does not authorize or imply codec fidelity, predictive state sufficiency,
+forecast skill, stationarity, stochastic modeling, assimilation, diagnostic
+ranking, or access to 85606. Exact rules are in
+`protocol/PHASE2_MODEL_DATASET_PROTOCOL.md` and
+`manifests/phase2_model_dataset_85604.json`.

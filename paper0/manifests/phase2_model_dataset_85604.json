@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_85604_matched_model_dataset",
+  "protocol_status": "frozen_before_converter_implementation_or_converted_array_read",
+  "protocol": {
+    "path": "paper0/protocol/PHASE2_MODEL_DATASET_PROTOCOL.md",
+    "sha256": "be18547dc961b5acf0243312800163f249705c4312b4e3e8d03f8491c1701eb6"
+  },
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "training_authorized": false,
+  "sources": {
+    "native_81_well": [
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_85604/data/train/TCV_85604_train.hdf5",
+        "sha256": "843f9ae99d08fbcdabce977b53e4f6b49be05641a82a387d100b237224b77777",
+        "global_start_inclusive": 0,
+        "global_stop_exclusive": 500,
+        "field_dataset_template": "t0_fields/{field}",
+        "field_shape": [1, 500, 64, 32, 81],
+        "time_dataset": "dimensions/time",
+        "file_label_is_not_paper0_split": true
+      },
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_85604/data/valid/TCV_85604_valid.hdf5",
+        "sha256": "a17b536856c6b8108c0553c300200e074e41407129e47ef402a4de51882ea1ba",
+        "global_start_inclusive": 500,
+        "global_stop_exclusive": 624,
+        "field_dataset_template": "t0_fields/{field}",
+        "field_shape": [1, 124, 64, 32, 81],
+        "time_dataset": "dimensions/time",
+        "file_label_is_not_paper0_split": true
+      }
+    ],
+    "potential_boundary": {
+      "extraction_record_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/extraction_record.json",
+      "extraction_record_sha256": "2922c0faadf23a68b43189890f6c0de69dd3cc03442b827c1b8f7e95b8d61e63",
+      "source_job_id": 6893033,
+      "canonical_file_key": "canonical_file",
+      "canonical_file_sha256_key": "canonical_file_sha256",
+      "array_name": "saved_midpoint",
+      "array_sha256_key": "saved_midpoint",
+      "native_dtype": "float64",
+      "native_shape_per_frame": [2, 32],
+      "radial_side_order": ["inner", "outer"]
+    },
+    "legacy_z88_transform_oracle": [
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/train/TCV_c5_train.hdf5",
+        "sha256": "f4aae5c13ecd944f51cec0c3539f57ff669cb0bb0405cb813c3f50ff6cb83817",
+        "global_start_inclusive": 0,
+        "global_stop_exclusive": 500
+      },
+      {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/valid/TCV_c5_valid.hdf5",
+        "sha256": "eed18a7f7a356a4f8d437647b73d4f8078a5309e1e8583a1089e622196ce4d43",
+        "global_start_inclusive": 500,
+        "global_stop_exclusive": 624
+      }
+    ]
+  },
+  "data": {
+    "global_frames": [0, 624],
+    "frame_stop_is_exclusive": true,
+    "frame_count": 624,
+    "volume_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort", "phi", "Vi"],
+    "volume_axis_order": ["time", "x", "y", "z"],
+    "native_shape_per_frame": [64, 32, 81],
+    "output_shape_per_frame": [64, 32, 88],
+    "source_volume_dtype": "float32",
+    "output_volume_dtype": "float32",
+    "boundary_field": "Bphi",
+    "output_boundary_dtype": "float32",
+    "cadence_microseconds": 3.131905426352636,
+    "zperiod": 5,
+    "wedge_length_radians": 1.2566370614359172,
+    "mode_mapping": "n=5*k",
+    "native_nonnegative_k": [0, 40],
+    "output_padding_k": [41, 44],
+    "retain_negative_Pi": true,
+    "clipping_allowed": false,
+    "gauge_shift_during_conversion_allowed": false
+  },
+  "output": {
+    "base_directory": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset",
+    "job_directory_template": "job_{slurm_job_id}",
+    "shard_directory": "shards",
+    "shard_filename_template": "model_dataset_shard_{shard_index:03d}.h5",
+    "partial_record_template": "partial_{shard_index:03d}.json",
+    "merged_record_filename": "model_dataset_manifest.json",
+    "normalization_filename": "normalization.json",
+    "shard_intervals": [
+      [0, 78],
+      [78, 156],
+      [156, 234],
+      [234, 312],
+      [312, 390],
+      [390, 468],
+      [468, 546],
+      [546, 624]
+    ],
+    "volume_dataset_template": "fields/{field}",
+    "volume_dataset_shape": [78, 64, 32, 88],
+    "volume_chunk_shape": [1, 64, 32, 88],
+    "boundary_dataset": "boundary/Bphi",
+    "boundary_dataset_shape": [78, 2, 32],
+    "frame_index_dataset": "coordinates/frame_index",
+    "time_dataset": "coordinates/time",
+    "stores_raw_resampled_values_not_standardized": true,
+    "atomic_finalization_required": true,
+    "overwrite_allowed": false
+  },
+  "resampling": {
+    "implementation": "scipy.signal.resample",
+    "forward_call": "resample(x,88,axis=-1,window=None,domain='time').astype(float32)",
+    "inverse_call": "resample(x,81,axis=-1,window=None,domain='time').astype(float32)",
+    "window": null,
+    "smoothing": false,
+    "coordinate_interpolation": false,
+    "phase_shift": false
+  },
+  "paper0_split": {
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "normalization_fit_frames": [0, 432],
+    "stationarity_screen_status": "failed_and_not_reclassified",
+    "interpretation": "conditional_transient_later_background_extrapolation"
+  },
+  "normalization": {
+    "stored_arrays_are_normalized": false,
+    "accumulator_dtype": "float64",
+    "moments": ["count", "mean", "M2", "population_variance", "population_standard_deviation"],
+    "mergeable_moments_required": true,
+    "volume_statistics": "one_scalar_record_per_field",
+    "boundary_statistics": "one_scalar_record_per_radial_side",
+    "volume_count_per_field": 77856768,
+    "boundary_count_per_side": 13824,
+    "transforms": {
+      "Ne": {
+        "name": "log_offset",
+        "offset": 0.000001,
+        "strictly_positive_argument_required": true
+      },
+      "Pe": {"name": "identity"},
+      "Pi": {"name": "identity"},
+      "NVe": {"name": "identity"},
+      "NVi": {"name": "identity"},
+      "Vort": {"name": "identity"},
+      "phi": {"name": "identity"},
+      "Vi": {"name": "identity"},
+      "Bphi": {"name": "identity"}
+    }
+  },
+  "integrity_gates": {
+    "source_hashes_match": true,
+    "canonical_file_and_saved_midpoint_hashes_match_extraction_record": true,
+    "complete_unique_frame_coverage": true,
+    "strictly_increasing_time": true,
+    "uniform_cadence_matches_manifest": true,
+    "all_inputs_and_reopened_outputs_finite": true,
+    "writer_echo_bitwise_exact": true,
+    "legacy_z88_bitwise_fields": ["Ne", "phi", "Vi"],
+    "legacy_z88_bitwise_all_frames": true,
+    "field_round_trip_max_per_frame_relative_l2": 0.000002,
+    "Bphi_equals_explicit_float32_cast_bitwise": true,
+    "normalization_recomputation_relative_tolerance": 1e-12,
+    "normalization_recomputation_absolute_tolerance": 1e-12,
+    "clean_git_checkout_required": true,
+    "rocky_major_version_required": 9,
+    "protocol_and_manifest_hash_lock_required": true,
+    "all_gates_must_pass_before_training": true
+  },
+  "state_views_enabled_after_dataset_gate": {
+    "E6B-H1": {
+      "context_frames": 1,
+      "volume_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+      "boundary_field": "Bphi"
+    },
+    "C5P-H2": {
+      "context_frames": 2,
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"]
+    },
+    "C5P-H1": {
+      "context_frames": 1,
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"]
+    }
+  },
+  "passing_claim": "verified_shared_engineering_representation_only",
+  "claims_not_authorized": [
+    "predictive_state_sufficiency",
+    "codec_transport_fidelity",
+    "forecast_skill",
+    "stationarity",
+    "held_out_generalization",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering_or_control"
+  ]
+}
