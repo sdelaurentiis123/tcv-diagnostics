@@ -559,6 +559,21 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     canonical NetCDF chunk from `[1,4,2,81]` to the exact assignment slab
     `[78,4,2,81]`; it does not alter a canonical value, field, frame, equation,
     tolerance, source lock, sequential replay, memory rule, or decision gate.
+51. **Matching the canonical write slab exposed an independent raw-HDF5 read-
+    order bottleneck before any scientific gate.** CPU-only Rocky 9 job
+    `6892978`, from clean commit `8bd9eb2`, passed all provenance gates and
+    created eight canonical files with the corrected chunk shape. It then read
+    1,128,539,772 bytes by 3:50 without completing the first canonical field
+    block. The cause is the raw archive's one-frame HDF5 allocation: requesting
+    all 624 scalar times and then full temporal slabs field by field makes
+    nonsequential, full-file-scale reads. The job was cancelled at 4:23 with
+    no completed extraction, compilation, shard replay, scientific JSON,
+    accepted statistic, or 85606 access; its unique directory is retained.
+    The next execution-only correction reads `Ne,Pe,Pi,Vort,phi,t` together
+    per frame in raw allocation order, buffering only the current 78-frame
+    local-rank slab. It preserves the one-open traversal, every timestamp and
+    value check, canonical content, memory bound, equation, tolerance, replay
+    order, and decision rule.
 
 ## Exact commands
 

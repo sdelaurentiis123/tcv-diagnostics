@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_potential_vorticity_all_frame_85604_attempt",
+  "paper0_commit": "8bd9eb2663f9c7d323f0805008a74db690b8b294",
+  "slurm": {
+    "job_id": 6892978,
+    "state": "CANCELLED",
+    "batch_exit_code": "0:15",
+    "submit": "2026-08-17T13:50:48-04:00",
+    "start": "2026-08-17T13:50:49-04:00",
+    "end": "2026-08-17T13:55:12-04:00",
+    "elapsed": "00:04:23",
+    "time_limit": "01:00:00",
+    "node": "worker5582",
+    "batch_max_rss_kib": 673980
+  },
+  "data_access": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "provenance_gates_passed": true,
+    "canonical_extraction_completed": false,
+    "compiled_oracle_started": false,
+    "shard_replay_count": 0,
+    "scientific_result_written": false
+  },
+  "outcome": {
+    "classification": "no_result_raw_hdf5_access_order_performance_failure",
+    "reason": "the extractor requested the 624 one-value time chunks and then whole temporal slabs field by field even though the raw HDF5 chunks are allocated by frame; this produced nonsequential full-file-scale reads before the first canonical assignment",
+    "read_only_rate_observation": {
+      "elapsed": "00:03:50",
+      "batch_max_disk_read_bytes": 1128539772,
+      "batch_max_disk_write_bytes": 487089,
+      "canonical_volume_chunks_written": 0
+    },
+    "partial_canonical_file_count": 8,
+    "partial_canonical_apparent_bytes_each": 18523,
+    "partial_job_directory_du": "174K",
+    "scientific_statistics_accepted": false,
+    "protocol_or_tolerance_changed": false,
+    "planned_correction": "inside each single-open raw rank traversal, read Ne, Pe, Pi, Vort, phi, and t one saved frame at a time in native allocation order, buffer only one 78-frame local-rank slab, and retain the exact canonical writes and all frozen gates"
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6892978",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_vort_all_6892978.log",
+    "artifact_digests": {
+      "commands.sh": "6ce5f46b3d748e99e24b5f8ff4c80f296e2754137616f9ad715260ee1a33a2ff",
+      "environment.txt": "13910ef8ecd817097823219e91f66a1257a40d1df4e146d53f61f78c6e495e9f",
+      "modules.txt": "b383f226b959e93aab38ad41ee079f5e3f71158c337a80b142a0683610907ce7",
+      "slurm_job.txt": "740f5d5186eccb293e835d1f618eb59cb22eb06c836e1fe0e134ebd70c5152bf",
+      "job.log": "67304471949e45378757dcc298311ab6b98609ceb0afd80149ecf741b8b0c88f",
+      "slurm_log": "f9732d6b806d8d58b3626f371399933ac5e9284a03e716868a2c78de641b6677"
+    }
+  }
+}

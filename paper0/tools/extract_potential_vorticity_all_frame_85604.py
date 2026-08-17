@@ -173,7 +173,6 @@ def validate_rank_metadata(
     *,
     path: Path,
     archive: dict[str, Any],
-    times: np.ndarray,
 ) -> tuple[int, int]:
     dimensions = {
         name: int(len(dimension)) for name, dimension in dataset.dimensions.items()
@@ -192,9 +191,6 @@ def validate_rank_metadata(
         raise ValueError(f"Hermes revision mismatch in {path.name}")
     if scalar_value(dataset, "HERMES_SLOPE_LIMITER") != archive["slope_limiter"]:
         raise ValueError(f"slope limiter mismatch in {path.name}")
-    actual_times = np.asarray(dataset.variables["t"][:], dtype=np.float64)
-    if not np.array_equal(actual_times, times):
-        raise ValueError(f"full time sequence mismatch in {path.name}")
     pe_x = int(scalar_value(dataset, "PE_XIND"))
     pe_y = int(scalar_value(dataset, "PE_YIND"))
     if not (0 <= pe_x < 16 and 0 <= pe_y < 16):
@@ -209,13 +205,23 @@ def update_pressure_inventory(
     block: np.ndarray,
     pe_x: int,
     pe_y: int,
+    frame_start: int = 0,
 ) -> None:
     negative = block < 0.0
     count = int(np.count_nonzero(negative))
     inventory[f"negative_raw_{field}_count"] += count
+    frame_stop = frame_start + block.shape[0]
     for shard_index, (start, stop) in enumerate(EXPECTED_SHARDS):
+        overlap_start = max(start, frame_start)
+        overlap_stop = min(stop, frame_stop)
+        if overlap_start >= overlap_stop:
+            continue
         inventory[f"negative_raw_{field}_count_by_shard"][shard_index] += int(
-            np.count_nonzero(negative[start:stop])
+            np.count_nonzero(
+                negative[
+                    overlap_start - frame_start : overlap_stop - frame_start
+                ]
+            )
         )
     if field != "Pi":
         return
@@ -225,7 +231,7 @@ def update_pressure_inventory(
         t, local_x, local_y, z = np.unravel_index(flat_index, block.shape)
         inventory["minimum_raw_Pi"] = value
         inventory["minimum_raw_Pi_location_txyz"] = [
-            int(t),
+            frame_start + int(t),
             pe_x * block.shape[1] + int(local_x),
             pe_y * block.shape[2] + int(local_y),
             int(z),
@@ -335,7 +341,7 @@ def main() -> int:
         for path in paths:
             with netCDF4.Dataset(path, "r") as source:
                 pe_x, pe_y = validate_rank_metadata(
-                    source, path=path, archive=archive, times=times
+                    source, path=path, archive=archive
                 )
                 coverage[pe_x, pe_y] += 1
                 metadata = {
@@ -357,36 +363,6 @@ def main() -> int:
                 x1 = x0 + mxsub
                 y0 = pe_y * mysub
                 y1 = y0 + mysub
-                for field in VOLUME_FIELDS:
-                    variable = source.variables[field]
-                    if tuple(variable.dimensions) != ("t", "x", "y", "z"):
-                        raise ValueError(f"unexpected axes for {field} in {path.name}")
-                    block = np.ma.filled(
-                        variable[
-                            :,
-                            mxg : mxg + mxsub,
-                            myg : myg + mysub,
-                            :,
-                        ],
-                        np.nan,
-                    ).astype(np.float64, copy=False)
-                    if block.shape != (624, mxsub, mysub, 81):
-                        raise ValueError(f"unexpected block shape in {path.name}")
-                    if not np.all(np.isfinite(block)):
-                        raise ValueError(f"non-finite {field} in {path.name}")
-                    if field in ("Pe", "Pi"):
-                        update_pressure_inventory(
-                            pressure_inventory,
-                            field=field,
-                            block=block,
-                            pe_x=pe_x,
-                            pe_y=pe_y,
-                        )
-                    for shard_index, (start, stop) in enumerate(EXPECTED_SHARDS):
-                        shard_variables[shard_index][field][
-                            :, x0:x1, y0:y1, :
-                        ] = block[start:stop]
-
                 side: str | None = None
                 side_index = -1
                 if pe_x == 0:
@@ -395,15 +371,109 @@ def main() -> int:
                 elif pe_x == 15:
                     side = "outer"
                     side_index = 1
-                if side is not None:
-                    raw_phi = np.ma.filled(
-                        source.variables["phi"][
-                            :, :, myg : myg + mysub, :
-                        ],
-                        np.nan,
-                    ).astype(np.float64, copy=False)
+                for field in VOLUME_FIELDS:
+                    if tuple(source.variables[field].dimensions) != (
+                        "t",
+                        "x",
+                        "y",
+                        "z",
+                    ):
+                        raise ValueError(f"unexpected axes for {field} in {path.name}")
+
+                # BOUT++ allocated one HDF5 chunk per saved frame and wrote
+                # the time-dependent variables in frame order.  Read the five
+                # required fields, then t, for one frame at a time so the raw
+                # file is traversed in its native order.  Buffer only the
+                # current 78-frame local-rank slab before one canonical write.
+                for shard_index, (start, stop) in enumerate(EXPECTED_SHARDS):
+                    blocks = {
+                        field: np.empty(
+                            (stop - start, mxsub, mysub, 81), dtype=np.float64
+                        )
+                        for field in VOLUME_FIELDS
+                    }
+                    raw_phi_boundary = (
+                        np.empty(
+                            (stop - start, mxsub + 2 * mxg, mysub, 81),
+                            dtype=np.float64,
+                        )
+                        if side is not None
+                        else None
+                    )
+                    for local_frame, frame_index in enumerate(range(start, stop)):
+                        for field in VOLUME_FIELDS:
+                            variable = source.variables[field]
+                            if field == "phi" and raw_phi_boundary is not None:
+                                raw_frame = np.ma.filled(
+                                    variable[
+                                        frame_index,
+                                        :,
+                                        myg : myg + mysub,
+                                        :,
+                                    ],
+                                    np.nan,
+                                ).astype(np.float64, copy=False)
+                                if raw_frame.shape != (
+                                    mxsub + 2 * mxg,
+                                    mysub,
+                                    81,
+                                ):
+                                    raise ValueError(
+                                        f"unexpected raw phi frame in {path.name}"
+                                    )
+                                raw_phi_boundary[local_frame] = raw_frame
+                                frame = raw_frame[mxg : mxg + mxsub]
+                            else:
+                                frame = np.ma.filled(
+                                    variable[
+                                        frame_index,
+                                        mxg : mxg + mxsub,
+                                        myg : myg + mysub,
+                                        :,
+                                    ],
+                                    np.nan,
+                                ).astype(np.float64, copy=False)
+                            if frame.shape != (mxsub, mysub, 81):
+                                raise ValueError(
+                                    f"unexpected {field} frame in {path.name}"
+                                )
+                            if not np.all(np.isfinite(frame)):
+                                raise ValueError(
+                                    f"non-finite {field} frame in {path.name}"
+                                )
+                            blocks[field][local_frame] = frame
+
+                        actual_time = float(
+                            np.ma.filled(
+                                source.variables["t"][frame_index], np.nan
+                            )
+                        )
+                        if (
+                            not np.isfinite(actual_time)
+                            or actual_time != times[frame_index]
+                        ):
+                            raise ValueError(
+                                f"time mismatch at frame {frame_index} in {path.name}"
+                            )
+
+                    for field, block in blocks.items():
+                        if field in ("Pe", "Pi"):
+                            update_pressure_inventory(
+                                pressure_inventory,
+                                field=field,
+                                block=block,
+                                pe_x=pe_x,
+                                pe_y=pe_y,
+                                frame_start=start,
+                            )
+                        shard_variables[shard_index][field][
+                            :, x0:x1, y0:y1, :
+                        ] = block
+
+                    if raw_phi_boundary is None:
+                        continue
                     planes = phi_boundary.extract_boundary_planes(
-                        raw_phi, side=side, physical_y_slice=(0, mysub)
+                        raw_phi_boundary, side=side, physical_y_slice=(0, mysub)
                     )
                     if any(not np.all(np.isfinite(values)) for values in planes.values()):
                         boundary_checks[side]["nonfinite_count"] += sum(
@@ -436,10 +506,10 @@ def main() -> int:
                         boundary_checks[side]["midpoint_constancy_max_abs"],
                         float(np.max(np.abs(midpoint - midpoint_reference))),
                     )
-                    for shard_index, (start, stop) in enumerate(EXPECTED_SHARDS):
-                        shard_variables[shard_index]["saved_midpoint"][
-                            :, side_index, y0:y1
-                        ] = midpoint_mean[start:stop]
+                    shard_variables[shard_index]["saved_midpoint"][
+                        :, side_index, y0:y1
+                    ] = midpoint_mean
+                if side is not None:
                     boundary_coverage[side][y0:y1] += 1
 
         if not np.array_equal(coverage, np.ones_like(coverage)):
@@ -526,6 +596,8 @@ def main() -> int:
         "raw_root": str(raw_root),
         "rank_file_count": len(paths),
         "rank_files_traversed_once": True,
+        "raw_rank_read_order": [*VOLUME_FIELDS, "t"],
+        "time_major_local_rank_buffer_frames": 78,
         "processor_coverage_complete": True,
         "boundary_y_coverage_complete": True,
         "frame_count": 624,

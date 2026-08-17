@@ -20,7 +20,7 @@ LOCAL_LOCKS = (
     ROOT / "paper0/tools/merge_potential_vorticity_all_frame_shards.py",
 )
 LAUNCHER_SHA256 = (
-    "3edafbfab2f01464fd522ef97d7531a39be6db248059a7efe75bafe567d49c75"
+    "f8672e4b32aa79f8d263b903539c4c6e9aa408286bf9063cd9000e2bf545deea"
 )
 
 

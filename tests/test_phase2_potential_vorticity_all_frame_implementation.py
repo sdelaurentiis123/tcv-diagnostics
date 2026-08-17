@@ -49,7 +49,7 @@ SELECTED_DRIVER_SHA256 = (
 FILE_HASHES = {
     DRIVER: "79daf7925cb6a8b7d8751eee51f3fa9f5e6139289700654999d659a8bce6d254",
     CMAKE: "b2ac21ea37793e24417320b7fef8c143f0db6a1ff80f65a0e6663328f019169e",
-    EXTRACTOR: "5840704805b04c8586b1835064a5ae34b62ad22a95257722e6a416db5e2c191a",
+    EXTRACTOR: "4a47c94dd761e918746790f0408817624f9a59ae802e8b266d842d3bdb63a292",
     COMPARATOR: "ffd5efbb59abb0eef3bd9a187431f85d5a9c9700fd976627c1d9b89c8b64e967",
     MERGER: "3bedce322efbf22e4942afc84101422f807b179e82c9fa739f1c6800ab4e6fa6",
 }
@@ -145,6 +145,30 @@ class AllFrameExtractionTests(unittest.TestCase):
         self.assertEqual(
             inventory["minimum_raw_Pi_location_txyz"], [3, 9, 6, 2]
         )
+
+    def test_pressure_inventory_preserves_global_frame_after_sharding(self) -> None:
+        inventory = {
+            "negative_raw_Pe_count": 0,
+            "negative_raw_Pi_count": 0,
+            "negative_raw_Pe_count_by_shard": [0] * 8,
+            "negative_raw_Pi_count_by_shard": [0] * 8,
+            "minimum_raw_Pi": float("inf"),
+            "minimum_raw_Pi_location_txyz": None,
+        }
+        block = np.ones((2, 1, 1, 1), dtype=np.float64)
+        block[1, 0, 0, 0] = -3.0
+        update_pressure_inventory(
+            inventory,
+            field="Pi",
+            block=block,
+            pe_x=0,
+            pe_y=0,
+            frame_start=156,
+        )
+        self.assertEqual(
+            inventory["negative_raw_Pi_count_by_shard"], [0, 0, 1] + [0] * 5
+        )
+        self.assertEqual(inventory["minimum_raw_Pi_location_txyz"], [157, 0, 0, 0])
 
     def test_boundary_discrepancy_uses_frozen_scale_aware_rule(self) -> None:
         reference = np.array([1.0, 10.0])
@@ -253,7 +277,14 @@ class AllFrameCompiledImplementationTests(unittest.TestCase):
         source = EXTRACTOR.read_text(encoding="utf-8")
         self.assertIn("for path in paths:", source)
         self.assertIn("for shard_index, (start, stop) in enumerate(EXPECTED_SHARDS)", source)
+        self.assertIn(
+            "for local_frame, frame_index in enumerate(range(start, stop))", source
+        )
+        self.assertIn('source.variables["t"][frame_index]', source)
+        self.assertNotIn('source.variables["t"][:]', source)
         self.assertIn("rank_files_traversed_once", source)
+        self.assertIn('"raw_rank_read_order": [*VOLUME_FIELDS, "t"]', source)
+        self.assertIn('"time_major_local_rank_buffer_frames": 78', source)
         self.assertIn("chunksizes=(78, 4, 2, 81)", source)
         self.assertIn('"canonical_volume_chunks": [78, 4, 2, 81]', source)
         self.assertIn("refusing to overwrite all-frame extraction artifacts", source)
