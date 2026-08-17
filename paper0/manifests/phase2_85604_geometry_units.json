@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_85604_geometry_units_ensemble_transport",
+  "status": "frozen_before_implementation_or_release_evaluation",
+  "development_run": "85604",
+  "sequestered_runs": ["85606"],
+  "held_out_85606_access_allowed": false,
+  "sources": {
+    "geometry": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+      "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+    },
+    "hypnotoad": {
+      "repository": "https://github.com/boutproject/hypnotoad",
+      "revision": "e4a1dff39b80e30aaa05eb6903a8dc72cf4ed832",
+      "critical_file": "hypnotoad/core/mesh.py",
+      "critical_file_sha256": "3c4a3d8f5b94ab728650726fbf010af70f63ae6452a83e024460d34ab99336e3"
+    },
+    "boutpp": {
+      "repository": "https://github.com/boutproject/BOUT-dev",
+      "revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+      "critical_file": "include/bout/constants.hxx",
+      "critical_file_sha256": "4a89ceb00a66799668b1b73d3598e2995d9e171680be0d5ce0d20fe6b33e63b2",
+      "constants": {
+        "electron_charge_coulomb": 1.602176634e-19,
+        "proton_mass_kg": 1.672621898e-27
+      }
+    }
+  },
+  "grid": {
+    "full_shape": [68, 32],
+    "model_shape": [64, 32],
+    "model_x_to_grid_x_offset": 2,
+    "native_z_cells": 81,
+    "zperiod": 5,
+    "target_y_indices": [0, 31],
+    "operator_y_inclusive": [1, 30],
+    "topology": {
+      "ixseps1": 18,
+      "ixseps2": 68,
+      "jyseps1_1": 7,
+      "jyseps1_2": 16,
+      "jyseps2_1": 16,
+      "jyseps2_2": 23,
+      "model_first_sol_x": 16,
+      "separatrix_face_left_model_x": 15,
+      "core_y_inclusive": [8, 23],
+      "inner_leg_y_inclusive": [1, 7],
+      "outer_leg_y_inclusive": [24, 30]
+    },
+    "wall_policy": {
+      "primary_cell_rule": "penalty_mask == 0",
+      "fractional_values_are": "fraction_of_poloidal_cell_edge_outside_wall_not_cell_area",
+      "fractional_cells_primary": "excluded",
+      "unit_cells_primary": "excluded",
+      "fractional_weighting_forbidden": true
+    },
+    "primary_disjoint_masks": {
+      "confined_edge": "x<16 and 8<=y<=23 and operator_interior and strict_wall_interior",
+      "private_flux": "x<16 and (1<=y<=7 or 24<=y<=30) and strict_wall_interior",
+      "scrape_off_layer": "x>=16 and 1<=y<=30 and strict_wall_interior"
+    },
+    "overlapping_masks": {
+      "separatrix_cell_band": "x in {15,16} and 1<=y<=30 and strict_wall_interior",
+      "outboard_midplane_row": "argmax Rxy_xlow on exact separatrix face over y=8..23",
+      "x_point_topology_stencil": "x in {15,16} and y in {7,8,23,24} and strict_wall_interior",
+      "inner_divertor_leg": "1<=y<=7 and strict_wall_interior",
+      "outer_divertor_leg": "24<=y<=30 and strict_wall_interior"
+    },
+    "primary_transport_surface": {
+      "name": "confined_separatrix",
+      "face_left_model_x": 15,
+      "y_inclusive": [8, 23],
+      "positive_direction": "+x_outward_from_confined_region",
+      "wall_face_rule": "both_adjacent_cells_penalty_mask_equal_zero"
+    }
+  },
+  "surface_integration": {
+    "primary_toroidal_convention": "simulated_one_fifth_wedge",
+    "formula": "sum(F * dy * (2*pi/(zperiod*n_z)))",
+    "full_torus_equivalent": "explicit_sensitivity_only_multiply_wedge_by_zperiod",
+    "unweighted_mean_forbidden": true
+  },
+  "normalization": {
+    "Nnorm_m_minus_3": 1e19,
+    "Tnorm_eV": 50.0,
+    "Bnorm_T": 1.0,
+    "Cs0_m_per_s": 69205.61141651045,
+    "Omega_ci_per_s": 95788333.03066081,
+    "rho_s0_m": 0.0007224847664314034,
+    "particle_rate_scale_per_s": 3.612423832157018e17,
+    "pressure_flow_scale_W": 2.893870527993356,
+    "internal_energy_factor_applied_before_si_conversion": 1.5
+  },
+  "ensemble": {
+    "forecast_axes": ["batch", "ensemble_member", "future_time", "channel", "x", "y", "z"],
+    "resampling": "downsample_every_member_from_88_to_81_before_primary_transport",
+    "nonlinear_diagnostic_order": "memberwise_before_ensemble_reduction",
+    "ensemble_mean_field_transport_as_replacement": false
+  },
+  "protocol_design_observations": {
+    "observed_before_freeze": true,
+    "role": "disclosed_structural_probes_rerun_as_execution_gates",
+    "model_psi_normalized_range": [0.8991575102879601, 1.1084596000007159],
+    "positive_radial_psi_differences": 2016,
+    "total_radial_psi_differences": 2016,
+    "minimum_radial_psi_difference": 4.1698824270566684e-05,
+    "separatrix_face_max_abs_psi_error": 1.6318089728854096e-16,
+    "xpoint_RZ_m": [0.7942120340630372, -0.4420630317234957],
+    "xpoint_duplicate_mismatch_m": 0.0,
+    "outboard_midplane_y": 18,
+    "outboard_midplane_separatrix_RZ_m": [1.087493128717754, -0.017535153092040314],
+    "inner_target_separatrix_RZ_m": [0.6341100851522731, -0.5126931808070041],
+    "outer_target_separatrix_RZ_m": [1.033095921281306, -0.6420693611434914],
+    "penalty_counts_model_crop": {"strict": 1933, "fractional": 64, "exterior": 51},
+    "penalty_counts_operator_interior": {"strict": 1869, "fractional": 35, "exterior": 16},
+    "strict_primary_mask_counts": {"confined_edge": 256, "private_flux": 219, "scrape_off_layer": 1394}
+  },
+  "acceptance_gates": {
+    "geometry_sha256_exact": true,
+    "topology_exact": true,
+    "penalty_categories_exhaustive": true,
+    "primary_masks_disjoint_and_exhaustive": true,
+    "separatrix_psi_absolute_tolerance": 1e-12,
+    "all_crop_radial_psi_differences_positive": true,
+    "xpoint_duplicate_distance_tolerance_m": 1e-12,
+    "unique_outboard_midplane_y": 18,
+    "strict_confined_separatrix_y_count": 16,
+    "normalization_relative_tolerance": 1e-14,
+    "surface_known_answer_exact": true,
+    "full_torus_replication_factor_exact": 5,
+    "signed_direction_known_answer": true,
+    "memberwise_nonlinear_known_answer": true,
+    "all_existing_tests_pass": true,
+    "held_out_85606_untouched": true
+  },
+  "training_loss_use": false,
+  "physical_independence_unit": "simulation_run_not_frame_or_window"
+}
