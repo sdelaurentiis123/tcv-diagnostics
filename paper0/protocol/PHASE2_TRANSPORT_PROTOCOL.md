@@ -325,6 +325,22 @@ The full metric remains blocked until all of the following pass:
 4. **Shifted `DDY`:** the Paper 0 implementation matches an exact BOUT++
    operator harness, including at least one periodic-core neighbor, one branch
    connection, and one open-field boundary case.
+
+   The compiled comparison is frozen before execution as follows. BOUT++
+   `5.2.1` evaluates `DDY(..., "C2")` on the hash-locked 85604 geometry at the
+   native 81-cell toroidal resolution and `zperiod=5`. Four manufactured inputs
+   exercise a constant, toroidal modes, a `y` code, and a mixed `x-y-z` field.
+   The candidate is compared on model radial cells `grid_x=2:66` and physical
+   `y=1:31`; target cells `y=0,31` are excluded because their physical guards
+   are absent from the model state. Every case must pass in the full valid
+   region, ordinary sequential stencils, both private-flux connections, both
+   core branch connections, and the open SOL. For each region, with reference
+   scale `s=max(abs(BOUT_DDY))`, acceptance requires no non-finite values and
+
+   `max_abs_error <= 5e-10 + 5e-10 * s`.
+
+   This tolerance and all manufactured fields are committed before the first
+   comparison job. A failure is recorded; it is not tuned away.
 5. **Conservation:** face-flow differences reproduce the source operator's
    volume-weighted divergence on manufactured fields.
 6. **Native-grid oracle:** selected raw 81-cell 85604 frames match the

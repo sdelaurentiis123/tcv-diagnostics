@@ -72,3 +72,23 @@ The accepted dependency build is Slurm job `6890722`, produced from Paper 0
 commit `e298337918582293b682cc3c0465175634f29da3`. Its compact tracked index is
 `paper0/results/phase2_bout_build_6890722.json`; the immutable install is under
 `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890722`.
+
+## Phase 2 compiled shifted-DDY oracle
+
+`phase2_shifted_ddy_oracle.sbatch` compiles a four-case manufactured-field
+driver against the accepted BOUT++ install and compares BOUT++ `DDY(...,
+"C2")` with the independent Paper 0 NumPy candidate. It uses the real 85604
+geometry and topology at native `z=81`, but reads no plasma-state frame. It is
+CPU-only, refuses a dirty or mismatched checkout, and preserves a unique result
+directory whether the numerical comparison passes or fails.
+
+Submit the committed launcher from Rocky 9:
+
+```bash
+export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase2_shifted_ddy_oracle.sbatch
+```
+
+The prospective acceptance tolerance and evaluated topology regions are
+frozen in `paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md`. Passing this job
+releases only the shifted-derivative rung, not the full transport metric.

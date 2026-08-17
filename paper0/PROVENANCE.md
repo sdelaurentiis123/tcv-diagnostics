@@ -77,6 +77,18 @@ shifts, core and private-flux neighbor maps, nonzero `ShiftAngle`, and an
 analytic field-aligned gradient. It remains explicitly `partial` and is not an
 accepted source oracle until its arrays match the compiled BOUT++ harness.
 
+The compiled comparison harness under
+`paper0/oracles/bout_shifted_ddy/` uses the initialization, mesh-load,
+communication, derivative, and default-output pattern from BOUT++
+`tests/integrated/test-yupdown/test_yupdown.cxx` at the same locked revision.
+Because that reference test is GPL-licensed, the small adapted driver is
+explicitly marked `GPL-3.0-or-later`. The driver adds Paper 0's four frozen
+manufactured cases and calls the installed BOUT++ `DDY` with explicit `C2`.
+The independently written NumPy comparator is
+`paper0/tools/compare_shifted_ddy_oracle.py`; its region masks, guard removal,
+and prospective numerical tolerance are tested locally and frozen in the
+transport protocol before the first execution.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

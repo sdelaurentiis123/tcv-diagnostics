@@ -1,0 +1,22 @@
+# Paper 0 manufactured shifted-DDY oracle on the executed 85604 geometry.
+# No plasma-state frame is read. The geometry source is hash-checked by the
+# launcher before this file is used.
+
+MZ = 81
+zperiod = 5
+
+[mesh]
+file = "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc"
+extrapolate_y = false
+
+# Four independent manufactured fields. The compiled executable echoes every
+# evaluated input, so the comparison never has to reproduce BOUT++ FieldFactory
+# coordinate conventions.
+input_constant = 2.5
+input_zmode = cos(15*z) + 0.125*sin(30*z)
+input_ycode = y
+input_mixed = sin(2*x + 3*y - 20*z) + 0.2*cos(5*x - y + 35*z)
+
+[mesh:paralleltransform]
+type = shifted
+
