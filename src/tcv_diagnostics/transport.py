@@ -124,6 +124,22 @@ class PartialCombinedRadialDivergence:
     component: str = "radial_exb_xz_plus_xy_divergence_partial"
 
 
+@dataclass(frozen=True)
+class HermesTransportScales:
+    """Source-matched Hermes normalization and SI transport multipliers."""
+
+    density_norm_m_minus_3: float
+    temperature_norm_ev: float
+    magnetic_field_norm_t: float
+    electron_charge_c: float
+    proton_mass_kg: float
+    sound_speed_m_per_s: float
+    ion_cyclotron_frequency_per_s: float
+    sound_gyroradius_m: float
+    particle_rate_scale_per_s: float
+    pressure_flow_scale_w: float
+
+
 def _real_finite(name: str, values: np.ndarray) -> np.ndarray:
     array = np.asarray(values)
     if np.iscomplexobj(array):
@@ -831,3 +847,170 @@ def divergence_from_xz_face_flow_partial(
         divergence=divergence,
         cell_indices=cell_indices,
     )
+
+
+def integrate_radial_surface_flow(
+    face_result: PartialCombinedRadialFaceFlow,
+    dy: np.ndarray,
+    *,
+    dz: np.ndarray | float,
+    face_mask: np.ndarray,
+    toroidal_replication: int = 1,
+) -> np.ndarray:
+    """Integrate normalized radial face flow over an explicit surface mask.
+
+    ``face_result.flow`` has trailing axes ``[..., face, y, z]``. ``dy`` and
+    non-scalar ``dz`` are full cell-centred arrays ``[x,y]``; the value at each
+    face's left cell is used, matching the frozen Hermes convention. The
+    default returns the simulated-wedge flow. A full-torus-equivalent
+    sensitivity requires the explicit replication factor ``zperiod``.
+    """
+
+    flow = np.asarray(face_result.flow)
+    if np.iscomplexobj(flow):
+        raise ValueError("radial face flow must be real-valued")
+    if not np.issubdtype(flow.dtype, np.number):
+        raise TypeError("radial face flow must have a numeric dtype")
+    flow = np.asarray(flow, dtype=np.float64)
+    if flow.ndim < 3:
+        raise ValueError("radial face flow needs trailing axes [face, y, z]")
+
+    indices = np.asarray(face_result.left_cell_indices)
+    if not np.issubdtype(indices.dtype, np.integer):
+        raise TypeError("left-cell indices must contain integers")
+    indices = np.asarray(indices, dtype=np.int64)
+    n_face, n_y, _ = flow.shape[-3:]
+    if indices.shape != (n_face,):
+        raise ValueError("left-cell indices do not match the face axis")
+
+    selected = np.asarray(face_mask)
+    if selected.dtype != np.bool_:
+        raise TypeError("face_mask must have boolean dtype")
+    if selected.shape != (n_face, n_y):
+        raise ValueError("face_mask must have shape [face, y]")
+    if not np.any(selected):
+        raise ValueError("face_mask must select at least one face cell")
+
+    operator_valid = np.asarray(face_result.valid_mask, dtype=bool)
+    if operator_valid.shape != selected.shape:
+        raise ValueError("operator valid mask must have shape [face, y]")
+    if np.any(selected & ~operator_valid):
+        raise ValueError("face_mask selects an operator-invalid face cell")
+
+    dy_array = np.asarray(dy)
+    if np.iscomplexobj(dy_array):
+        raise ValueError("dy must be real-valued")
+    if not np.issubdtype(dy_array.dtype, np.number):
+        raise TypeError("dy must have a numeric dtype")
+    dy_array = np.asarray(dy_array, dtype=np.float64)
+    if dy_array.ndim != 2 or dy_array.shape[1] != n_y:
+        raise ValueError("dy must have full cell shape [x, y]")
+    if not np.all(np.isfinite(dy_array)) or np.any(dy_array <= 0.0):
+        raise ValueError("dy must be finite and strictly positive")
+    if np.any(indices < 0) or np.any(indices >= dy_array.shape[0]):
+        raise ValueError("face indices exceed dy")
+
+    dz_array = np.asarray(dz)
+    if np.iscomplexobj(dz_array):
+        raise ValueError("dz must be real-valued")
+    if not np.issubdtype(dz_array.dtype, np.number):
+        raise TypeError("dz must have a numeric dtype")
+    dz_array = np.asarray(dz_array, dtype=np.float64)
+    if dz_array.ndim == 0:
+        if not np.isfinite(dz_array) or float(dz_array) <= 0.0:
+            raise ValueError("dz must be finite and strictly positive")
+        face_dz = np.full((n_face, n_y), float(dz_array), dtype=np.float64)
+    elif dz_array.shape == dy_array.shape:
+        if not np.all(np.isfinite(dz_array)) or np.any(dz_array <= 0.0):
+            raise ValueError("dz must be finite and strictly positive")
+        face_dz = dz_array[indices]
+    else:
+        raise ValueError("dz must be scalar or have the same [x, y] shape as dy")
+
+    if not isinstance(toroidal_replication, (int, np.integer)):
+        raise TypeError("toroidal_replication must be an integer")
+    if toroidal_replication < 1:
+        raise ValueError("toroidal_replication must be positive")
+
+    face_weights = dy_array[indices] * face_dz
+    leading_singletons = (1,) * (flow.ndim - 3)
+    selected_broadcast = selected.reshape(
+        (*leading_singletons, n_face, n_y, 1)
+    )
+    full_selected = np.broadcast_to(selected_broadcast, flow.shape)
+    if not np.all(np.isfinite(flow[full_selected])):
+        raise ValueError("selected radial face flow contains non-finite values")
+    weight_shape = (*leading_singletons, n_face, n_y, 1)
+    weighted = np.where(
+        selected_broadcast,
+        flow * face_weights.reshape(weight_shape),
+        0.0,
+    )
+    return np.sum(weighted, axis=(-3, -2, -1)) * int(toroidal_replication)
+
+
+def hermes_transport_scales(
+    *,
+    density_norm_m_minus_3: float = 1.0e19,
+    temperature_norm_ev: float = 50.0,
+    magnetic_field_norm_t: float = 1.0,
+    electron_charge_c: float = 1.602176634e-19,
+    proton_mass_kg: float = 1.672621898e-27,
+) -> HermesTransportScales:
+    """Construct the executed Hermes normalization from source constants."""
+
+    values = np.asarray(
+        [
+            density_norm_m_minus_3,
+            temperature_norm_ev,
+            magnetic_field_norm_t,
+            electron_charge_c,
+            proton_mass_kg,
+        ],
+        dtype=np.float64,
+    )
+    if not np.all(np.isfinite(values)) or np.any(values <= 0.0):
+        raise ValueError("all Hermes normalization inputs must be finite and positive")
+    density, temperature, magnetic_field, charge, proton_mass = values
+    sound_speed = math.sqrt(charge * temperature / proton_mass)
+    cyclotron = charge * magnetic_field / proton_mass
+    gyroradius = sound_speed / cyclotron
+    particle_scale = gyroradius**3 * density * cyclotron
+    pressure_norm = charge * temperature * density
+    pressure_scale = gyroradius**3 * pressure_norm * cyclotron
+    return HermesTransportScales(
+        density_norm_m_minus_3=float(density),
+        temperature_norm_ev=float(temperature),
+        magnetic_field_norm_t=float(magnetic_field),
+        electron_charge_c=float(charge),
+        proton_mass_kg=float(proton_mass),
+        sound_speed_m_per_s=float(sound_speed),
+        ion_cyclotron_frequency_per_s=float(cyclotron),
+        sound_gyroradius_m=float(gyroradius),
+        particle_rate_scale_per_s=float(particle_scale),
+        pressure_flow_scale_w=float(pressure_scale),
+    )
+
+
+def normalized_particle_flow_to_si(
+    normalized_surface_flow: np.ndarray,
+    scales: HermesTransportScales,
+) -> np.ndarray:
+    """Convert a normalized particle surface flow to particles per second."""
+
+    values = _real_finite("normalized particle surface flow", normalized_surface_flow)
+    return values * scales.particle_rate_scale_per_s
+
+
+def normalized_pressure_flow_to_si(
+    normalized_surface_flow: np.ndarray,
+    scales: HermesTransportScales,
+) -> np.ndarray:
+    """Convert pressure or already-formed internal-energy flow to watts.
+
+    If the input represents internal-energy advection, its ``3/2`` factor must
+    already be present. This converter never applies that factor implicitly.
+    """
+
+    values = _real_finite("normalized pressure surface flow", normalized_surface_flow)
+    return values * scales.pressure_flow_scale_w
