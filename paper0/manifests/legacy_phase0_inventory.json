@@ -18,6 +18,7 @@
     "simulator": "Hermes-3/BOUT++",
     "device": "TCV",
     "raw_representative_file": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/BOUT.dmp.0.nc",
+    "raw_representative_file_sha256": "f5ced68fc90bad8fdf073ef7be508002b69aba68e2084d603a6d8f04698c9d38",
     "raw_processor_file_dimensions": {
       "x": 8,
       "y": 6,
@@ -47,7 +48,9 @@
   "legacy_well_conversion": {
     "dataset_name": "TCV_c5_z88",
     "train_path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/train/TCV_c5_train.hdf5",
+    "train_sha256": "f4aae5c13ecd944f51cec0c3539f57ff669cb0bb0405cb813c3f50ff6cb83817",
     "valid_path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/valid/TCV_c5_valid.hdf5",
+    "valid_sha256": "18a7f7a356a4f8d437647b73d4f8078a5309e1e8583a1089e622196ce4d43",
     "fields": [
       "Ne",
       "Te",
@@ -97,7 +100,23 @@
     ],
     "density_transform_name": "log_eps",
     "density_transform_definition": "ln(Ne + 1e-6)",
-    "training_augmentation": "random periodic roll on z"
+    "training_augmentation": "random periodic roll on z",
+    "physical_time_conditioning": false,
+    "label_features": 6,
+    "label_semantics": "constant boundary-condition code",
+    "label_value": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.0,
+      2.0
+    ],
+    "diffusion_noise_time_conditioning": true,
+    "fixed_physical_cadence_is_implicit": true,
+    "latent_cache_repeats": 4,
+    "latent_cache_repeat_semantics": "random toroidal-roll augmentations of one physical trajectory",
+    "legacy_validation_cache_augmented": true
   },
   "primary_legacy_stack": {
     "diffusion_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/idllqvqe_tcv_c5_f8c64_vit_small",
@@ -120,6 +139,16 @@
       11
     ],
     "trajectory_frames": 5
+  },
+  "geometry": {
+    "grid_path": "/mnt/home/sdelaurentiis/ceph/lola_tcv/grid_85604.npz",
+    "grid_sha256": "0bdf6ec083c32c9ef5e75ad4bcd6ac44b8dea4280a2b8a6d17c9ea36bdc249a0",
+    "cropped_state_shape_xy": [
+      64,
+      32
+    ],
+    "cropped_state_ixsep": 16,
+    "raw_grid_ixsep": 18
   },
   "critical_source_hashes": [
     {

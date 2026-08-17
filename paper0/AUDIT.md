@@ -87,6 +87,21 @@ The existing split uses frames 0--499 for train and 500--623 for validation. The
 - Other fields are standardized without the log transform.
 - The training loader applies a random periodic roll on the toroidal axis after temporal windows are constructed.
 
+### Time and conditioning semantics
+
+The legacy diffusion checkpoint does not receive physical simulation time. Its six configured label features are the constant boundary-condition code `[0, 0, 0, 0, 2, 2]`; they are not timestamps. The denoiser's separate time embedding receives diffusion noise-time only. Physical sequence order is represented by the temporal tensor axis, and the 3.131905426352636 microsecond frame interval is implicit because the legacy data use one fixed cadence.
+
+Phase 1 must freeze a deliberate policy:
+
+- always record physical cadence and relative forecast lead;
+- condition on `delta_t` or relative time offsets if models are asked to support more than one cadence;
+- do not use absolute frame number by default, because one training trajectory makes it a high-risk lookup/leakage feature;
+- condition on actual time-varying sources or boundary drivers if such metadata exist, rather than using clock time as their surrogate.
+
+### Latent-cache replication
+
+The f8 cache used to train the legacy diffusion model stores shape `[4, time, 64, 8, 4, 11]` and four identical label rows. These four rows are repeated encodings of the same physical trajectory under random toroidal-roll augmentation. They are symmetry augmentations, not four simulations, four shots, or four independent validation units. The legacy cache builder applied the configured random roll while constructing every split, including validation. Paper 0 must keep validation deterministic and report statistical uncertainty by temporal block and training seed, never by treating cache repeats as independent data.
+
 ## Code-path inventory
 
 | Purpose | Legacy path | Audit note |
@@ -175,6 +190,8 @@ Historical reference only:
 9. **Historical 85606 exposure.** The final simulation was viewed in exploratory work. New use remains prospectively sequestered under amendment A001.
 10. **Marginal calibration is not transport validation.** Historical CRPS/spread improvements cannot establish cross-phase or nonlinear-flux fidelity without member-wise physics evaluation.
 11. **Physical geometry does not imply a physical channel response.** Corrected target, reflectometry, and GPI supports exist, but the prior ranked channels are largely direct-state proxies. The acceptance ledger in `protocol/OBSERVATION_OPERATORS.md` prevents those proxies from entering final diagnostic claims.
+12. **The six legacy labels are not physical time.** They are constant boundary-condition codes. Cadence is implicit, and absolute frame time is absent.
+13. **Four cache rows are augmentation copies.** Random toroidal rolls of one run must never be counted as independent physical trajectories; validation augmentation also needs removal in the new protocol.
 
 ## Exact commands
 
