@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 import random
 import time
-from typing import Any, Iterable, Mapping
+from typing import Any, Callable, Iterable, Mapping
 
 import numpy as np
 import torch
@@ -365,6 +365,7 @@ def train_codec(
     paper0_commit: str,
     slurm_job_id: str,
     device: torch.device,
+    epoch_callback: Callable[[Mapping[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Execute one frozen full or bounded-smoke codec run."""
 
@@ -513,6 +514,8 @@ def train_codec(
                 json.dumps(epoch_record, sort_keys=True, allow_nan=False) + "\n"
             )
             print(json.dumps(epoch_record, sort_keys=True, allow_nan=False), flush=True)
+            if epoch_callback is not None:
+                epoch_callback(epoch_record)
     finally:
         history_handle.close()
         train_dataset.close()

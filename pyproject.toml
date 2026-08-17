@@ -17,6 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 models = [
   "torch>=2.5",
+  "wandb>=0.17",
 ]
 
 [tool.setuptools.packages.find]

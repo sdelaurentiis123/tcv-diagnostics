@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 ENTRYPOINT = ROOT / "paper0/tools/train_codec.py"
 TRAINING = ROOT / "src/tcv_diagnostics/codec_training.py"
+TRACKING = ROOT / "src/tcv_diagnostics/wandb_tracking.py"
 
 
 class TestCodecTrainerEntrypoint(unittest.TestCase):
@@ -16,6 +17,7 @@ class TestCodecTrainerEntrypoint(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.entrypoint = ENTRYPOINT.read_text()
         cls.training = TRAINING.read_text()
+        cls.tracking = TRACKING.read_text()
 
     def test_cli_choices_are_frozen(self) -> None:
         self.assertIn('choices=("smoke", "full")', self.entrypoint)
@@ -41,6 +43,22 @@ class TestCodecTrainerEntrypoint(unittest.TestCase):
         self.assertEqual(self.training.count("save_torch_atomic(\n        selected_path"), 1)
         self.assertIn('value.detach().to("cpu").clone()', self.training)
         self.assertIn("checkpoint reload changed model output", self.training)
+
+    def test_online_wandb_is_mandatory_but_not_scientific_authority(self) -> None:
+        for argument in (
+            "--wandb-entity",
+            "--wandb-project",
+            "--wandb-group",
+            "--wandb-run-id",
+            "--wandb-run-name",
+        ):
+            self.assertIn(argument, self.entrypoint)
+        self.assertIn('mode="online"', self.tracking)
+        self.assertIn('resume="never"', self.tracking)
+        self.assertIn('"checkpoints_uploaded": False', self.tracking)
+        self.assertIn(
+            '"local_artifacts_are_scientific_authority": True', self.tracking
+        )
 
 
 if __name__ == "__main__":
