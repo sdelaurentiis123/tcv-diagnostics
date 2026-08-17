@@ -3,12 +3,13 @@
 This module contains the radial ``x-z`` face-flow component of the executed
 Hermes-3 ``Div_n_bxGrad_f_B_XPPM`` operator, a source-matched shifted-field-line
 ``DDY`` primitive, and the shifted-poloidal ``x-y`` radial face component.
-Compiled jobs ``6891059`` and ``6891343`` validate the latter two primitives on
-manufactured fields and every declared single-null topology region. The
-combined flow, native plasma-frame oracle, surface integration, units, and
-ensemble semantics are not yet released. Accordingly, every face-flow result
-and function remains explicitly named ``partial`` or ``xz_component`` and must
-not be reported as total particle or energy transport.
+Compiled jobs ``6891059``, ``6891343``, and ``6891373`` validate these
+primitives, their combined radial face flow, and its conservative divergence
+on manufactured fields and every declared single-null topology region. The
+native plasma-frame oracle, surface integration, units, and ensemble semantics
+are not yet released. Accordingly, every face-flow result and function remains
+explicitly named ``partial`` or ``xz_component`` and must not be reported as
+total particle or energy transport.
 
 The frozen definition and release blockers are in
 ``paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md``.
@@ -102,25 +103,25 @@ class PartialShiftedRadialFaceFlow:
 
 
 @dataclass(frozen=True)
-class CandidateCombinedRadialFaceFlow:
-    """Candidate sum of the validated ``xz`` and shifted-``xy`` face terms."""
+class PartialCombinedRadialFaceFlow:
+    """Validated partial sum of the radial ``xz`` and shifted-``xy`` terms."""
 
     flow: np.ndarray
     xz_flow: np.ndarray
     xy_flow: np.ndarray
     valid_mask: np.ndarray
     left_cell_indices: np.ndarray
-    component: str = "radial_exb_xz_plus_xy_candidate_partial"
+    component: str = "radial_exb_xz_plus_xy_partial"
 
 
 @dataclass(frozen=True)
-class CandidateCombinedRadialDivergence:
-    """Volume-normalized divergence of the candidate combined face flow."""
+class PartialCombinedRadialDivergence:
+    """Volume-normalized divergence of the validated partial combined flow."""
 
     divergence: np.ndarray
     valid_mask: np.ndarray
     cell_indices: np.ndarray
-    component: str = "radial_exb_xz_plus_xy_divergence_candidate_partial"
+    component: str = "radial_exb_xz_plus_xy_divergence_partial"
 
 
 def _real_finite(name: str, values: np.ndarray) -> np.ndarray:
@@ -657,7 +658,7 @@ def radial_exb_xy_face_flow_partial(
     )
 
 
-def radial_exb_face_flow_candidate_partial(
+def radial_exb_face_flow_partial(
     advected: np.ndarray,
     potential: np.ndarray,
     jacobian: np.ndarray,
@@ -672,14 +673,14 @@ def radial_exb_face_flow_candidate_partial(
     topology: SingleNullTopology,
     zperiod: int = 5,
     positive: bool = True,
-) -> CandidateCombinedRadialFaceFlow:
+) -> PartialCombinedRadialFaceFlow:
     """Sum the source-matched radial ``xz`` and shifted-``xy`` face terms.
 
     The result is restricted to faces and target-independent ``y`` cells for
-    which both source stencils are available. Although both component
-    primitives have passed isolated oracles, the combined result remains a
-    candidate until its face sum and divergence pass the compiled-Hermes
-    conservation oracle.
+    which both source stencils are available. Compiled Hermes job ``6891373``
+    validated each component, their exact sum, and the resulting conservative
+    divergence. ``partial`` remains mandatory because plasma-frame transport,
+    surface integration, units, and ensemble semantics are still unvalidated.
     """
 
     xz = radial_exb_xz_face_flow_partial(
@@ -713,7 +714,7 @@ def radial_exb_face_flow_candidate_partial(
     )
     valid_broadcast = xy.valid_mask.reshape(valid_shape)
     flow = np.where(valid_broadcast, xz.flow + xy.flow, np.nan)
-    return CandidateCombinedRadialFaceFlow(
+    return PartialCombinedRadialFaceFlow(
         flow=flow,
         xz_flow=np.where(valid_broadcast, xz.flow, np.nan),
         xy_flow=xy.flow,
@@ -722,12 +723,12 @@ def radial_exb_face_flow_candidate_partial(
     )
 
 
-def divergence_from_radial_face_flow_candidate_partial(
-    face_result: CandidateCombinedRadialFaceFlow,
+def divergence_from_radial_face_flow_partial(
+    face_result: PartialCombinedRadialFaceFlow,
     jacobian: np.ndarray,
     *,
     dx: np.ndarray | float,
-) -> CandidateCombinedRadialDivergence:
+) -> PartialCombinedRadialDivergence:
     """Return the conservative divergence of consecutive combined faces."""
 
     flow = np.asarray(face_result.flow)
@@ -782,7 +783,7 @@ def divergence_from_radial_face_flow_candidate_partial(
         denominator_shape
     )
     divergence = np.where(cell_valid_broadcast, divergence, np.nan)
-    return CandidateCombinedRadialDivergence(
+    return PartialCombinedRadialDivergence(
         divergence=divergence,
         valid_mask=cell_valid,
         cell_indices=cell_indices,

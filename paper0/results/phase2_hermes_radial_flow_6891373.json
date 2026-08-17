@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_hermes_combined_radial_flow_compiled_oracle",
+  "paper0_commit": "b6926caf6aba4cc14c947a0542246564845b8d9d",
+  "slurm": {
+    "job_id": 6891373,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "submit": "2026-08-17T03:09:24-04:00",
+    "start": "2026-08-17T03:09:27-04:00",
+    "end": "2026-08-17T03:09:43-04:00",
+    "elapsed": "00:00:16",
+    "time_limit": "00:15:00",
+    "requested_tasks": 4,
+    "node": "worker5594"
+  },
+  "acceptance": {
+    "rule_frozen_before_execution": true,
+    "continuous_formula": "max_abs_error <= atol + rtol * max_abs_reference",
+    "continuous_atol": 5e-10,
+    "continuous_rtol": 5e-10,
+    "conservation_formula": "max_abs_residual <= atol + rtol * max_abs_face_difference",
+    "conservation_atol": 5e-12,
+    "conservation_rtol": 5e-12,
+    "component_sum_requires_exact_equality": true,
+    "native_dz_atol": 1e-15,
+    "native_dz_expected": 0.015514037795505151,
+    "native_dz_max_abs_error": 0.0,
+    "requires_every_case_quantity_and_region": true,
+    "requires_both_xz_and_total_flow_signs_in_nonconstant_cases": true,
+    "overall_passed": true,
+    "largest_face_max_abs_error": 2.5619506516250112e-12,
+    "largest_divergence_max_abs_error": 3.073364496231079e-08,
+    "largest_divergence_reference_scale": 3680114.2065100316,
+    "largest_divergence_relative_error": 8.351274780533639e-15,
+    "largest_component_sum_max_abs_error": 0.0,
+    "largest_conservation_max_abs_residual": 1.1368683772161603e-13,
+    "cases": {
+      "constant": {
+        "passed": true,
+        "largest_face_max_abs_error": 0.0,
+        "largest_divergence_max_abs_error": 0.0,
+        "xz_positive_count": 0,
+        "xz_negative_count": 0,
+        "total_positive_count": 0,
+        "total_negative_count": 0,
+        "zero_flow_count": 148230
+      },
+      "smooth": {
+        "passed": true,
+        "largest_face_max_abs_error": 2.5619506516250112e-12,
+        "largest_divergence_max_abs_error": 3.073364496231079e-08,
+        "largest_divergence_reference_scale": 3680114.2065100316,
+        "xz_positive_count": 74068,
+        "xz_negative_count": 74162,
+        "total_positive_count": 74071,
+        "total_negative_count": 74159
+      },
+      "signed": {
+        "passed": true,
+        "largest_face_max_abs_error": 1.3287149158713873e-12,
+        "largest_divergence_max_abs_error": 1.8335413187742233e-08,
+        "largest_divergence_reference_scale": 3116726.9687002725,
+        "xz_positive_count": 74220,
+        "xz_negative_count": 74010,
+        "total_positive_count": 74213,
+        "total_negative_count": 74017
+      },
+      "clipping": {
+        "passed": true,
+        "largest_face_max_abs_error": 1.388944514957302e-12,
+        "largest_divergence_max_abs_error": 2.1864252630621195e-08,
+        "largest_divergence_reference_scale": 3385970.623118621,
+        "xz_positive_count": 74326,
+        "xz_negative_count": 73904,
+        "total_positive_count": 74322,
+        "total_negative_count": 73908
+      }
+    },
+    "face_quantities": [
+      "xz_flow",
+      "xy_flow",
+      "total_radial_flow"
+    ],
+    "face_regions": [
+      "all_valid",
+      "ordinary_or_sol_sequential",
+      "inner_private_flux_connection",
+      "inner_core_branch_connection",
+      "separatrix_radial_face",
+      "open_sol_interior"
+    ],
+    "divergence_regions": [
+      "all_valid",
+      "ordinary_or_sol_sequential",
+      "inner_private_flux_connection",
+      "inner_core_branch_connection",
+      "separatrix_cell",
+      "open_sol_interior"
+    ]
+  },
+  "operator": {
+    "reference": "compiled GPL source-derived Hermes-3 xz plus shifted-xy radial face flow and divergence",
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "hermes_source_ranges": [
+      "src/div_ops.cxx:128-229",
+      "src/div_ops.cxx:273-326"
+    ],
+    "hermes_source_sha256": "458eeecbd6da1afb882d0de2b652271fc2c2ca142c39a636a52f3adc5c16ef3f",
+    "executed_candidate": "tcv_diagnostics.transport.radial_exb_face_flow_candidate_partial",
+    "promoted_name_after_acceptance": "tcv_diagnostics.transport.radial_exb_face_flow_partial",
+    "promoted_divergence_name_after_acceptance": "tcv_diagnostics.transport.divergence_from_radial_face_flow_partial",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "mpi_decomposition": {
+      "NXPE": 1,
+      "NYPE": 4,
+      "MYSUB": 8
+    }
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_hermes_radial_flow/job_6891373",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_hermes_radial_flow_6891373.log",
+    "artifact_digests": {
+      "job.log": "da8c87594f74409bed373b8bad23d9b1453e2b7ec7724855532cd6eaa45a9301",
+      "commands.sh": "743261c167183bcc542b0670c3a6535f15b087da631ada523fb2b5a4773f9392",
+      "build/hermes_radial_flow_oracle": "b6a0a4ca3d92da49803f4147fef280a96469e1f1535f7886596daa12627ef764",
+      "run/BOUT.inp": "dfeb133e45b6539791a6477948d2ac09da779ea255aed73b69fd256d18c1fa2b",
+      "run/BOUT.dmp.0.nc": "4cbbd76c256d3dbf4d60e7726f0e528bee9bf249b06f3331fe8b94409faa4971",
+      "run/BOUT.dmp.1.nc": "e368c900d5bffe497ade984a55c971891123df3d17af776f0713df46d8f7d98e",
+      "run/BOUT.dmp.2.nc": "1096c1e847c5c95342cd42e9d08ef365f90bcc607060c3acd05461200cfd7305",
+      "run/BOUT.dmp.3.nc": "9d928496d16bbb2fbb7a6a91bba8fd4710dc4cab3082a6cecc05e33673a47119",
+      "oracle_comparison.json": "111054902cfe43f4e07826f693fb394567ff93313243c5c28a161789ceda269c",
+      "comparison_arrays.npz": "9dbe98ebefe0ad2baaecca5f650cbb9101fb5bcf4160974721b7bdda27d7daa7",
+      "artifact_sha256.txt": "70fcdf57afd08cdacc054ae7f428a7680495964fe1023e92dc781195687c8e43"
+    }
+  },
+  "data_access": {
+    "run_id": "85604_geometry_only",
+    "model_x_grid_slice": [2, 66],
+    "safe_model_left_face_indices": [1, 62],
+    "safe_model_cell_indices": [2, 62],
+    "evaluated_y_slice": [1, 31],
+    "plasma_state_frames_read": 0,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "accepted_combined_radial_flow_stage_only",
+  "remaining_blockers": [
+    "total particle and advected-internal-energy transport definitions",
+    "native-81 plasma-frame oracle",
+    "native-81 versus Fourier-resampled-88 sensitivity",
+    "authoritative geometry masks and outward orientation",
+    "normalized-to-SI conversion",
+    "member-wise nonlinear ensemble semantics"
+  ]
+}

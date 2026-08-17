@@ -6,9 +6,9 @@
 
 **Sequestered evaluation run:** `85606`
 
-**Current gate:** shifted-field-line derivative and shifted-`xy` face rungs
-passed; full transport is blocked on the remaining Section 9 conservation,
-native-grid, resampling, mask, unit, and ensemble checks
+**Current gate:** shifted-field-line derivative, shifted-`xy` face, and combined
+radial-flow conservation rungs passed; full transport is blocked on the
+remaining Section 9 native-grid, resampling, mask, unit, and ensemble checks
 
 This document replaces the exploratory image-space flux proxy with the
 transport definition actually advanced by the Hermes-3 simulation. It does not
@@ -309,10 +309,10 @@ An intermediate API must include `_xz_component` or `_partial` in its public
 name and metadata. It cannot satisfy the transport gate, generate diagnostic
 rankings, or appear in a figure as “particle flux” or “heat flux.”
 
-The shifted-`DDY` and shifted-`xy` radial-face primitives have passed their
-separately frozen compiled oracles. They remain `_partial` APIs because
-target-boundary guards are absent and because a validated component is not a
-validated total transport metric.
+The shifted-`DDY`, shifted-`xy` radial-face, and combined radial-flow primitives
+have passed their frozen compiled oracles. They remain `_partial` APIs because
+target-boundary guards are absent and because a validated numerical operator
+is not yet a validated physical transport metric.
 
 As required by the general metric protocol, nonlinear transport is computed
 for every ensemble member before ensemble reduction.
@@ -450,6 +450,18 @@ The full metric remains blocked until all of the following pass:
    and both signs of total flow. All inputs retain the item-5 noncollapse gate.
    These fields, regions, formulas, and tolerances are committed before the
    first combined-flow execution and are not relaxed after seeing its result.
+
+   **Execution record:** Rocky 9 job `6891373`, from clean commit `b6926ca`,
+   passed the unchanged rules for every component, total face flow, divergence,
+   case, and declared region. Native `dz` matched `2*pi/(5*81)` exactly, and
+   both implementations satisfied exact component addition. The largest face
+   discrepancy was `2.5619506516250112e-12`. The largest divergence absolute
+   discrepancy was `3.073364496231079e-08` against a reference magnitude of
+   `3680114.2065100316`, or `8.351274780533639e-15` relative. The maximum
+   volume-weighted conservation residual was `1.1368683772161603e-13`. This
+   releases only the partial combined radial-flow and divergence primitives;
+   it does not release particle or energy transport or any model claim.
+
 7. **Native-grid oracle:** selected raw 81-cell 85604 frames match the
    hash-locked Hermes/BOUT++ calculation to a prospectively set tolerance.
 8. **Resampling sensitivity:** truth transport on native 81 cells is compared
@@ -469,9 +481,11 @@ absence of a transport result is a documented blocker, not a zero or a pass.
 
 ## 10. Immediate decision
 
-No architecture work or training is justified by this audit. The shifted
-`DDY` rung has passed; the next safe step is the prospectively frozen compiled
-Hermes shifted-`xy` face-flow comparison above. If the remaining exact oracle
-ladder cannot be completed, Paper 0 must retain cross-spectrum and cross-phase
-as validated joint-field metrics and omit strong physical-transport claims
-rather than promote the historical proxy.
+No architecture work or training is justified by this audit. The manufactured
+operator ladder through combined radial-flow conservation has passed. The next
+safe step is to freeze the native-81 85604 plasma-frame comparison, including
+the authoritative advected variables and frame-selection rule, before reading
+any selected state frames. If the remaining exact oracle ladder cannot be
+completed, Paper 0 must retain cross-spectrum and cross-phase as validated
+joint-field metrics and omit strong physical-transport claims rather than
+promote the historical proxy.

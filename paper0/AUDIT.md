@@ -291,6 +291,19 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     validation-ladder item 5 only. Combined-flow conservation, native plasma
     frames, resampling, geometry integrations, SI units, and member-wise
     ensemble semantics remain open.
+30. **The combined radial-flow transcription conserves exactly as the locked
+    Hermes source does.** Four-rank Rocky 9 job `6891373` completed with exit
+    code `0:0` from clean commit `b6926ca`. The `xz`, shifted-`xy`, and summed
+    face flows and their finite-volume divergence passed every frozen case and
+    topology region. Native `dz` and component addition were exact; the worst
+    face discrepancy was `2.5619506516250112e-12`; and the maximum
+    volume-weighted conservation residual was `1.1368683772161603e-13`. The
+    largest divergence absolute discrepancy, `3.073364496231079e-08`, occurred
+    at reference scale `3.6801142065100316e6` and is
+    `8.351274780533639e-15` relative. This closes validation-ladder item 6
+    only. The partial API is not yet a particle- or heat-transport metric;
+    native 85604 plasma frames, resampling, masks/orientation, units, and
+    member-wise ensemble semantics remain open, while 85606 remains untouched.
 
 ## Exact commands
 

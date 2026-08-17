@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -15,6 +16,7 @@ COMPARATOR = TOOLS / "compare_hermes_radial_flow_oracle.py"
 LAUNCHER = ROOT / "cluster" / "phase2_hermes_radial_flow_oracle.sbatch"
 ORACLE_DIR = ROOT / "paper0" / "oracles" / "hermes_radial_flow"
 PROTOCOL = ROOT / "paper0" / "protocol" / "PHASE2_TRANSPORT_PROTOCOL.md"
+RESULT = ROOT / "paper0" / "results" / "phase2_hermes_radial_flow_6891373.json"
 
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
@@ -35,6 +37,37 @@ class DummyVariable:
 
 
 class CompiledHermesRadialFlowOracleTests(unittest.TestCase):
+    def test_tracked_execution_passes_frozen_rule_without_scope_creep(
+        self,
+    ) -> None:
+        result = json.loads(RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(
+            result["paper0_commit"],
+            "b6926caf6aba4cc14c947a0542246564845b8d9d",
+        )
+        self.assertEqual(result["slurm"]["state"], "COMPLETED")
+        self.assertEqual(result["slurm"]["exit_code"], "0:0")
+        acceptance = result["acceptance"]
+        self.assertTrue(acceptance["rule_frozen_before_execution"])
+        self.assertTrue(acceptance["overall_passed"])
+        self.assertEqual(acceptance["continuous_atol"], MODULE.DEFAULT_ATOL)
+        self.assertEqual(acceptance["continuous_rtol"], MODULE.DEFAULT_RTOL)
+        self.assertEqual(
+            acceptance["conservation_atol"], MODULE.CONSERVATION_ATOL
+        )
+        self.assertEqual(
+            acceptance["conservation_rtol"], MODULE.CONSERVATION_RTOL
+        )
+        self.assertEqual(acceptance["native_dz_atol"], MODULE.DZ_ATOL)
+        self.assertEqual(set(acceptance["cases"]), set(MODULE.CASES))
+        self.assertEqual(acceptance["largest_component_sum_max_abs_error"], 0.0)
+        self.assertFalse(result["data_access"]["held_out_85606_read"])
+        self.assertEqual(result["data_access"]["plasma_state_frames_read"], 0)
+        self.assertEqual(
+            result["scientific_status"],
+            "accepted_combined_radial_flow_stage_only",
+        )
+
     def test_launcher_is_cpu_only_source_locked_and_syntax_valid(self) -> None:
         text = LAUNCHER.read_text(encoding="utf-8")
         subprocess.run(["bash", "-n", str(LAUNCHER)], check=True)

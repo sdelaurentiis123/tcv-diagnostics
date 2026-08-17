@@ -21,11 +21,13 @@ The historical codecs have now been evaluated through the frozen O1 oracle;
 passes the complete preliminary representation gate. The exact-source
 transport audit is frozen in
 [`paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md`](paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md):
-the former image-space flux is retained only as a proxy. The shifted-`DDY` and
-shifted-`xy` radial-face primitives now match their frozen compiled oracles,
-but no physical transport claim is allowed until combined-flow conservation,
-native-grid, resampling, geometry, unit, and ensemble rungs pass.
+the former image-space flux is retained only as a proxy. The shifted-`DDY`,
+shifted-`xy` radial-face, and combined conservative radial-flow primitives now
+match their frozen compiled oracles, but no physical transport claim is allowed
+until native-grid, resampling, geometry, unit, and ensemble rungs pass.
 The narrow execution evidence and remaining blockers are summarized in
 [`paper0/PHASE2_SHIFTED_DDY_READOUT.md`](paper0/PHASE2_SHIFTED_DDY_READOUT.md)
 and
 [`paper0/PHASE2_XY_FACE_READOUT.md`](paper0/PHASE2_XY_FACE_READOUT.md).
+The combined-flow result is documented separately in
+[`paper0/PHASE2_RADIAL_FLOW_READOUT.md`](paper0/PHASE2_RADIAL_FLOW_READOUT.md).

@@ -185,13 +185,12 @@ arrays have SHA-256 `c024ab47a82e1cdbb59a032b97593e4e5ecdecfa13dea228384b24264de
 and `bfa42628c536cd6833a3ccd8aeb235d83bd5e934caea27d5b96194777f382c13`.
 This accepts only the guard-independent shifted-`xy` radial face component.
 
-`radial_exb_face_flow_candidate_partial` now forms the pointwise sum of the
-separately validated `xz` and shifted-`xy` face components on their common
-guard-independent mask. Its companion divergence uses consecutive radial faces
-and the source volume factor `J*dx`. Synthetic tests verify exact component
-addition, constant-potential zero flow, and volume-weighted telescoping for
-batched fields. Both APIs retain `candidate_partial` pending a compiled Hermes
-comparison of each component, their sum, and their divergence.
+The implementation initially named `radial_exb_face_flow_candidate_partial`
+forms the pointwise sum of the separately validated `xz` and shifted-`xy` face
+components on their common guard-independent mask. Its companion divergence
+uses consecutive radial faces and the source volume factor `J*dx`. Synthetic
+tests verify exact component addition, constant-potential zero flow, and
+volume-weighted telescoping for batched fields.
 
 The prospective combined comparison under
 `paper0/oracles/hermes_radial_flow/` is GPL-3.0-or-later because its C++ driver
@@ -202,7 +201,29 @@ each topology region, exact component addition, volume-weighted telescoping,
 both signs of nonconstant `xz` and total flow, and the precommitted tolerances.
 The launcher uses the same clean-commit, official-source, ABI, geometry,
 four-rank, no-plasma-frame, and no-blind-test gates as the accepted component
-oracle. No combined-flow execution result is claimed yet.
+oracle. This paragraph records the pre-execution design; the immutable result
+follows.
+
+Rocky 9 job `6891373` completed from clean Paper 0 commit
+`b6926caf6aba4cc14c947a0542246564845b8d9d`. Every `xz`, shifted-`xy`, total
+face-flow, and divergence comparison passed in all four cases and every frozen
+topology region. Native `dz` matched `2*pi/(5*81)` exactly; component addition
+was exact in reference and candidate; and the worst volume-weighted
+conservation residual was `1.1368683772161603e-13`. The worst face discrepancy
+was `2.5619506516250112e-12`. The worst divergence discrepancy was
+`3.073364496231079e-08` on a reference magnitude of `3680114.2065100316`, or
+`8.351274780533639e-15` relative. The compact record is
+`paper0/results/phase2_hermes_radial_flow_6891373.json`; the immutable full JSON
+and arrays have SHA-256
+`111054902cfe43f4e07826f693fb394567ff93313243c5c28a161789ceda269c` and
+`9dbe98ebefe0ad2baaecca5f650cbb9101fb5bcf4160974721b7bdda27d7daa7`.
+
+After acceptance, the same implementation was promoted mechanically to
+`radial_exb_face_flow_partial` and
+`divergence_from_radial_face_flow_partial`. The `_partial` suffix remains
+mandatory: no plasma frame, particle/internal-energy definition, physical
+surface integral, SI conversion, ensemble, learned model, diagnostic, or
+85606 data was evaluated by this job.
 
 ### Phase 2 O1 historical codec execution
 

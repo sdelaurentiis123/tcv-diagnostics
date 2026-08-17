@@ -36,8 +36,8 @@ from compare_shifted_ddy_oracle import (  # noqa: E402
     sha256_file,
 )
 from tcv_diagnostics.transport import (  # noqa: E402
-    divergence_from_radial_face_flow_candidate_partial,
-    radial_exb_face_flow_candidate_partial,
+    divergence_from_radial_face_flow_partial,
+    radial_exb_face_flow_partial,
     radial_exb_xz_face_flow_partial,
     toroidal_wedge_spacing,
 )
@@ -233,7 +233,7 @@ def main() -> int:
                 outputs, decomposition, f"radial_divergence_{case}"
             )[MODEL_X_SLICE]
 
-            candidate_faces = radial_exb_face_flow_candidate_partial(
+            candidate_faces = radial_exb_face_flow_partial(
                 q,
                 phi,
                 geometry["jacobian"],
@@ -249,7 +249,7 @@ def main() -> int:
                 positive=True,
             )
             candidate_divergence = (
-                divergence_from_radial_face_flow_candidate_partial(
+                divergence_from_radial_face_flow_partial(
                     candidate_faces,
                     geometry["jacobian"],
                     dx=geometry["dx"],
@@ -419,10 +419,7 @@ def main() -> int:
                 "compiled GPL source-derived Hermes-3 xz plus shifted-xy "
                 "radial face flow and divergence at revision 920ba829"
             ),
-            "candidate": (
-                "tcv_diagnostics.transport."
-                "radial_exb_face_flow_candidate_partial"
-            ),
+            "candidate": "tcv_diagnostics.transport.radial_exb_face_flow_partial",
             "hermes_source_ranges": [
                 "src/div_ops.cxx:128-229",
                 "src/div_ops.cxx:273-326",
