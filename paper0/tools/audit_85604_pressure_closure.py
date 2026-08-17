@@ -429,6 +429,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--paper0-commit", required=True)
     parser.add_argument("--slurm-job-id", type=int, required=True)
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--shard-count", type=int, default=1)
     return parser.parse_args()
 
 
@@ -480,6 +482,99 @@ def update_stream_digest(
     digest.update(np.ascontiguousarray(values, dtype="<f8").tobytes(order="C"))
 
 
+def expected_scope_counts_for_coverage(
+    coverage: np.ndarray,
+    *,
+    frame_count: int,
+    mxsub: int,
+    mysub: int,
+    native_z: int,
+) -> dict[str, int]:
+    counts = {
+        "full_physical_domain": 0,
+        "guard_independent_transport_interior": 0,
+        "target_dependent_rows": 0,
+    }
+    points_per_local_y = frame_count * mxsub * native_z
+    for _, pe_y in np.argwhere(coverage == 1):
+        global_y = int(pe_y) * mysub + np.arange(mysub)
+        for scope_name in counts:
+            local_y_count = int(scope_y_indices(global_y, scope_name).size)
+            counts[scope_name] += points_per_local_y * local_y_count
+    return counts
+
+
+def validate_scope_accounting(
+    value_results: dict[str, Any],
+    closure_results: dict[str, Any],
+    expected_scope_counts: dict[str, int],
+) -> None:
+    for field, field_result in value_results.items():
+        for scope_name, expected_count in expected_scope_counts.items():
+            actual = field_result["scopes"][scope_name]["total_count"]
+            if actual != expected_count:
+                raise ValueError(
+                    f"incomplete value accounting for {field}/{scope_name}: {actual}"
+                )
+    for relation, relation_result in closure_results.items():
+        for scope_name, expected_count in expected_scope_counts.items():
+            actual = relation_result["scopes"][scope_name]["total_count"]
+            if actual != expected_count:
+                raise ValueError(
+                    f"incomplete closure accounting for {relation}/{scope_name}: {actual}"
+                )
+
+
+def derive_scientific_findings(
+    value_results: dict[str, Any], closure_results: dict[str, Any]
+) -> dict[str, Any]:
+    all_fields_finite = all(
+        value_results[field]["scopes"]["full_physical_domain"]["nonfinite_count"] == 0
+        for field in FIELD_NAMES
+    )
+    all_full_closures_pass = all(
+        closure_results[relation]["scopes"]["full_physical_domain"]["frame_fail_count"] == 0
+        for relation in RELATIONS
+    )
+    pressure_relations = ("Pe_equals_Ne_times_Te", "Pi_equals_Ne_times_Ti")
+    interior_pressure_closures_pass = all(
+        closure_results[relation]["scopes"]["guard_independent_transport_interior"]["frame_fail_count"] == 0
+        for relation in pressure_relations
+    )
+    pressure_undershoots_present = any(
+        value_results[field]["scopes"]["full_physical_domain"]["negative_count"] > 0
+        for field in ("Pe", "Pi")
+    )
+    target_only_pressure_undershoots = all(
+        value_results[field]["scopes"]["guard_independent_transport_interior"]["negative_count"] == 0
+        for field in ("Pe", "Pi")
+    )
+    pressure_discrepancies_confined_to_targets = all(
+        closure_results[relation]["scopes"]["guard_independent_transport_interior"]["point_discrepancy_count"] == 0
+        for relation in pressure_relations
+    )
+    if not all_fields_finite:
+        recommendation = "resolve_nonfinite_state_before_channel_choice"
+    elif not interior_pressure_closures_pass:
+        recommendation = "prefer_direct_evolved_pressure_or_define_and_validate_floor_policy"
+    elif all_full_closures_pass:
+        recommendation = "historical_temperature_channels_close_evolved_pressure_on_85604"
+    else:
+        recommendation = "temperature_channels_match_guard_independent_operator_scope_but_not_full_evolved_state"
+    return {
+        "all_fields_finite": all_fields_finite,
+        "exact_full_state_compatibility": all_fields_finite
+        and all_full_closures_pass,
+        "temperature_state_reproduces_guard_independent_pressure_transport": all_fields_finite
+        and interior_pressure_closures_pass,
+        "pressure_undershoots_present": pressure_undershoots_present,
+        "target_only_pressure_undershoots": target_only_pressure_undershoots,
+        "pressure_closure_discrepancies_confined_to_targets": pressure_discrepancies_confined_to_targets,
+        "recommendation": recommendation,
+        "automatic_channel_change_authorized": False,
+    }
+
+
 def main() -> int:
     args = parse_args()
     if args.output.exists():
@@ -509,13 +604,33 @@ def main() -> int:
         if sha256_file(args.raw_root / name) != expected_digest:
             raise ValueError(f"hash mismatch for raw control {name}")
 
-    paths = sorted(args.raw_root.glob("BOUT.dmp.*.nc"), key=rank_number)
+    if args.shard_count < 1:
+        raise ValueError("shard count must be positive")
+    if not 0 <= args.shard_index < args.shard_count:
+        raise ValueError("shard index must lie in [0, shard_count)")
+
+    all_paths = sorted(args.raw_root.glob("BOUT.dmp.*.nc"), key=rank_number)
     expected_rank_count = int(archive["expected_rank_file_count"])
-    if len(paths) != expected_rank_count:
-        raise ValueError(f"expected {expected_rank_count} rank files, found {len(paths)}")
-    ranks = [rank_number(path) for path in paths]
+    if len(all_paths) != expected_rank_count:
+        raise ValueError(
+            f"expected {expected_rank_count} rank files, found {len(all_paths)}"
+        )
+    ranks = [rank_number(path) for path in all_paths]
     if ranks != list(range(expected_rank_count)):
         raise ValueError("rank filenames must cover exactly 0 through 255")
+    paths = [
+        path
+        for path in all_paths
+        if rank_number(path) % args.shard_count == args.shard_index
+    ]
+    selected_ranks = [rank_number(path) for path in paths]
+    expected_selected_ranks = [
+        rank
+        for rank in range(expected_rank_count)
+        if rank % args.shard_count == args.shard_index
+    ]
+    if selected_ranks != expected_selected_ranks or not paths:
+        raise ValueError("rank shard does not follow the frozen modulo partition")
 
     decomposition = {
         key: int(value) for key, value in archive["mpi_decomposition"].items()
@@ -652,8 +767,10 @@ def main() -> int:
                     y0=pe_y * mysub,
                 )
 
-    if not np.array_equal(coverage, np.ones_like(coverage)):
-        raise ValueError("processor-coordinate coverage is incomplete or duplicated")
+    if np.any(coverage > 1) or int(np.count_nonzero(coverage)) != len(paths):
+        raise ValueError("processor-coordinate coverage is duplicated or incomplete for shard")
+    if args.shard_count == 1 and not np.array_equal(coverage, np.ones_like(coverage)):
+        raise ValueError("full processor-coordinate coverage is incomplete")
     assert reference_metadata is not None
 
     value_results = {
@@ -664,80 +781,54 @@ def main() -> int:
         relation: accumulator.result()
         for relation, accumulator in closure_accumulators.items()
     }
-    expected_total = int(manifest["canonical_cells"]["total_points_per_field"])
-    expected_interior = frame_count * nx * 30 * native_z
-    expected_targets = frame_count * nx * 2 * native_z
-    expected_scope_counts = {
-        "full_physical_domain": expected_total,
-        "guard_independent_transport_interior": expected_interior,
-        "target_dependent_rows": expected_targets,
-    }
-    for field, field_result in value_results.items():
-        for scope_name, expected_count in expected_scope_counts.items():
-            actual = field_result["scopes"][scope_name]["total_count"]
-            if actual != expected_count:
-                raise ValueError(
-                    f"incomplete value accounting for {field}/{scope_name}: {actual}"
-                )
-    for relation, relation_result in closure_results.items():
-        for scope_name, expected_count in expected_scope_counts.items():
-            actual = relation_result["scopes"][scope_name]["total_count"]
-            if actual != expected_count:
-                raise ValueError(
-                    f"incomplete closure accounting for {relation}/{scope_name}: {actual}"
-                )
-
-    all_fields_finite = all(
-        value_results[field]["scopes"]["full_physical_domain"]["nonfinite_count"] == 0
-        for field in FIELD_NAMES
+    expected_scope_counts = expected_scope_counts_for_coverage(
+        coverage,
+        frame_count=frame_count,
+        mxsub=decomposition["MXSUB"],
+        mysub=decomposition["MYSUB"],
+        native_z=native_z,
     )
-    all_full_closures_pass = all(
-        closure_results[relation]["scopes"]["full_physical_domain"]["frame_fail_count"] == 0
-        for relation in RELATIONS
+    validate_scope_accounting(
+        value_results, closure_results, expected_scope_counts
     )
-    pressure_relations = ("Pe_equals_Ne_times_Te", "Pi_equals_Ne_times_Ti")
-    interior_pressure_closures_pass = all(
-        closure_results[relation]["scopes"]["guard_independent_transport_interior"]["frame_fail_count"] == 0
-        for relation in pressure_relations
+    complete_audit = args.shard_count == 1
+    scientific_findings = (
+        derive_scientific_findings(value_results, closure_results)
+        if complete_audit
+        else None
     )
-    pressure_undershoots_present = any(
-        value_results[field]["scopes"]["full_physical_domain"]["negative_count"] > 0
-        for field in ("Pe", "Pi")
-    )
-    target_only_pressure_undershoots = all(
-        value_results[field]["scopes"]["guard_independent_transport_interior"]["negative_count"] == 0
-        for field in ("Pe", "Pi")
-    )
-    pressure_discrepancies_confined_to_targets = all(
-        closure_results[relation]["scopes"]["guard_independent_transport_interior"]["point_discrepancy_count"] == 0
-        for relation in pressure_relations
-    )
-    if not all_fields_finite:
-        recommendation = "resolve_nonfinite_state_before_channel_choice"
-    elif not interior_pressure_closures_pass:
-        recommendation = "prefer_direct_evolved_pressure_or_define_and_validate_floor_policy"
-    elif all_full_closures_pass:
-        recommendation = "historical_temperature_channels_close_evolved_pressure_on_85604"
-    else:
-        recommendation = "temperature_channels_match_guard_independent_operator_scope_but_not_full_evolved_state"
 
     result = {
         "schema_version": 1,
-        "phase": "phase2_85604_all_frame_pressure_closure_audit",
+        "phase": (
+            "phase2_85604_all_frame_pressure_closure_audit"
+            if complete_audit
+            else "phase2_85604_pressure_closure_rank_shard"
+        ),
         "paper0_commit": args.paper0_commit,
         "slurm_job_id": args.slurm_job_id,
-        "audit_completed": True,
+        "audit_completed": complete_audit,
+        "rank_shard_completed": True,
         "development_run": "85604",
         "held_out_85606_read": False,
         "manifest": str(args.manifest),
         "manifest_sha256": sha256_file(args.manifest),
         "raw_root": str(args.raw_root),
         "raw_control_digests": locked_files,
+        "archive_rank_file_count": len(all_paths),
         "rank_file_count": len(paths),
+        "rank_indices": selected_ranks,
+        "rank_shard": {
+            "index": args.shard_index,
+            "count": args.shard_count,
+            "rule": "rank modulo shard_count equals shard_index",
+        },
         "processor_coverage": {
             "NXPE": decomposition["NXPE"],
             "NYPE": decomposition["NYPE"],
             "unique_coordinates": int(np.count_nonzero(coverage)),
+            "coordinates": np.argwhere(coverage == 1).astype(int).tolist(),
+            "complete": bool(np.array_equal(coverage, np.ones_like(coverage))),
         },
         "frame_count": frame_count,
         "normalized_time": {
@@ -751,9 +842,10 @@ def main() -> int:
         "native_z_samples": native_z,
         "zperiod": int(archive["zperiod"]),
         "shape_per_field": expected_shape,
-        "total_points_per_field": expected_total,
+        "total_points_per_field": expected_scope_counts["full_physical_domain"],
+        "expected_scope_counts": expected_scope_counts,
         "variable_metadata": reference_metadata,
-        "guard_stripped_rank_stream_sha256": {
+        "guard_stripped_rank_stream_digests": {
             field: digest.hexdigest() for field, digest in stream_digests.items()
         },
         "value_statistics": value_results,
@@ -762,22 +854,18 @@ def main() -> int:
             "rtol": rtol,
             "relations": closure_results,
         },
-        "scientific_findings": {
-            "all_fields_finite": all_fields_finite,
-            "exact_full_state_compatibility": all_fields_finite
-            and all_full_closures_pass,
-            "temperature_state_reproduces_guard_independent_pressure_transport": all_fields_finite
-            and interior_pressure_closures_pass,
-            "pressure_undershoots_present": pressure_undershoots_present,
-            "target_only_pressure_undershoots": target_only_pressure_undershoots,
-            "pressure_closure_discrepancies_confined_to_targets": pressure_discrepancies_confined_to_targets,
-            "recommendation": recommendation,
-            "automatic_channel_change_authorized": False,
-        },
     }
+    if scientific_findings is not None:
+        result["scientific_findings"] = scientific_findings
     strict_json_write(args.output, result)
-    print(json.dumps(result["scientific_findings"], indent=2, sort_keys=True))
-    print(f"Wrote complete audit: {args.output}")
+    if scientific_findings is not None:
+        print(json.dumps(scientific_findings, indent=2, sort_keys=True))
+        print(f"Wrote complete audit: {args.output}")
+    else:
+        print(
+            f"Wrote rank shard {args.shard_index}/{args.shard_count}: "
+            f"{args.output}"
+        )
     return 0
 
 

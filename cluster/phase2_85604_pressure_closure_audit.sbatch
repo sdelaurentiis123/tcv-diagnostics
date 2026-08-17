@@ -6,8 +6,8 @@
 #SBATCH --qos=preempt
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
-#SBATCH --mem=16G
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
 #SBATCH --time=00:45:00
 #SBATCH --no-requeue
 #SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_pressure_closure_%j.log
@@ -23,15 +23,18 @@ readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2
 readonly OUTDIR="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly MANIFEST="${PAPER0_ROOT}/paper0/manifests/phase2_85604_pressure_closure_audit.json"
 readonly AUDITOR="${PAPER0_ROOT}/paper0/tools/audit_85604_pressure_closure.py"
+readonly MERGER="${PAPER0_ROOT}/paper0/tools/merge_85604_pressure_closure_shards.py"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-data/bin/python"
 readonly RESULT="${OUTDIR}/pressure_closure_audit.json"
+readonly PARTIAL_DIR="${OUTDIR}/partials"
+readonly SHARD_COUNT=16
 readonly EXPECTED_HERMES_COMMIT="920ba829cc78cdab0dbf6101c69fecc4689bd8dd"
 
 if [[ -e "${OUTDIR}" ]]; then
   echo "Refusing to overwrite existing result directory: ${OUTDIR}" >&2
   exit 2
 fi
-mkdir -p "${OUTDIR}"
+mkdir -p "${OUTDIR}" "${PARTIAL_DIR}"
 exec > >(tee -a "${OUTDIR}/job.log") 2>&1
 
 readonly PAPER0_COMMIT="$(git -C "${PAPER0_ROOT}" rev-parse HEAD)"
@@ -77,7 +80,8 @@ if [[ -n "$(git -C "${HERMES_SOURCE}" status --porcelain --untracked-files=no)" 
 fi
 
 check_sha256 "fcd91e8dae1e4f8307ea157a88af4c112035683c0ef0a0db618584f77ef3b71b" "${MANIFEST}"
-check_sha256 "9a62d311f303bfc77a16d453ba593dbc66853b0f81578263154625815cd87a66" "${AUDITOR}"
+check_sha256 "2672c4787b0f3ab239311413c2ef38d3145b1b7efc9b78cd87a2292bec811e68" "${AUDITOR}"
+check_sha256 "a59d5f5e9d03766a176772592415967bc9c85c96d6a29a1d92fd4db700d68095" "${MERGER}"
 check_sha256 "3c766083078ec17d737a7ac595868adf1706e0596a9e614bb3ac73f071c1834d" "${HERMES_SOURCE}/src/evolve_density.cxx"
 check_sha256 "d3abc5e32cdad3ea9c42faf432dcaed465070ee5792cb62e550b9baaad9953e6" "${HERMES_SOURCE}/src/evolve_pressure.cxx"
 check_sha256 "c1f7f63a4210b35680f338289916f6a588dcc7881928f26066a9af2e09fb95ad" "${RAW_ROOT}/BOUT.inp"
@@ -90,7 +94,15 @@ module load hdf5/1.12.3
 module load netcdf-c/4.9.2
 
 {
-  echo "${PYTHON} ${AUDITOR} --manifest ${MANIFEST} --raw-root ${RAW_ROOT} --output ${RESULT} --paper0-commit ${PAPER0_COMMIT} --slurm-job-id ${SLURM_JOB_ID}"
+  for ((shard = 0; shard < SHARD_COUNT; shard++)); do
+    echo "srun --exclusive --ntasks=1 --cpus-per-task=1 ${PYTHON} ${AUDITOR} --manifest ${MANIFEST} --raw-root ${RAW_ROOT} --output ${PARTIAL_DIR}/shard_${shard}.json --paper0-commit ${PAPER0_COMMIT} --slurm-job-id ${SLURM_JOB_ID} --shard-index ${shard} --shard-count ${SHARD_COUNT}"
+  done
+  printf '%s' "${PYTHON} ${MERGER} --manifest ${MANIFEST} --partial-output"
+  for ((shard = 0; shard < SHARD_COUNT; shard++)); do
+    printf ' %s' "${PARTIAL_DIR}/shard_${shard}.json"
+  done
+  printf ' --output %s --paper0-commit %s --slurm-job-id %s --artifact-root %s\n' \
+    "${RESULT}" "${PAPER0_COMMIT}" "${SLURM_JOB_ID}" "${OUTDIR}"
 } > "${OUTDIR}/commands.sh"
 
 {
@@ -102,18 +114,60 @@ module load netcdf-c/4.9.2
   module list
 } > "${OUTDIR}/environment.txt" 2>&1
 
+declare -a SHARD_PIDS=()
+for ((shard = 0; shard < SHARD_COUNT; shard++)); do
+  srun \
+    --exclusive \
+    --ntasks=1 \
+    --cpus-per-task=1 \
+    "${PYTHON}" \
+    "${AUDITOR}" \
+    --manifest "${MANIFEST}" \
+    --raw-root "${RAW_ROOT}" \
+    --output "${PARTIAL_DIR}/shard_${shard}.json" \
+    --paper0-commit "${PAPER0_COMMIT}" \
+    --slurm-job-id "${SLURM_JOB_ID}" \
+    --shard-index "${shard}" \
+    --shard-count "${SHARD_COUNT}" &
+  SHARD_PIDS+=("$!")
+done
+
+SHARD_STATUS=0
+for pid in "${SHARD_PIDS[@]}"; do
+  if ! wait "${pid}"; then
+    SHARD_STATUS=1
+  fi
+done
+if [[ "${SHARD_STATUS}" -ne 0 ]]; then
+  echo "At least one rank shard failed; refusing incomplete merge" >&2
+  exit 2
+fi
+
+mapfile -t PARTIAL_OUTPUTS < <(
+  find "${PARTIAL_DIR}" -maxdepth 1 -name 'shard_*.json' -type f | sort -V
+)
+if [[ "${#PARTIAL_OUTPUTS[@]}" -ne "${SHARD_COUNT}" ]]; then
+  echo "Expected ${SHARD_COUNT} shard outputs; found ${#PARTIAL_OUTPUTS[@]}" >&2
+  exit 2
+fi
+for partial in "${PARTIAL_OUTPUTS[@]}"; do
+  "${PYTHON}" -m json.tool "${partial}" >/dev/null
+done
+
 "${PYTHON}" \
-  "${AUDITOR}" \
+  "${MERGER}" \
   --manifest "${MANIFEST}" \
-  --raw-root "${RAW_ROOT}" \
+  --partial-output "${PARTIAL_OUTPUTS[@]}" \
   --output "${RESULT}" \
   --paper0-commit "${PAPER0_COMMIT}" \
-  --slurm-job-id "${SLURM_JOB_ID}"
+  --slurm-job-id "${SLURM_JOB_ID}" \
+  --artifact-root "${OUTDIR}"
 
 "${PYTHON}" -m json.tool "${RESULT}" >/dev/null
 sha256sum \
   "${OUTDIR}/commands.sh" \
   "${OUTDIR}/environment.txt" \
+  "${PARTIAL_OUTPUTS[@]}" \
   "${RESULT}" \
   > "${OUTDIR}/artifact_sha256.txt"
 

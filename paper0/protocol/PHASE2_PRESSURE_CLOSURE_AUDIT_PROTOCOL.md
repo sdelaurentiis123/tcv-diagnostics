@@ -176,3 +176,13 @@ statistics after verifying complete, unique processor-coordinate coverage.
 The six fields, all 624 frames, native cells, spatial scopes, time blocks,
 closure formulas, tolerances, completion conditions, and interpretation rules
 above remain unchanged.
+
+The corrected execution is fixed to 16 shards before its first submission.
+Shard `s` reads exactly the ranks satisfying `rank modulo 16 == s` and writes a
+strict partial JSON containing no scientific conclusion. The reducer requires
+all shard indices `0..15`, all rank indices `0..255`, and all 256 `(PE_XIND,
+PE_YIND)` coordinates exactly once. It sums counts, takes maxima across shards,
+recomputes every frame-level tolerance and pass decision from the merged
+sufficient statistics, and only then derives the frozen interpretation. Any
+missing or failed shard blocks the merge. Guard-stripped field streams are
+locked by per-shard digests and a deterministic merged digest tree.

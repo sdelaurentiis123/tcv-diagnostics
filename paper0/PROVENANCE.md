@@ -270,6 +270,16 @@ directory is retained. The next implementation may parallelize disjoint rank
 reads and merge only after complete coordinate coverage, while leaving every
 frozen scientific choice unchanged.
 
+The prospective correction uses 16 modulo-partitioned rank shards in one
+CPU-only Slurm allocation. Each shard re-verifies its assigned files and emits
+only sufficient statistics and field-stream digests. The independent merger
+under `paper0/tools/merge_85604_pressure_closure_shards.py` refuses a result
+unless shard, rank, and processor-coordinate coverage are each complete and
+duplicate-free. Synthetic tests establish that merging value and closure
+statistics exactly reproduces a single-pass calculation, including frame
+gates, target/interior counts, extrema, and most-negative locations. This is
+an execution repair only; no data definition or acceptance rule changes.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

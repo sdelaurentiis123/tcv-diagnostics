@@ -92,6 +92,8 @@ class PressureClosureAuditProtocolTests(unittest.TestCase):
             "atol = 1e-12",
             "rtol = 1e-12",
             "No frequency or magnitude discovered by this job automatically",
+            "rank modulo 16 == s",
+            "all rank indices `0..255`",
         ):
             self.assertIn(required, text)
 

@@ -14,6 +14,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "paper0" / "tools"
 AUDITOR = TOOLS / "audit_85604_pressure_closure.py"
+MERGER = TOOLS / "merge_85604_pressure_closure_shards.py"
 MANIFEST = (
     ROOT / "paper0" / "manifests" / "phase2_85604_pressure_closure_audit.json"
 )
@@ -29,7 +30,10 @@ def load_module(name: str, path: Path):
     return module
 
 
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
 AUDIT = load_module("paper0_pressure_closure_audit", AUDITOR)
+MERGE = load_module("paper0_pressure_closure_merge", MERGER)
 
 
 class PressureClosureAuditImplementationTests(unittest.TestCase):
@@ -38,16 +42,24 @@ class PressureClosureAuditImplementationTests(unittest.TestCase):
         subprocess.run(["bash", "-n", str(LAUNCHER)], check=True)
         manifest_digest = hashlib.sha256(MANIFEST.read_bytes()).hexdigest()
         auditor_digest = hashlib.sha256(AUDITOR.read_bytes()).hexdigest()
+        merger_digest = hashlib.sha256(MERGER.read_bytes()).hexdigest()
         for required in (
             "PAPER0_EXPECTED_COMMIT",
             "--ntasks=1",
+            "--cpus-per-task=16",
             "--no-requeue",
             "Refusing to overwrite",
             manifest_digest,
             auditor_digest,
+            merger_digest,
             "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
             "audit_85604_pressure_closure.py",
+            "merge_85604_pressure_closure_shards.py",
             "pressure_closure_audit.json",
+            "SHARD_COUNT=16",
+            "--shard-count",
+            "srun",
+            "--exclusive",
         ):
             self.assertIn(required, text)
         self.assertNotIn("--gres=gpu", text)
@@ -64,6 +76,20 @@ class PressureClosureAuditImplementationTests(unittest.TestCase):
             ),
             np.array([1]),
         )
+
+    def test_partial_scope_accounting_respects_target_rows(self) -> None:
+        coverage = np.zeros((2, 2), dtype=np.int64)
+        coverage[0, 0] = 1
+        counts = AUDIT.expected_scope_counts_for_coverage(
+            coverage,
+            frame_count=2,
+            mxsub=1,
+            mysub=2,
+            native_z=1,
+        )
+        self.assertEqual(counts["full_physical_domain"], 4)
+        self.assertEqual(counts["guard_independent_transport_interior"], 2)
+        self.assertEqual(counts["target_dependent_rows"], 2)
         np.testing.assert_array_equal(
             AUDIT.scope_y_indices(np.array([30, 31]), "target_dependent_rows"),
             np.array([1]),
@@ -140,6 +166,67 @@ class PressureClosureAuditImplementationTests(unittest.TestCase):
         AUDIT.update_stream_digest(first, values, rank=0, pe_x=0, pe_y=0)
         AUDIT.update_stream_digest(second, values, rank=1, pe_x=0, pe_y=0)
         self.assertNotEqual(first.hexdigest(), second.hexdigest())
+
+    def test_value_shard_merge_matches_single_pass(self) -> None:
+        temporal_blocks = [(0, 0), (1, 1)]
+        values = np.ones((2, 2, 2, 1), dtype=np.float64)
+        values[0, 0, 0, 0] = -3.0
+        values[1, 1, 1, 0] = -2.0
+        complete = AUDIT.ValueAccumulator(
+            frame_count=2, nx=2, ny=2, temporal_blocks=temporal_blocks
+        )
+        complete.update(values, x0=0, y0=0)
+        partials = []
+        for x_index in range(2):
+            partial = AUDIT.ValueAccumulator(
+                frame_count=2, nx=2, ny=2, temporal_blocks=temporal_blocks
+            )
+            partial.update(
+                values[:, x_index : x_index + 1], x0=x_index, y0=0
+            )
+            partials.append(partial.result())
+        merged = MERGE.merge_value_field(partials, temporal_blocks)
+        self.assertEqual(merged, complete.result())
+
+    def test_closure_shard_merge_matches_single_pass(self) -> None:
+        temporal_blocks = [(0, 0), (1, 1)]
+        reference = np.ones((2, 2, 2, 1), dtype=np.float64)
+        candidate = reference.copy()
+        reference[1, 1, 0, 0] = -1.0e-4
+        candidate[1, 1, 0, 0] = 0.0
+        kwargs = {
+            "frame_count": 2,
+            "nx": 2,
+            "ny": 2,
+            "temporal_blocks": temporal_blocks,
+            "atol": 1.0e-12,
+            "rtol": 1.0e-12,
+        }
+        complete = AUDIT.ClosureAccumulator(**kwargs)
+        complete.update(reference, candidate, x0=0, y0=0)
+        partials = []
+        for x_index in range(2):
+            partial = AUDIT.ClosureAccumulator(**kwargs)
+            partial.update(
+                reference[:, x_index : x_index + 1],
+                candidate[:, x_index : x_index + 1],
+                x0=x_index,
+                y0=0,
+            )
+            partials.append(partial.result())
+        merged = MERGE.merge_closure_relation(
+            partials,
+            temporal_blocks=temporal_blocks,
+            atol=1.0e-12,
+            rtol=1.0e-12,
+        )
+        self.assertEqual(merged, complete.result())
+
+    def test_digest_tree_is_order_sensitive_and_repeatable(self) -> None:
+        first = [{"shard": 0, "stream_sha256": "a" * 64}]
+        second = [{"shard": 1, "stream_sha256": "a" * 64}]
+        self.assertEqual(MERGE.digest_tree(first), MERGE.digest_tree(first))
+        self.assertNotEqual(MERGE.digest_tree(first), MERGE.digest_tree(second))
 
     def test_strict_json_writer_refuses_overwrite_and_nonfinite(self) -> None:
         from tempfile import TemporaryDirectory
