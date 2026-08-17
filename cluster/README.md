@@ -2,6 +2,27 @@
 
 Cluster scripts are committed, bounded, and provenance-locked before submission. They must print the repository revision and refuse dirty worktrees or mismatched inputs.
 
+## Phase 2 evolved-state and momentum closure
+
+`phase2_85604_state_completeness.sbatch` is a CPU-only all-rank audit of the
+six saved evolved Hermes fields and five derived fields. It streams eight
+value fields over all 624 saved 85604 frames, verifies metadata on every rank,
+and tests the exact Hermes momentum/velocity identities with the executed
+soft-density floor. It performs no training and cannot access the held-out
+simulation.
+
+Submit only from the Rocky 9 login node after syncing the exact clean commit:
+
+```bash
+export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase2_85604_state_completeness.sbatch
+```
+
+The unique result directory is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_state_completeness/job_<id>`.
+The job's findings cannot change channels automatically; potential/vorticity
+closure remains a separate gate.
+
 ## Phase 2 O1 codec transport
 
 `phase2_o1_codec_transport.sbatch` extends the historical deterministic f8
