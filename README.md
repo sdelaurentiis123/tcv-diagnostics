@@ -9,3 +9,9 @@ The pre-execution Phase 1 rules are frozen in
 They explicitly distinguish the inherited five observable channels from a
 physically complete Markov state and keep physical time as relative cadence and
 forecast lead rather than an absolute trajectory lookup feature.
+
+The executed data findings and current go/no-go decision are in
+[`paper0/PHASE1_READOUT.md`](paper0/PHASE1_READOUT.md). The 85604 trajectory has
+slow background evolution plus fast, coherently translating toroidal
+fluctuations; the data characterization is complete, but the stationary
+learning split remains blocked pending simulator-owner guidance.
