@@ -35,8 +35,8 @@ class PotentialEllipticLauncherTests(unittest.TestCase):
         text = LAUNCHER.read_text(encoding="utf-8")
         for required in (
             "PAPER0_EXPECTED_COMMIT",
-            "--partition=preempt",
-            "--qos=preempt",
+            "--partition=gen",
+            "--qos=inter",
             "--ntasks=4",
             "--cpus-per-task=2",
             "--mem=32G",
