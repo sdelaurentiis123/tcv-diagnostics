@@ -396,6 +396,19 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     transport tests exercise the exact `61 x 30` face and `60 x 30`
     divergence scopes with nonzero `xz` and shifted-`xy` terms. No real
     round-trip or resampling-transport metric has yet been evaluated.
+40. **The native round trip passes, while direct 88-cell transport is a small
+    numerical sensitivity.** Rocky 9 job `6891664` completed all 17 shards and
+    strict merge from clean commit `67abc70`. All five `C5P` fields have a
+    maximum per-frame `81->88->81` relative L2 below `1.61e-7`. Primary total
+    face flows have aggregate round-trip error below `4.92e-6`, and their
+    divergences remain below `2.45e-5`; every frozen aggregate, frame-p99, and
+    five-frame float-quantization gate passes. Applying the nonlinear operator
+    directly at 88 cells changes total face flow by about 1.6% and divergence
+    by 3.5--3.8%, all prospectively labeled small. Paper 0 therefore evaluates
+    every 88-cell ensemble member by downsampling to native 81 before applying
+    `Q_81`. This closes only the resampling rung: geometry-region integrations,
+    orientation, units, ensemble semantics, codec transport, dynamics, and
+    85606 remain open.
 
 ## Exact commands
 

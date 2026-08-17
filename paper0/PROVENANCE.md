@@ -353,6 +353,29 @@ boundary mapping, held-out path rejection, energy factors, operator scopes,
 nonzero component behavior, paired scaling, strict JSON, linear quantiles, and
 order-sensitive digest trees. No predecessor audit implementation was copied.
 
+Rocky 9 job `6891664` executed the frozen audit from clean commit
+`67abc70763135dcd33f64c0c03f4fbf4b6396575`. It completed all 17 shard steps
+and the strict reducer with exit code `0:0` in 1:41. The full 53,299,031-byte
+result has SHA-256
+`4b903d27d303e7b5db086d4e1ea62856f65cac7aacc3e623ac98bab1706d2781`;
+the post-run artifact manifest verified every partial, command, environment,
+and final-result digest. Run 85606 was not read.
+
+Every prospective field, transport-round-trip, and selected-frame float32
+quantization gate passed. Direct 88-cell total face flow and divergence were
+prospectively labeled small, so the released primary evaluator downsamples
+each 88-cell member to native 81 before applying `Q_81`. This is a numerical
+operator policy, not an emulator, architecture, or physical transport result.
+The tracked compact record is
+`paper0/results/phase2_resampling_6891664.json`; its SHA-256 is
+`2d1ed6e7af5a1559e213590ed6315775400ebdcb1db849cfc826d77ef7d8b4a5`.
+
+The first compacting attempt under commit `4c4c5e2` failed before creating an
+output because the helper assumed that the five selected raw-float64 frames
+had the same eight temporal-block summaries as the all-frame paths. Commit
+`836417c` encodes that scope difference explicitly and adds a regression test.
+The immutable job result was not altered or rerun.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in
