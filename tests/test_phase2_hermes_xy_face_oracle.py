@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -15,6 +16,7 @@ COMPARATOR = TOOLS / "compare_hermes_xy_face_oracle.py"
 LAUNCHER = ROOT / "cluster" / "phase2_hermes_xy_face_oracle.sbatch"
 ORACLE_DIR = ROOT / "paper0" / "oracles" / "hermes_xy_face"
 PROTOCOL = ROOT / "paper0" / "protocol" / "PHASE2_TRANSPORT_PROTOCOL.md"
+RESULT = ROOT / "paper0" / "results" / "phase2_hermes_xy_face_6891343.json"
 
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
@@ -25,6 +27,27 @@ SPEC.loader.exec_module(MODULE)
 
 
 class CompiledHermesXyFaceOracleTests(unittest.TestCase):
+    def test_tracked_execution_passes_frozen_rule_without_scope_creep(
+        self,
+    ) -> None:
+        result = json.loads(RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(
+            result["paper0_commit"],
+            "ee2b04ff381466ae62054616f7e59410b868ed08",
+        )
+        self.assertEqual(result["slurm"]["state"], "COMPLETED")
+        self.assertEqual(result["slurm"]["exit_code"], "0:0")
+        self.assertTrue(result["acceptance"]["overall_passed"])
+        self.assertEqual(result["acceptance"]["atol"], MODULE.DEFAULT_ATOL)
+        self.assertEqual(result["acceptance"]["rtol"], MODULE.DEFAULT_RTOL)
+        self.assertEqual(set(result["acceptance"]["cases"]), set(MODULE.CASES))
+        self.assertEqual(result["acceptance"]["clip_mismatch_count"], 0)
+        self.assertFalse(result["data_access"]["held_out_85606_read"])
+        self.assertEqual(result["data_access"]["plasma_state_frames_read"], 0)
+        self.assertEqual(
+            result["scientific_status"], "accepted_shifted_xy_face_stage_only"
+        )
+
     def test_launcher_is_cpu_only_source_locked_and_syntax_valid(self) -> None:
         text = LAUNCHER.read_text(encoding="utf-8")
         subprocess.run(["bash", "-n", str(LAUNCHER)], check=True)

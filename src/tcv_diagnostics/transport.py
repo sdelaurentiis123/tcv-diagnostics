@@ -1,14 +1,14 @@
 """Partial, source-matched transport primitives for the Paper 0 oracle.
 
-This module currently contains the radial ``x-z`` face-flow component of the
-executed Hermes-3 ``Div_n_bxGrad_f_B_XPPM`` operator and a source-matched
-shifted-field-line ``DDY`` primitive.  Compiled BOUT++ job ``6891059`` validates
-that derivative on manufactured fields and every declared single-null topology
-region.  The full radial ExB flow still requires the shifted-poloidal ``x-y``
-face term because the run used ``poloidal_flows = true``.  Accordingly, every
-face-flow result and function remains explicitly named ``partial`` or
-``xz_component`` and must not be reported as total particle or energy
-transport.
+This module contains the radial ``x-z`` face-flow component of the executed
+Hermes-3 ``Div_n_bxGrad_f_B_XPPM`` operator, a source-matched shifted-field-line
+``DDY`` primitive, and the shifted-poloidal ``x-y`` radial face component.
+Compiled jobs ``6891059`` and ``6891343`` validate the latter two primitives on
+manufactured fields and every declared single-null topology region. The
+combined flow, native plasma-frame oracle, surface integration, units, and
+ensemble semantics are not yet released. Accordingly, every face-flow result
+and function remains explicitly named ``partial`` or ``xz_component`` and must
+not be reported as total particle or energy transport.
 
 The frozen definition and release blockers are in
 ``paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md``.
@@ -89,8 +89,8 @@ class PartialFrommFaceStates:
 
 
 @dataclass(frozen=True)
-class CandidateShiftedRadialFaceFlow:
-    """Candidate shifted-``xy`` radial face term before compiled validation."""
+class PartialShiftedRadialFaceFlow:
+    """Validated shifted-``xy`` radial face term on the available stencil."""
 
     flow: np.ndarray
     velocity_factor: np.ndarray
@@ -98,7 +98,7 @@ class CandidateShiftedRadialFaceFlow:
     positivity_clipped_mask: np.ndarray
     valid_mask: np.ndarray
     left_cell_indices: np.ndarray
-    component: str = "radial_exb_xy_component_candidate_partial"
+    component: str = "radial_exb_xy_component_partial"
 
 
 def _real_finite(name: str, values: np.ndarray) -> np.ndarray:
@@ -525,7 +525,7 @@ def radial_exb_xz_face_flow_partial(
     )
 
 
-def radial_exb_xy_face_flow_candidate_partial(
+def radial_exb_xy_face_flow_partial(
     advected: np.ndarray,
     potential: np.ndarray,
     jacobian: np.ndarray,
@@ -539,8 +539,8 @@ def radial_exb_xy_face_flow_candidate_partial(
     topology: SingleNullTopology,
     zperiod: int = 5,
     positive: bool = True,
-) -> CandidateShiftedRadialFaceFlow:
-    """Evaluate the candidate shifted-poloidal radial ExB face term.
+) -> PartialShiftedRadialFaceFlow:
+    """Evaluate the validated shifted-poloidal radial ExB face term.
 
     This is an independent NumPy transcription of the radial ``x``-face part
     of Hermes-3's optional ``x-y`` advection. It combines the already validated
@@ -548,8 +548,10 @@ def radial_exb_xy_face_flow_candidate_partial(
     clipping used by the executed source revision.
 
     Target-adjacent ``y`` cells are marked invalid because the model tensor
-    omits their physical guard values. This candidate cannot be reported as
-    physical transport until it passes the frozen compiled-Hermes oracle.
+    omits their physical guard values. Job ``6891343`` validated the velocity,
+    selected Fromm state, clipping decision, and face flow against the frozen
+    compiled Hermes-source oracle. This partial term alone is not total
+    particle or internal-energy transport.
     """
 
     q = _real_finite("advected field", advected)
@@ -623,7 +625,7 @@ def radial_exb_xy_face_flow_candidate_partial(
     flow = np.where(valid_broadcast, velocity_factor * upwind_state, np.nan)
     positivity_clipped = positivity_clipped & valid_broadcast
 
-    return CandidateShiftedRadialFaceFlow(
+    return PartialShiftedRadialFaceFlow(
         flow=flow,
         velocity_factor=velocity_factor,
         upwind_state=upwind_state,

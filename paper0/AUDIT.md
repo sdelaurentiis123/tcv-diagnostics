@@ -282,6 +282,15 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     face flow, total conservative transport, native-frame comparison,
     resampling sensitivity, geometry masks, units, and member-wise ensemble
     semantics remain open.
+29. **The shifted-`xy` radial face term matches the locked Hermes source.**
+    Four-rank Rocky 9 job `6891343` completed with exit code `0:0` from clean
+    commit `ee2b04f`. Velocity, selected Fromm state, positivity clipping, and
+    face flow passed in four manufactured cases and every frozen topology
+    region; the worst continuous absolute discrepancy was
+    `2.5619506516250112e-12`, and all clipping decisions matched. This closes
+    validation-ladder item 5 only. Combined-flow conservation, native plasma
+    frames, resampling, geometry integrations, SI units, and member-wise
+    ensemble semantics remain open.
 
 ## Exact commands
 

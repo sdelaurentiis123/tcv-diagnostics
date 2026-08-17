@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_hermes_shifted_xy_face_compiled_oracle",
+  "paper0_commit": "ee2b04ff381466ae62054616f7e59410b868ed08",
+  "slurm": {
+    "job_id": 6891343,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "submit": "2026-08-17T02:54:20-04:00",
+    "start": "2026-08-17T02:54:24-04:00",
+    "end": "2026-08-17T02:54:41-04:00",
+    "elapsed": "00:00:17",
+    "time_limit": "00:15:00",
+    "requested_tasks": 4,
+    "node": "worker5594"
+  },
+  "acceptance": {
+    "rule_frozen_before_execution": true,
+    "formula": "max_abs_error <= atol + rtol * max_abs_reference",
+    "atol": 5e-10,
+    "rtol": 5e-10,
+    "requires_every_case_quantity_and_region": true,
+    "requires_no_nonfinite_values": true,
+    "requires_exact_binary_clipping_decisions": true,
+    "requires_both_velocity_signs_in_nonconstant_cases": true,
+    "requires_selected_clipped_and_unclipped_states_in_clipping_case": true,
+    "overall_passed": true,
+    "nonfinite_count": 0,
+    "clip_mismatch_count": 0,
+    "largest_max_abs_error": 2.5619506516250112e-12,
+    "cases": {
+      "constant": {
+        "passed": true,
+        "largest_max_abs_error": 0.0,
+        "positive_velocity_count": 0,
+        "negative_velocity_count": 0,
+        "selected_clipped_count": 0
+      },
+      "smooth": {
+        "passed": true,
+        "largest_max_abs_error": 2.5619506516250112e-12,
+        "positive_velocity_count": 74138,
+        "negative_velocity_count": 74092,
+        "selected_clipped_count": 0
+      },
+      "signed": {
+        "passed": true,
+        "largest_max_abs_error": 1.3287149158713873e-12,
+        "positive_velocity_count": 73888,
+        "negative_velocity_count": 74342,
+        "selected_clipped_count": 0
+      },
+      "clipping": {
+        "passed": true,
+        "largest_max_abs_error": 1.4348522370255523e-12,
+        "positive_velocity_count": 74073,
+        "negative_velocity_count": 74157,
+        "selected_clipped_count": 85830,
+        "selected_unclipped_count": 62400
+      }
+    },
+    "quantities_required": [
+      "velocity_factor",
+      "selected_fromm_state",
+      "positivity_clip_decision",
+      "face_flow"
+    ],
+    "regions_required_for_every_case": [
+      "all_valid",
+      "ordinary_or_sol_sequential",
+      "inner_private_flux_connection",
+      "inner_core_branch_connection",
+      "separatrix_radial_face",
+      "open_sol_interior"
+    ]
+  },
+  "operator": {
+    "reference": "compiled GPL source-derived Hermes-3 shifted-xy radial face operator",
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "hermes_source": "src/div_ops.cxx:273-326",
+    "hermes_source_sha256": "458eeecbd6da1afb882d0de2b652271fc2c2ca142c39a636a52f3adc5c16ef3f",
+    "executed_candidate": "tcv_diagnostics.transport.radial_exb_xy_face_flow_candidate_partial",
+    "promoted_name_after_acceptance": "tcv_diagnostics.transport.radial_exb_xy_face_flow_partial",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "mpi_decomposition": {
+      "NXPE": 1,
+      "NYPE": 4,
+      "MYSUB": 8
+    }
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_hermes_xy_face/job_6891343",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_hermes_xy_face_6891343.log",
+    "artifact_digests": {
+      "job.log": "72c2c5e2f7e3e1975c0d67426c2275b28b3a1a96df8e3111cc3d2d5be8a2afc8",
+      "commands.sh": "4c6aa09c91652488e289f391a680ee43048a776d54a15bf48812a97708f5e9e7",
+      "build/hermes_xy_face_oracle": "1a1cce78120fc1e89d84f50638da4835d87ae19e0e21474391a66295f488f900",
+      "run/BOUT.inp": "de104f88e971ecc0cc214887bd13f7bdd0a2a6916ff038443c35be1b1238cb03",
+      "run/BOUT.dmp.0.nc": "71d4ae58838b0be15d987a3315dc1ba89fa66fe2e0461cfac51546fccb9aeab4",
+      "run/BOUT.dmp.1.nc": "d0eb78b1ba69e19f54e97d9af5d893b8f6f086aee0c3b021f9f9fb0db65dc7ae",
+      "run/BOUT.dmp.2.nc": "d550a614164eeed561f655a3e70e45e841cd692da7e6be2a9b19bb879085eb38",
+      "run/BOUT.dmp.3.nc": "73eca8e3360e10cb652d54127f624dbda9cab411ddebbd4e37b961b852976fab",
+      "oracle_comparison.json": "c024ab47a82e1cdbb59a032b97593e4e5ecdecfa13dea228384b24264de2ac10",
+      "comparison_arrays.npz": "bfa42628c536cd6833a3ccd8aeb235d83bd5e934caea27d5b96194777f382c13",
+      "artifact_sha256.txt": "21f804cf81ec3b7d8fc6566af78478d59af41fa58a9df220b66f1c566ae18349"
+    }
+  },
+  "data_access": {
+    "run_id": "85604_geometry_only",
+    "model_x_grid_slice": [2, 66],
+    "safe_model_left_face_indices": [1, 62],
+    "evaluated_y_slice": [1, 31],
+    "plasma_state_frames_read": 0,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "accepted_shifted_xy_face_stage_only",
+  "remaining_blockers": [
+    "combined xz-plus-xy flow conservation",
+    "total particle and advected-internal-energy transport",
+    "native-81 plasma-frame oracle",
+    "native-81 versus Fourier-resampled-88 sensitivity",
+    "authoritative geometry masks and outward orientation",
+    "normalized-to-SI conversion",
+    "member-wise nonlinear ensemble semantics"
+  ]
+}

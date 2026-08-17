@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare the candidate shifted-xy face flow with a compiled Hermes oracle."""
+"""Compare the shifted-xy face flow with a compiled Hermes oracle."""
 
 from __future__ import annotations
 
@@ -31,7 +31,7 @@ from compare_shifted_ddy_oracle import (  # noqa: E402
     sha256_file,
 )
 from tcv_diagnostics.transport import (  # noqa: E402
-    radial_exb_xy_face_flow_candidate_partial,
+    radial_exb_xy_face_flow_partial,
 )
 
 
@@ -244,7 +244,7 @@ def main() -> int:
                 outputs, decomposition, f"xy_clipped_{case}"
             )[MODEL_X_SLICE]
 
-            candidate_result = radial_exb_xy_face_flow_candidate_partial(
+            candidate_result = radial_exb_xy_face_flow_partial(
                 q,
                 phi,
                 geometry["jacobian"],
@@ -363,7 +363,7 @@ def main() -> int:
             ),
             "candidate": (
                 "tcv_diagnostics.transport."
-                "radial_exb_xy_face_flow_candidate_partial"
+                "radial_exb_xy_face_flow_partial"
             ),
             "hermes_source_file": "src/div_ops.cxx:273-326",
             "topology": {

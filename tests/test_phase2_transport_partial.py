@@ -20,7 +20,7 @@ from tcv_diagnostics.transport import (  # noqa: E402
     fromm_radial_face_states_partial,
     mc_radial_face_states_partial,
     monotonized_central_slope,
-    radial_exb_xy_face_flow_candidate_partial,
+    radial_exb_xy_face_flow_partial,
     radial_exb_xz_face_flow_partial,
     shifted_ddy_single_null_partial,
     single_null_y_neighbors,
@@ -364,7 +364,7 @@ class PartialFaceFlowTests(unittest.TestCase):
             )
 
 
-class CandidateShiftedFaceFlowTests(unittest.TestCase):
+class ShiftedFaceFlowTests(unittest.TestCase):
     @staticmethod
     def topology() -> SingleNullTopology:
         return SingleNullTopology(
@@ -401,7 +401,7 @@ class CandidateShiftedFaceFlowTests(unittest.TestCase):
     ):
         advected, potential = self.fields(radial_values)
         n_x, n_y, _ = advected.shape
-        return radial_exb_xy_face_flow_candidate_partial(
+        return radial_exb_xy_face_flow_partial(
             advected,
             potential,
             np.full((n_x, n_y), 4.0),
@@ -424,7 +424,7 @@ class CandidateShiftedFaceFlowTests(unittest.TestCase):
         self.assertTrue(np.all(np.isnan(result.flow[:, (0, -1), :])))
         self.assertTrue(np.all(result.valid_mask[:, 1:-1]))
         self.assertFalse(np.any(result.valid_mask[:, (0, -1)]))
-        self.assertIn("candidate", result.component)
+        self.assertEqual(result.component, "radial_exb_xy_component_partial")
 
     def test_velocity_sign_selects_the_matching_fromm_side(self) -> None:
         radial = np.asarray([1.0, 2.0, 4.0, 8.0, 16.0])
@@ -458,7 +458,7 @@ class CandidateShiftedFaceFlowTests(unittest.TestCase):
             "zperiod": 5,
             "positive": True,
         }
-        result = radial_exb_xy_face_flow_candidate_partial(
+        result = radial_exb_xy_face_flow_partial(
             advected,
             potential,
             np.ones((n_x, n_y)),
@@ -472,7 +472,7 @@ class CandidateShiftedFaceFlowTests(unittest.TestCase):
         )
         np.testing.assert_array_equal(result.flow[:, 1:-1], 0.0)
         with self.assertRaisesRegex(ValueError, "bxy must be nonzero"):
-            radial_exb_xy_face_flow_candidate_partial(
+            radial_exb_xy_face_flow_partial(
                 advected,
                 potential,
                 np.ones((n_x, n_y)),

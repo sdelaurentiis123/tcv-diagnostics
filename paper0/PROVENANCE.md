@@ -148,15 +148,15 @@ This accepts the NumPy shifted-`DDY` primitive for its declared interior scope.
 It does not accept the shifted-`xy` face term or total particle/internal-energy
 transport.
 
-`fromm_radial_face_states_partial` and
+`fromm_radial_face_states_partial` and the function initially committed as
 `radial_exb_xy_face_flow_candidate_partial` are new independent NumPy
 transcriptions of the radial `x`-face code at Hermes-3 revision `920ba829`,
-`src/div_ops.cxx:273-326`; no GPL source text was copied. Synthetic tests lock
-the four-cell Fromm formulas, both velocity signs, positivity clipping,
-geometry factors, target masking, and constant-potential zero flow. The public
-name and metadata retain `candidate_partial`: these tests do not substitute for
-the prospective compiled-Hermes face-flow comparison and do not release a
-transport metric.
+`src/div_ops.cxx:273-326`; no GPL source text was copied into the NumPy
+implementation. Synthetic tests lock the four-cell Fromm formulas, both
+velocity signs, positivity clipping, geometry factors, target masking, and
+constant-potential zero flow. After the compiled comparison below passed, the
+same implementation was promoted mechanically to
+`radial_exb_xy_face_flow_partial`; the `_partial` scope remains mandatory.
 
 The prospective comparison under `paper0/oracles/hermes_xy_face/` is marked
 GPL-3.0-or-later because its small C++ driver adapts the internal radial-face
@@ -168,8 +168,22 @@ the accepted BOUT++ install and four-rank topology, and reads no plasma-state
 frame. `paper0/tools/compare_hermes_xy_face_oracle.py` contains the independently
 written comparison and the protocol's prospectively frozen continuous,
 binary-decision, topology-region, input-noncollapse, sign-coverage, and
-clipping-coverage gates. This paragraph records design provenance only; no
-execution result is claimed yet.
+clipping-coverage gates. This paragraph records the pre-execution design; the
+immutable execution result follows.
+
+Rocky 9 job `6891343` completed from clean Paper 0 commit
+`ee2b04ff381466ae62054616f7e59410b868ed08`. All continuous velocity, selected
+Fromm-state, and face-flow comparisons passed in every case and topology
+region. The largest absolute discrepancy was
+`2.5619506516250112e-12`, versus the unchanged rule
+`5e-10 + 5e-10 * max_abs_reference`. All 592,920 clipping decisions matched;
+the dedicated case included 85,830 selected clipped states and 62,400 selected
+unclipped states. Every nonconstant case contained both velocity signs and no
+compared value was non-finite. The compact record is
+`paper0/results/phase2_hermes_xy_face_6891343.json`; the immutable full JSON and
+arrays have SHA-256 `c024ab47a82e1cdbb59a032b97593e4e5ecdecfa13dea228384b24264de2ac10`
+and `bfa42628c536cd6833a3ccd8aeb235d83bd5e934caea27d5b96194777f382c13`.
+This accepts only the guard-independent shifted-`xy` radial face component.
 
 ### Phase 2 O1 historical codec execution
 

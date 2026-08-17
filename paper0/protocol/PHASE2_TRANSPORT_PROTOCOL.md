@@ -6,9 +6,9 @@
 
 **Sequestered evaluation run:** `85606`
 
-**Current gate:** shifted-field-line derivative rung passed; full transport is
-blocked on the remaining Section 9 face-flow, native-grid, resampling, mask,
-unit, and ensemble checks
+**Current gate:** shifted-field-line derivative and shifted-`xy` face rungs
+passed; full transport is blocked on the remaining Section 9 conservation,
+native-grid, resampling, mask, unit, and ensemble checks
 
 This document replaces the exploratory image-space flux proxy with the
 transport definition actually advanced by the Hermes-3 simulation. It does not
@@ -309,11 +309,10 @@ An intermediate API must include `_xz_component` or `_partial` in its public
 name and metadata. It cannot satisfy the transport gate, generate diagnostic
 rankings, or appear in a figure as “particle flux” or “heat flux.”
 
-The shifted-`DDY` primitive has passed its compiled oracle. The independently
-written Fromm and shifted-`xy` face routines are present only as
-`candidate_partial` APIs and remain blocked pending the separately committed
-compiled-Hermes face-flow oracle. Their synthetic tests are necessary but not
-sufficient evidence.
+The shifted-`DDY` and shifted-`xy` radial-face primitives have passed their
+separately frozen compiled oracles. They remain `_partial` APIs because
+target-boundary guards are absent and because a validated component is not a
+validated total transport metric.
 
 As required by the general metric protocol, nonlinear transport is computed
 for every ensemble member before ensemble reduction.
@@ -409,6 +408,15 @@ The full metric remains blocked until all of the following pass:
    `1e-13`; every nonconstant input must be finite with peak-to-peak range
    greater than `1e-6`. The fields, masks, coverage requirements, and tolerance
    are committed before execution and are not relaxed after seeing a result.
+
+   **Execution record:** Rocky 9 job `6891343`, from clean commit `ee2b04f`,
+   passed the unchanged rule for all cases, quantities, and declared regions.
+   The largest continuous absolute discrepancy was
+   `2.5619506516250112e-12`; every selected clipping decision matched exactly,
+   with 85,830 clipped points in the dedicated 148,230-point case. Each
+   nonconstant case contained both velocity signs and no compared value was
+   non-finite. This releases only the shifted-`xy` radial face primitive, not
+   total transport or any learned-model transport claim.
 
 6. **Conservation:** face-flow differences reproduce the source operator's
    volume-weighted divergence on manufactured fields.
