@@ -23,6 +23,26 @@ The unique result directory is
 The job's findings cannot change channels automatically; potential/vorticity
 closure remains a separate gate.
 
+## Phase 2 saved potential-boundary state
+
+`phase2_85604_phi_boundary_state.sbatch` is a one-CPU Rusty audit of the raw
+radial `phi` guard state retained by the exact Hermes restart. It verifies all
+rank metadata, reads only the 32 predeclared radial-boundary ranks from 85604,
+and measures the gauge-invariant departure from an instantaneous Neumann
+boundary. It neither runs an elliptic counterfactual nor trains a model.
+
+Submit from the Rocky 9 Rusty login only after syncing the exact clean commit:
+
+```bash
+export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase2_85604_phi_boundary_state.sbatch
+```
+
+The unique result directory is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_phi_boundary_state/job_<id>`.
+Any nonzero boundary state remains descriptive until a paired exact elliptic
+solve measures its effect on the interior potential.
+
 ## Phase 2 O1 codec transport
 
 `phase2_o1_codec_transport.sbatch` extends the historical deterministic f8
