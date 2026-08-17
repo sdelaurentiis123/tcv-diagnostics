@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_potential_vorticity_forward_85604",
+  "status": "frozen_before_implementation_or_source_data_execution",
+  "protocol": {
+    "path": "paper0/protocol/PHASE2_POTENTIAL_VORTICITY_FORWARD_PROTOCOL.md",
+    "sha256": "67d2dfe95eb4e3c24d55dc271fd8d624b514869ae7cf002cba338fecaead2b1d"
+  },
+  "scope": {
+    "development_run": "85604",
+    "held_out_85606_access_allowed": false,
+    "training_allowed": false,
+    "model_evaluation": false,
+    "codec_evaluation": false,
+    "assimilation_evaluation": false,
+    "selected_frames_are_independent_runs": false,
+    "frame_indices": [0, 156, 312, 467, 623],
+    "physical_shape_xyz": [64, 32, 81],
+    "native_z_samples": 81,
+    "zperiod": 5,
+    "toroidal_mode_mapping": "n=5k"
+  },
+  "immutable_inputs": {
+    "paper0_root_on_rusty": "/mnt/home/sdelaurentiis/tcv-diagnostics",
+    "canonical": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/canonical_potential_inputs.nc",
+      "sha256": "e090b3a23fa6eedf8c37e74421c08bafd3eb513039fa7621b5d612a7e1cbba3e"
+    },
+    "extraction_record": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/extraction_record.json",
+      "sha256": "e30e4f14dddfdff369387f9e8657b31a3e56bb4dc628c1e9ef5d86bd5bfd68be"
+    },
+    "grid": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+      "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+    },
+    "bout_input": {
+      "path": "paper0/oracles/potential_elliptic/BOUT.inp",
+      "sha256": "39a1404c3bdf2bf4b295c8531ef27771884e2d8df3d6ebc33153595bd7eb2bc2"
+    },
+    "accepted_inverse_result": {
+      "path": "paper0/results/phase2_potential_elliptic_runtime_pressure_6892641.json",
+      "sha256": "ae0aea28efc8719c7c3c91419a8f122256f9fe7e6d64c94e6aa9e1827dd2297a",
+      "slurm_job_id": 6892641,
+      "executed_commit": "df7fa7d7464c3e91fbcc12c228c6c9d3c5aad6f0"
+    },
+    "runtime_pressure_correction_manifest": {
+      "path": "paper0/manifests/phase2_potential_elliptic_runtime_pressure_correction.json",
+      "sha256": "116ebfd1a320f633c9346afe8fc76c0544fb2608013370f6a64a7d462b210113"
+    },
+    "runtime_pressure_correction_protocol": {
+      "path": "paper0/protocol/PHASE2_POTENTIAL_ELLIPTIC_RUNTIME_PRESSURE_CORRECTION.md",
+      "sha256": "ba7d39ff659fe9b789fe77be1916b9ed585f085c6414dad61439d8df5304f632"
+    }
+  },
+  "external_revisions": {
+    "hermes": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/hermes-3-920ba829",
+      "commit": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+      "tracked_source_must_be_clean": true,
+      "files_sha256": {
+        "src/evolve_pressure.cxx": "d3abc5e32cdad3ea9c42faf432dcaed465070ee5792cb62e550b9baaad9953e6",
+        "include/hermes_utils.hxx": "5e3b8055ae068481319a90329a3bdf3605b82b9024ee8273b210fd2be915bd85",
+        "src/vorticity.cxx": "7643af10d23ce4efebf58b835fbb27cb8a7d7ed11545d450182916013f3a002a",
+        "include/vorticity.hxx": "276a90682298e2b20594fc52b241518f197aa1a3310ada47fb9f7852b3deaded"
+      }
+    },
+    "bout": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/BOUT-dev-7d28d67",
+      "commit": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+      "tracked_source_must_be_clean": true,
+      "files_sha256": {
+        "include/bout/invert_laplace.hxx": "858752dd39c55caf7afd00fa84583b5e1c7944763f6497f6ffaa2530ba0e1fc3",
+        "include/bout/fft.hxx": "ca8167cab0cf0ab71a9c135240d383394455bfc469a33858ccd90673da85c5b1",
+        "src/invert/fft_fftw.cxx": "c7da57b5dcbda9f0e93cae7b847d4b5f43a21426ee8c938ff2b137fbee55310e",
+        "src/invert/laplace/invert_laplace.cxx": "47c2cbe674c61e510cc96835823ba8a7b55f2a9b6c2a5c1f93d730c8dba5d157",
+        "src/invert/laplace/impls/cyclic/cyclic_laplace.cxx": "568faa3c9bcf17732779868f28aa219f5e8beea2ad4f98c490b233ce9552d38a",
+        "src/invert/laplace/impls/cyclic/cyclic_laplace.hxx": "1309f7eebf5fe076663224b1a66a08b1a3ae6ce7526d0f0b595d6537db5bf296"
+      }
+    },
+    "bout_install": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890766/install",
+      "library_sha256": "9e4ae1f46c01418711515cda63fd92513712705655c5623d932297e5d8c53333",
+      "bout_config_sha256": "b5d86b8adedf11f3fab2783cbc75fd7b1064e87d91c7df596437fd7d26dd11e6"
+    }
+  },
+  "state_contract": {
+    "stored_inputs": ["Ne", "Pe_raw", "Pi_raw", "Vort", "phi"],
+    "runtime_pressure": "N*max(P_raw,0)/softFloor(N,1e-7)",
+    "soft_floor": "max(N,0)+1e-7*exp(-max(N,0)/1e-7)",
+    "pi_hat": "Pi_runtime-Pe_runtime/3672",
+    "average_atomic_mass": 2.0,
+    "coefficient_C": "2/Bxy^2",
+    "forward_field_u": "phi+Pi_hat",
+    "forward_vorticity": "C*L_C(u)"
+  },
+  "discrete_operator": {
+    "primary": "BOUT++ Laplacian::tridagCoefs matrix used by LaplaceCyclic",
+    "alternative_fv_operator_is_primary": false,
+    "A": 0.0,
+    "D": 1.0,
+    "C1": "C",
+    "C2": "C",
+    "all_terms": true,
+    "nonuniform": true,
+    "fft": "BOUT++ rfft/irfft",
+    "fourier_indices": [0, 40],
+    "spectral_filtering_allowed": false,
+    "constant_alignment_allowed": false
+  },
+  "boundary_contract": {
+    "arm": "retained_saved_midpoint",
+    "phi_first_guard": "2*saved_midpoint-adjacent_physical_phi",
+    "phi_second_guard": "copy_first_guard",
+    "pi_hat_boundary": "Hermes neumann",
+    "internal_x_guards": "MPI mesh communication",
+    "solver_replaced_rows": "two exterior radial guard rows per side",
+    "primary_physical_x_indices": [0, 63],
+    "primary_physical_y_indices": [0, 31],
+    "primary_physical_z_indices": [0, 80]
+  },
+  "ordered_gates": {
+    "input_echo": {
+      "rule": "bitwise_exact",
+      "required": true
+    },
+    "runtime_pressure": {
+      "atol": 1e-12,
+      "rtol": 1e-12,
+      "known_negative_raw_pi_location": {
+        "frame_index": 312,
+        "x": 6,
+        "y": 31,
+        "z": 73
+      },
+      "known_runtime_pi": 0.0,
+      "required": true
+    },
+    "compiled_implementation": {
+      "constant_null": true,
+      "nonzero_constant_gauge_invariance": true,
+      "manufactured_modes_k": [0, 3],
+      "manufactured_forward_inverse_round_trip": true,
+      "required": true
+    },
+    "source_forward_closure": {
+      "scope": "all_64x32x81_physical_points_for_each_selected_frame",
+      "atol": 5e-10,
+      "rtol": 5e-10,
+      "rule": "max_abs_difference <= atol + rtol*max_abs_stored_vort",
+      "nonfinite_count": 0,
+      "all_frames_must_pass": true,
+      "correlation_can_override": false,
+      "regional_subset_can_override": false,
+      "alignment_can_override": false
+    }
+  },
+  "required_reports": [
+    "per_frame_continuous_metrics",
+    "pooled_continuous_metrics",
+    "maximum_error_location",
+    "named_geometry_region_metrics",
+    "toroidal_mode_residual_power_with_n_equal_5k",
+    "compiled_known_answer_metrics",
+    "input_echoes",
+    "runtime_pressure_metrics",
+    "artifact_sha256"
+  ],
+  "execution": {
+    "os_major": 9,
+    "cpu_only": true,
+    "mpi_ranks": 4,
+    "time_limit_minutes": 20,
+    "clean_exact_commit_required": true,
+    "new_job_specific_output_required": true,
+    "existing_results_read_only": true
+  },
+  "decision_rules": {
+    "pass": "selected-frame retained-boundary runtime-pressure potential-vorticity closure is bidirectionally validated; a separately frozen all-frame extension and state decision may proceed",
+    "fail": "retain the failure artifact and localize matrix boundary or FFT mismatch before state selection or training",
+    "selected_frames_establish_all_frame_stability": false,
+    "automatic_state_change_authorized": false,
+    "automatic_training_authorized": false,
+    "automatic_held_out_access_authorized": false,
+    "posthoc_materiality_label_allowed": false
+  }
+}
