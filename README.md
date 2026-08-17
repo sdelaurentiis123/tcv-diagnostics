@@ -78,3 +78,13 @@ parallel state and has not passed the separate potential/vorticity boundary
 gate. Exact evidence and implications are in
 [`paper0/PHASE2_STATE_COMPLETENESS_READOUT.md`](paper0/PHASE2_STATE_COMPLETENESS_READOUT.md).
 No channel set or model architecture has been selected.
+
+The follow-up 85604 radial-potential guard audit is also complete. The saved
+guards satisfy the exact Hermes copy and toroidal-midpoint structure, but the
+compact boundary midpoint differs from the instantaneous target at every saved
+frame/y location. Guard-stripped evolved volumes are therefore not the exact
+saved state. The measured departures are reported without a post hoc
+materiality cutoff in
+[`paper0/PHASE2_PHI_BOUNDARY_STATE_READOUT.md`](paper0/PHASE2_PHI_BOUNDARY_STATE_READOUT.md).
+A paired exact elliptic solve is still required before deciding whether to
+model the 64 boundary scalars explicitly or approximate them through history.

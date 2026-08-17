@@ -464,6 +464,20 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     `Ve` nor `NVe`, and the independent `phi/Vort` boundary
     gate remains open. No channels were changed, no model was trained, and
     85606 was not read.
+45. **The saved radial-potential guards contain a distinct compact boundary
+    state.** CPU-only Rocky 9 job `6891890` completed from clean commit
+    `cee2264a88ae7a912f8a70a06086137bf16d4e76`. It verified all 256
+    rank filenames and read only the 32 prospectively declared 85604 radial
+    boundary ranks. Both sides have zero non-finite values, zero outer-guard
+    copy discrepancies, and zero toroidal-midpoint constancy discrepancies.
+    The midpoint differs from the instantaneous target at all 19,968
+    frame/y locations per side and in every frozen temporal block. Departure
+    RMS is `1.07261 V` inner and `0.512986 V` outer; maximum
+    absolute departure is `8.11711 V` and `1.99169 V`. Thus
+    guard-stripped evolved volumes are not the exact saved discrete state.
+    These amplitudes do not establish interior materiality: the paired exact
+    elliptic solve and potential/vorticity forward closure remain required.
+    No state was changed, no model was trained, and 85606 was not read.
 
 ## Exact commands
 

@@ -170,6 +170,17 @@ state definitions:
 Calling any of these “physically valid” requires saying which sense is meant:
 source-state fidelity, diagnostic convenience, or predictive sufficiency.
 
+The subsequent all-frame raw-guard audit confirms that a distinct saved
+boundary value is visible at the output cadence. Both sides satisfy the exact
+guard-copy and toroidal-midpoint source identities, while the midpoint differs
+from the instantaneous target at all `624 x 32` frame/y locations.
+Departure RMS is `1.073 V` on the inner side and `0.513 V` on
+the outer side. This proves that guard-stripped `S6` is not the exact
+saved discrete state. It does not prove that the difference materially affects
+interior potential: the paired exact elliptic solve remains required. The
+complete result is
+`paper0/PHASE2_PHI_BOUNDARY_STATE_READOUT.md`.
+
 ## 4. What “include time” should mean
 
 The record begins at normalized time `285000`, not zero. With the stored
@@ -249,9 +260,9 @@ Before choosing LOLA, FGN, diffusion, or PDE-Refiner:
    floor over all 624 frames.
 3. **Potential closure:** apply the exact forward vorticity operator to stored
    `phi`, `Pi`, geometry, and radial boundary state, and compare with `Vort`.
-4. **Boundary-memory materiality:** measure the stored midpoint boundary state,
-   its departure from the instantaneous zero-gradient target, and its effect
-   on the elliptic solution.
+4. **Boundary-state structure -- complete; materiality pending:** the stored
+   midpoint is structurally valid and distinct from the instantaneous target.
+   Its effect on the exact elliptic solution remains to be measured.
 5. **Freeze state candidates:** select an exact source-state candidate and one
    pragmatic observed-state baseline.
 6. **Matched O1 codecs:** only under an accepted temporal protocol, train the

@@ -530,6 +530,43 @@ model state, a temporal split, potential reconstruction, forecast dynamics,
 or held-out generalization. The complete interpretation is
 `paper0/PHASE2_STATE_COMPLETENESS_READOUT.md`.
 
+### Phase 2 saved potential-boundary state
+
+The prospective boundary audit was frozen in
+`paper0/protocol/PHASE2_PHI_BOUNDARY_STATE_PROTOCOL.md` and
+`paper0/manifests/phase2_85604_phi_boundary_state.json` before the first
+all-frame read of raw radial `phi` guards.
+`src/tcv_diagnostics/phi_boundary.py` and
+`paper0/tools/audit_85604_phi_boundary_state.py` are new Paper 0 code.
+They implement gauge-invariant midpoint departure, exact guard-copy and
+toroidal-constancy checks, mergeable continuous summaries, frozen temporal and
+spatial reductions, and strict JSON. No predecessor audit code was copied.
+
+CPU-only Rocky 9 job `6891890` executed from clean Paper 0 commit
+`cee2264a88ae7a912f8a70a06086137bf16d4e76` on Rusty worker
+`worker5594`. It completed with exit `0:0` in 5:17, read only
+the 32 declared radial-boundary ranks of 85604, and explicitly records
+`held_out_85606_read=false`. The immutable full result is
+
+```text
+/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_phi_boundary_state/job_6891890/phi_boundary_state_audit.json
+```
+
+with SHA-256
+`79c67709c921caa1ddf1ea3e4d8f431ce88e220adc70247527c7a8a5e5f637cc`.
+The job's artifact inventory records the same digest plus command and
+environment hashes. The exact file is tracked unchanged at
+`paper0/results/phase2_phi_boundary_state_6891890.json`; a regression
+test locks its complete SHA-256, provenance, structural identities, amplitude
+summaries, and open materiality flags.
+
+Both source-structural checks pass, while the instantaneous-Neumann state fails
+at every saved frame/y location on both sides. This accepts the presence of a
+distinct saved compact boundary value only. It does not establish its effect
+on interior potential or transport, close the potential/vorticity gate, select
+a model state, or authorize held-out access. The complete interpretation is
+`paper0/PHASE2_PHI_BOUNDARY_STATE_READOUT.md`.
+
 ## Phase 0 execution evidence
 
 No predecessor code has been ported yet. The audit-only legacy reproduction executed the predecessor files in place after verifying their byte hashes. Job `6890428` used Paper 0 commit `7e2b5d2`, Rocky Linux 9.8, an NVIDIA H100, and only the legacy 85604 validation region. Its compact result record is `paper0/results/phase0_legacy_valid_6890428.json`; the full Rusty artifacts remain under `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428`.
