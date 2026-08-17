@@ -661,6 +661,18 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     PyTorch `2.8.0`. This is an implementation gate, not evidence that the
     codec reconstructs the simulation: no training, GPU smoke, O1 metric,
     forecast result, or 85606 access has occurred.
+58. **The codec implementation passes the required clean Rocky 9 CPU gate.**
+    CPU-only job `6893674` ran exact commit `0d63316` on Rocky Linux 9.8,
+    exited `0:0` in 23 seconds, and reported `399 passed, 1 skipped, 29
+    subtests passed`. Its launcher verified the frozen protocol, manifest,
+    model files, test file, and MIT license by SHA-256 before testing. It
+    requested no GPU, read no simulation data, trained no model, and did not
+    access 85606. The tracked result is byte-identical to the immutable Ceph
+    result (SHA-256
+    `d46bca572c52b8beab1f0bda18b3b869fe63ec6627b76382c350c52a972ed6f9`).
+    This closes the CPU portability portion of the implementation gate only;
+    data-loading, optimizer, checkpoint, bounded GPU smoke, and O1 scientific
+    gates remain open.
 
 ## Exact commands
 

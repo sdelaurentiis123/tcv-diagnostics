@@ -1,0 +1,15 @@
+{
+  "finished_at": "2026-08-17T16:45:06-04:00",
+  "gpu_requested": false,
+  "held_out_85606_read": false,
+  "host": "worker5582.cm.cluster",
+  "paper0_commit": "0d633164050281160f37b79f33d4332c536e7970",
+  "rocky_major": 9,
+  "schema_version": 1,
+  "scope": "deterministic_codec_cpu_implementation_gate",
+  "simulation_data_read": false,
+  "slurm_job_id": "6893674",
+  "status": "passed",
+  "test_output_sha256": "b51152f6a8640079b1dc49823cf21a7b8c977aa4b60e8b3028cb7c3ca81d45d4",
+  "training_performed": false
+}

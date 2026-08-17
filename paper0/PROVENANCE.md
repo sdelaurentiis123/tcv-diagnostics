@@ -641,5 +641,13 @@ It imports nothing from the dirty predecessor checkout.
 No historical codec or forecast checkpoint initializes the matched models.
 A deterministic codec implementation and CPU result exist, but no trainer,
 checkpoint, GPU smoke result, or scientific training result exists under this
-section yet. On local PyTorch `2.8.0`, the 11 codec tests and complete Paper 0
-suite pass (`393 passed, 1 skipped`). Rocky 9 execution remains required.
+section yet. On local PyTorch `2.8.0`, the 11 codec tests and then-current
+complete Paper 0 suite passed (`393 passed, 1 skipped`). CPU-only Rocky 9 job
+`6893674` ran clean commit `0d633164050281160f37b79f33d4332c536e7970`
+on worker `worker5582`, passed the expanded suite (`399 passed, 1 skipped, 29
+subtests`) in 23 seconds, requested no GPU, read no simulation data, and
+performed no training. The immutable full result remains at
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_cpu_gate/job_6893674/result.json`;
+its tracked byte-identical copy has SHA-256
+`d46bca572c52b8beab1f0bda18b3b869fe63ec6627b76382c350c52a972ed6f9`.
+No reconstruction-quality gate is implied by an implementation test.
