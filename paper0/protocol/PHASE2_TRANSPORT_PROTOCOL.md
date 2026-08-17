@@ -6,8 +6,9 @@
 
 **Sequestered evaluation run:** `85606`
 
-**Current gate:** blocked until the shifted-field-line derivative and native-grid
-oracle checks in Section 9 pass
+**Current gate:** shifted-field-line derivative rung passed; full transport is
+blocked on the remaining Section 9 face-flow, native-grid, resampling, mask,
+unit, and ensemble checks
 
 This document replaces the exploratory image-space flux proxy with the
 transport definition actually advanced by the Hermes-3 simulation. It does not
@@ -363,6 +364,14 @@ The full metric remains blocked until all of the following pass:
    finite values for all used model cells `x<16`; topology-unused outer entries
    are replaced by zero only after this check. A non-finite used entry is a
    hard failure.
+
+   **Execution record:** Rocky 9 job `6891059`, from clean commit `0223035`,
+   passed the unchanged rule for all four cases and every declared region. The
+   largest absolute error was `3.025468764406014e-12`; all inputs passed the
+   non-collapse gate and no compared value was non-finite. This releases only
+   the shifted-`DDY` primitive. It does not release the shifted-`xy` face flow,
+   total transport, or any model transport claim.
+
 5. **Conservation:** face-flow differences reproduce the source operator's
    volume-weighted divergence on manufactured fields.
 6. **Native-grid oracle:** selected raw 81-cell 85604 frames match the

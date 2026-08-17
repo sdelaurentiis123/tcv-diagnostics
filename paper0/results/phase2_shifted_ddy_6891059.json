@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_shifted_ddy_compiled_oracle",
+  "paper0_commit": "0223035106cb6a81c041ecd8701a99df9e39c59b",
+  "slurm": {
+    "job_id": 6891059,
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "submit": "2026-08-17T02:32:21-04:00",
+    "start": "2026-08-17T02:33:20-04:00",
+    "end": "2026-08-17T02:33:55-04:00",
+    "elapsed": "00:00:35",
+    "time_limit": "00:15:00",
+    "requested_tasks": 4,
+    "node": "worker6204"
+  },
+  "acceptance": {
+    "rule_frozen_before_execution": true,
+    "formula": "max_abs_error <= atol + rtol * max_abs_reference",
+    "atol": 5e-10,
+    "rtol": 5e-10,
+    "requires_every_case_and_region": true,
+    "requires_no_nonfinite_values": true,
+    "overall_passed": true,
+    "nonfinite_count": 0,
+    "largest_max_abs_error": 3.025468764406014e-12,
+    "cases": {
+      "constant": {
+        "passed": true,
+        "largest_max_abs_error": 0.0
+      },
+      "zmode": {
+        "passed": true,
+        "largest_max_abs_error": 1.917661383139527e-12
+      },
+      "ycode": {
+        "passed": true,
+        "largest_max_abs_error": 1.7763568394002505e-15
+      },
+      "mixed": {
+        "passed": true,
+        "largest_max_abs_error": 3.025468764406014e-12
+      }
+    },
+    "regions_required_for_every_case": [
+      "all_valid",
+      "ordinary_or_sol_sequential",
+      "inner_private_flux_connection",
+      "inner_core_branch_connection",
+      "open_sol_interior"
+    ]
+  },
+  "operator": {
+    "reference": "compiled BOUT++ 5.2.1 DDY with C2 and shifted transform",
+    "candidate": "tcv_diagnostics.transport.shifted_ddy_single_null_partial",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "mpi_decomposition": {
+      "NXPE": 1,
+      "NYPE": 4,
+      "MYSUB": 8
+    }
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_shifted_ddy/job_6891059",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_shifted_ddy_6891059.log",
+    "artifact_digests": {
+      "job.log": "4920ae0efac0ea28bba17fa1acbdadb3cafc0ffff1fb85bf3e62087652311095",
+      "commands.sh": "4fd2b4fed6a1c70923c110d648702bb7ad9f71c751aaf4f85a1852eff54eebb1",
+      "build/shifted_ddy_oracle": "0042227d21ba8ba64067930d0dee5bbe4631097c16f635ba4347780ce1cad9db",
+      "run/BOUT.inp": "65ebec7b12f4f63d441d96651096e15810670cd0b03f9bc3937619c4f7f26d53",
+      "run/BOUT.dmp.0.nc": "3c57c6bdb4aa28e8681d434470cb4c7567f6718ebd5bb855f64b9eb0bab46190",
+      "run/BOUT.dmp.1.nc": "99a7bc8cf8c890d1ef3602e33004fa375e0fdeb508b6714a6b04ad482faefdf4",
+      "run/BOUT.dmp.2.nc": "0e748ffb32009dba91cd801ff4b248b2ea254d503d0bb2dc296739c8c1314df6",
+      "run/BOUT.dmp.3.nc": "27c7511d7660666af6194ca5bfa530a6b6fc3e7881af7459638c008b827c71ae",
+      "oracle_comparison.json": "44389079dd64203b7dc9706b38180afad48beb91fd86e6b93f33041d696c99cb",
+      "comparison_arrays.npz": "1d366e0643d2ae3420460743a926aaf291093e7e8facc3e60cd5841f43bc85d9",
+      "artifact_sha256.txt": "c5894156815f19abc277b817ee391c0e6ab352abc87bc2d9dbb08e9dbdf18b23"
+    }
+  },
+  "data_access": {
+    "run_id": "85604_geometry_only",
+    "model_x_grid_slice": [2, 66],
+    "evaluated_y_slice": [1, 31],
+    "plasma_state_frames_read": 0,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "accepted_shifted_ddy_stage_only",
+  "remaining_blockers": [
+    "Fromm reconstruction and shifted-xy radial face flow",
+    "total particle and advected-internal-energy transport",
+    "native-81 plasma-frame oracle",
+    "native-81 versus Fourier-resampled-88 sensitivity",
+    "authoritative geometry masks and outward orientation",
+    "normalized-to-SI conversion",
+    "member-wise nonlinear ensemble semantics"
+  ]
+}

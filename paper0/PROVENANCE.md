@@ -132,6 +132,22 @@ The independently written NumPy comparator is
 and prospective numerical tolerance are tested locally and frozen in the
 transport protocol before the first execution.
 
+Corrected runtime job `6891059` completed from clean Paper 0 commit
+`0223035106cb6a81c041ecd8701a99df9e39c59b` on Rocky 9. The four explicit
+FieldFactory inputs passed their independent non-collapse checks. Every
+constant, toroidal-mode, `y`-code, and mixed-field comparison passed in the
+full valid region, ordinary sequential stencils, both private-flux
+connections, both twisted core connections, and the open SOL. The largest
+absolute discrepancy was `3.025468764406014e-12`, versus the unchanged frozen
+rule `5e-10 + 5e-10 * max_abs_reference`; no compared value was non-finite.
+The tracked compact record is
+`paper0/results/phase2_shifted_ddy_6891059.json`; the immutable full JSON and
+arrays have SHA-256 `44389079dd64203b7dc9706b38180afad48beb91fd86e6b93f33041d696c99cb`
+and `1d366e0643d2ae3420460743a926aaf291093e7e8facc3e60cd5841f43bc85d9`.
+This accepts the NumPy shifted-`DDY` primitive for its declared interior scope.
+It does not accept the shifted-`xy` face term or total particle/internal-energy
+transport.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

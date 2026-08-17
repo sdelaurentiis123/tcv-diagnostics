@@ -21,6 +21,8 @@ The historical codecs have now been evaluated through the frozen O1 oracle;
 passes the complete preliminary representation gate. The exact-source
 transport audit is frozen in
 [`paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md`](paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md):
-the former image-space flux is retained only as a proxy, and no physical
-transport claim is allowed until the conservative Hermes/BOUT++ operator and
-geometry pass the declared oracle ladder.
+the former image-space flux is retained only as a proxy. The shifted-`DDY`
+primitive now matches compiled BOUT++ under the frozen manufactured-field
+oracle, but no physical transport claim is allowed until the remaining
+conservative face-flow, native-grid, resampling, geometry, unit, and ensemble
+rungs pass.

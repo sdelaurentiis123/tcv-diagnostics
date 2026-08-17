@@ -1,11 +1,14 @@
 """Partial, source-matched transport primitives for the Paper 0 oracle.
 
-Only the radial ``x-z`` face-flow component of the executed Hermes-3
-``Div_n_bxGrad_f_B_XPPM`` operator is implemented here.  The full radial ExB
-flow also contains a shifted-field-line ``x-y`` component because the run used
-``poloidal_flows = true``.  Accordingly, every public result and function in
-this module is explicitly named ``partial`` or ``xz_component`` and must not be
-reported as total particle or energy transport.
+This module currently contains the radial ``x-z`` face-flow component of the
+executed Hermes-3 ``Div_n_bxGrad_f_B_XPPM`` operator and a source-matched
+shifted-field-line ``DDY`` primitive.  Compiled BOUT++ job ``6891059`` validates
+that derivative on manufactured fields and every declared single-null topology
+region.  The full radial ExB flow still requires the shifted-poloidal ``x-y``
+face term because the run used ``poloidal_flows = true``.  Accordingly, every
+face-flow result and function remains explicitly named ``partial`` or
+``xz_component`` and must not be reported as total particle or energy
+transport.
 
 The frozen definition and release blockers are in
 ``paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md``.
@@ -200,8 +203,10 @@ def shifted_ddy_single_null_partial(
     marks the two target-adjacent ``y`` cells invalid because the model dataset
     does not contain their physical-boundary guards.
 
-    This source transcription remains a candidate until compared with the
-    hash-locked BOUT++ executable oracle.
+    This transcription passed the frozen compiled-BOUT++ oracle in job
+    ``6891059``.  It remains named ``partial`` because target-boundary guards
+    are absent and because a validated derivative alone is not the full
+    shifted-poloidal radial face-flow operator.
     """
 
     phi = _real_finite("potential", potential)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 import subprocess
 import unittest
@@ -12,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LAUNCHER = ROOT / "cluster" / "phase2_shifted_ddy_oracle.sbatch"
 COMPARATOR = ROOT / "paper0" / "tools" / "compare_shifted_ddy_oracle.py"
 ORACLE_DIR = ROOT / "paper0" / "oracles" / "bout_shifted_ddy"
+RESULT = ROOT / "paper0" / "results" / "phase2_shifted_ddy_6891059.json"
 
 SPEC = importlib.util.spec_from_file_location("shifted_ddy_comparator", COMPARATOR)
 assert SPEC is not None and SPEC.loader is not None
@@ -30,6 +32,26 @@ class DummyVariable:
 
 
 class CompiledShiftedDdyOracleTests(unittest.TestCase):
+    def test_tracked_execution_passes_frozen_rule_without_scope_creep(
+        self,
+    ) -> None:
+        result = json.loads(RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(result["slurm"]["state"], "COMPLETED")
+        self.assertEqual(result["slurm"]["exit_code"], "0:0")
+        self.assertEqual(
+            result["paper0_commit"],
+            "0223035106cb6a81c041ecd8701a99df9e39c59b",
+        )
+        self.assertTrue(result["acceptance"]["overall_passed"])
+        self.assertEqual(result["acceptance"]["atol"], MODULE.DEFAULT_ATOL)
+        self.assertEqual(result["acceptance"]["rtol"], MODULE.DEFAULT_RTOL)
+        self.assertEqual(set(result["acceptance"]["cases"]), set(MODULE.CASES))
+        self.assertFalse(result["data_access"]["held_out_85606_read"])
+        self.assertEqual(result["data_access"]["plasma_state_frames_read"], 0)
+        self.assertEqual(
+            result["scientific_status"], "accepted_shifted_ddy_stage_only"
+        )
+
     def test_launcher_is_cpu_only_clean_commit_locked_and_syntax_valid(self) -> None:
         text = LAUNCHER.read_text(encoding="utf-8")
         subprocess.run(["bash", "-n", str(LAUNCHER)], check=True)

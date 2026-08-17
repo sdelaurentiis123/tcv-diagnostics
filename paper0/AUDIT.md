@@ -273,6 +273,15 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     core twist connection exists. After the model crop, only `x<16` uses the
     branch shift. Paper 0 now requires those 16 values to be finite and ignores
     non-finite outer values only because the topology proves they are unused.
+28. **The shifted-`DDY` transcription matches compiled BOUT++.** Corrected
+    four-rank job `6891059` completed with exit code `0:0` from clean commit
+    `0223035`. All four manufactured inputs and every frozen topology region
+    passed without a non-finite value. The worst absolute discrepancy was
+    `3.025468764406014e-12`, well inside the prospectively frozen tolerance.
+    This closes only validation-ladder item 4: the Fromm-reconstructed `xy`
+    face flow, total conservative transport, native-frame comparison,
+    resampling sensitivity, geometry masks, units, and member-wise ensemble
+    semantics remain open.
 
 ## Exact commands
 
