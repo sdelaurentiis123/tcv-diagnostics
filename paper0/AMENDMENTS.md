@@ -89,3 +89,40 @@ The result cannot establish stationarity, choose a split, authorize training,
 or replace geometry-aware correlation measures. It exists to identify how
 much of the apparent memory belongs to the slowly evolving `n=0` background
 versus non-axisymmetric turbulent structure.
+
+## A004 - Distinguish toroidal translation from loss of mode coherence
+
+**Status:** proposed before calculation, following job `6890601`.
+
+After removal of the toroidal mean, every C5 field crosses `1/e` in less than
+one stored frame under fixed-grid Eulerian correlation. This can mean that the
+saved cadence does not resolve the realization, but it can also occur when a
+coherent structure translates or its Fourier phase rotates between frames.
+Because the domain is periodic in `z`, these possibilities can be separated
+without choosing a learned model.
+
+This amendment authorizes two oracle diagnostics on the same model-coordinate
+toroidal residual and candidate training frames `[0, 432)`:
+
+1. **Global circular-shift alignment.** For every lag `0..32`, calculate the
+   normalized cross-correlation for all 88 circular `z` shifts after per-cell
+   temporal-mean removal. Report the maximum correlation and its signed shift
+   in stored cells and full-torus degrees. One global shift is shared across
+   all sampled times and `(x,y)` cells at each lag.
+2. **Complex mode coherence.** Fourier transform the full 88-cell residual in
+   `z`. For each stored mode `k=1..16` and lag `0..32`, calculate the magnitude
+   and phase of the normalized complex cross-correlation across sampled times
+   and `(x,y)` cells. Report `n = 5k`, lag-one magnitude and phase, and the first
+   `1/e` magnitude crossing. The band `k=4..7` is labeled explicitly as
+   full-torus `n=20..35`.
+
+The calculation retains the A003 `x=4`, `y=2` subsampling and all toroidal
+cells. A synthetic translating-wave test must show low or sign-changing
+fixed-grid correlation together with unit shift-aligned correlation and unit
+mode-coherence magnitude.
+
+These are oracle diagnostics: the maximizing shift and future Fourier phase
+use the verifying frame. They cannot be supplied to a forecast, used as a
+training target or loss, select the split, or open the learning gate. Their
+purpose is to decide whether future architectures need to represent coherent
+phase transport or genuinely stochastic re-sampling at the saved cadence.
