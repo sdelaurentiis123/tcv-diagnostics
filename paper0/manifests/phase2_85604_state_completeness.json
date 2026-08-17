@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_before_first_all_frame_raw_momentum_closure_read",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "prior_reads": {
+    "all_frame_c5_profile": "phase1 profiling jobs 6890563, 6890591, 6890601, and 6890606",
+    "all_frame_pressure_values": "phase2 pressure-closure job 6891583",
+    "predeclared_native_frames": [0, 156, 312, 467, 623],
+    "current_freeze_read": "source text and representative rank metadata only; no all-frame raw momentum values"
+  },
+  "raw_archive": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604",
+    "expected_rank_file_count": 256,
+    "rank_file_pattern": "BOUT.dmp.<rank>.nc",
+    "rank_dimensions": {"t": 624, "x": 8, "y": 6, "z": 81},
+    "mpi_decomposition": {
+      "NXPE": 16,
+      "NYPE": 16,
+      "MXSUB": 4,
+      "MYSUB": 2,
+      "MXG": 2,
+      "MYG": 2
+    },
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "slope_limiter": "MC",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "bout_input_sha256": "c1f7f63a4210b35680f338289916f6a588dcc7881928f26066a9af2e09fb95ad",
+    "bout_settings_sha256": "57148a0f3d829b72192363d4d6e5da9fc1ce8aa2bff63359491bdb0b9a075d57",
+    "geometry_sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+  },
+  "source_lock": {
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "evolve_momentum_sha256": "83d56e8335aeb3c7595f26b1ecbbed7a9ad016bb7bc4df3280a7b752ba6061ae",
+    "hermes_utils_sha256": "5e3b8055ae068481319a90329a3bdf3605b82b9024ee8273b210fd2be915bd85"
+  },
+  "frame_scope": {
+    "first_index": 0,
+    "last_index": 623,
+    "frame_count": 624,
+    "expected_first_normalized_time": 285000.0,
+    "expected_last_normalized_time": 471900.0,
+    "expected_normalized_cadence": 300.0,
+    "omega_ci_per_second": 95788333.03066081,
+    "physical_cadence_microseconds": 3.131905426352636,
+    "selection_uses_field_values": false
+  },
+  "temporal_blocks": {
+    "rule": "eight contiguous nonoverlapping blocks of 78 frames",
+    "inclusive_index_ranges": [
+      [0, 77], [78, 155], [156, 233], [234, 311],
+      [312, 389], [390, 467], [468, 545], [546, 623]
+    ]
+  },
+  "canonical_cells": {
+    "shape_per_field": [624, 64, 32, 81],
+    "axes": ["time", "x", "y", "z"],
+    "total_points_per_field": 103514112,
+    "strip_guards_before_statistics": true,
+    "global_coordinate_key": ["PE_XIND", "PE_YIND"],
+    "stream_rank_files_without_writing_a_full_canonical_copy": true
+  },
+  "field_inventory": {
+    "evolved_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+    "derived_fields": ["Te", "Ti", "Ve", "Vi", "phi"],
+    "metadata_inventory_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort", "Te", "Ti", "Ve", "Vi", "phi"],
+    "value_stream_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort", "Ve", "Vi"],
+    "expected_common": {
+      "dimensions": ["t", "x", "y", "z"],
+      "dtype": "float64",
+      "cell_location": "CELL_CENTRE",
+      "time_dimension": "t"
+    },
+    "expected_per_field": {
+      "Ne": {"source": "evolve_density", "species": "e", "units": "m^-3", "conversion": 1e19},
+      "Pe": {"source": "evolve_pressure", "species": "e", "units": "Pa", "conversion": 80.1088317},
+      "Pi": {"source": "evolve_pressure", "species": "i", "units": "Pa", "conversion": 80.1088317},
+      "NVe": {"source": "evolve_momentum", "species": "e", "units": "kg / m^2 / s", "conversion": 0.001157548211197342},
+      "NVi": {"source": "evolve_momentum", "species": "i", "units": "kg / m^2 / s", "conversion": 0.001157548211197342},
+      "Vort": {"source": "vorticity", "species": null, "units": "C m^-3", "conversion": 1.6021766339999999},
+      "Te": {"source": "evolve_pressure", "species": "e", "units": "eV", "conversion": 50.0},
+      "Ti": {"source": "evolve_pressure", "species": "i", "units": "eV", "conversion": 50.0},
+      "Ve": {"source": "evolve_momentum", "species": "e", "units": "m / s", "conversion": 69205.61141651045},
+      "Vi": {"source": "evolve_momentum", "species": "i", "units": "m / s", "conversion": 69205.61141651045},
+      "phi": {"source": "vorticity", "species": null, "units": "V", "conversion": 50.0}
+    }
+  },
+  "momentum_formula": {
+    "density_field": "Ne",
+    "density_floor": 1e-7,
+    "soft_floor": "u=max(N,0); softFloor(N,f)=u+f*exp(-u/f)",
+    "electron_atomic_mass": {"numerator": 1, "denominator": 1836},
+    "ion_atomic_mass": {"numerator": 2, "denominator": 1},
+    "relations": {
+      "NVe_from_softfloor_Ne_Ve": {"reference": "NVe", "candidate": "(1/1836) * softFloor(Ne,1e-7) * Ve", "source_exact": true},
+      "NVi_from_softfloor_Ne_Vi": {"reference": "NVi", "candidate": "2 * softFloor(Ne,1e-7) * Vi", "source_exact": true},
+      "NVe_from_plain_Ne_Ve": {"reference": "NVe", "candidate": "(1/1836) * Ne * Ve", "source_exact": false},
+      "NVi_from_plain_Ne_Vi": {"reference": "NVi", "candidate": "2 * Ne * Vi", "source_exact": false}
+    }
+  },
+  "spatial_scopes": {
+    "full_physical_domain": {"included_y_indices": [0, 31]},
+    "guard_independent_transport_interior": {"python_y_slice": [1, 31], "included_y_indices": [1, 30]},
+    "target_dependent_rows": {"included_y_indices": [0, 31]}
+  },
+  "closure_statistics": {
+    "atol": 1e-12,
+    "rtol": 1e-12,
+    "point_discrepancy_formula": "abs_error > atol + rtol * abs(reference_at_point)",
+    "frame_pass_formula": "max_abs_error <= atol + rtol * frame_max_abs_reference and no nonfinite values",
+    "relative_l2_formula": "sqrt(sum((candidate-reference)^2) / sum(reference^2))",
+    "report_by_frame_x_y_temporal_block_and_spatial_scope": true
+  },
+  "density_floor_statistics": {
+    "report_Ne_below_zero": true,
+    "report_Ne_below_density_floor": true,
+    "report_softfloor_not_exactly_equal_to_Ne": true
+  },
+  "completion_requirements": {
+    "all_256_rank_files_structurally_verified": true,
+    "all_624_times_verified_on_every_rank": true,
+    "all_eleven_field_metadata_records_verified_on_every_rank": true,
+    "all_eight_value_streams_read_on_every_physical_cell": true,
+    "processor_coordinate_coverage_complete_and_unique": true,
+    "output_is_strict_json_without_nan_or_infinity": true,
+    "result_directory_is_immutable_and_refuses_overwrite": true,
+    "scientific_findings_do_not_change_process_exit_status": true
+  },
+  "decision_rules": {
+    "velocity_momentum_equivalence": "both source-exact soft-floor relations pass every full-domain frame and all relevant values are finite",
+    "exact_relation_failure_action": "do not replace evolved momentum with velocity until dump ordering, source revision, boundaries, and metadata are resolved",
+    "plain_density_relations_are_attribution_only": true,
+    "historical_c5_remains_electron_momentum_incomplete_if_equivalence_passes": true,
+    "potential_vorticity_closure_is_a_separate_gate": true,
+    "automatic_channel_change_authorized": false,
+    "posthoc_threshold_change_authorized": false
+  },
+  "scientific_scope": {
+    "characterizes_85604_only": true,
+    "selects_channels": false,
+    "selects_a_model": false,
+    "trains_a_model": false,
+    "evaluates_transport": false,
+    "evaluates_diagnostics": false,
+    "establishes_cross_shot_generalization": false
+  }
+}
