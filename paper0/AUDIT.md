@@ -529,6 +529,23 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     a small sampled transport sensitivity; no post-hoc materiality label is
     assigned, and five selected frames do not establish all-frame stability.
     No model was trained, no state was changed, and 85606 remained untouched.
+49. **Stored potential and vorticity close bidirectionally under the executed
+    source discretization on the five frozen frames.** CPU-only Rocky 9 job
+    `6892764`, from clean commit `ab1a5e8`, independently applied the
+    BOUT++ cyclic matrix represented by `Laplacian::tridagCoefs` and the public
+    `rfft/irfft` path to `u=phi+Pi_hat`, then formed
+    `Vort=(2/Bxy^2)L_C(u)`. Input echoes, runtime-pressure reproduction, the
+    constant null test, gauge invariance, and a manufactured `k=0+k=3`
+    forward/inverse round trip all pass before source values are scored. Over
+    all `829,440` physical values, forward versus stored vorticity has pooled
+    relative L2 `6.363e-13`, RMS error `2.499e-14`, and maximum absolute error
+    `4.738e-13`, more than three orders of magnitude below the frozen
+    scale-aware tolerance. Every named geometry region and all native Fourier
+    indices `k=0..40` (`n=5k`) are consistent. Together with job `6892641`,
+    this validates the retained-boundary, runtime-pressure potential/vorticity
+    relation in both directions on the selected frames. It does not establish
+    all-frame stability, choose `S6+Bphi` versus a pragmatic observed state,
+    authorize training, or read 85606.
 
 ## Exact commands
 
