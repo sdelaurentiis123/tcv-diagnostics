@@ -25,3 +25,24 @@ sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase0_reproduce_legacy_valid
 The launcher requests one Rocky 9 H100/H200 GPU through the `gpupreempt` partition and matching QOS. The `gpuxl` QOS has a four-GPU minimum and is intentionally not used for this one-GPU audit. Automatic requeue is disabled: a preempted attempt must be resubmitted under a new job ID, preserving the partial attempt rather than overwriting it.
 
 The output directory is unique to the Slurm job ID, and the launcher refuses to overwrite it.
+
+## Phase 1 immutable 85604 profile
+
+`phase1_profile_85604.sbatch` is a CPU-only, read-only pass over the two audited
+85604 Well storage shards plus representative raw metadata. It verifies all
+source hashes, reconstructs the 624-frame chronology, applies the precommitted
+steady-state screen, fits candidate training-only normalization, and computes
+the frozen decorrelation estimate only if the screen passes. It cannot read a
+path containing `85606` or a `test` path component.
+
+Submit from the Rocky 9 login node after non-destructively syncing an exact,
+clean commit:
+
+```bash
+export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase1_profile_85604.sbatch
+```
+
+The unique result directory is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase1_85604_profile/job_<id>`.
+No learned model is launched by this job.

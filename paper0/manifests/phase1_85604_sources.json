@@ -1,0 +1,104 @@
+{
+  "schema_version": "0.1.0",
+  "protocol_commit": "e040717b3f2052c15fbe9d5f9526bba893c3070e",
+  "run_id": "85604",
+  "sequestered_run_ids": [
+    "85606"
+  ],
+  "simulator": "Hermes-3/BOUT++",
+  "device": "TCV",
+  "sources": {
+    "raw_representative": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/BOUT.dmp.0.nc",
+      "sha256": "f5ced68fc90bad8fdf073ef7be508002b69aba68e2084d603a6d8f04698c9d38"
+    },
+    "well_shards": [
+      {
+        "legacy_name": "train",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/train/TCV_c5_train.hdf5",
+        "sha256": "f4aae5c13ecd944f51cec0c3539f57ff669cb0bb0405cb813c3f50ff6cb83817",
+        "global_start_inclusive": 0,
+        "global_stop_exclusive": 500
+      },
+      {
+        "legacy_name": "valid",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/valid/TCV_c5_valid.hdf5",
+        "sha256": "eed18a7f7a356a4f8d437647b73d4f8078a5309e1e8583a1089e622196ce4d43",
+        "global_start_inclusive": 500,
+        "global_stop_exclusive": 624
+      }
+    ],
+    "bout_input": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/BOUT.inp",
+      "sha256": "c1f7f63a4210b35680f338289916f6a588dcc7881928f26066a9af2e09fb95ad"
+    },
+    "bout_settings": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/BOUT.settings",
+      "sha256": "57148a0f3d829b72192363d4d6e5da9fc1ce8aa2bff63359491bdb0b9a075d57"
+    },
+    "mesh": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+      "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+    },
+    "legacy_geometry_cache": {
+      "path": "/mnt/home/sdelaurentiis/ceph/lola_tcv/grid_85604.npz",
+      "sha256": "0bdf6ec083c32c9ef5e75ad4bcd6ac44b8dea4280a2b8a6d17c9ea36bdc249a0"
+    }
+  },
+  "expected": {
+    "total_frames": 624,
+    "raw_time_first": 285000.0,
+    "raw_time_last": 471900.0,
+    "normalized_frame_step": 300.0,
+    "omega_ci_per_second": 95788333.03066081,
+    "cadence_microseconds": 3.131905426352636,
+    "zperiod": 5,
+    "zmin": 0.0,
+    "zmax": 0.2,
+    "native_z_samples": 81,
+    "converted_spatial_shape": [
+      64,
+      32,
+      88
+    ],
+    "c5_fields": [
+      "Ne",
+      "Te",
+      "Ti",
+      "phi",
+      "Vi"
+    ],
+    "raw_field_metadata": {
+      "Ne": {"units": "m^-3", "conversion": 1e19},
+      "Te": {"units": "eV", "conversion": 50.0},
+      "Ti": {"units": "eV", "conversion": 50.0},
+      "phi": {"units": "V", "conversion": 50.0},
+      "Vi": {"units": "m/s", "conversion": 69205.61141651045}
+    },
+    "additional_state_candidates": [
+      "Vort",
+      "Ve",
+      "NVe",
+      "NVi",
+      "Pe",
+      "Pi"
+    ],
+    "bout_version": "5.2.1",
+    "bout_revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f"
+  },
+  "split": {
+    "train": [0, 432],
+    "guard": [432, 496],
+    "validation": [496, 624],
+    "maximum_window_frames": 32,
+    "freeze_condition": "all predeclared operational steady-state criteria pass"
+  },
+  "time_conditioning": {
+    "ordered_temporal_axis": true,
+    "record_relative_physical_lead": true,
+    "absolute_frame_number_input": false,
+    "delta_t_required_for_multiple_cadences": true
+  },
+  "blind_test_accessed": false
+}
+
