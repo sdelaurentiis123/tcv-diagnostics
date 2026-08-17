@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(paper0_matched_e6b_elliptic LANGUAGES CXX)
+project(paper0_matched_e6b_elliptic LANGUAGES C CXX)
 
 if(NOT TARGET bout++::bout++)
   find_package(bout++ REQUIRED)
