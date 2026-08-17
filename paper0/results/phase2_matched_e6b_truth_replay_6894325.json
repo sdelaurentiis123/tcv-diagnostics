@@ -1,0 +1,254 @@
+{
+  "all_frames_passed": true,
+  "boundary_only_zero_interior_seed": true,
+  "completed_at_utc": "2026-08-17T23:49:02.336989+00:00",
+  "coverage": [
+    0,
+    624
+  ],
+  "development_run": "85604",
+  "frame_count": 624,
+  "held_out_85606_read": false,
+  "maximum_absolute_difference": 2.8066438062523957e-13,
+  "maximum_relative_l2": 2.0831143066739132e-14,
+  "paper0_commit": "75a915d023503f8033d7dcf89071bdf7b3e4a436",
+  "schema_version": 1,
+  "scope": "phase2_matched_e6b_zero_seed_truth_replay",
+  "shards": [
+    {
+      "derived_phi": {
+        "dtype": "float64",
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_0/derived_phi.h5",
+        "sha256": "47e0967efd69ec5b9eb328430b5b7bb84c5b7e18b56aa17cf121dd14378da3fe",
+        "shape": [
+          78,
+          64,
+          32,
+          81
+        ]
+      },
+      "frame_interval": [
+        0,
+        78
+      ],
+      "maximum_absolute_difference": 2.779998453661392e-13,
+      "maximum_relative_l2": 2.038211575851573e-14,
+      "passes": true,
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_0/result.json",
+        "sha256": "37ed2975b7890f4744e5a63806a22a39fcf099e8b9bafbb1598f8b0f6cd38358"
+      },
+      "shard_index": 0,
+      "source_input": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/canonical/canonical_shard_0.nc",
+        "sha256": "618a5b63c43165b174e2c6be5bf172ec14e76ab0e41752dae85f82c51178de25"
+      }
+    },
+    {
+      "derived_phi": {
+        "dtype": "float64",
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_1/derived_phi.h5",
+        "sha256": "30331b90824bb8829da4e152fab90b085c3d48a810378be748df323794e9a5ff",
+        "shape": [
+          78,
+          64,
+          32,
+          81
+        ]
+      },
+      "frame_interval": [
+        78,
+        156
+      ],
+      "maximum_absolute_difference": 2.6068036618198676e-13,
+      "maximum_relative_l2": 2.029687406315387e-14,
+      "passes": true,
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_1/result.json",
+        "sha256": "0aa29ca53c7dceba4e42d113193d06081092210a8204ccd4355c893e88239bd5"
+      },
+      "shard_index": 1,
+      "source_input": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/canonical/canonical_shard_1.nc",
+        "sha256": "e43754b8f998026404766ac8b4a9dba6af56cd65f6a0587c65e6313af5867f57"
+      }
+    },
+    {
+      "derived_phi": {
+        "dtype": "float64",
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_2/derived_phi.h5",
+        "sha256": "0106966b9ed1746c0a8b415584ba53959ee510150ab8364d3dc62143eeb9d1a9",
+        "shape": [
+          78,
+          64,
+          32,
+          81
+        ]
+      },
+      "frame_interval": [
+        156,
+        234
+      ],
+      "maximum_absolute_difference": 2.744471316873387e-13,
+      "maximum_relative_l2": 2.0379337396287438e-14,
+      "passes": true,
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_2/result.json",
+        "sha256": "de60230bb88cf43a5f95157197b67972db42d4c403989a1a603c5e6789912090"
+      },
+      "shard_index": 2,
+      "source_input": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/canonical/canonical_shard_2.nc",
+        "sha256": "9d4e4f3819b8a53e4d0b78e88a78b7256441e555dd72cecbe09cf9151b1209dc"
+      }
+    },
+    {
+      "derived_phi": {
+        "dtype": "float64",
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_3/derived_phi.h5",
+        "sha256": "8743847fcf3f4e91ced760efe60fcaf5674109a4a421ba5dfe7960d722d579e9",
+        "shape": [
+          78,
+          64,
+          32,
+          81
+        ]
+      },
+      "frame_interval": [
+        234,
+        312
+      ],
+      "maximum_absolute_difference": 2.7622348852673895e-13,
+      "maximum_relative_l2": 2.0247120638196086e-14,
+      "passes": true,
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_3/result.json",
+        "sha256": "69b36983e085ba54204a07961c3e6125bbe0eff99b943f37b50e61c1aef4e0b4"
+      },
+      "shard_index": 3,
+      "source_input": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/canonical/canonical_shard_3.nc",
+        "sha256": "694230f6197adf1932986296c4500f83fba1bb0f5dc25caf7075ce3868108a58"
+      }
+    },
+    {
+      "derived_phi": {
+        "dtype": "float64",
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_4/derived_phi.h5",
+        "sha256": "e891fa7d9b953f420096e3e10686603d3c523050d0d26861db1943d5282bc02d",
+        "shape": [
+          78,
+          64,
+          32,
+          81
+        ]
+      },
+      "frame_interval": [
+        312,
+        390
+      ],
+      "maximum_absolute_difference": 2.7045032879868813e-13,
+      "maximum_relative_l2": 2.061214741803065e-14,
+      "passes": true,
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_4/result.json",
+        "sha256": "b2db712c53a54e22f47c9126638d7bae74afe10ead2d0619397770f00ee8cd86"
+      },
+      "shard_index": 4,
+      "source_input": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/canonical/canonical_shard_4.nc",
+        "sha256": "ae747722fc7c9f06093abfe316ce323a01ac7fb213c38d9f1b9884865f3da877"
+      }
+    },
+    {
+      "derived_phi": {
+        "dtype": "float64",
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_5/derived_phi.h5",
+        "sha256": "1950c5140bc2ba7a636c27a2ce283a62eb595e186d1a22460c1160104a5e6c05",
+        "shape": [
+          78,
+          64,
+          32,
+          81
+        ]
+      },
+      "frame_interval": [
+        390,
+        468
+      ],
+      "maximum_absolute_difference": 2.802202914153895e-13,
+      "maximum_relative_l2": 1.993164114423001e-14,
+      "passes": true,
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_5/result.json",
+        "sha256": "2a25dbf10ee66dddc98db122f24bc847d7819b5390370778e11c5e1c298a3493"
+      },
+      "shard_index": 5,
+      "source_input": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/canonical/canonical_shard_5.nc",
+        "sha256": "d4a05e6e78a6c2575f619b77955cea66fa34b2c9c71f779b08548eab14c37972"
+      }
+    },
+    {
+      "derived_phi": {
+        "dtype": "float64",
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_6/derived_phi.h5",
+        "sha256": "27bb2a6a5c39b10cf0779c99f82a8e6dcca8a8dcc1de16a84cd8b0cb06e38d11",
+        "shape": [
+          78,
+          64,
+          32,
+          81
+        ]
+      },
+      "frame_interval": [
+        468,
+        546
+      ],
+      "maximum_absolute_difference": 2.8066438062523957e-13,
+      "maximum_relative_l2": 2.0413977384313055e-14,
+      "passes": true,
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_6/result.json",
+        "sha256": "6401d9ea7b8b9732cc5af9b9c8c77d2558b05a2030f70c03a544676d11c1576a"
+      },
+      "shard_index": 6,
+      "source_input": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/canonical/canonical_shard_6.nc",
+        "sha256": "3454f20940370d64d8a5d7c92360be49281975f8b32ca633180834f51ab91c8f"
+      }
+    },
+    {
+      "derived_phi": {
+        "dtype": "float64",
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_7/derived_phi.h5",
+        "sha256": "26630c404c1a8397e9aa41929582463458f6c2c17f1e3f7eecfd69a74cc00fdf",
+        "shape": [
+          78,
+          64,
+          32,
+          81
+        ]
+      },
+      "frame_interval": [
+        546,
+        624
+      ],
+      "maximum_absolute_difference": 2.7711166694643907e-13,
+      "maximum_relative_l2": 2.0831143066739132e-14,
+      "passes": true,
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_e6b_truth_replay/job_6894325/shards/shard_7/result.json",
+        "sha256": "09ba5f742118d98fa98a54d87f619d0cac8fee84a4b5ecfc1f30f73249a8eb4b"
+      },
+      "shard_index": 7,
+      "source_input": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6893033/canonical/canonical_shard_7.nc",
+        "sha256": "d8fa85092b2010230d357cf0e9ee08d705b36b9ffce887f6c5045b115066b471"
+      }
+    }
+  ],
+  "slurm_job_id": "6894325",
+  "status": "pass",
+  "zperiod": 5
+}
