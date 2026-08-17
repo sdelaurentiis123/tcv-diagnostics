@@ -232,7 +232,7 @@ def compact_record(
             "maximum_per_frame_relative_l2": raw["alignment"][
                 "maximum_per_frame_relative_l2"
             ],
-            "per_frame_series_sha256": alignment_digests,
+            "per_frame_series_digests": alignment_digests,
         },
         "geometry": raw["geometry"],
         "units": raw["units"],
@@ -243,7 +243,7 @@ def compact_record(
             ],
             "truth_P0": shared_truth_si,
             "reconstruction_R": surface_reconstructions_si,
-            "series_sha256": surface_digests,
+            "series_digests": surface_digests,
         },
         "surface_statistics_si": surface_statistics,
         "codec_results": codec_results,

@@ -435,6 +435,57 @@ The compact-record generator verifies that digest, the run ID, the blind-test
 exclusion flag, the commit, and the SLURM job before writing. The O1 readout and
 all four figure pairs are regenerated only from that tracked compact record.
 
+### Phase 2 O1 geometry-aware codec transport
+
+The codec-transport extension was prospectively frozen in
+`paper0/protocol/PHASE2_O1_TRANSPORT_PROTOCOL.md` and
+`paper0/manifests/phase2_o1_transport_85604.json`. It reuses the same
+hash-locked predecessor LOLA package and f8/z44 checkpoints as job `6890650`,
+without copying or modifying that implementation. New Paper 0 code is limited
+to the independently tested state-path assembly, validated transport
+reductions, strict result compaction, and figure generation:
+
+| Paper 0 path | Role | Verification |
+|---|---|---|
+| `src/tcv_diagnostics/codec_transport.py` | Builds frozen geometry masks and accumulates four-path transport comparisons | Synthetic state-path, masks, aggregation, gate-boundary, and strict-JSON tests |
+| `paper0/tools/evaluate_codec_transport_oracle.py` | Streams all 624 exposed 85604 frames through each deterministic codec and the released native-81 transport evaluator | Clean-commit launcher; locked data, geometry, LOLA, checkpoint, run, and blind-test gates |
+| `paper0/tools/summarize_codec_transport_oracle.py` | Verifies and compacts the immutable full result while retaining all figure-complete surface series | Exact raw digest, scope, job, commit, codec set, and shared-truth assertions |
+| `paper0/tools/plot_codec_transport_oracle.py` | Regenerates the three labeled transport figures from the tracked compact record | Figure-file, provenance-text, series-length, and source-path regression tests |
+| `cluster/phase2_o1_codec_transport.sbatch` | Rocky 9 H100 launcher | Literal path/hash tests, dirty-state refusal, `bash -n`, and 85606-path rejection |
+
+Rocky 9 job `6891766` completed from clean Paper 0 commit
+`47a26e3ad7e7c8c9a216930dbddd3954e1213e60` on an NVIDIA H100. It accessed
+only all 624 historically exposed 85604 frames and performed no training. Its
+full result is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_transport/job_6891766/o1_codec_transport.json`,
+SHA-256
+`c8434cfea29fb4fb9bfa3f8e7fb455985aed6885b478513b06b8d6d8214e3df1`.
+The tracked compact record is
+`paper0/results/phase2_o1_codec_transport_6891766.json`, SHA-256
+`140bf3faabb0922edd9108af7d3e00e76c71075caa3a43e5c29760cc043b0a23`.
+The full and compact records both state that 85606 was not accessed.
+
+Native/legacy alignment and the `P1/P2` storage-resampling transport gates
+pass. The shared `P0/P1` C5T state-adequacy gate formally fails because its
+electron strict-face relative L2 is `5.1434788769506797e-8`, above the frozen
+numerical-identity threshold `1e-10`; particle error is zero and every other
+state-path transport error is below `5.1e-7`. That formal failure is retained
+without threshold revision.
+
+For authoritative `P0/R` transport, f8 has strict-face relative L2
+`0.288--0.305` and therefore fails the frozen `0.25` local criterion, while
+its four integrated-separatrix errors are `0.0268--0.0533` and all eight
+temporal blocks pass. z44 has strict-face errors `0.2019--0.2232` and
+integrated errors `0.0387--0.0857`, passing the radial-transport subgate and
+every temporal block. Neither codec passes complete O1 acceptance because the
+prior spectral gate fails for both and the prior cross-field gate also fails
+for z44. Their unmatched training histories still forbid attributing the
+difference to latent toroidal capacity.
+
+All three O1 transport figure pairs are generated only from the tracked
+compact result. Their interpretation and exact regeneration command are in
+`paper0/PHASE2_O1_TRANSPORT_READOUT.md`.
+
 ## Phase 0 execution evidence
 
 No predecessor code has been ported yet. The audit-only legacy reproduction executed the predecessor files in place after verifying their byte hashes. Job `6890428` used Paper 0 commit `7e2b5d2`, Rocky Linux 9.8, an NVIDIA H100, and only the legacy 85604 validation region. Its compact result record is `paper0/results/phase0_legacy_valid_6890428.json`; the full Rusty artifacts remain under `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428`.

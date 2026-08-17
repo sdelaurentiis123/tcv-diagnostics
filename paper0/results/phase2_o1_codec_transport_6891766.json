@@ -7,7 +7,7 @@
       "Vi": 1.5237029140525836e-07,
       "phi": 1.5751610579802045e-07
     },
-    "per_frame_series_sha256": {
+    "per_frame_series_digests": {
       "Ne": "94fed4adab1a51e00171f2f0514e854c272e91b4e0623c48918c1ff0defd0ed6",
       "Te": "8c3e6a529692f7441549528c3847cb77318c2dbd622d262f3dbe2b61d37b500e",
       "Ti": "64fa685acf51507bf29ae49c657318ac6d356a9e4b04878810ccb89fdf3a996a",
@@ -26993,7 +26993,7 @@
         ]
       }
     },
-    "series_sha256": {
+    "series_digests": {
       "f8": {
         "reconstruction_R": {
           "electron_internal_energy": "0c5a4a97bc8f0a9892cd0afa3cc492fccdb392fd0cedaf334e0864d426f8b1a1",

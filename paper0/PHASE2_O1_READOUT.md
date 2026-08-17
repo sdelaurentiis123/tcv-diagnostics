@@ -11,8 +11,9 @@ representation gate
 
 **Run not accessed:** `85606`
 
-**Full codec acceptance:** blocked pending an authoritative geometry-aware
-transport calculation
+**Full codec acceptance:** complete and failed for both historical codecs;
+see the transport extension in
+[`PHASE2_O1_TRANSPORT_READOUT.md`](PHASE2_O1_TRANSPORT_READOUT.md)
 
 ## Executive conclusion
 
@@ -35,9 +36,10 @@ The result is narrower than either “f8 works” or “the codec is broken”:
 4. The f8 latent Nyquist index at `k=5` (`n=25`) is not a hard decoded-field
    cutoff. The decoder reconstructs appreciable power and coherence at
    `k=6--7` (`n=30--35`), then degrades gradually at higher modes.
-5. O1 does not yet establish particle- or heat-transport fidelity. Under the
-   predeclared decision rule, new forecast training remains paused while the
-   representation and authoritative transport gate are resolved.
+5. The subsequent geometry-aware transport extension finds good integrated
+   separatrix fidelity but a failed local-face gate for f8. z44 passes the
+   radial-transport subgate but retains the spectral and cross-field failures
+   reported here. Neither codec passes complete O1 acceptance.
 
 The practical decision is to retain f8 as the stronger historical reference,
 not to adopt z44. If a codec repair is needed after the transport calculation,
@@ -165,10 +167,10 @@ conventions, and boundary masks still enter the authoritative flux definition.
 
 ## Gate accounting
 
-| Codec | Field reconstruction | Spectral transfer | Cross-field structure | Preliminary status | Full transport status |
+| Codec | Field reconstruction | Spectral transfer | Cross-field structure | Preliminary status | Radial ExB transport subgate |
 |---|---|---|---|---|---|
-| f8 | pass | **fail** | pass | **fail** | blocked |
-| z44 | pass | **fail** | **fail** | **fail** | blocked |
+| f8 | pass | **fail** | pass | **fail** | **fail**: local faces |
+| z44 | pass | **fail** | **fail** | **fail** | pass |
 
 The gate thresholds were frozen before the result was opened. They are
 engineering stop/go criteria, not universal plasma-physics tolerances. A miss
@@ -189,10 +191,16 @@ inflated into a catastrophic representation collapse.
   a superior replacement for f8.
 - Reconstruction quality deteriorates in late 85604 blocks for both codecs,
   reinforcing the need to resolve the Phase 1 temporal-regime question.
+- f8 reconstructs the integrated confined-separatrix ExB particle and
+  internal-energy series with `2.7--5.3%` relative L2, but its local signed
+  face contributions have `28.8--30.5%` error.
+- z44 reduces those local errors to `20.2--22.3%`, while its integrated
+  separatrix errors are worse than f8's and its earlier O1 failures remain.
 
 ### What remains unestablished
 
-- Codec preservation of authoritative particle and heat flux.
+- Preservation of every term in a complete heat-flux definition beyond the
+  now-validated radial ExB particle/internal-energy diagnostic.
 - One-step forecast error or state sufficiency for C5 versus an augmented state.
 - Autonomous rollout fidelity for any architecture.
 - Ensemble calibration of fields, modes, or transport.
@@ -202,20 +210,15 @@ inflated into a catastrophic representation collapse.
 
 ### Next locked sequence
 
-1. Identify and test the authoritative Hermes/TCV particle- and heat-flux
-   definitions, geometry factors, derivatives, and region masks.
-2. Add those quantities to O0 synthetic metric oracles.
-3. Evaluate truth versus codec reconstruction member-by-member at O1 and close
-   the full representation gate.
-4. If f8 passes transport despite the narrow spectral miss, document the
-   tolerance sensitivity and retain it as the historical baseline while a
-   matched repair is evaluated. Do not silently change the frozen result.
-5. If f8 fails transport, train matched codecs from scratch on the accepted
-   85604 protocol using only allowed field-space training losses; select by the
-   already-frozen physics evaluation suite.
-6. Only after the representation and temporal-regime gates close, proceed to
-   O2 teacher-forced one-step tests, including C5 versus physically justified
-   augmented inputs.
+1. Preserve the transport result as a failed complete O1 gate without changing
+   its frozen thresholds after inspection.
+2. Resolve the Phase 1 temporal-regime and forecast-state blockers before any
+   new dynamics training.
+3. If a codec repair is pursued, compare capacity from scratch under matched
+   fields, data, loss, budget, and checkpoint selection. Do not use the
+   historical z44 continuation as a causal ablation.
+4. Proceed to O2 teacher-forced one-step dynamics only after a representation
+   passes the complete O1 suite.
 
 No diffusion, FGN, PDE-Refiner, residual generator, or assimilation rerun is
 authorized by O1 alone. Those experiments remain downstream of the failure
@@ -231,6 +234,12 @@ decomposition.
 - Full artifact SHA-256:
   `d9440ecf7182c434976b67a33118d8c3dcb81b0fcec9a16f89745a5398aa850e`
 - O1 protocol: `paper0/protocol/PHASE2_O1_CODEC_PROTOCOL.md`
+- Transport protocol:
+  `paper0/protocol/PHASE2_O1_TRANSPORT_PROTOCOL.md`
+- Transport readout:
+  `paper0/PHASE2_O1_TRANSPORT_READOUT.md`
+- Transport result:
+  `paper0/results/phase2_o1_codec_transport_6891766.json`
 - Numerical amendment: `paper0/AMENDMENTS.md`, entry `A005`
 
 Regenerate every figure from stored metrics without rerunning inference:

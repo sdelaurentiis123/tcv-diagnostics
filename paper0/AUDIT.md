@@ -420,6 +420,22 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     gives mean member-wise transport `10.8470` but zero transport from the
     ensemble-mean fields, proving the required evaluation order. This releases
     the evaluator, not codec, rollout, assimilation, or 85606 claims.
+42. **Codec compression, not state conversion or resampling, dominates the O1
+    radial-transport error.** Rocky 9 job `6891766`, from clean commit
+    `47a26e3`, deterministically evaluated both historical codecs on all 624
+    exposed 85604 frames and read no 85606 field. Legacy/native input
+    alignment is below `1.6e-7` per frame; the strict-face `P1/P2`
+    resampling errors are below `5e-6`; and every `P0/P1` state-path error is
+    below `5.1e-7`. The electron state-identity gate still records a formal
+    failure because its frozen `1e-10` tolerance is tighter than the observed
+    `5.14e-8` numerical residue. f8 reconstructs the integrated separatrix
+    particle and ExB internal-energy series at `2.7--5.3%` relative L2 in all
+    eight blocks, but fails the local-face gate at `28.8--30.5%`. z44 passes
+    that transport subgate with `20.2--22.3%` local error, yet has worse
+    integrated errors than f8 and retains the prior spectral/cross-field
+    failures from an unmatched training lineage. Thus neither historical codec
+    passes complete O1 acceptance, no learning gate reopens, and 85606 remains
+    sequestered.
 
 ## Exact commands
 

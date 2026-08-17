@@ -18,13 +18,12 @@ learning split remains blocked pending simulator-owner guidance.
 
 The historical codecs have now been evaluated through the frozen O1 oracle;
 [`paper0/PHASE2_O1_READOUT.md`](paper0/PHASE2_O1_READOUT.md) records why neither
-passes the complete preliminary representation gate. The exact-source
-transport audit is frozen in
+passes the spectral/cross-field representation gate. The exact-source
+transport definition is frozen in
 [`paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md`](paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md):
 the former image-space flux is retained only as a proxy. The shifted-`DDY`,
-shifted-`xy` radial-face, and combined conservative radial-flow primitives now
-match their frozen compiled oracles, but no physical transport claim is allowed
-until native-grid, resampling, geometry, unit, and ensemble rungs pass.
+shifted-`xy` radial-face, and combined conservative radial-flow primitives
+match their frozen compiled oracles.
 The narrow execution evidence and remaining blockers are summarized in
 [`paper0/PHASE2_SHIFTED_DDY_READOUT.md`](paper0/PHASE2_SHIFTED_DDY_READOUT.md)
 and
@@ -49,4 +48,14 @@ explicitly limited state recommendation are in
 Before any new data conversion or training, the resulting `C5T` versus `C5P`
 state distinction and the native-81 transport scoring rule are frozen in
 [`paper0/protocol/PHASE2_STATE_RESAMPLING_PROTOCOL.md`](paper0/protocol/PHASE2_STATE_RESAMPLING_PROTOCOL.md).
-The next oracle tests the complete 85604 trajectory and keeps 85606 prohibited.
+The complete 85604 resampling audit, geometry/unit audit, and deterministic
+codec-transport extension have now passed their execution-integrity gates,
+while 85606 remains prohibited. The transport extension is documented in
+[`paper0/PHASE2_O1_TRANSPORT_READOUT.md`](paper0/PHASE2_O1_TRANSPORT_READOUT.md).
+It shows negligible state/storage-path error, good integrated-separatrix
+fidelity, and a failed local-face criterion for f8. z44 passes the radial ExB
+transport subgate but retains its earlier spectral/cross-field failures and is
+not a matched training ablation. Neither historical codec is accepted for
+dynamics training. The active blocker is again upstream: a defensible 85604
+temporal protocol and physically sufficient forecast state must be frozen
+before O2 or any new architecture run.
