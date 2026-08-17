@@ -439,6 +439,23 @@ def compute_decorrelation(
     }
 
 
+def label_decorrelation_scope(
+    decorrelation: Mapping[str, Any], *, steady_state_passes: bool
+) -> dict[str, Any]:
+    """Attach the protocol meaning without changing any calculated value."""
+
+    return {
+        **decorrelation,
+        "status": (
+            "accepted_after_stationarity_gate"
+            if steady_state_passes
+            else "diagnostic_only_under_nonstationarity"
+        ),
+        "learning_or_split_selection_authorized": bool(steady_state_passes),
+        "amendment": None if steady_state_passes else "A002",
+    }
+
+
 def main() -> None:
     args = parse_args()
     if args.chunk_frames <= 0:
@@ -491,14 +508,15 @@ def main() -> None:
     )
     steady = operational_steady_screen(frame_means, fluctuation_rms)
     split_status = "frozen" if steady["passes"] else "blocked_by_steady_state_screen"
-    decorrelation = None
-    if steady["passes"]:
-        decorrelation = compute_decorrelation(
+    decorrelation = label_decorrelation_scope(
+        compute_decorrelation(
             trajectory,
             normalization,
             float(raw["time"]["cadence_microseconds"]),
             chunk_frames=args.chunk_frames,
-        )
+        ),
+        steady_state_passes=bool(steady["passes"]),
+    )
 
     result = {
         "schema_version": "0.1.0",
@@ -509,6 +527,9 @@ def main() -> None:
             "path": str(ROOT / "paper0/protocol/PHASE1_DATA_PROTOCOL.md"),
             "frozen_rule_commit": manifest["protocol_commit"],
             "execution_commit": state["commit"],
+            "active_amendment": (
+                None if steady["passes"] else "A002_diagnostic_only_decorrelation"
+            ),
         },
         "execution": {
             "argv": sys.argv,
@@ -592,7 +613,7 @@ def main() -> None:
         "steady_state_passes": steady["passes"],
         "steady_state_failures": steady["failures"],
         "decorrelation_representative": (
-            None if decorrelation is None else decorrelation["representative"]
+            decorrelation["representative"]
         ),
     }, indent=2, allow_nan=False))
 

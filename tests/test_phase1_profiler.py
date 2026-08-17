@@ -120,6 +120,24 @@ exb_advection_simplified = false
             self.assertTrue(result["diamagnetic_polarisation_enabled"])
             self.assertTrue(result["exb_advection_simplified_false"])
 
+    def test_failed_stationarity_labels_decorrelation_diagnostic_only(self) -> None:
+        raw = {"representative": {"median_one_over_e_frames": 3.0}}
+        diagnostic = profiler.label_decorrelation_scope(
+            raw, steady_state_passes=False
+        )
+        self.assertEqual(
+            diagnostic["status"], "diagnostic_only_under_nonstationarity"
+        )
+        self.assertEqual(diagnostic["amendment"], "A002")
+        self.assertFalse(diagnostic["learning_or_split_selection_authorized"])
+
+        accepted = profiler.label_decorrelation_scope(
+            raw, steady_state_passes=True
+        )
+        self.assertEqual(accepted["status"], "accepted_after_stationarity_gate")
+        self.assertIsNone(accepted["amendment"])
+        self.assertTrue(accepted["learning_or_split_selection_authorized"])
+
 
 if __name__ == "__main__":
     unittest.main()
