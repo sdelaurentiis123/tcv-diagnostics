@@ -28,9 +28,9 @@ from compare_shifted_ddy_oracle import (  # noqa: E402
     MODEL_X_SLICE,
     scalar_integer,
 )
-from tcv_diagnostics.codec_training import sha256_path  # noqa: E402
 from tcv_diagnostics.model_data import (  # noqa: E402
     assert_development_path,
+    sha256_file as sha256_path,
     write_strict_json_atomic,
 )
 

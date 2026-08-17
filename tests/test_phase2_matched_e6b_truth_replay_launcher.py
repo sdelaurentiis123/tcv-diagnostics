@@ -42,3 +42,10 @@ def test_truth_replay_launcher_hash_locks_every_local_dependency() -> None:
     text = LAUNCHER.read_text(encoding="utf-8")
     for path in LOCKED:
         assert hashlib.sha256(path.read_bytes()).hexdigest() in text
+
+
+def test_truth_replay_postprocessors_do_not_import_training_dependencies() -> None:
+    for path in LOCKED[2:4]:
+        text = path.read_text(encoding="utf-8")
+        assert "tcv_diagnostics.codec_training" not in text
+        assert "sha256_file as sha256_path" in text
