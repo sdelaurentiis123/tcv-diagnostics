@@ -60,6 +60,7 @@ class RawMetadataTests(unittest.TestCase):
                     # attribute array, which must be unwrapped explicitly.
                     dataset.attrs["conversion"] = np.asarray([conversion])
                     dataset.attrs["object_reference"] = dataset.ref
+                    dataset.attrs["empty_attribute"] = h5py.Empty("f")
                 handle.create_dataset("Vort", shape=(624, 1, 1, 5))
 
             expected = {
@@ -86,6 +87,8 @@ class RawMetadataTests(unittest.TestCase):
             self.assertTrue(result["required_field_checks"]["phi"]["units_match"])
             reference = result["field_metadata"]["Ne"]["attrs"]["object_reference"]
             self.assertEqual(reference["hdf5_reference_type"], "object")
+            empty = result["field_metadata"]["Ne"]["attrs"]["empty_attribute"]
+            self.assertTrue(empty["hdf5_empty"])
             # The complete metadata record must remain strict JSON.
             json.dumps(result, allow_nan=False)
 

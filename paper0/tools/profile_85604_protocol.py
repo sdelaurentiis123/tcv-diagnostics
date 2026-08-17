@@ -58,6 +58,11 @@ def parse_args() -> argparse.Namespace:
 
 
 def _jsonable(value: Any) -> Any:
+    if isinstance(value, h5py.Empty):
+        return {
+            "hdf5_empty": True,
+            "dtype": str(value.dtype),
+        }
     if isinstance(value, h5py.RegionReference):
         return {
             "hdf5_reference_type": "region",
