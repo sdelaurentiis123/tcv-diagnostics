@@ -376,6 +376,16 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     field or transport metric was inspected before the gates in
     `PHASE2_STATE_RESAMPLING_PROTOCOL.md` were committed, and 85606 remains
     prohibited.
+38. **The resampling primitive and comparison reductions pass synthetic known
+    answers before shot-level execution.** The new module is a narrow wrapper
+    around the public unwindowed SciPy Fourier resampler, not copied legacy
+    code. Tests preserve known `k=7` and `k=40` modes under `81->88`, verify
+    zero padding in `k=41..44`, bound the float32 round trip, and prove that
+    disjoint sufficient-statistic merges reproduce a single pass. Paired
+    relative L2, bias, RMS ratio, correlation, weighted sign error, profile,
+    linear-quantile tails, and materiality interval boundaries all have known
+    answers. No 85604 round-trip or transport-sensitivity value was read by
+    these unit tests.
 
 ## Exact commands
 

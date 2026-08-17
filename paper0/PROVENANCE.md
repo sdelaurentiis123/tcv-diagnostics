@@ -23,6 +23,16 @@ For Paper 0, the predecessor is an auditable, read-only source of candidate load
 
 External implementations or method-specific code must record repository URL, revision, license, local modifications, and validation tests here before use.
 
+`src/tcv_diagnostics/resampling.py` calls the public
+`scipy.signal.resample` API (SciPy, BSD-3-Clause) with the exact unwindowed
+arguments frozen by the protocol, then casts to float32. It does not import or
+copy predecessor converter code. The dependency floor is recorded in
+`pyproject.toml`; every scientific execution must capture the exact SciPy
+version. Synthetic tests verify known Fourier amplitude and phase, zero padded
+bandwidth, bitwise equality to the public SciPy call, 81-to-88-to-81 error,
+mergeable metric statistics, tail-quantile convention, and all frozen
+materiality boundaries.
+
 ### Executed Hermes-3/BOUT++ transport source
 
 The representative 85604 dump embeds Hermes-3 revision
