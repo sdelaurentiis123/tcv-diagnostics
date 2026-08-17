@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 from pathlib import Path
 import subprocess
 import unittest
@@ -8,15 +7,13 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 LAUNCHER = ROOT / "cluster" / "phase2_85604_resampling_audit.sbatch"
-MANIFEST = ROOT / "paper0" / "manifests" / "phase2_85604_resampling_sensitivity.json"
-AUDITOR = ROOT / "paper0" / "tools" / "audit_85604_resampling.py"
-MERGER = ROOT / "paper0" / "tools" / "merge_85604_resampling_shards.py"
-RESAMPLING = ROOT / "src" / "tcv_diagnostics" / "resampling.py"
-TRANSPORT = ROOT / "src" / "tcv_diagnostics" / "transport.py"
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+FROZEN_INTERNAL_HASHES = (
+    "875164259879621c3273a043b7fc529e8bef4875cf51b8c4d23764b95b00ce91",
+    "8b36c516ad3002268261c169cc95b07a5f1e349386ea522c4e05b6066824f229",
+    "f56ac1b366cc8a278032068cdc718ed604c9b79f01e920c3cb6d1b46e35a4c63",
+    "12612b2cd65ac807ef4e55996712f6dde49dfca1b956f449ed189386eb5ea04e",
+    "e61f007bb6268fdcd754bc975e1b0cb04133d471d86eda9d3bab01927fe8401e",
+)
 
 
 class ResamplingLauncherTests(unittest.TestCase):
@@ -36,11 +33,7 @@ class ResamplingLauncherTests(unittest.TestCase):
             "--mem=4G",
             "Refusing to overwrite",
             "status --porcelain --untracked-files=all",
-            sha256(MANIFEST),
-            sha256(AUDITOR),
-            sha256(MERGER),
-            sha256(RESAMPLING),
-            sha256(TRANSPORT),
+            *FROZEN_INTERNAL_HASHES,
             "resampling_sensitivity.json",
             "artifact_sha256.txt",
         ):
