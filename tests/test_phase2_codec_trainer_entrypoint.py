@@ -38,6 +38,8 @@ class TestCodecTrainerEntrypoint(unittest.TestCase):
     def test_selected_checkpoint_uses_strict_earliest_improvement(self) -> None:
         self.assertIn("if validation_loss < selected_loss:", self.training)
         self.assertNotIn("if validation_loss <= selected_loss:", self.training)
+        self.assertEqual(self.training.count("save_torch_atomic(\n        selected_path"), 1)
+        self.assertIn('value.detach().to("cpu").clone()', self.training)
         self.assertIn("checkpoint reload changed model output", self.training)
 
 

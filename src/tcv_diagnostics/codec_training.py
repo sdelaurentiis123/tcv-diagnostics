@@ -292,6 +292,7 @@ def _checkpoint_payload(
     selected: bool,
     include_optimizer: bool,
     reload_probe: Mapping[str, Any] | None = None,
+    model_state: Mapping[str, Tensor] | None = None,
 ) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "schema_version": 1,
@@ -301,7 +302,7 @@ def _checkpoint_payload(
         "epoch": int(epoch),
         "global_step": int(global_step),
         "validation_loss": float(validation_loss),
-        "model_state": model.state_dict(),
+        "model_state": model.state_dict() if model_state is None else dict(model_state),
         "torch_rng_state": torch.get_rng_state(),
         "cuda_rng_state_all": torch.cuda.get_rng_state_all(),
     }
@@ -409,7 +410,10 @@ def train_codec(
     selected_path = output / "selected.pt"
     final_path = output / "final_training_state.pt"
     selected_epoch: int | None = None
+    selected_global_step: int | None = None
     selected_loss = math.inf
+    selected_state: dict[str, Tensor] | None = None
+    selected_probe: dict[str, Any] | None = None
     global_step = 0
     started = time.monotonic()
     torch.cuda.reset_peak_memory_stats(device)
@@ -479,25 +483,15 @@ def train_codec(
             if validation_loss < selected_loss:
                 selected_loss = validation_loss
                 selected_epoch = epoch
-                reload_probe = _capture_reload_probe(
+                selected_global_step = global_step
+                selected_state = {
+                    name: value.detach().to("cpu").clone()
+                    for name, value in model.state_dict().items()
+                }
+                selected_probe = _capture_reload_probe(
                     model,
                     validation_dataset,
                     device,
-                )
-                save_torch_atomic(
-                    selected_path,
-                    _checkpoint_payload(
-                        model=model,
-                        optimizer=optimizer,
-                        config=config,
-                        epoch=epoch,
-                        global_step=global_step,
-                        validation_loss=validation_loss,
-                        paper0_commit=paper0_commit,
-                        selected=True,
-                        include_optimizer=False,
-                        reload_probe=reload_probe,
-                    ),
                 )
 
             epoch_record = {
@@ -523,7 +517,12 @@ def train_codec(
         history_handle.close()
         train_dataset.close()
 
-    if selected_epoch is None:
+    if (
+        selected_epoch is None
+        or selected_global_step is None
+        or selected_state is None
+        or selected_probe is None
+    ):
         raise RuntimeError("training completed without a selected checkpoint")
     final_validation_loss, final_validation_by_channel = _validation_loss(
         model,
@@ -545,6 +544,23 @@ def train_codec(
             include_optimizer=True,
         ),
     )
+    save_torch_atomic(
+        selected_path,
+        _checkpoint_payload(
+            model=model,
+            optimizer=optimizer,
+            config=config,
+            epoch=selected_epoch,
+            global_step=selected_global_step,
+            validation_loss=selected_loss,
+            paper0_commit=paper0_commit,
+            selected=True,
+            include_optimizer=False,
+            reload_probe=selected_probe,
+            model_state=selected_state,
+        ),
+    )
+    del selected_state, selected_probe
     reload_exact = _reload_identity(
         selected_path,
         validation_dataset,

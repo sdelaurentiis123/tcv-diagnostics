@@ -49,7 +49,7 @@ class TestO1CodecGpuSmokeLauncher(unittest.TestCase):
             "src/tcv_diagnostics/model_training_data.py":
                 "e4cf03475e37e808acc21beead82fa7c0849b2857f6bac16f93538611a261ed1",
             "src/tcv_diagnostics/codec_training.py":
-                "23aa18e961b9af6c17dcde459b4fab322f9b4eee0b71f8f94f03bfb59c82bbdc",
+                "727408e524a1c1b9fbe644327e6fa5ec096e6b7eea4373bc4ee7c6e4d5546f7a",
             "paper0/tools/train_codec.py":
                 "ddea107b6d6ed79557e05aa55cb63069441e36fa9510e10ae63673ec23c1607d",
         }
