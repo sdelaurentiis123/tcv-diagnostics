@@ -330,6 +330,14 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     immutable logs remain under the job-specific directory. The correction is
     an execution-only parallelization over disjoint rank shards; it does not
     change a field, cell, scope, formula, tolerance, or decision rule.
+33. **The first parallel launch exposed a Slurm step-allocation setting before
+    producing any shard.** Job `6891530`, from clean commit `b672d69`, passed
+    all provenance gates, but `srun --exclusive` assigned the first shard step
+    the allocation's full CPU set because `--exact` was absent. A read-only
+    step query showed only `6891530.0` active instead of 16. The job was
+    cancelled after 49 seconds; no partial JSON or scientific result existed,
+    and 85606 was not read. The correction adds only `srun --exact`, forcing
+    each exclusive shard step to consume precisely its requested one CPU.
 
 ## Exact commands
 

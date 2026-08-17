@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_85604_all_frame_pressure_closure_audit_attempt",
+  "paper0_commit": "b672d69bcadcf411ddf9549a4e52a23294d5d0f3",
+  "slurm": {
+    "job_id": 6891530,
+    "state": "CANCELLED",
+    "batch_exit_code": "0:15",
+    "start": "2026-08-17T04:52:43-04:00",
+    "end": "2026-08-17T04:53:32-04:00",
+    "elapsed": "00:00:49",
+    "time_limit": "00:45:00",
+    "node": "worker7401",
+    "batch_max_rss_kib": 46564,
+    "started_shard_step_count": 1
+  },
+  "data_access": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "provenance_gates_passed": true,
+    "complete_shard_coverage_established": false,
+    "partial_json_count": 0,
+    "scientific_result_written": false
+  },
+  "outcome": {
+    "classification": "no_result_slurm_step_allocation_failure",
+    "reason": "srun --exclusive reserved the full allocation for shard step zero because --exact was absent, so the other fifteen shard steps could not launch concurrently",
+    "observation": {
+      "active_steps": ["6891530.0"],
+      "expected_active_shard_steps": 16,
+      "observation_was_read_only": true
+    },
+    "scientific_statistics_accepted": false,
+    "protocol_or_tolerance_changed": false,
+    "planned_correction": "add srun --exact so every exclusive step receives exactly one requested CPU"
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891530",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_pressure_closure_6891530.log",
+    "artifact_digests": {
+      "commands.sh": "2d04a5e3b6fb75339be4b274679861c07c42db02ae31db5ac985991095d0d3ac",
+      "environment.txt": "320eeff611bf7040ebf719d7c0ce0a645726bef7456da0c369bbbe422430acc4",
+      "job.log": "812ce52a30136e2bdd451f37d16b22cdc968ac015b8c654a9aca4b795976f024",
+      "slurm_log": "83117bbebc037a6650641c1fbcf3654977a5a4684ea2dc06e4c874e1843d4ff4"
+    }
+  }
+}

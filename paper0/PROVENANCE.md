@@ -280,6 +280,15 @@ statistics exactly reproduces a single-pass calculation, including frame
 gates, target/interior counts, extrema, and most-negative locations. This is
 an execution repair only; no data definition or acceptance rule changes.
 
+The first parallel submission, job `6891530` from clean commit `b672d69`,
+showed that this Slurm release gives an `--exclusive` step all resources not
+otherwise constrained. Only shard step `6891530.0` became active; none of the
+other 15 started. The job was cancelled after 49 seconds, before any partial
+JSON existed. Its no-result record is
+`paper0/results/phase2_pressure_closure_6891530.json`. The launcher correction
+adds `srun --exact` to each one-CPU exclusive step. No Python statistic, input,
+or scientific rule changes.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

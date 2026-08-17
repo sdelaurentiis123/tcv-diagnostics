@@ -186,3 +186,10 @@ recomputes every frame-level tolerance and pass decision from the merged
 sufficient statistics, and only then derives the frozen interpretation. Any
 missing or failed shard blocks the merge. Guard-stripped field streams are
 locked by per-shard digests and a deterministic merged digest tree.
+
+Parallel job `6891530` from clean commit `b672d69` was cancelled after 49
+seconds because Slurm assigned the first `srun --exclusive` step all CPUs; only
+shard step zero became active and no partial JSON was written. This is another
+no-result execution finding. The corrected launcher adds `srun --exact`, so
+each exclusive shard receives exactly the one CPU it requests. No scientific
+choice above changes.
