@@ -1,0 +1,166 @@
+{
+  "schema_version": "0.1.0",
+  "audit_date": "2026-08-16",
+  "scope": "read_only_85604_legacy_inventory",
+  "sequestered_run_ids": [
+    "85606"
+  ],
+  "predecessor": {
+    "local_root": "/Users/stanislavdelaurentiis/tcv-gaot-3d",
+    "rusty_root": "/mnt/home/sdelaurentiis/tcv-gaot-3d",
+    "root_commit": "b367d8bd89ab8119f6070f9c0533eb17f5d438cd",
+    "rusty_root_has_git_metadata": false,
+    "embedded_lola_base_revision": "21a4354b327e6e5ee06da5075ba3bd1dd88c61f1",
+    "embedded_lola_dirty": true
+  },
+  "simulation": {
+    "run_id": "85604",
+    "simulator": "Hermes-3/BOUT++",
+    "device": "TCV",
+    "raw_representative_file": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/BOUT.dmp.0.nc",
+    "raw_processor_file_dimensions": {
+      "x": 8,
+      "y": 6,
+      "t": 624,
+      "z": 81
+    },
+    "zperiod": 5,
+    "zmin": 0.0,
+    "zmax": 0.2,
+    "stored_torus_fraction": 0.2,
+    "full_torus_mode_mapping": "n = 5k",
+    "omega_ci_per_second": 95788333.03066081,
+    "normalized_frame_step": 300.0,
+    "frame_cadence_seconds": 3.131905426352636e-06,
+    "frame_cadence_microseconds": 3.131905426352636,
+    "raw_time_first": 285000.0,
+    "raw_time_last": 471900.0,
+    "raw_frame_count": 624,
+    "normalization_scalars": {
+      "Bnorm": 1.0,
+      "Nnorm": 1e+19,
+      "Tnorm": 50.0,
+      "rho_s0": 0.0007224847664314034,
+      "Cs0": 69205.61141651045
+    }
+  },
+  "legacy_well_conversion": {
+    "dataset_name": "TCV_c5_z88",
+    "train_path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/train/TCV_c5_train.hdf5",
+    "valid_path": "/mnt/home/sdelaurentiis/ceph/tcv_well/TCV_c5_z88/data/valid/TCV_c5_valid.hdf5",
+    "fields": [
+      "Ne",
+      "Te",
+      "Ti",
+      "phi",
+      "Vi"
+    ],
+    "train_shape_per_field": [
+      1,
+      500,
+      64,
+      32,
+      88
+    ],
+    "valid_shape_per_field": [
+      1,
+      124,
+      64,
+      32,
+      88
+    ],
+    "dtype": "float32",
+    "train_time_first": 285000.0,
+    "train_time_last": 434700.0,
+    "valid_time_first": 435000.0,
+    "valid_time_last": 471900.0,
+    "guard_frames": 0,
+    "field_units_declared": false,
+    "z_coordinate_is_physical_angle": false,
+    "native_z_samples": 81,
+    "converted_z_samples": 88
+  },
+  "legacy_preprocessing": {
+    "mean": [
+      -1.9359,
+      0.9337,
+      1.2636,
+      2.8614,
+      -0.1795
+    ],
+    "std": [
+      1.4488,
+      0.5312,
+      0.4681,
+      1.2784,
+      0.9219
+    ],
+    "density_transform_name": "log_eps",
+    "density_transform_definition": "ln(Ne + 1e-6)",
+    "training_augmentation": "random periodic roll on z"
+  },
+  "primary_legacy_stack": {
+    "diffusion_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/dm/idllqvqe_tcv_c5_f8c64_vit_small",
+    "diffusion_target": "state_best.pth",
+    "diffusion_checkpoint_sha256": "5d8e14807b62e81e928628c8413c2563d00884bf339f50e9b221bd758c02e759",
+    "diffusion_config_sha256": "b7ce08657d142cf9d7139798dff0aec847697dd4b198e41d79b6e03ea85a35a5",
+    "codec_run": "/mnt/home/sdelaurentiis/ceph/lola_tcv/runs/ae/w24x2ybf_tcv_c5_dcae_3d_tcv_f8c64",
+    "codec_target": "state.pth",
+    "codec_checkpoint_sha256": "9f65dc523b8ee32ea5dd87842b99075de15f9aae86d2e71a5da55bc37091a44e",
+    "codec_config_sha256": "66509d2b0c9a1aaa03959e0e33691d443f39fa24bbad93a0dbb41e291176e776",
+    "input_spatial_shape": [
+      64,
+      32,
+      88
+    ],
+    "latent_channels": 64,
+    "latent_spatial_shape": [
+      8,
+      4,
+      11
+    ],
+    "trajectory_frames": 5
+  },
+  "critical_source_hashes": [
+    {
+      "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/lola_ext/experiments/da_anchored_rollout.py",
+      "sha256": "3b70e4eadf3ba1c8ca0d5463a037ebe6fa78da6725ed5dca4331a96aea5df518"
+    },
+    {
+      "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/lola_ext/experiments/etkf.py",
+      "sha256": "1009005e60ab99c20941a52b743ce274572318c9031122978e157703bbfb10ad"
+    },
+    {
+      "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/lola_ext/experiments/diagnostic_layouts.py",
+      "sha256": "7620a83b0299747418e4d83dceab3d52033f78a36aca25b56000b212f607f669"
+    },
+    {
+      "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/external/lola/lola/data.py",
+      "sha256": "def0e35e3a97a31627415186130b5b8ac6bf69611dc50caacafb73398a706bc5"
+    },
+    {
+      "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/external/lola/lola/emulation.py",
+      "sha256": "a56aef6d1d04c86af91238eeb51d93d345dce5a74481dde5ae3dc244f842691f"
+    },
+    {
+      "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/external/lola/lola/diffusion.py",
+      "sha256": "3b372f18d57b0b627031a5c26b669d751532b5bbfef953421041a3187f00051c"
+    }
+  ],
+  "historical_reference_only": {
+    "data_split": "85604 legacy valid",
+    "trajectory_start": 24,
+    "horizon_frames": 48,
+    "ensemble_members": 64,
+    "sampler": "AB16",
+    "free_mean_rmse": 0.2011699302399412,
+    "anchored_mean_rmse": 0.17706738111186535,
+    "observation_layout": "iter",
+    "observation_layout_semantics": "69 direct-state point channels: 54 Ne and 15 phi on z=0",
+    "assimilation": "ETKF every 4 frames",
+    "observation_std_standardized_space": 0.05,
+    "inflation": 1.0,
+    "seed": 0,
+    "paper0_reproduced": false
+  }
+}
