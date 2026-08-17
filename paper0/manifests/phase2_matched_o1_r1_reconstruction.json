@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_after_checkpoint_selection_before_reconstruction_metrics",
+  "development_run": "85604",
+  "held_out_85606_access_allowed": false,
+  "codec": "dcae_l20",
+  "training_matrix": {
+    "path": "paper0/results/phase2_o1_codec_r1_freeze_6894300.json",
+    "sha256": "7589069f6447c10c44debe3eaa3ccdeffe0d553a512280c1cf0b440ae6aefb57",
+    "training_job_id": "6893802",
+    "training_commit": "a5adc57499239702a8b28b661357b3dcfcbaa167",
+    "freeze_job_id": "6894300",
+    "checkpoint_choice_frozen_before_physics_metrics": true
+  },
+  "exact_e6b_phi_prerequisite": {
+    "path": "paper0/results/phase2_matched_e6b_truth_replay_6894325.json",
+    "sha256": "031ca578e7db5ef5a3cbd9d4688dadc244c0da542b66f82fd79e1c10d5712f27",
+    "status": "pass",
+    "coverage": [0, 624],
+    "zero_interior_seed": true
+  },
+  "run_order": [
+    {"run_index": 0, "family": "c5p", "seed": 1701},
+    {"run_index": 1, "family": "e6b", "seed": 1701},
+    {"run_index": 2, "family": "c5p", "seed": 1702},
+    {"run_index": 3, "family": "e6b", "seed": 1702},
+    {"run_index": 4, "family": "c5p", "seed": 1703},
+    {"run_index": 5, "family": "e6b", "seed": 1703}
+  ],
+  "evaluation": {
+    "training_frames": [0, 432],
+    "validation_frames": [496, 624],
+    "guard_frames_read": false,
+    "chunk_frames": 4,
+    "inference_dtype": "float32",
+    "metric_accumulator_dtype": "float64",
+    "tf32_allowed": false,
+    "deterministic_algorithms": true,
+    "candidate_dtype": "float32",
+    "candidate_native_grid": [64, 32, 81],
+    "e6b_model_grid": [64, 32, 88],
+    "zperiod": 5,
+    "mode_mapping": "n=5k"
+  },
+  "output_contract": {
+    "one_result_per_checkpoint": true,
+    "native_pretransport_gate_only": true,
+    "complete_o1_decision_allowed": false,
+    "e6b_exact_phi_stage_required_after_reconstruction": true,
+    "authoritative_native81_transport_required_after_reconstruction": true
+  }
+}
