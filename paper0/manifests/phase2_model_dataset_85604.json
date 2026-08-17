@@ -4,7 +4,7 @@
   "protocol_status": "frozen_before_converter_implementation_or_converted_array_read",
   "protocol": {
     "path": "paper0/protocol/PHASE2_MODEL_DATASET_PROTOCOL.md",
-    "sha256": "be18547dc961b5acf0243312800163f249705c4312b4e3e8d03f8491c1701eb6"
+    "sha256": "88fa7e694ae3a19b9bec85ddc942e87d5f85a85baf879f680c167a66d8f39480"
   },
   "development_run": "85604",
   "sequestered_run": "85606",
@@ -72,7 +72,16 @@
     "output_volume_dtype": "float32",
     "boundary_field": "Bphi",
     "output_boundary_dtype": "float32",
-    "cadence_microseconds": 3.131905426352636,
+    "time": {
+      "coordinate_name": "normalized_ion_cyclotron_time",
+      "symbol": "tau=Omega_ci*t",
+      "first": 285000.0,
+      "last": 471900.0,
+      "normalized_step": 300.0,
+      "omega_ci_per_second": 95788333.03066081,
+      "physical_cadence_microseconds": 3.131905426352636,
+      "output_coordinate_is_normalized_not_physical": true
+    },
     "zperiod": 5,
     "wedge_length_radians": 1.2566370614359172,
     "mode_mapping": "n=5*k",
@@ -158,7 +167,8 @@
     "canonical_file_and_saved_midpoint_hashes_match_extraction_record": true,
     "complete_unique_frame_coverage": true,
     "strictly_increasing_time": true,
-    "uniform_cadence_matches_manifest": true,
+    "normalized_step_matches_manifest": true,
+    "physical_cadence_after_omega_ci_conversion_matches_manifest": true,
     "all_inputs_and_reopened_outputs_finite": true,
     "writer_echo_bitwise_exact": true,
     "legacy_z88_bitwise_fields": ["Ne", "phi", "Vi"],

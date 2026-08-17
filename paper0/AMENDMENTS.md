@@ -281,3 +281,16 @@ forecast skill, stationarity, stochastic modeling, assimilation, diagnostic
 ranking, or access to 85606. Exact rules are in
 `protocol/PHASE2_MODEL_DATASET_PROTOCOL.md` and
 `manifests/phase2_model_dataset_85604.json`.
+
+## A012 - Distinguish normalized simulator time from physical cadence
+
+**Status:** corrected before converter implementation and before any converted
+array was read.
+
+The Well coordinate is normalized ion-cyclotron time, not microseconds. It
+runs from `285000` to `471900` in steps of `300`. The source-locked
+`Omega_ci=95788333.03066081 s^-1` converts that step to
+`3.131905426352636 microseconds`. The model-dataset protocol and manifest
+now require both checks and store the normalized coordinate without
+mislabeling it as physical time. No source, split, field, threshold, or
+scientific decision changed.

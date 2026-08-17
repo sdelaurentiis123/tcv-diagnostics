@@ -79,7 +79,7 @@ One output shard corresponds to each 78-frame interval. Every shard contains:
 | each of eight volume fields | `[78,64,32,88]` | float32 | source field after the frozen periodic resample |
 | `Bphi` | `[78,2,32]` | float32 | explicit cast of canonical saved midpoint |
 | `frame_index` | `[78]` | int64 | unique global frame |
-| `time` | `[78]` | float64 | saved simulator time |
+| `time` | `[78]` | float64 | saved normalized simulator time \(\tau=\Omega_{ci}t\) |
 
 Volume datasets use chunk shape `[1,64,32,88]`, so one frame can be read
 without decompressing neighboring frames. Boundary and coordinate chunking
@@ -90,6 +90,22 @@ writer.
 Field values remain in source units. The canonical dataset stores raw
 resampled values, not standardized tensors. It may store normalization
 metadata but must not rewrite field arrays in normalized form.
+
+The time coordinate is copied exactly from the audited Well source. It begins
+at \(285000\), ends at \(471900\), and advances by
+\(\Delta\tau=300\). With the source-locked
+\(\Omega_{ci}=95{,}788{,}333.03066081\ {\rm s}^{-1}\), the physical cadence is
+
+\[
+\Delta t
+=
+\frac{\Delta\tau}{\Omega_{ci}}
+=
+3.131905426352636\ {\rm \mu s}.
+\]
+
+Both the normalized coordinate and this conversion are recorded. The
+converter does not relabel normalized time as seconds or microseconds.
 
 ## 4. Frozen toroidal transform
 
@@ -174,7 +190,9 @@ passes every gate below.
 2. The extraction record's eight canonical-file hashes and
    `saved_midpoint` array hashes match.
 3. Input and output coverage is exactly global frames `0..623`, once each,
-   with strictly increasing saved time and the frozen cadence.
+   with strictly increasing saved normalized time, exact normalized step
+   \(300\), and the frozen physical cadence after the \(\Omega_{ci}\)
+   conversion.
 4. Every required input and reopened output value is finite.
 5. Reopened HDF5 arrays are bitwise identical to the arrays supplied to the
    writer; array and file SHA-256 digests are recorded.

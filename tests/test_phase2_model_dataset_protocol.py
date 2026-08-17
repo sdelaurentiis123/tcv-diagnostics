@@ -150,6 +150,25 @@ def test_toroidal_mapping_and_numeric_gates_are_explicit():
     assert gates["rocky_major_version_required"] == 9
 
 
+def test_normalized_and_physical_time_are_not_conflated():
+    manifest = load(MANIFEST)
+    time = manifest["data"]["time"]
+    gates = manifest["integrity_gates"]
+
+    assert time["coordinate_name"] == "normalized_ion_cyclotron_time"
+    assert time["first"] == 285000.0
+    assert time["last"] == 471900.0
+    assert time["normalized_step"] == 300.0
+    physical = time["normalized_step"] / time["omega_ci_per_second"] * 1e6
+    assert physical == time["physical_cadence_microseconds"]
+    assert time["output_coordinate_is_normalized_not_physical"] is True
+    assert gates["normalized_step_matches_manifest"] is True
+    assert (
+        gates["physical_cadence_after_omega_ci_conversion_matches_manifest"]
+        is True
+    )
+
+
 def test_protocol_math_source_is_renderable_markdown():
     text = PROTOCOL.read_text()
 
@@ -157,6 +176,7 @@ def test_protocol_math_source_is_renderable_markdown():
     assert "\\[" in text
     assert "\\left[" in text
     assert "\\frac{2\\pi}{5}" in text
+    assert "\\Omega_{ci}" in text
     assert "\\widehat{x}" in text
     assert "\\epsilon_{\\mathrm{rel}\\,2}" in text
     assert "\\" + chr(96) not in text
