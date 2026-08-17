@@ -158,6 +158,19 @@ name and metadata retain `candidate_partial`: these tests do not substitute for
 the prospective compiled-Hermes face-flow comparison and do not release a
 transport metric.
 
+The prospective comparison under `paper0/oracles/hermes_xy_face/` is marked
+GPL-3.0-or-later because its small C++ driver adapts the internal radial-face
+calculation from the locked Hermes source. It exposes the otherwise private
+velocity, chosen Fromm state, clipping decision, and flow without copying that
+code into the independent NumPy candidate. The launcher refuses a dirty Paper
+0 checkout, verifies the official Hermes revision and `div_ops.cxx` hash, uses
+the accepted BOUT++ install and four-rank topology, and reads no plasma-state
+frame. `paper0/tools/compare_hermes_xy_face_oracle.py` contains the independently
+written comparison and the protocol's prospectively frozen continuous,
+binary-decision, topology-region, input-noncollapse, sign-coverage, and
+clipping-coverage gates. This paragraph records design provenance only; no
+execution result is claimed yet.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

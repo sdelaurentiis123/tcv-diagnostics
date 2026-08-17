@@ -378,19 +378,51 @@ The full metric remains blocked until all of the following pass:
    the shifted-`DDY` primitive. It does not release the shifted-`xy` face flow,
    total transport, or any model transport claim.
 
-5. **Conservation:** face-flow differences reproduce the source operator's
+5. **Shifted-`xy` radial face flow:** the candidate Fromm reconstruction,
+   positivity decision, velocity factor, and face flow match a compiled,
+   source-derived Hermes harness.
+
+   The comparison is frozen before its first execution. The GPL-marked C++
+   driver is adapted from Hermes-3 `src/div_ops.cxx:273-326` at hash-locked
+   revision `920ba829`; the launcher verifies that revision and the exact
+   `div_ops.cxx` SHA-256 before compiling against the accepted BOUT++ build.
+   It reads only the 85604 geometry and four FieldFactory pairs: constant,
+   smooth, signed-velocity, and positivity-clipping cases. It echoes both
+   inputs and writes the face velocity, selected Fromm state, binary clipping
+   decision, and resulting face flow.
+
+   Paper 0 compares the independent NumPy candidate on native-81,
+   `zperiod=5`, model crop `grid_x=2:66`, safe radial faces whose model-local
+   left cells are `1:62`, and physical `y=1:31`. Every continuous quantity in
+   every case must pass over all valid points, ordinary/sequential cells, both
+   private-flux connections, both core branch connections, the separatrix
+   radial face, and open SOL. With `s=max(abs(reference))`, the unchanged rule
+   is
+
+   `max_abs_error <= 5e-10 + 5e-10 * s`.
+
+   No compared value may be non-finite. The clipping reference must contain
+   only exact binary decisions and match the candidate at every valid point.
+   Every nonconstant case must contain both positive and negative face
+   velocities. The clipping case must select at least one clipped and one
+   unclipped state. Constant inputs must match `q=2.5` and `phi=4.0` within
+   `1e-13`; every nonconstant input must be finite with peak-to-peak range
+   greater than `1e-6`. The fields, masks, coverage requirements, and tolerance
+   are committed before execution and are not relaxed after seeing a result.
+
+6. **Conservation:** face-flow differences reproduce the source operator's
    volume-weighted divergence on manufactured fields.
-6. **Native-grid oracle:** selected raw 81-cell 85604 frames match the
+7. **Native-grid oracle:** selected raw 81-cell 85604 frames match the
    hash-locked Hermes/BOUT++ calculation to a prospectively set tolerance.
-7. **Resampling sensitivity:** truth transport on native 81 cells is compared
+8. **Resampling sensitivity:** truth transport on native 81 cells is compared
    with the 88-cell Fourier-resampled evaluation; the discrepancy is reported
    and cannot be tuned away.
-8. **Geometry masks:** synthetic and real-grid tests verify cell/face indexing,
+9. **Geometry masks:** synthetic and real-grid tests verify cell/face indexing,
    the local/global radial map, separatrix membership, branch regions, and
    `+x` versus outward orientation.
-9. **Units:** normalized-to-SI conversion is independently hand calculated and
-   compared with the simulator metadata convention.
-10. **Ensemble semantics:** a nonlinear known-answer case proves that transport
+10. **Units:** normalized-to-SI conversion is independently hand calculated
+    and compared with the simulator metadata convention.
+11. **Ensemble semantics:** a nonlinear known-answer case proves that transport
     is evaluated member-wise rather than from ensemble-mean fields.
 
 Only after this ladder passes may O1 be rerun with a transport gate. The
@@ -399,9 +431,9 @@ absence of a transport result is a documented blocker, not a zero or a pass.
 
 ## 10. Immediate decision
 
-No architecture work or training is justified by this audit. The next safe
-step is a small exact-operator validation harness, starting with the isolated
-`xz` component and then validating shifted `DDY` against BOUT++. If that exact
-oracle cannot be built, Paper 0 must retain cross-spectrum and cross-phase as
-validated joint-field metrics and omit strong physical-transport claims rather
-than promote the historical proxy.
+No architecture work or training is justified by this audit. The shifted
+`DDY` rung has passed; the next safe step is the prospectively frozen compiled
+Hermes shifted-`xy` face-flow comparison above. If the remaining exact oracle
+ladder cannot be completed, Paper 0 must retain cross-spectrum and cross-phase
+as validated joint-field metrics and omit strong physical-transport claims
+rather than promote the historical proxy.
