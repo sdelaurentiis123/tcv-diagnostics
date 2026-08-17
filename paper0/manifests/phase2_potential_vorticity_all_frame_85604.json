@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_before_first_all_624_frame_forward_closure_calculation",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "training_allowed": false,
+  "protocol": {
+    "path": "paper0/protocol/PHASE2_POTENTIAL_VORTICITY_ALL_FRAME_PROTOCOL.md",
+    "sha256": "b52816365f78755c3433c56af6b71931805a839d9958bdd711e91c4b0b378723"
+  },
+  "prior_reads": {
+    "all_frame_85604_values_already_inspected": true,
+    "first_new_quantity": "source_matched_forward_vorticity_on_all_624_frames",
+    "selected_forward_frames_already_evaluated": [0, 156, 312, 467, 623],
+    "selected_forward_job": 6892764
+  },
+  "raw_archive": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604",
+    "expected_rank_file_count": 256,
+    "rank_file_pattern": "BOUT.dmp.<rank>.nc",
+    "rank_dimensions": {"t": 624, "x": 8, "y": 6, "z": 81},
+    "mpi_decomposition": {
+      "NXPE": 16,
+      "NYPE": 16,
+      "MXSUB": 4,
+      "MYSUB": 2,
+      "MXG": 2,
+      "MYG": 2
+    },
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "slope_limiter": "MC",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "bout_input_sha256": "c1f7f63a4210b35680f338289916f6a588dcc7881928f26066a9af2e09fb95ad",
+    "bout_settings_sha256": "57148a0f3d829b72192363d4d6e5da9fc1ce8aa2bff63359491bdb0b9a075d57",
+    "geometry_sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+  },
+  "frame_scope": {
+    "first_index": 0,
+    "last_index": 623,
+    "frame_count": 624,
+    "expected_first_normalized_time": 285000.0,
+    "expected_last_normalized_time": 471900.0,
+    "expected_normalized_cadence": 300.0,
+    "omega_ci_per_second": 95788333.03066081,
+    "physical_cadence_microseconds": 3.131905426352636,
+    "shape_xyz": [64, 32, 81],
+    "points_per_field": 103514112,
+    "selection_uses_field_values": false
+  },
+  "shards": {
+    "count": 8,
+    "frames_per_shard": 78,
+    "half_open_intervals": [
+      [0, 78],
+      [78, 156],
+      [156, 234],
+      [234, 312],
+      [312, 390],
+      [390, 468],
+      [468, 546],
+      [546, 624]
+    ],
+    "must_cover_each_frame_exactly_once": true,
+    "maximum_concurrent_replays": 1,
+    "raw_rank_archive_traversals": 1
+  },
+  "canonical_extraction": {
+    "volume_fields": ["Ne", "Pe", "Pi", "Vort", "phi"],
+    "volume_axes": ["frame", "x", "y", "z"],
+    "volume_shape_per_shard": [78, 64, 32, 81],
+    "boundary_field": "saved_midpoint",
+    "boundary_axes": ["frame", "side", "y"],
+    "boundary_shape_per_shard": [78, 2, 32],
+    "boundary_side_order": ["inner", "outer"],
+    "dtype": "float64",
+    "strip_volume_guards": true,
+    "preserve_radial_phi_boundary_state": true,
+    "stream_rank_files_into_shards": true,
+    "hold_complete_624_frame_field_in_memory": false,
+    "processor_coordinate_key": ["PE_XIND", "PE_YIND"],
+    "refuse_overwrite": true
+  },
+  "raw_pressure_identity": {
+    "negative_raw_Pe_count": 0,
+    "negative_raw_Pi_count": 3412,
+    "negative_raw_Pi_count_by_shard": [0, 116, 1812, 86, 67, 69, 1262, 0],
+    "minimum_raw_Pi": -0.0234714551052543,
+    "minimum_raw_Pi_location_txyz": [223, 7, 31, 74]
+  },
+  "runtime_pressure": {
+    "density_floor": 1e-7,
+    "soft_floor": "u=max(N,0); u+f*exp(-u/f)",
+    "species_formula": "N*max(P_raw,0)/softFloor(N,1e-7)",
+    "Pi_hat": "Pi_runtime-Pe_runtime/3672",
+    "atol": 1e-12,
+    "rtol": 1e-12,
+    "all_points_must_pass": true
+  },
+  "forward_equation": {
+    "u": "phi+Pi_hat",
+    "C": "2/Bxy^2",
+    "forward_vorticity": "C*L_C(u)",
+    "primary_discretization": "BOUT++ cyclic Laplacian::tridagCoefs with public rfft/irfft",
+    "alternative_relax_potential_fv_operator_allowed": false,
+    "fourier_index_k": {"first": 0, "last": 40, "count": 41},
+    "toroidal_mode_mapping": "n=5k",
+    "radial_physical_rows_are_operator_rows": [0, 63]
+  },
+  "boundary_contract": {
+    "saved_midpoint": "0.5*(adjacent_guard+adjacent_physical)",
+    "ghost_value": "2*saved_midpoint-adjacent_physical",
+    "ghost_rows_per_side": 2,
+    "outer_guard_copy_atol": 1e-12,
+    "outer_guard_copy_rtol": 1e-12,
+    "midpoint_constancy_atol": 1e-12,
+    "midpoint_constancy_rtol": 1e-12,
+    "all_frames_must_pass": true
+  },
+  "compiled_known_answers": {
+    "constant_null_value": 3.25,
+    "gauge_shift": 7.0,
+    "manufactured_fourier_indices": [0, 3],
+    "manufactured_mode_number_n": [0, 15],
+    "same_rules_as_selected_frame_protocol": true,
+    "all_shards_must_pass": true
+  },
+  "source_forward_gate": {
+    "scope": "all_624x64x32x81_physical_points",
+    "atol": 5e-10,
+    "rtol": 5e-10,
+    "per_frame_rule": "max_abs_difference <= atol + rtol*max_abs_stored_vort",
+    "nonfinite_count": 0,
+    "all_624_frames_must_pass": true,
+    "pooled_metric_can_override": false,
+    "correlation_can_override": false,
+    "regional_subset_can_override": false,
+    "alignment_can_override": false
+  },
+  "ordered_gates": [
+    "G0_provenance_and_extraction",
+    "G1_compiled_known_answers",
+    "G2_compiled_input_and_runtime_pressure",
+    "G3_source_forward_closure",
+    "G4_exact_eight_shard_merge"
+  ],
+  "required_reports": [
+    "per_frame_continuous_metrics",
+    "per_shard_and_pooled_sufficient_statistics",
+    "maximum_error_locations",
+    "named_geometry_region_metrics",
+    "toroidal_mode_residual_power_with_n_equal_5k",
+    "runtime_pressure_metrics",
+    "negative_raw_pressure_inventory",
+    "compiled_known_answer_metrics",
+    "canonical_and_output_sha256",
+    "exact_frame_and_time_coverage"
+  ],
+  "provenance_locks": {
+    "selected_forward_result": {
+      "path": "paper0/results/phase2_potential_vorticity_forward_6892764.json",
+      "sha256": "42b3aa3d56ff6f4dbfda9b2cf7317c1f3c0080c3a229f331ff75d58a95406871"
+    },
+    "runtime_pressure_inverse_result": {
+      "path": "paper0/results/phase2_potential_elliptic_runtime_pressure_6892641.json",
+      "sha256": "ae0aea28efc8719c7c3c91419a8f122256f9fe7e6d64c94e6aa9e1827dd2297a"
+    },
+    "all_frame_phi_boundary_result": {
+      "path": "paper0/results/phase2_phi_boundary_state_6891890.json",
+      "sha256": "79c67709c921caa1ddf1ea3e4d8f431ce88e220adc70247527c7a8a5e5f637cc"
+    },
+    "all_frame_pressure_result": {
+      "path": "paper0/results/phase2_pressure_closure_6891583.json",
+      "sha256": "9511571507bcd0d46b632843c3220646b8c1b9b53c909845262946fe6f1e4c51"
+    },
+    "all_frame_state_result": {
+      "path": "paper0/results/phase2_state_completeness_6891855.json",
+      "sha256": "565a4e27e87d4f5a3e647daf77486020ac627f43ffb5cd30a8daf74b7199cf20"
+    },
+    "selected_forward_protocol": {
+      "path": "paper0/protocol/PHASE2_POTENTIAL_VORTICITY_FORWARD_PROTOCOL.md",
+      "sha256": "67d2dfe95eb4e3c24d55dc271fd8d624b514869ae7cf002cba338fecaead2b1d"
+    },
+    "selected_forward_driver": {
+      "path": "paper0/oracles/potential_vorticity_forward/potential_vorticity_forward_oracle.cxx",
+      "sha256": "516527bea146d2ccc258e210e4058f233ecb66ca030fa48298030224919ac487"
+    },
+    "geometry_module": {
+      "path": "src/tcv_diagnostics/geometry.py",
+      "sha256": "4f5eda7001bf9b42cefb224842a1dee4a955028a1aa063a57db6c447879f424c"
+    },
+    "phi_boundary_module": {
+      "path": "src/tcv_diagnostics/phi_boundary.py",
+      "sha256": "c78bc34b82e225a32cb0c0764d17304c1c8e21cae58f0987d8a82c9d55869f99"
+    }
+  },
+  "external_source_locks": {
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "bout_revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+    "hermes_evolve_pressure_sha256": "d3abc5e32cdad3ea9c42faf432dcaed465070ee5792cb62e550b9baaad9953e6",
+    "hermes_utils_sha256": "5e3b8055ae068481319a90329a3bdf3605b82b9024ee8273b210fd2be915bd85",
+    "hermes_vorticity_cxx_sha256": "7643af10d23ce4efebf58b835fbb27cb8a7d7ed11545d450182916013f3a002a",
+    "hermes_vorticity_hxx_sha256": "276a90682298e2b20594fc52b241518f197aa1a3310ada47fb9f7852b3deaded",
+    "bout_invert_laplace_hxx_sha256": "858752dd39c55caf7afd00fa84583b5e1c7944763f6497f6ffaa2530ba0e1fc3",
+    "bout_fft_hxx_sha256": "ca8167cab0cf0ab71a9c135240d383394455bfc469a33858ccd90673da85c5b1",
+    "bout_fft_cxx_sha256": "c7da57b5dcbda9f0e93cae7b847d4b5f43a21426ee8c938ff2b137fbee55310e",
+    "bout_invert_laplace_cxx_sha256": "47c2cbe674c61e510cc96835823ba8a7b55f2a9b6c2a5c1f93d730c8dba5d157",
+    "bout_cyclic_cxx_sha256": "568faa3c9bcf17732779868f28aa219f5e8beea2ad4f98c490b233ce9552d38a",
+    "bout_cyclic_hxx_sha256": "1309f7eebf5fe076663224b1a66a08b1a3ae6ce7526d0f0b595d6537db5bf296",
+    "bout_shared_library_sha256": "9e4ae1f46c01418711515cda63fd92513712705655c5623d932297e5d8c53333",
+    "bout_config_sha256": "b5d86b8adedf11f3fab2783cbc75fd7b1064e87d91c7df596437fd7d26dd11e6"
+  },
+  "execution": {
+    "os_major": 9,
+    "cpu_only": true,
+    "mpi_ranks": 4,
+    "memory_gib_max": 64,
+    "time_limit_minutes_max": 60,
+    "compile_once_per_top_level_run": true,
+    "sequential_shard_replays": true,
+    "gpu_requested": false,
+    "clean_exact_commit_required": true,
+    "new_job_specific_output_required": true,
+    "existing_results_read_only": true
+  },
+  "decision_rules": {
+    "pass": "all 624 frames pass every ordered gate; a separately committed state-candidate decision may proceed",
+    "fail": "retain the failure and localize the first failed gate and frame before state selection or training",
+    "automatic_state_change_authorized": false,
+    "automatic_training_authorized": false,
+    "automatic_held_out_access_authorized": false,
+    "establishes_predictive_sufficiency": false,
+    "establishes_stationarity": false
+  }
+}
