@@ -37,7 +37,7 @@
   "immutable_external_artifact": {
     "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890722",
     "install_prefix": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890722/install",
-    "sha256": {
+    "artifact_digests": {
       "install/lib64/libbout++.so.5.2.0": "fa11368c90e5c392b20290910d5856b39c122154cbcf3b814a1e98ed65f9a6ce",
       "install/bin/bout-config": "aa20fd55d7da46f31e87c8bc09b8a725c4ba3a94abe73215d4e06f4c55c6a480",
       "job.log": "53d3fd797e65b265eacdcb4541468e423a39ec16b90a94f2a8633e168d9d66df",
