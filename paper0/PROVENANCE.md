@@ -608,3 +608,22 @@ and the complete artifact index has SHA-256
 The two compact records are tracked byte-for-byte under `paper0/results/`.
 All 3,599,761,472 HDF5 bytes remain on Ceph. The run explicitly records
 `held_out_85606_read=false` and `training_performed=false`.
+
+### Prospective matched O1/O2 model implementation
+
+The training and evaluation contract is frozen in
+`paper0/protocol/PHASE2_MATCHED_O1_O2_PROTOCOL.md` and
+`paper0/manifests/phase2_matched_o1_o2_85604.json` before any model code is
+ported or executed.
+
+The intended codec implementation is a minimum attributed port from
+[PolymathicAI/lola](https://github.com/PolymathicAI/lola), upstream commit
+`21a4354b327e6e5ee06da5075ba3bd1dd88c61f1`, under its MIT license. The
+predecessor project's per-axis padding and per-transition stride repairs are
+design evidence only at this point; the new implementation will be committed,
+tested, and hash-identified here rather than imported from the dirty
+predecessor checkout.
+
+No historical codec or forecast checkpoint initializes the matched models.
+No model implementation, checkpoint, smoke result, or training result exists
+under this section yet.

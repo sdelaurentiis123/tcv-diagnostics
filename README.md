@@ -36,8 +36,14 @@ source union, the same exact saved `Bphi` boundary record, the same
 resampling, legacy-equality, storage, boundary, and normalization gate. The
 compact evidence and its intentionally limited meaning are in
 [`paper0/PHASE2_MODEL_DATASET_READOUT.md`](paper0/PHASE2_MODEL_DATASET_READOUT.md).
-The next step is a separately committed matched O1/O2 model protocol. No model
-training has started.
+The matched deterministic model experiment is now prospectively frozen in
+[`paper0/protocol/PHASE2_MATCHED_O1_O2_PROTOCOL.md`](paper0/protocol/PHASE2_MATCHED_O1_O2_PROTOCOL.md).
+It first trains from-scratch codecs with data-only loss and requires
+field/spectral/cross-field/transport reconstruction gates before any one-step
+model may run. A three-arm one-step ladder then compares exact Hermes state,
+two-frame pragmatic state, and one-frame pragmatic state against persistence
+and uncompressed linear/spectral references. No model training has started;
+implementation and Rocky 9 smoke gates come next.
 
 The historical codecs have now been evaluated through the frozen O1 oracle;
 [`paper0/PHASE2_O1_READOUT.md`](paper0/PHASE2_O1_READOUT.md) records why neither

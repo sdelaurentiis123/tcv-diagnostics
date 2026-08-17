@@ -29,6 +29,9 @@ Development-only protocol locks that do not authorize held-out access include:
   native-81 to model-88 conversion, boundary-state storage, training-only
   normalization, and hard integrity gates required before matched O1/O2
   learning;
+- `PHASE2_MATCHED_O1_O2_PROTOCOL.md`: the from-scratch representation
+  escalation, deterministic one-step state/history comparison, training
+  budgets, uncompressed references, and stop/go gates;
 - `PHASE2_CONDITIONAL_TRANSIENT_STATE_PROTOCOL.md`: the nonstationary 85604
   development interpretation, exact `E6B-H1` state, pragmatic
   `C5P-H2` state, and mandatory `C5P-H1` history control;

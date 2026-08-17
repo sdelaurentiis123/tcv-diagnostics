@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_before_model_implementation_or_training",
+  "protocol": {
+    "path": "paper0/protocol/PHASE2_MATCHED_O1_O2_PROTOCOL.md",
+    "sha256": "2148880b998f71b309e553d0712170b2f25a0d5c69c204ea1a089a1407a03de4"
+  },
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "authorized_scope": [
+    "matched_O1_codec_training_85604",
+    "matched_O1_codec_evaluation_85604",
+    "matched_O2_teacher_forced_one_step_training_85604",
+    "matched_O2_teacher_forced_one_step_evaluation_85604"
+  ],
+  "forbidden_scope": [
+    "O3_or_longer_rollout",
+    "stochastic_model_training",
+    "assimilation",
+    "diagnostic_ranking",
+    "85606_access"
+  ],
+  "dataset": {
+    "job_id": "6893525",
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+    "volume_shape": [64, 32, 88],
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "cadence_microseconds": 3.131905426352636,
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "o2_training_target_frames": [2, 432],
+    "o2_validation_target_frames": [498, 624],
+    "absolute_time_input_allowed": false
+  },
+  "evidence_locks": {
+    "shared_dataset_result": {
+      "path": "paper0/results/phase2_model_dataset_6893525.json",
+      "sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18"
+    },
+    "shared_normalization_result": {
+      "path": "paper0/results/phase2_model_dataset_normalization_6893525.json",
+      "sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7"
+    },
+    "shared_dataset_manifest": {
+      "path": "paper0/manifests/phase2_model_dataset_85604.json",
+      "sha256": "f60bcb4109c55b2927017017e0a59fc43173fbb8f648525c651f72656c910c97"
+    },
+    "state_protocol_manifest": {
+      "path": "paper0/manifests/phase2_conditional_transient_state_85604.json",
+      "sha256": "ea99fff6236b9a6b4ecccc03bc046ae29112f3588285b5cbba0ce81d15d7c1f0"
+    }
+  },
+  "state_arms": {
+    "E6B-H1": {
+      "context_frames": 1,
+      "volume_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+      "boundary": {"field": "Bphi", "shape": [2, 32]},
+      "o1_boundary_bypass": true,
+      "o2_truth_boundary_reset": false,
+      "common_view": ["Ne", "Pe", "Pi", "phi", "Vi"]
+    },
+    "C5P-H2": {
+      "context_frames": 2,
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+      "shares_codec_with": "C5P-H1"
+    },
+    "C5P-H1": {
+      "context_frames": 1,
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+      "shares_codec_with": "C5P-H2"
+    }
+  },
+  "seeds": [1701, 1702, 1703],
+  "codec_candidates": [
+    {
+      "name": "dcae_l20",
+      "order": 1,
+      "hidden_channels": [64, 128, 256, 512],
+      "hidden_blocks": [2, 2, 2, 2],
+      "latent_channels": 64,
+      "strides": [[2, 2, 2], [2, 2, 2], [2, 2, 1]],
+      "latent_grid": [8, 4, 22],
+      "latent_scalars": 45056,
+      "predictor_patch": [1, 1, 1]
+    },
+    {
+      "name": "dcae_l10",
+      "order": 2,
+      "hidden_channels": [64, 128, 256],
+      "hidden_blocks": [2, 2, 2],
+      "latent_channels": 32,
+      "strides": [[2, 2, 2], [2, 2, 2]],
+      "latent_grid": [16, 8, 22],
+      "latent_scalars": 90112,
+      "predictor_patch": [2, 2, 1]
+    }
+  ],
+  "codec_common_architecture": {
+    "origin": {
+      "repository": "https://github.com/PolymathicAI/lola",
+      "commit": "21a4354b327e6e5ee06da5075ba3bd1dd88c61f1",
+      "license": "MIT"
+    },
+    "kernel_size": 3,
+    "pixel_shuffle": true,
+    "normalization": "layer",
+    "latent_saturation": "softclip2",
+    "latent_noise": 0.0,
+    "dropout": 0.05,
+    "periodic_axes_xyz": [false, false, true],
+    "wall_padding_mode": "zeros",
+    "identity_initialized_sampling": true
+  },
+  "codec_training": {
+    "from_scratch": true,
+    "epochs": 200,
+    "examples_per_epoch": 432,
+    "microbatch": 4,
+    "gradient_accumulation": 4,
+    "effective_batch": 16,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "betas": [0.9, 0.95],
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "warmup_epochs": 10,
+    "minimum_learning_rate": 0.000002,
+    "scheduler": "linear_warmup_cosine",
+    "loss": "equal_channel_standardized_MAE",
+    "physics_derived_loss_allowed": false,
+    "validation_frames": [496, 624],
+    "checkpoint_selection": "earliest_numerically_lowest_full_validation_data_loss",
+    "early_stopping": false
+  },
+  "codec_escalation": {
+    "run_first": "dcae_l20",
+    "pass_requires": "all_three_seeds_for_both_c5p_and_e6b_pass_complete_O1",
+    "on_failure": "run_complete_dcae_l10_set",
+    "if_dcae_l10_any_seed_fails": "stop_before_O2"
+  },
+  "o1_gates": {
+    "validation_blocks": 8,
+    "frames_per_block": 16,
+    "field_rmse_max": 0.1,
+    "variance_ratio": [0.8, 1.2],
+    "bands_k": [[1, 3], [4, 5], [6, 7]],
+    "materiality_from_training_truth_fraction": 0.01,
+    "spectral_power_ratio": [0.8, 1.25],
+    "transfer_coherence_min": 0.9,
+    "cross_phase_degrees_max": 15.0,
+    "cross_coherence_change_max": 0.1,
+    "required_passing_blocks": 7,
+    "transport_protocol": "paper0/protocol/PHASE2_O1_TRANSPORT_PROTOCOL.md"
+  },
+  "uncompressed_references": {
+    "persistence": true,
+    "c5p_h2_linear_extrapolation": true,
+    "toroidal_spectral_ar1": {
+      "fit_region": [0, 432],
+      "relative_ridge": 1e-8,
+      "pooled_axes": ["time", "x", "y"],
+      "one_complex_coefficient_per_channel_and_k": true
+    }
+  },
+  "o2_model": {
+    "family": "deterministic_masked_latent_ViT_residual",
+    "hidden_channels": 512,
+    "transformer_blocks": 16,
+    "attention_heads": 4,
+    "ffn_factor": 4,
+    "qk_normalization": true,
+    "rope": true,
+    "dropout": 0.05,
+    "noise_features": 0,
+    "activation_checkpointing": true,
+    "tokens_per_frame": 704,
+    "target_slot_masked": true,
+    "loss_applies_to_target_only": true,
+    "prediction": "standardized_latent_increment",
+    "training_loss": "equal_channel_standardized_field_MAE_after_frozen_decode"
+  },
+  "o2_boundary_adapter": {
+    "bphi_embedding": [64, 256, 256],
+    "modulation": "AdaLN_all_transformer_blocks",
+    "head": "zero_padded_1d_residual_conv",
+    "head_width": 128,
+    "kernel_size": 3,
+    "residual_blocks": 4,
+    "inputs": ["current_Bphi", "current_instantaneous_elliptic_target"],
+    "future_truth_input_allowed": false
+  },
+  "o2_training": {
+    "epochs": 200,
+    "targets_per_epoch": 430,
+    "microbatch": 1,
+    "gradient_accumulation": 16,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "betas": [0.9, 0.95],
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "warmup_epochs": 10,
+    "minimum_learning_rate": 0.000002,
+    "scheduler": "linear_warmup_cosine",
+    "checkpoint_selection": "earliest_numerically_lowest_full_validation_equal_channel_data_loss",
+    "early_stopping": false,
+    "physics_derived_loss_allowed": false
+  },
+  "o2_gate": {
+    "validation_blocks": 6,
+    "targets_per_block": 21,
+    "all_three_seeds_must_pass": true,
+    "must_beat_best_uncompressed_reference_in_aggregate_rmse_and_mae": true,
+    "minimum_common_fields_beating_persistence": 4,
+    "maximum_per_field_persistence_ratio": 1.05,
+    "spectral_power_ratio": [0.75, 1.3],
+    "forecast_truth_coherence_min": 0.8,
+    "cross_phase_degrees_max": 20.0,
+    "cross_coherence_change_max": 0.15,
+    "strict_face_transport": {
+      "relative_l2_max": 0.4,
+      "correlation_min": 0.7,
+      "weighted_sign_disagreement_max": 0.2
+    },
+    "separatrix_transport": {
+      "relative_l2_max": 0.3,
+      "absolute_normalized_bias_max": 0.15,
+      "correlation_min": 0.8,
+      "weighted_sign_disagreement_max": 0.15
+    },
+    "required_passing_blocks": 5,
+    "e6b_boundary_must_beat_persistence": true
+  },
+  "implementation_gate": {
+    "minimum_cpu_tests": [
+      "per_axis_padding",
+      "per_transition_stride_shapes",
+      "codec_roundtrip_shape",
+      "history_order",
+      "target_masking",
+      "target_only_loss",
+      "toroidal_roll_alignment",
+      "latent_normalization",
+      "residual_semantics",
+      "Bphi_no_future_truth",
+      "checkpoint_reload_identity"
+    ],
+    "rocky9_full_cpu_suite_required": true,
+    "gpu_smoke_max_frames": 16,
+    "gpu_smoke_max_epochs": 2,
+    "clean_exact_commit_required": true
+  }
+}

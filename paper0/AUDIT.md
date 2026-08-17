@@ -632,6 +632,21 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     only: no codec, one-step, rollout, stochastic, assimilation, ranking, or
     85606 claim is accepted, and training remains closed pending a separately
     committed matched O1/O2 protocol.
+56. **The matched deterministic O1/O2 experiment is frozen before model code
+    or training.** The first candidate is a from-scratch DCAE with latent grid
+    `[64,8,4,22]`, which retains direct representational support through
+    `k=11`; a lower-compression `[32,16,8,22]` repair is predeclared and
+    may run only if the first candidate fails. Both C5P and E6B codecs receive
+    the same 200-epoch, all-training-frame, data-only MAE budget at seeds
+    `1701,1702,1703`. Spectrum, cross-phase, and authoritative transport
+    remain evaluation gates and never enter a loss. Only a codec passing every
+    seed/state gate may feed the matched deterministic one-step comparison of
+    `E6B-H1`, `C5P-H2`, and `C5P-H1`, each scored against persistence,
+    linear extrapolation where applicable, and a training-only toroidal
+    spectral AR(1). No O3 rollout, stochastic model, assimilation, ranking, or
+    85606 access is authorized. Implementation, Rocky 9 CPU tests, and a
+    bounded non-scientific GPU smoke remain required before the first full
+    launch.
 
 ## Exact commands
 
