@@ -67,3 +67,14 @@ derived field with short boundary memory. The memo distinguishes physical
 history/relative lead from an unsafe absolute-frame lookup and lays out the
 remaining deterministic state-closure tests. It is a design memo, not an
 authorization to train.
+
+The first two source-state gates are now complete. The all-rank 85604 inventory
+found the six evolved fields on all 256 ranks, and both exact electron and ion
+velocity-to-momentum relations pass every one of 624 frames with zero
+discrepant physical cells. The density floor is inactive in this saved
+interval. This establishes algebraic equivalence of density-plus-velocity and
+density-plus-momentum representations, but historical C5 still omits electron
+parallel state and has not passed the separate potential/vorticity boundary
+gate. Exact evidence and implications are in
+[`paper0/PHASE2_STATE_COMPLETENESS_READOUT.md`](paper0/PHASE2_STATE_COMPLETENESS_READOUT.md).
+No channel set or model architecture has been selected.

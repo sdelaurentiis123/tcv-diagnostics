@@ -447,6 +447,23 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     omission. The design memo records three candidate state policies and a
     deterministic closure ladder without changing a split, manifest, model,
     threshold, or 85606 lock.
+44. **The all-frame momentum audit confirms representation equivalence but
+    not historical-state completeness.** CPU-only Rocky 9 job `6891855`
+    completed from clean commit
+    `4913361b4f1ee5f04f8fd3e95ac9240b3941c9fc`. All 256 rank files,
+    624 saved times, 11 metadata fields, and 103,514,112 physical values per
+    streamed field passed the frozen structural checks. Every value in
+    `Ne,Pe,Pi,NVe,NVi,Vort,Ve,Vi` is finite, and `Ne` never reaches
+    the `1e-7` density floor. Both exact source identities,
+    `NVe=(1/1836)*softFloor(Ne)*Ve` and
+    `NVi=2*softFloor(Ne)*Vi`, pass every frame with zero discrepant
+    points; full-domain relative L2 errors are `5.185e-16` and
+    `2.951e-16`. Therefore density-plus-velocity and
+    density-plus-momentum are algebraically equivalent representations for
+    this output. Historical C5 remains incomplete because it contains neither
+    `Ve` nor `NVe`, and the independent `phi/Vort` boundary
+    gate remains open. No channels were changed, no model was trained, and
+    85606 was not read.
 
 ## Exact commands
 

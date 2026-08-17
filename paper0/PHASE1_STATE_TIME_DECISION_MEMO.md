@@ -1,6 +1,7 @@
 # Phase 1 state and time decision memo
 
-**Status:** evidence-backed design memo; not a frozen training protocol
+**Status:** evidence-backed design memo, updated after the all-frame momentum
+closure; not a frozen training protocol
 
 **Scope:** 85604 metadata, exact executed Hermes source, and already exposed
 85604 fields only
@@ -125,9 +126,15 @@ formal state difference, C5T-versus-direct-pressure transport differs by less
 than `5.1e-7` relative L2 for the scored radial ExB quantities. Thus C5T's
 pressure loss is real but does not explain the present O1 transport error.
 
-No equivalent all-frame momentum-closure or potential/vorticity forward-
-operator audit has yet been run. Those are the remaining deterministic state
-oracles.
+The subsequent all-frame momentum-closure audit is complete. Both exact
+velocity/momentum relations pass all 624 frames and every physical cell, and
+the configured density floor is inactive throughout the saved 85604 interval.
+Thus `(Ne,Vi)` is algebraically equivalent to `(Ne,NVi)` here, and
+`(Ne,Ve)` is algebraically equivalent to `(Ne,NVe)`. Historical
+C5 nevertheless contains neither electron quantity. Exact values, provenance,
+and the deliberately limited interpretation are in
+`paper0/PHASE2_STATE_COMPLETENESS_READOUT.md`. The
+potential/vorticity forward-operator and boundary-state audits remain open.
 
 ## 3. The potential boundary carries short memory
 
@@ -235,11 +242,11 @@ the failed Phase 1 gate.
 
 Before choosing LOLA, FGN, diffusion, or PDE-Refiner:
 
-1. **All-rank inventory:** verify that every rank and saved frame contains the
+1. **All-rank inventory -- complete:** every rank and saved frame contains the
    same six evolved fields with identical metadata and complete coordinates.
-2. **Momentum closure:** compare raw `NVe/NVi` with the exact source formula
-   from `Ne`, `Ve/Vi`, masses, and the executed density floor over all 624
-   frames.
+2. **Momentum closure -- complete:** raw `NVe/NVi` match the exact source
+   formula from `Ne`, `Ve/Vi`, masses, and the executed density
+   floor over all 624 frames.
 3. **Potential closure:** apply the exact forward vorticity operator to stored
    `phi`, `Pi`, geometry, and radial boundary state, and compare with `Vort`.
 4. **Boundary-memory materiality:** measure the stored midpoint boundary state,

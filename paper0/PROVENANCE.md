@@ -486,6 +486,50 @@ All three O1 transport figure pairs are generated only from the tracked
 compact result. Their interpretation and exact regeneration command are in
 `paper0/PHASE2_O1_TRANSPORT_READOUT.md`.
 
+### Phase 2 evolved-state inventory and momentum closure
+
+The prospective state audit was frozen in
+`paper0/protocol/PHASE2_STATE_COMPLETENESS_PROTOCOL.md` and
+`paper0/manifests/phase2_85604_state_completeness.json` before reading
+all raw momentum values. `src/tcv_diagnostics/state_completeness.py`,
+`paper0/tools/audit_85604_state_completeness.py`, and
+`paper0/tools/merge_85604_state_completeness_shards.py` are new Paper 0
+code. They implement source-locked Hermes velocity/momentum relations,
+mergeable exact counts, deterministic stream digests, strict rank/time/axis
+coverage, and strict JSON. No predecessor audit implementation was copied.
+
+CPU-only Rocky 9 job `6891855` executed from clean Paper 0 commit
+`4913361b4f1ee5f04f8fd3e95ac9240b3941c9fc` on Rusty worker
+`worker5594`. All 16 deterministic rank shards and the strict reducer
+completed with exit `0:0` in 28:16. The immutable full result is
+
+```text
+/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_state_completeness/job_6891855/state_completeness_audit.json
+```
+
+with SHA-256
+`9fec0426a97fab9e15b0029d80f1f6c6464d0d7e34aac4216ec4a76ceb3bda93`.
+The launcher's `artifact_sha256.txt` records the command, environment,
+16 partials, and merged-result hashes. The result verifies all 256 rank files,
+all 624 saved times, complete `16 x 16` processor-coordinate coverage,
+and 103,514,112 native physical values per stream. It explicitly records
+`held_out_85606_read=false`.
+
+The result was compacted without metric changes by the prospectively committed
+helper at Paper 0 commit
+`54d2bba33cf4a5458bc8e61cb794024de0849d7f`. The tracked compact record is
+`paper0/results/phase2_state_completeness_6891855.json`, SHA-256
+`565a4e27e87d4f5a3e647daf77486020ac627f43ffb5cd30a8daf74b7199cf20`.
+Regression tests lock the raw identity, compacting commit, archive coverage,
+field finiteness, inactive density floor, exact closure counts, and
+non-overreaching decision flags.
+
+Both exact velocity/momentum closures pass throughout 85604. This accepts only
+their algebraic equivalence on the saved development run. It does not accept a
+model state, a temporal split, potential reconstruction, forecast dynamics,
+or held-out generalization. The complete interpretation is
+`paper0/PHASE2_STATE_COMPLETENESS_READOUT.md`.
+
 ## Phase 0 execution evidence
 
 No predecessor code has been ported yet. The audit-only legacy reproduction executed the predecessor files in place after verifying their byte hashes. Job `6890428` used Paper 0 commit `7e2b5d2`, Rocky Linux 9.8, an NVIDIA H100, and only the legacy 85604 validation region. Its compact result record is `paper0/results/phase0_legacy_valid_6890428.json`; the full Rusty artifacts remain under `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428`.
