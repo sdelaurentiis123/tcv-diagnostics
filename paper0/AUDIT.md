@@ -436,6 +436,17 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     failures from an unmatched training lineage. Thus neither historical codec
     passes complete O1 acceptance, no learning gate reopens, and 85606 remains
     sequestered.
+43. **The exact source-state audit narrows the partial-observation problem.**
+    The hash-locked 85604 input and Hermes revision show that the volumetric
+    solver state is `[Ne, Pe, Pi, NVe, NVi, Vort]`; `Te`, `Ti`, `Ve`, `Vi`,
+    and interior `phi` are derived. Potential is obtained by an elliptic
+    inversion and its radial guard values retain a one-microsecond relaxation
+    memory, whereas the saved cadence is 3.132 microseconds and the converted
+    grid strips those guards. C5 therefore omits direct electron momentum and
+    exact boundary state; adding an absolute frame index would not repair that
+    omission. The design memo records three candidate state policies and a
+    deterministic closure ladder without changing a split, manifest, model,
+    threshold, or 85606 lock.
 
 ## Exact commands
 

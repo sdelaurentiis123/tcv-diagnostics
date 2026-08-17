@@ -78,6 +78,12 @@ Therefore the inherited C5 set `Ne, Te, Ti, phi, Vi` is a useful observable
 baseline but is not assumed to be a complete Markov state. C5-versus-augmented
 state sufficiency must be tested at the teacher-forced one-step rung.
 
+A subsequent exact source-state review sharpens this statement: the six
+volumetric solver variables are `[Ne, Pe, Pi, NVe, NVi, Vort]`; `phi` is a
+derived elliptic field with short radial-boundary memory. The direct independent
+field most clearly absent from C5 is electron momentum. See
+[`PHASE1_STATE_TIME_DECISION_MEMO.md`](PHASE1_STATE_TIME_DECISION_MEMO.md).
+
 ## Frozen candidate split and normalization
 
 The predeclared candidate split was:
@@ -245,9 +251,12 @@ codec reconstruction mode by mode before any new diffusion training.
 
 ### 5. Test state sufficiency before architecture complexity
 
-The raw simulation evolves `Vort` and electron momentum, while C5 omits `Vort`
-and `Ve`. A matched one-step C5-versus-augmented-state test can reveal an
-irreducible partial-observation error that no decoder or noise schedule will
+The raw simulation advances `Ne`, both pressures, both parallel momenta, and
+`Vort`; the C5 observables omit direct vorticity and electron momentum.
+Potential and ion pressure contain enough information to make direct vorticity
+partly redundant, but the exact elliptic relation also carries radial-boundary
+memory. A matched one-step observed-state-versus-source-state test can reveal
+an irreducible partial-observation error that no decoder or noise schedule will
 repair.
 
 ### 6. Long rollouts have a different target than short forecasts
@@ -274,7 +283,9 @@ not the correct long-horizon target.
 ## What is not established
 
 - A statistically steady learning interval.
-- Codec preservation of spectra, cross-phase, or transport.
+- Preservation of every term in a complete heat-flux definition. Subsequent O1
+  work has separately measured codec spectra, cross-field structure, and
+  radial ExB particle/internal-energy transport.
 - One-step or rollout superiority of any learned architecture.
 - Probabilistic calibration of fields, modes, or flux.
 - Correct particle or heat flux implementation.
@@ -288,11 +299,11 @@ not the correct long-horizon target.
    stored interval expected to continue relaxing on a transport timescale?
 2. Is there a known statistically steady suffix, a longer continuation, or a
    run-level diagnostic that should define steady state?
-3. For this exact Hermes configuration, should the emulator state include
-   `Vort` and electron momentum/velocity, or is C5 intended to be closed after
-   the elliptic and parallel closures?
-4. Which geometry weights and authoritative implementation should define radial
-   particle and heat flux on this mesh?
+3. For this exact Hermes configuration, should the emulator use the six evolved
+   variables `[Ne, Pe, Pi, NVe, NVi, Vort]`, or should `phi` also be predicted
+   redundantly for fast transport evaluation?
+4. Is the one-microsecond relaxed radial `phi` boundary state material at the
+   3.132-microsecond saved cadence, and should it be retained explicitly?
 5. Is the approximately 9--12-cell per-frame toroidal phase advance an expected
    physical propagation rate in these field-aligned coordinates?
 

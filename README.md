@@ -59,3 +59,11 @@ not a matched training ablation. Neither historical codec is accepted for
 dynamics training. The active blocker is again upstream: a defensible 85604
 temporal protocol and physically sufficient forecast state must be frozen
 before O2 or any new architecture run.
+
+The exact source-state question is now narrowed in
+[`paper0/PHASE1_STATE_TIME_DECISION_MEMO.md`](paper0/PHASE1_STATE_TIME_DECISION_MEMO.md).
+The simulator advances six volumetric fields, while potential is an elliptic
+derived field with short boundary memory. The memo distinguishes physical
+history/relative lead from an unsafe absolute-frame lookup and lays out the
+remaining deterministic state-closure tests. It is a design memo, not an
+authorization to train.
