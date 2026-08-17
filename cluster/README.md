@@ -22,4 +22,6 @@ export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
 sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase0_reproduce_legacy_valid.sbatch
 ```
 
+The launcher requests one Rocky 9 H100/H200 GPU through the `gpupreempt` partition and matching QOS. The `gpuxl` QOS has a four-GPU minimum and is intentionally not used for this one-GPU audit. Automatic requeue is disabled: a preempted attempt must be resubmitted under a new job ID, preserving the partial attempt rather than overwriting it.
+
 The output directory is unique to the Slurm job ID, and the launcher refuses to overwrite it.

@@ -2,12 +2,14 @@
 # Phase 0 audit-only reproduction: one legacy 85604-valid free/ETKF rollout.
 # The direct-state `iter` layout is an oracle/control, not a physical diagnostic.
 #SBATCH --job-name=p0_legacy_repro
-#SBATCH --partition=gpu
+#SBATCH --partition=gpupreempt
+#SBATCH --qos=gpupreempt
 #SBATCH --gres=gpu:1
-#SBATCH --constraint=a100-80gb|h100
+#SBATCH --constraint=h100|h200
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=100G
 #SBATCH --time=00:45:00
+#SBATCH --no-requeue
 #SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase0_repro_%j.log
 
 set -euo pipefail
