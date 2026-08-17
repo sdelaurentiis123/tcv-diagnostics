@@ -2,6 +2,29 @@
 
 Cluster scripts are committed, bounded, and provenance-locked before submission. They must print the repository revision and refuse dirty worktrees or mismatched inputs.
 
+## Phase 2 O1 codec transport
+
+`phase2_o1_codec_transport.sbatch` extends the historical deterministic f8
+and z44 reconstruction oracle with the released native-81, geometry-aware
+particle and internal-energy transport evaluator. It compares four explicit
+state paths (`P0`, `P1`, `P2`, and `R`) so direct-pressure state error,
+88-to-81 resampling, and codec compression remain separately attributable.
+It reads only the historically exposed 624 frames of 85604 and performs no
+training or dynamics evaluation.
+
+Submit only from the Rocky 9 login node after syncing the exact clean commit:
+
+```bash
+export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase2_o1_codec_transport.sbatch
+```
+
+The unique result directory is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_transport/job_<id>`.
+Both historical codecs already failed at least one preliminary O1 gate, so
+this extension can localize transport loss but cannot retroactively accept
+either representation or authorize access to 85606.
+
 ## Phase 0 legacy reproduction
 
 `phase0_reproduce_legacy_valid.sbatch` runs one 48-frame, 64-member forecast on the legacy 85604 validation interval. One invocation produces:
