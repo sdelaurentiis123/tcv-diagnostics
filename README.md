@@ -15,3 +15,12 @@ The executed data findings and current go/no-go decision are in
 slow background evolution plus fast, coherently translating toroidal
 fluctuations; the data characterization is complete, but the stationary
 learning split remains blocked pending simulator-owner guidance.
+
+The historical codecs have now been evaluated through the frozen O1 oracle;
+[`paper0/PHASE2_O1_READOUT.md`](paper0/PHASE2_O1_READOUT.md) records why neither
+passes the complete preliminary representation gate. The exact-source
+transport audit is frozen in
+[`paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md`](paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md):
+the former image-space flux is retained only as a proxy, and no physical
+transport claim is allowed until the conservative Hermes/BOUT++ operator and
+geometry pass the declared oracle ladder.

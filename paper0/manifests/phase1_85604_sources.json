@@ -40,6 +40,31 @@
       "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
       "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
     },
+    "simulator_source": {
+      "hermes3": {
+        "repository": "https://github.com/boutproject/hermes-3",
+        "revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+        "license": "GPL-3.0",
+        "critical_files": {
+          "hermes-3.cxx": "843ea048baa90b4a55ead6aa6ed546c6746e81c2718a8ade3ed977381364f65a",
+          "src/div_ops.cxx": "458eeecbd6da1afb882d0de2b652271fc2c2ca142c39a636a52f3adc5c16ef3f",
+          "src/evolve_density.cxx": "3c766083078ec17d737a7ac595868adf1706e0596a9e614bb3ac73f071c1834d",
+          "src/evolve_pressure.cxx": "d3abc5e32cdad3ea9c42faf432dcaed465070ee5792cb62e550b9baaad9953e6"
+        }
+      },
+      "boutpp": {
+        "repository": "https://github.com/boutproject/BOUT-dev",
+        "revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+        "license": "LGPL-3.0",
+        "critical_files": {
+          "src/mesh/coordinates.cxx": "e00afb05e00ddfc1631c9afbd5d3e00ab50911e14399e4814e14ba9e8c1f336f",
+          "src/mesh/difops.cxx": "7b89f0b7b859c23ac504dde62bbf7b58dbe81fa6b5eea73cbadaa14d422eb6e9",
+          "include/bout/coordinates.hxx": "5e237be2344dd588e110304dd6aee0e370d6cbf4b12ae20485653545d4f373f6",
+          "src/mesh/parallel/shiftedmetric.cxx": "761bf5b8488edb21feb8c512860bf2f2a9283e4d6d9c7200bc0f6b1598fafe56",
+          "src/sys/derivs.cxx": "55319fa4197c3904f8bf63ee27e0332a1c218558cdf0552838b931bb4560bd8a"
+        }
+      }
+    },
     "legacy_geometry_cache": {
       "path": "/mnt/home/sdelaurentiis/ceph/lola_tcv/grid_85604.npz",
       "sha256": "0bdf6ec083c32c9ef5e75ad4bcd6ac44b8dea4280a2b8a6d17c9ea36bdc249a0"
@@ -84,7 +109,25 @@
       "Pi"
     ],
     "bout_version": "5.2.1",
-    "bout_revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f"
+    "bout_revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "hermes_slope_limiter": "MC",
+    "parallel_transform": "shifted",
+    "normalise_metric": true,
+    "poloidal_flows": true,
+    "exb_advection_simplified": false,
+    "mesh_topology": {
+      "nx_with_radial_guards": 68,
+      "ny": 32,
+      "radial_guard_cells_each_side": 2,
+      "model_x_to_grid_x_offset": 2,
+      "ixseps1": 18,
+      "ixseps2": 68,
+      "jyseps1_1": 7,
+      "jyseps1_2": 16,
+      "jyseps2_1": 16,
+      "jyseps2_2": 23
+    }
   },
   "split": {
     "train": [0, 432],

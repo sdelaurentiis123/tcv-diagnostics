@@ -147,3 +147,41 @@ execution details before either real-data reconstruction is run:
 The result records the exact PyTorch, CUDA, cuDNN, driver, and GPU identities.
 This amendment changes no data selection, metric, band, threshold, checkpoint,
 or scientific claim.
+
+## A006 - Recover the exact Hermes revision from the raw dump
+
+**Status:** active after the O1 codec result and before transport implementation.
+
+The Phase 1 manifest originally recorded the BOUT++ revision from
+`BOUT.settings` but not the Hermes-3 revision embedded in the representative
+raw dump. A read-only source audit recovered:
+
+- Hermes-3 revision `920ba829cc78cdab0dbf6101c69fecc4689bd8dd`;
+- slope limiter `MC`;
+- BOUT++ revision `7d28d67c3f12c24ec281c0982e870f5369c65a6f` and version `5.2.1`.
+
+Clean detached checkouts of the official Hermes-3 and BOUT++ repositories were
+used only to identify the executed equations and hash the critical source
+files. Their revisions, repository URLs, licenses, and file hashes are added to
+`phase1_85604_sources.json`. This is a provenance correction. It changes no
+data, split, model, threshold, or earlier result.
+
+## A007 - Replace the exploratory radial-flux proxy before transport claims
+
+**Status:** frozen before implementation.
+
+The predecessor radial-flux function used a centered `z` difference divided by
+`Bxy` and an unweighted `y,z` mean. Exact-source review shows that the executed
+Hermes density and pressure equations instead use the conservative
+`Div_n_bxGrad_f_B_XPPM` operator. Because `poloidal_flows = true`, its radial
+face flow contains both a Jacobian-weighted `x-z` contribution and an `x-y`
+contribution involving BOUT++ shifted-field-line `DDY`, `g11`, and `g23`.
+
+The old result remains historical evidence about density--potential
+correlation but is not an authoritative physical particle or energy flux.
+`paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md` freezes the replacement
+definition and validation ladder. It permits an explicitly named partial
+`xz`-component implementation for oracle development, but keeps the transport
+gate closed until shifted topology, native-grid agreement, geometry masks,
+resampling sensitivity, sign, and units are validated. No failed or missing
+transport value may be silently recorded as zero.
