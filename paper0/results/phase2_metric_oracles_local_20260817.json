@@ -42,7 +42,14 @@
     "known_spread_skill_ratio": "pass",
     "memberwise_nonlinear_diagnostic": "pass"
   },
-  "sha256": {
+  "record_corrections": [
+    {
+      "kind": "metadata_schema_only",
+      "description": "Renamed the file-digest container after the first Rusty validation because repository-wide audit code reserves keys ending in sha256 for scalar digests. No metric value or test outcome changed."
+    }
+  ],
+  "digest_algorithm": "sha256",
+  "file_digests": {
     "paper0/protocol/PHASE2_METRIC_PROTOCOL.md": "3070bae464ef005a63a3b581bed1e4ebbcf1e9e2be356a2e291921204847462d",
     "src/tcv_diagnostics/metrics.py": "0a7540a3e1b9698dea2293e729fd1f956986924cb3be6cc15a546add98521b64",
     "tests/test_phase2_metrics.py": "93cd4afa63c8cc2a684b34d15e194fa0a932adc5bd58fe7a83202ee8092735d1"
