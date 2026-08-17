@@ -40,6 +40,14 @@ port of the executed conservative operator. The exact definition, staged
 implementation restrictions, and required oracle comparison are frozen in
 `paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md`.
 
+`src/tcv_diagnostics/transport.py` is a new NumPy transcription of only the
+guard-independent radial `x-z` face-flow component. It was written from the
+hash-locked equations rather than copied from GPL source, uses source-matched
+corner placement and Monotonized-Central reconstruction, and is covered by
+synthetic known-answer and finite-volume conservation tests. Its API and
+metadata say `partial`; it remains scientifically blocked from use as total
+transport until the shifted `x-y` component passes the BOUT++ oracle ladder.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in
