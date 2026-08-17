@@ -3,7 +3,7 @@
 # CPU-only; no learned model is trained or evaluated.
 #SBATCH --job-name=p2_phi_elliptic
 #SBATCH --partition=gen
-#SBATCH --qos=inter
+#SBATCH --qos=gen
 #SBATCH --nodes=1
 #SBATCH --ntasks=4
 #SBATCH --cpus-per-task=2

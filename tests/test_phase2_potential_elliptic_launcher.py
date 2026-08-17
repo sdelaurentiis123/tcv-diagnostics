@@ -36,7 +36,7 @@ class PotentialEllipticLauncherTests(unittest.TestCase):
         for required in (
             "PAPER0_EXPECTED_COMMIT",
             "--partition=gen",
-            "--qos=inter",
+            "--qos=gen",
             "--ntasks=4",
             "--cpus-per-task=2",
             "--mem=32G",
