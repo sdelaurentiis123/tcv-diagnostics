@@ -51,6 +51,9 @@ def _compact_truth(root: Path) -> dict:
             )
         records.append(
             {
+                "shard_index": index,
+                "start": start,
+                "stop": start + 78,
                 "canonical_file": str(path),
                 "canonical_file_sha256": _sha256(path),
             }
@@ -131,6 +134,18 @@ def test_native_truth_catalog_refuses_failed_source_gate() -> None:
             raise AssertionError("failed native truth gate was accepted")
 
 
+def test_native_truth_catalog_refuses_reordered_shard_record() -> None:
+    with tempfile.TemporaryDirectory() as temporary:
+        result = _compact_truth(Path(temporary))
+        result["extraction"]["canonical_shards"][2]["shard_index"] = 3
+        try:
+            NativeTruthCatalog(result)
+        except ValueError as error:
+            assert "order or interval" in str(error)
+        else:
+            raise AssertionError("reordered native truth shard was accepted")
+
+
 def test_matched_candidate_artifact_verifies_and_reads_e6b_views() -> None:
     with tempfile.TemporaryDirectory() as temporary:
         path = _candidate(Path(temporary), "e6b", (496, 497))
@@ -189,3 +204,17 @@ def test_matched_phi_artifact_is_tied_to_candidate_hash() -> None:
             assert "attributes differ" in str(error)
         else:
             raise AssertionError("phi artifact accepted the wrong candidate hash")
+
+        with h5py.File(phi, "r+") as handle:
+            del handle.attrs["held_out_85606_read"]
+        try:
+            MatchedPhiArtifact(
+                phi,
+                sha256=_sha256(phi),
+                source_candidate_sha256=candidate_hash,
+                frames=(496, 497),
+            )
+        except ValueError as error:
+            assert "attributes are missing" in str(error)
+        else:
+            raise AssertionError("phi artifact accepted a missing blind-lock attribute")

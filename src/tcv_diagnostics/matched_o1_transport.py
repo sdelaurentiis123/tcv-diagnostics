@@ -82,6 +82,8 @@ class MatchedCandidateArtifact:
                 "zperiod": 5,
             }
             for name, expected in expected_attributes.items():
+                if name not in handle.attrs:
+                    raise ValueError(f"matched candidate attribute {name} is missing")
                 actual = handle.attrs.get(name)
                 if isinstance(expected, str):
                     actual = _text_attribute(actual)
@@ -194,6 +196,16 @@ class MatchedPhiArtifact:
         ):
             raise ValueError("matched phi frames must be contiguous")
         with h5py.File(self.path, "r") as handle:
+            required_attributes = {
+                "schema_version",
+                "development_run",
+                "held_out_85606_read",
+                "zperiod",
+                "truth_layout",
+                "source_input_sha256",
+            }
+            if not required_attributes.issubset(handle.attrs):
+                raise ValueError("matched phi artifact attributes are missing")
             if (
                 int(handle.attrs.get("schema_version", -1)) != 1
                 or _text_attribute(handle.attrs.get("development_run")) != "85604"
@@ -259,13 +271,22 @@ class NativeTruthCatalog:
         records = compact_result.get("extraction", {}).get("canonical_shards", [])
         shards = []
         for index, record in enumerate(records):
+            expected_start = index * 78
+            expected_stop = (index + 1) * 78
+            if (
+                not {"shard_index", "start", "stop"}.issubset(record)
+                or int(record["shard_index"]) != index
+                or int(record["start"]) != expected_start
+                or int(record["stop"]) != expected_stop
+            ):
+                raise ValueError("native truth shard record order or interval differs")
             path = Path(record["canonical_file"])
             assert_development_path(path)
             shards.append(
                 NativeTruthShard(
                     index=index,
-                    start=index * 78,
-                    stop=(index + 1) * 78,
+                    start=expected_start,
+                    stop=expected_stop,
                     path=path,
                     sha256=str(record["canonical_file_sha256"]),
                 )
