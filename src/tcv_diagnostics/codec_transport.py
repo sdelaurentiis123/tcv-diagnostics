@@ -49,6 +49,33 @@ O1_COMPARISONS = {
     "P0_vs_R_authoritative": ("P0", "R"),
 }
 
+MATCHED_O1_COMPARISON = {
+    "truth_vs_reconstruction": ("truth", "reconstruction"),
+}
+
+MATCHED_O1_TRANSPORT_THRESHOLDS = {
+    "strict_faces": {
+        "relative_l2_max": 0.25,
+        "rms_ratio": (0.75, 1.25),
+        "pearson_correlation_min": 0.85,
+        "weighted_sign_disagreement_max": 0.15,
+    },
+    "separatrix": {
+        "relative_l2_max": 0.20,
+        "absolute_normalized_bias_max": 0.10,
+        "rms_ratio": (0.80, 1.20),
+        "pearson_correlation_min": 0.90,
+        "weighted_sign_disagreement_max": 0.10,
+    },
+    "separatrix_block": {
+        "relative_l2_max": 0.30,
+        "absolute_normalized_bias_max": 0.15,
+        "pearson_correlation_min": 0.80,
+        "weighted_sign_disagreement_max": 0.15,
+        "required_passing_blocks": 7,
+    },
+}
+
 
 def _finite_real(name: str, values: np.ndarray) -> np.ndarray:
     array = np.asarray(values)
@@ -546,6 +573,35 @@ def evaluate_codec_comparison_gate(
         "quantities": quantity_results,
         "passes": passes,
         "status": "pass" if passes else "fail",
+    }
+
+
+def build_matched_o1_transport_gate(
+    *,
+    overall: Mapping[str, Any],
+    temporal_blocks: list[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Apply only the transport thresholds in the matched O1/O2 protocol."""
+
+    gate = evaluate_codec_comparison_gate(
+        overall,
+        temporal_blocks,
+        comparison="truth_vs_reconstruction",
+        face_thresholds=MATCHED_O1_TRANSPORT_THRESHOLDS["strict_faces"],
+        surface_thresholds=MATCHED_O1_TRANSPORT_THRESHOLDS["separatrix"],
+        block_thresholds=MATCHED_O1_TRANSPORT_THRESHOLDS[
+            "separatrix_block"
+        ],
+    )
+    return {
+        "thresholds": {
+            name: {
+                key: list(value) if isinstance(value, tuple) else value
+                for key, value in thresholds.items()
+            }
+            for name, thresholds in MATCHED_O1_TRANSPORT_THRESHOLDS.items()
+        },
+        **gate,
     }
 
 

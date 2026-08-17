@@ -12,11 +12,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from tcv_diagnostics.codec_transport import (  # noqa: E402
+    MATCHED_O1_COMPARISON,
+    MATCHED_O1_TRANSPORT_THRESHOLDS,
     O1_COMPARISONS,
     STATE_PATHS,
     TRANSPORT_QUANTITIES,
     TransportComparisonAccumulator,
     build_codec_transport_geometry,
+    build_matched_o1_transport_gate,
     build_o1_transport_gate,
     c5t_transport_state,
     direct_pressure_transport_state,
@@ -137,11 +140,49 @@ def fake_outputs(scale_by_path: dict[str, float], frames: int = 4):
             }
             for index, quantity in enumerate(TRANSPORT_QUANTITIES)
         }
-        for path in STATE_PATHS
+        for path in scale_by_path
     }
 
 
 class CodecTransportAccumulatorTests(unittest.TestCase):
+    def test_matched_gate_uses_frozen_truth_reconstruction_thresholds(self) -> None:
+        def summary(reconstruction_scale: float):
+            accumulator = TransportComparisonAccumulator(MATCHED_O1_COMPARISON)
+            accumulator.update(
+                fake_outputs(
+                    {"truth": 1.0, "reconstruction": reconstruction_scale}
+                )
+            )
+            return accumulator.finalize()
+
+        identity = summary(1.0)
+        gate = build_matched_o1_transport_gate(
+            overall=identity,
+            temporal_blocks=[identity] * 8,
+        )
+        self.assertTrue(gate["passes"])
+        self.assertEqual(
+            gate["thresholds"]["strict_faces"]["relative_l2_max"],
+            0.25,
+        )
+        self.assertEqual(
+            gate["thresholds"]["separatrix"]["rms_ratio"],
+            [0.8, 1.2],
+        )
+        self.assertEqual(
+            MATCHED_O1_TRANSPORT_THRESHOLDS["separatrix_block"][
+                "required_passing_blocks"
+            ],
+            7,
+        )
+
+        biased = summary(1.3)
+        failed = build_matched_o1_transport_gate(
+            overall=biased,
+            temporal_blocks=[biased] * 8,
+        )
+        self.assertFalse(failed["passes"])
+
     def test_accumulator_keeps_all_four_attribution_comparisons(self) -> None:
         accumulator = TransportComparisonAccumulator()
         accumulator.update(fake_outputs({path: 1.0 for path in STATE_PATHS}))
