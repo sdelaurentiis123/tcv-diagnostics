@@ -59,6 +59,11 @@ class CompiledShiftedDdyOracleTests(unittest.TestCase):
             self.assertIn(f'"{case}"', source)
         self.assertIn('DDY(input, CELL_CENTRE, "C2")', source)
         self.assertIn("mesh->communicate(input)", source)
+        self.assertIn(
+            'Options::root()["mesh"]["input_" + name].setConditionallyUsed()',
+            source,
+        )
+        self.assertNotIn("error_on_unused_options", source)
 
     def test_canonical_reader_reorders_axes_and_selects_last_time(self) -> None:
         values = np.arange(2 * 81 * 4 * 3, dtype=np.float64).reshape(2, 81, 4, 3)

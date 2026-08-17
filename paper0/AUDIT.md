@@ -254,6 +254,13 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     forced to `NXPE=1`, yielding `NYPE=4` and `MYSUB=8`; rank-local outputs are
     reassembled only after verifying `NXPE`, `NYPE`, `MYSUB`, `PE_XIND`, and
     `PE_YIND`.
+25. **The four-rank harness reached output but failed its final input lint.**
+    Job `6890792` evaluated the manufactured fields and BOUT++ `DDY`, then
+    wrote four complete rank files. Its subsequent `checkForUnusedOptions`
+    treated the four FieldFactory fallback expressions as unused because
+    `mesh->get` did not mark their `Options` nodes. The output is not accepted
+    or compared. The fix marks exactly those four nodes conditionally used and
+    retains global unused-option validation.
 
 ## Exact commands
 

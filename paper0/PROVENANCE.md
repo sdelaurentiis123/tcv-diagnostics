@@ -99,6 +99,15 @@ the minimal valid `NXPE=1`, `NYPE=4`, `MYSUB=8` decomposition and reconstructs
 the global `y` axis by verified `PE_YIND`; numerical acceptance settings and
 candidate code are unchanged.
 
+Four-rank job `6890792` then evaluated all four operators and wrote rank-local
+outputs, but the executable's final `checkForUnusedOptions` rejected the four
+manufactured `mesh:input_*` nodes. BOUT++'s `mesh->get` consumed the expressions
+through its FieldFactory fallback without marking the corresponding `Options`
+nodes. No comparison was accepted. The narrow correction calls
+`setConditionallyUsed()` on exactly those four named nodes; it does not disable
+global unused-option checking or modify an input, operator, mask, or tolerance.
+The no-result artifact is `paper0/results/phase2_shifted_ddy_6890792.json`.
+
 The compiled comparison harness under
 `paper0/oracles/bout_shifted_ddy/` uses the initialization, mesh-load,
 communication, derivative, and default-output pattern from BOUT++

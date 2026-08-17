@@ -17,6 +17,7 @@ void evaluate_case(const std::string& name, Options& output) {
 
   Field3D input;
   mesh->get(input, "input_" + name);
+  Options::root()["mesh"]["input_" + name].setConditionallyUsed();
 
   // This mirrors the state of an evolved Hermes field before DDY: physical
   // boundary guards are present and logical/MPI connections are communicated.
@@ -47,4 +48,3 @@ int main(int argc, char** argv) {
   BoutFinalise();
   return 0;
 }
-

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_shifted_ddy_compiled_oracle",
+  "paper0_commit": "9c9cc062fa800a177f4548f63e46390b504d20cb",
+  "slurm": {
+    "job_id": 6890792,
+    "state": "FAILED",
+    "exit_code": "6:0",
+    "start": "2026-08-17T02:23:18-04:00",
+    "end": "2026-08-17T02:23:31-04:00",
+    "elapsed": "00:00:13",
+    "node": "worker5594"
+  },
+  "failure": {
+    "stage": "post_output_unused_option_validation",
+    "classification": "manufactured_option_consumption_not_marked",
+    "observed": "BOUT++ wrote all four rank outputs and then checkForUnusedOptions rejected the four mesh input expressions.",
+    "root_cause": "mesh->get evaluated the FieldFactory fallback expressions without marking their exact Options nodes as used.",
+    "operator_evaluated": true,
+    "candidate_compared": false,
+    "result_accepted": false,
+    "global_unused_option_validation_disabled": false,
+    "numerical_acceptance_rule_changed": false
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_shifted_ddy/job_6890792",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_shifted_ddy_6890792.log",
+    "artifact_digests": {
+      "slurm_log": "704a2c25486bfd411c9a31a42b3a0bfeba1f9ff27638876c7083d85ad64d1e70",
+      "job.log": "704a2c25486bfd411c9a31a42b3a0bfeba1f9ff27638876c7083d85ad64d1e70",
+      "build/shifted_ddy_oracle": "814bd1687fe7db1df2ca9d0672bc6452238cc2645ab4b4b1a030150d54627d2a",
+      "run/BOUT.inp": "65ebec7b12f4f63d441d96651096e15810670cd0b03f9bc3937619c4f7f26d53",
+      "run/BOUT.settings": "0a5bc14f2557d7ae5c9d1ab9c7263ce199940e0a4f1fa625734e0faf6ea48d4a",
+      "run/BOUT.dmp.0.nc": "af7ca57d35c39c3823c103841e87f7502e558fbc5d620876b2dff76f9619af4e",
+      "run/BOUT.dmp.1.nc": "808e5b8e9c27e7f66b1c585443adedb90c5d6c00d27a047b3e56e1023fefc499",
+      "run/BOUT.dmp.2.nc": "8d71221c4a7529187be316409373beafa4c0af0d0ec4a78e48621eb45e0932ab",
+      "run/BOUT.dmp.3.nc": "660371ac020fd6ea1f609d60d9f0192a88b807516779770d838999e56d0f4ff6"
+    }
+  },
+  "data_access": {
+    "run_id": "85604_geometry_only",
+    "plasma_state_frames_read": 0,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "no_result_post_output_validation_failure"
+}
