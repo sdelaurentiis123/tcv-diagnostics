@@ -49,6 +49,18 @@ independently tested NumPy reductions:
 The f8 and z44 checkpoints remain external immutable artifacts; their paths,
 hashes, lineage, and non-comparability caveat are frozen in the O1 protocol.
 
+Job `6890650` completed from clean Paper 0 commit
+`2bf810ff226641ac1955367a18bd492ab08c442c` on Rocky 9 with an NVIDIA H100.
+The tracked compact result is
+`paper0/results/phase2_o1_codec_6890650.json`; it identifies the immutable full
+artifact at
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec/job_6890650/o1_codec_metrics.json`
+with SHA-256
+`d9440ecf7182c434976b67a33118d8c3dcb81b0fcec9a16f89745a5398aa850e`.
+The compact-record generator verifies that digest, the run ID, the blind-test
+exclusion flag, the commit, and the SLURM job before writing. The O1 readout and
+all four figure pairs are regenerated only from that tracked compact record.
+
 ## Phase 0 execution evidence
 
 No predecessor code has been ported yet. The audit-only legacy reproduction executed the predecessor files in place after verifying their byte hashes. Job `6890428` used Paper 0 commit `7e2b5d2`, Rocky Linux 9.8, an NVIDIA H100, and only the legacy 85604 validation region. Its compact result record is `paper0/results/phase0_legacy_valid_6890428.json`; the full Rusty artifacts remain under `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428`.
