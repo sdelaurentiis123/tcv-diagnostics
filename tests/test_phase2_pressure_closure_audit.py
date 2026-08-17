@@ -18,6 +18,7 @@ MANIFEST = (
     ROOT / "paper0" / "manifests" / "phase2_85604_pressure_closure_audit.json"
 )
 LAUNCHER = ROOT / "cluster" / "phase2_85604_pressure_closure_audit.sbatch"
+NO_RESULT = ROOT / "paper0" / "results" / "phase2_pressure_closure_6891417.json"
 
 
 def load_module(name: str, path: Path):
@@ -159,6 +160,17 @@ class PressureClosureAuditImplementationTests(unittest.TestCase):
             AUDIT._verify_path_is_development_run(Path("/tmp/data/85606"))
         with self.assertRaises(ValueError):
             AUDIT._verify_path_is_development_run(Path("/tmp/data/unknown"))
+
+    def test_serial_attempt_is_tracked_as_no_result(self) -> None:
+        attempt = json.loads(NO_RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(attempt["paper0_commit"], "39bfb22ebd2eed9ee67bc193d958298857fd1e21")
+        self.assertEqual(attempt["slurm"]["job_id"], 6891417)
+        self.assertEqual(attempt["slurm"]["state"], "CANCELLED")
+        self.assertFalse(attempt["data_access"]["complete_rank_coverage_established"])
+        self.assertFalse(attempt["data_access"]["scientific_result_written"])
+        self.assertFalse(attempt["outcome"]["scientific_statistics_accepted"])
+        self.assertFalse(attempt["outcome"]["protocol_or_tolerance_changed"])
+        self.assertFalse(attempt["data_access"]["held_out_85606_read"])
 
 
 if __name__ == "__main__":

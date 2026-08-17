@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_85604_all_frame_pressure_closure_audit_attempt",
+  "paper0_commit": "39bfb22ebd2eed9ee67bc193d958298857fd1e21",
+  "slurm": {
+    "job_id": 6891417,
+    "state": "CANCELLED",
+    "batch_exit_code": "0:15",
+    "submit_or_start": "2026-08-17T04:02:35-04:00",
+    "end": "2026-08-17T04:41:21-04:00",
+    "elapsed": "00:38:46",
+    "time_limit": "00:45:00",
+    "node": "worker5594",
+    "batch_max_rss_kib": 6619428
+  },
+  "data_access": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "provenance_gates_passed": true,
+    "complete_rank_coverage_established": false,
+    "scientific_result_written": false
+  },
+  "outcome": {
+    "classification": "no_result_serial_io_performance_failure",
+    "reason": "the serial scanner could not cover 256 native rank files inside the frozen 45-minute job cap",
+    "last_live_file_descriptor_observation": {
+      "elapsed": "approximately 00:37:00",
+      "open_rank_file": "BOUT.dmp.42.nc",
+      "observation_was_read_only": true
+    },
+    "scientific_statistics_accepted": false,
+    "protocol_or_tolerance_changed": false,
+    "planned_correction": "parallelize the identical frozen audit over disjoint rank shards and merge only after complete unique coverage"
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_pressure_closure/job_6891417",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_pressure_closure_6891417.log",
+    "artifact_digests": {
+      "commands.sh": "68e8ff756c4fb6a17d8a59c345a1f49d615e2e5ca7c2d31de27df7ae45a2a893",
+      "environment.txt": "2004d8827369edd6fb6644bd672342879bc557b677972cc972c80bf70a3cb028",
+      "job.log": "851718902045ff19dc5b7d341d2e3d97756d24b652b3eadd44fadef9ba68a711",
+      "slurm_log": "d4155b940cc3e75f0bd1c0e2808c07e44b390781a471472aa3a16bfa4874cae7"
+    }
+  }
+}

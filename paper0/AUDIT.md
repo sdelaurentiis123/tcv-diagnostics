@@ -319,6 +319,17 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     No threshold, frame, or region was changed. This accepts the partial
     operator on selected real states but blocks an implicit claim that
     `[Ne, Te, Ti, phi, Vi]` exactly reconstructs the evolved Hermes state.
+32. **The first all-frame closure audit produced no result because serial
+    native-rank I/O cannot fit the short-job budget.** Rocky 9 job `6891417`
+    ran from clean commit `39bfb22` and passed every source, archive, OS, and
+    dirty-state gate. A read-only live descriptor check at about 37 minutes
+    showed it still processing `BOUT.dmp.42.nc` of 256; it was cancelled at
+    38:46 rather than allowed to consume the remaining allocation without any
+    chance of completion. Peak RSS was 6,619,428 KiB. No strict result JSON was
+    written, no partial statistic is accepted, and 85606 was not read. The
+    immutable logs remain under the job-specific directory. The correction is
+    an execution-only parallelization over disjoint rank shards; it does not
+    change a field, cell, scope, formula, tolerance, or decision rule.
 
 ## Exact commands
 

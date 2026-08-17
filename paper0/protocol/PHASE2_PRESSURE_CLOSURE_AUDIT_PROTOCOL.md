@@ -160,3 +160,19 @@ No frequency or magnitude discovered by this job automatically authorizes a
 channel change. The audit yields a recommendation to be reconciled with the
 scientific target and simulator-owner guidance. It cannot establish anything
 about 85606, learned forecasts, transport fidelity, or diagnostic ranking.
+
+## 8. Execution history
+
+The first implementation attempt, Rocky 9 job `6891417` from clean commit
+`39bfb22`, used one serial scanner. It passed all provenance gates but was only
+reading `BOUT.dmp.42.nc` of 256 after approximately 37 minutes. It was
+cancelled at 38:46, before the 45-minute cap, and wrote no result JSON. No
+partial statistics are accepted. The immutable no-result record is
+`paper0/results/phase2_pressure_closure_6891417.json`.
+
+This establishes an implementation-performance constraint only. A corrected
+launcher may read disjoint rank shards concurrently and merge their sufficient
+statistics after verifying complete, unique processor-coordinate coverage.
+The six fields, all 624 frames, native cells, spatial scopes, time blocks,
+closure formulas, tolerances, completion conditions, and interpretation rules
+above remain unchanged.

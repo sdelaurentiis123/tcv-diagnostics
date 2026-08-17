@@ -257,6 +257,19 @@ JSON, and comparison arrays have SHA-256
 and `9c5fe8a72a4ed6a1d67dc94e93913be978dda603db609af1f7dcdceaf8237082`.
 This execution read no 85606 state.
 
+The prospectively frozen all-frame pressure-closure audit was first attempted
+serially by Rocky 9 job `6891417` from clean commit
+`39bfb22ebd2eed9ee67bc193d958298857fd1e21`. All provenance gates passed, but
+the native NetCDF files are chunked by full local rank and frame. After roughly
+37 minutes, a read-only inspection of the running process showed the open file
+was only `BOUT.dmp.42.nc` of 256. The job was cancelled at 38:46 with peak RSS
+6,619,428 KiB; it had written no result JSON. This is a no-result implementation
+performance failure, not a data or closure finding. Its compact record is
+`paper0/results/phase2_pressure_closure_6891417.json`. The unique external
+directory is retained. The next implementation may parallelize disjoint rank
+reads and merge only after complete coordinate coverage, while leaving every
+frozen scientific choice unchanged.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in
