@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_after_job_6892446_before_first_runtime_pressure_corrected_replay",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "training_allowed": false,
+  "scientific_scope": {
+    "evaluates_learned_model": false,
+    "establishes_held_out_generalization": false,
+    "changes_only_raw_to_runtime_pressure_contract": true
+  },
+  "predecessor_locks": {
+    "base_manifest": {
+      "path": "paper0/manifests/phase2_potential_elliptic_85604.json",
+      "sha256": "29feca35c73d8eeac24cf1b6da0e93473d1fec33a79b014a4ea91875f742af48"
+    },
+    "base_protocol": {
+      "path": "paper0/protocol/PHASE2_POTENTIAL_ELLIPTIC_PROTOCOL.md",
+      "sha256": "c208b4d8a654f1a33c557630461a00918ea62d41996acd9270c454ada170fdba"
+    },
+    "failed_replay_result": {
+      "path": "paper0/results/phase2_potential_elliptic_6892446.json",
+      "sha256": "71b9d2942f8ff943f412f86ee7c6fa729194c53a883a2df6c8ecc6894bb6917d",
+      "slurm_job_id": 6892446
+    },
+    "selected_frame_pressure_result": {
+      "path": "paper0/results/phase2_hermes_native_frames_6891379.json",
+      "sha256": "8c72e2396c474cffda2c36254f1c1ef1a9cd4348fcae59bb92e96f8a14c406ed"
+    },
+    "all_frame_pressure_result": {
+      "path": "paper0/results/phase2_pressure_closure_6891583.json",
+      "sha256": "9511571507bcd0d46b632843c3220646b8c1b9b53c909845262946fe6f1e4c51"
+    },
+    "all_frame_state_result": {
+      "path": "paper0/results/phase2_state_completeness_6891855.json",
+      "sha256": "565a4e27e87d4f5a3e647daf77486020ac627f43ffb5cd30a8daf74b7199cf20"
+    }
+  },
+  "known_failed_point": {
+    "frame_index": 312,
+    "model_indices_xyz": [6, 31, 73],
+    "raw_evolved_Pi": -5.799512988032478e-05,
+    "replay_minus_stored_phi": 5.7995129900123565e-05,
+    "selected_frame_negative_raw_Pe_count": 0,
+    "selected_frame_negative_raw_Pi_count": 1
+  },
+  "source_contract_correction": {
+    "density_floor": 1e-07,
+    "soft_floor_formula": "softFloor(N,f) = max(N,0) + f * exp(-max(N,0)/f)",
+    "runtime_pressure_formula": "P_runtime = N * max(P_evolved,0) / softFloor(N,1e-7)",
+    "electron_density": "Ne",
+    "ion_density": "Ni = Ne",
+    "pressure_correction": "Pi_hat = Pi_runtime - Pe_runtime / 3672",
+    "raw_evolved_pressure_retained_for_transport": true,
+    "runtime_pressure_used_only_for_vorticity_inversion": true
+  },
+  "source_locks": {
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "bout_revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+    "evolve_pressure_source_sha256": "d3abc5e32cdad3ea9c42faf432dcaed465070ee5792cb62e550b9baaad9953e6",
+    "hermes_utils_header_sha256": "5e3b8055ae068481319a90329a3bdf3605b82b9024ee8273b210fd2be915bd85",
+    "vorticity_source_sha256": "7643af10d23ce4efebf58b835fbb27cb8a7d7ed11545d450182916013f3a002a",
+    "vorticity_header_sha256": "276a90682298e2b20594fc52b241518f197aa1a3310ada47fb9f7852b3deaded"
+  },
+  "canonical_reuse": {
+    "producer_job_id": 6892446,
+    "canonical_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/canonical_potential_inputs.nc",
+    "canonical_sha256": "e090b3a23fa6eedf8c37e74421c08bafd3eb513039fa7621b5d612a7e1cbba3e",
+    "extraction_record_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_elliptic/job_6892446/extraction_record.json",
+    "extraction_record_sha256": "e30e4f14dddfdff369387f9e8657b31a3e56bb4dc628c1e9ef5d86bd5bfd68be",
+    "read_only": true,
+    "predecessor_directory_may_be_modified": false
+  },
+  "unchanged_experiment": {
+    "frame_indices": [0, 156, 312, 467, 623],
+    "native_z_samples": 81,
+    "zperiod": 5,
+    "mpi_ranks": 4,
+    "NXPE": 1,
+    "NYPE": 4,
+    "MYSUB": 8,
+    "coefficient_C": "2 / Bxy^2",
+    "right_hand_side": "Vort * Bxy^2 / 2",
+    "solver_type": "cyclic",
+    "radial_boundary_flags": "INVERT_SET",
+    "retained_boundary_midpoint": "saved_midpoint",
+    "instantaneous_boundary_midpoint": "stored_adjacent_interior_target",
+    "instantaneous_arm_is_iterated_neumann": false
+  },
+  "runtime_pressure_gate": {
+    "scope": "all five selected frames and all 64x32x81 physical points",
+    "continuous_atol": 1e-12,
+    "continuous_rtol": 1e-12,
+    "requires_all_values_finite": true,
+    "requires_known_negative_support": true,
+    "requires_zero_runtime_Pi_at_known_negative_point": true
+  },
+  "source_reconstruction_gate": {
+    "continuous_atol": 5e-10,
+    "continuous_rtol": 5e-10,
+    "requires_full_physical_domain": true,
+    "requires_guard_independent_y_1_through_30": true,
+    "requires_all_selected_frames": true,
+    "constant_shift_aligned_error_is_diagnostic_only": true,
+    "required_before_paired_effect_interpretation": true
+  },
+  "paired_effect_policy": {
+    "reuse_predecessor_metrics_unchanged": true,
+    "posthoc_materiality_threshold_allowed": false,
+    "selected_frames_establish_all_frame_stability": false,
+    "internal_energy_called_total_heat_flux": false
+  },
+  "decision_rules": {
+    "runtime_pressure_failure_action": "stop",
+    "source_reconstruction_failure_action": "stop_without_tolerance_change",
+    "automatic_model_state_change_authorized": false,
+    "automatic_training_authorized": false,
+    "automatic_held_out_access_authorized": false
+  }
+}
