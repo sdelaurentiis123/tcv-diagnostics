@@ -1,0 +1,197 @@
+{
+  "development_run": "85604",
+  "gates": {
+    "bout_constants": true,
+    "confined_separatrix_surface": true,
+    "held_out_85606_untouched": true,
+    "inner_outer_target_order": true,
+    "mask_counts": true,
+    "mask_partition": true,
+    "memberwise_nonlinear_transport": true,
+    "normalization": true,
+    "outboard_midplane": true,
+    "penalty_categories": true,
+    "radial_psi_orientation": true,
+    "separatrix_psi": true,
+    "source_hashes": true,
+    "source_revisions": true,
+    "source_semantics": true,
+    "surface_known_answer": true,
+    "topology": true,
+    "unit_linearity": true,
+    "xpoint": true
+  },
+  "geometry": {
+    "confined_separatrix_y_count": 16,
+    "full_shape": [
+      68,
+      32
+    ],
+    "inner_target_separatrix_RZ_m": [
+      0.6341100851522731,
+      -0.5126931808070041
+    ],
+    "minimum_radial_psi_difference": 4.1698824270566684e-05,
+    "model_shape": [
+      64,
+      32
+    ],
+    "outboard_midplane_separatrix_RZ_m": [
+      1.087493128717754,
+      -0.017535153092040314
+    ],
+    "outboard_midplane_y": 18,
+    "outer_target_separatrix_RZ_m": [
+      1.033095921281306,
+      -0.6420693611434914
+    ],
+    "penalty_counts_operator_interior": {
+      "exterior": 16,
+      "fractional": 35,
+      "strict": 1869
+    },
+    "positive_direction_on_confined_separatrix": "+x_outward",
+    "positive_radial_psi_differences": 2016,
+    "primary_mask_counts": {
+      "confined_edge": 256,
+      "private_flux": 219,
+      "scrape_off_layer": 1394
+    },
+    "psi_normalized_range": [
+      0.8991575102879601,
+      1.1084596000007159
+    ],
+    "separatrix_face_left_model_x": 15,
+    "separatrix_face_max_abs_psi_error": 1.6318089728854096e-16,
+    "strict_operator_cell_count": 1869,
+    "topology": {
+      "ixseps1": 18,
+      "ixseps2": 68,
+      "jyseps1_1": 7,
+      "jyseps1_2": 16,
+      "jyseps2_1": 16,
+      "jyseps2_2": 23
+    },
+    "total_radial_psi_differences": 2016,
+    "xpoint_RZ_m": [
+      0.7942120340630372,
+      -0.4420630317234957
+    ],
+    "xpoint_duplicate_RZ_m": [
+      0.7942120340630372,
+      -0.4420630317234957
+    ],
+    "xpoint_mismatch_m": 0.0
+  },
+  "held_out_85606_accessed": false,
+  "normalization": {
+    "conversion_probe": {
+      "internal_energy_flow_W_after_explicit_1p5": [
+        -8.681611583980068,
+        0.0,
+        13.022417375970102
+      ],
+      "normalized": [
+        -2.0,
+        0.0,
+        3.0
+      ],
+      "particle_rate_per_s": [
+        -7.224847664314036e+17,
+        0.0,
+        1.0837271496471055e+18
+      ],
+      "pressure_flow_W": [
+        -5.787741055986712,
+        0.0,
+        8.681611583980068
+      ]
+    },
+    "matches": {
+      "Cs0_m_per_s": true,
+      "Omega_ci_per_s": true,
+      "particle_rate_scale_per_s": true,
+      "pressure_flow_scale_W": true,
+      "rho_s0_m": true
+    },
+    "relative_tolerance": 1e-14,
+    "values": {
+      "Cs0_m_per_s": 69205.61141651045,
+      "Omega_ci_per_s": 95788333.03066081,
+      "particle_rate_scale_per_s": 3.612423832157018e+17,
+      "pressure_flow_scale_W": 2.893870527993356,
+      "rho_s0_m": 0.0007224847664314034
+    }
+  },
+  "paper0_commit": "9dd8780ca2b68b76624aaefa1d8b3638c5c6377c",
+  "phase": "phase2_85604_geometry_units_ensemble_transport",
+  "schema_version": 1,
+  "slurm_job_id": "6891709",
+  "sources": {
+    "hash_matches": {
+      "bout_constants": true,
+      "geometry": true,
+      "hermes_div_ops": true,
+      "hermes_evolve_density": true,
+      "hypnotoad_mesh": true
+    },
+    "hashes": {
+      "bout_constants": "4a89ceb00a66799668b1b73d3598e2995d9e171680be0d5ce0d20fe6b33e63b2",
+      "geometry": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8",
+      "hermes_div_ops": "458eeecbd6da1afb882d0de2b652271fc2c2ca142c39a636a52f3adc5c16ef3f",
+      "hermes_evolve_density": "3c766083078ec17d737a7ac595868adf1706e0596a9e614bb3ac73f071c1834d",
+      "hypnotoad_mesh": "3c4a3d8f5b94ab728650726fbf010af70f63ae6452a83e024460d34ab99336e3"
+    },
+    "parsed_constants": {
+      "electron_charge_c": 1.602176634e-19,
+      "proton_mass_kg": 1.672621898e-27
+    },
+    "revision_matches": true,
+    "semantics": {
+      "density_uses_negative_divergence": true,
+      "hermes_positive_face_flux_moves_i_to_i_plus_one": true,
+      "hypnotoad_penalty_is_edge_fraction": true,
+      "hypnotoad_x_increases_radially": true
+    }
+  },
+  "status": "passed",
+  "synthetic_memberwise_transport": {
+    "hand_expected": [
+      [
+        43.3881636538414,
+        -21.694081826920716
+      ]
+    ],
+    "mean_of_memberwise_transport": [
+      10.847040913460345
+    ],
+    "memberwise": [
+      [
+        43.3881636538414,
+        -21.694081826920712
+      ]
+    ],
+    "memberwise_matches_hand": true,
+    "noncommutation_demonstrated": true,
+    "transport_of_ensemble_mean_fields": [
+      0.0
+    ]
+  },
+  "synthetic_surface": {
+    "full_torus_equivalent": [
+      62.5,
+      -93.75
+    ],
+    "hand_expected": [
+      12.5,
+      -18.75
+    ],
+    "hand_sum_exact": true,
+    "replication_factor_exact": true,
+    "sign_preserved": true,
+    "wedge": [
+      12.5,
+      -18.75
+    ]
+  }
+}

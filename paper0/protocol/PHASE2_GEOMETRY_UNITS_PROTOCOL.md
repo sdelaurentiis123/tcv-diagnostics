@@ -1,6 +1,6 @@
 # Phase 2 geometry, units, and ensemble-transport protocol
 
-**Protocol status:** frozen before implementation or release evaluation
+**Protocol status:** frozen gates executed and passed unchanged in job `6891709`
 
 **Development run:** TCV/Hermes `85604`
 
@@ -267,3 +267,18 @@ The implementation is released only if all checks pass unchanged:
 
 A failed gate blocks the transport release. It is not relaxed after observing
 the result. The failure does not trigger architecture changes or training.
+
+## 7. Execution record
+
+Rocky 9 job `6891709` executed all frozen gates from clean commit
+`9dd8780ca2b68b76624aaefa1d8b3638c5c6377c` and completed with exit `0:0` in
+16 seconds. All 19 recorded gates passed. The full result is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_geometry_units/job_6891709/geometry_units.json`,
+SHA-256
+`9a62f47aaa15edba3ca6b17159862b026dbcf03977eb535306a4ed8702dde1cc`.
+The compact tracked copy is
+`paper0/results/phase2_geometry_units_6891709.json`. Run 85606 was not read.
+
+This releases the declared geometry masks, confined-separatrix sign and
+surface integral, SI conversion, and member-wise evaluation order. It does not
+release any learned model, codec, rollout, or assimilation transport claim.

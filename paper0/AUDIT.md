@@ -409,6 +409,17 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     `Q_81`. This closes only the resampling rung: geometry-region integrations,
     orientation, units, ensemble semantics, codec transport, dynamics, and
     85606 remain open.
+41. **The geometry, sign, SI-unit, and ensemble-ordering ladder passes.** Rocky
+    9 job `6891709`, from clean commit `9dd8780`, verified the exact geometry,
+    Hypnotoad, BOUT++, and Hermes source hashes and passed all 19 frozen gates.
+    The strict wall-interior operator cells partition exactly into 256
+    confined-edge, 219 private-flux, and 1,394 SOL cells. The exact confined
+    separatrix is local face `15->16`, `y=8..23`; all radial `psi` differences
+    are positive, so positive `+x` is outward on that surface. Unit scales
+    reproduce source metadata to `1e-14`. A real nonlinear face-operator test
+    gives mean member-wise transport `10.8470` but zero transport from the
+    ensemble-mean fields, proving the required evaluation order. This releases
+    the evaluator, not codec, rollout, assimilation, or 85606 claims.
 
 ## Exact commands
 

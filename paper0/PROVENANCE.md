@@ -376,6 +376,27 @@ had the same eight temporal-block summaries as the all-frame paths. Commit
 `836417c` encodes that scope difference explicitly and adds a regression test.
 The immutable job result was not altered or rerun.
 
+### Phase 2 geometry, units, and ensemble semantics
+
+The 85604 grid embeds Hypnotoad revision
+`e4a1dff39b80e30aaa05eb6903a8dc72cf4ed832`. Paper 0 reads that official
+source from the clean detached evidence checkout
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/hypnotoad-e4a1dff`;
+`hypnotoad/core/mesh.py` has SHA-256
+`3c4a3d8f5b94ab728650726fbf010af70f63ae6452a83e024460d34ab99336e3`.
+The BOUT++ constants file at the already locked executed revision has SHA-256
+`4a89ceb00a66799668b1b73d3598e2995d9e171680be0d5ce0d20fe6b33e63b2`.
+
+Rocky 9 job `6891709` ran the new Paper 0 mask, surface-integration, unit, and
+member-wise reductions from clean commit
+`9dd8780ca2b68b76624aaefa1d8b3638c5c6377c`. The full immutable result is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_85604_geometry_units/job_6891709/geometry_units.json`,
+SHA-256
+`9a62f47aaa15edba3ca6b17159862b026dbcf03977eb535306a4ed8702dde1cc`.
+The tracked copy is
+`paper0/results/phase2_geometry_units_6891709.json`. All prospective gates
+passed, and run 85606 was not read.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

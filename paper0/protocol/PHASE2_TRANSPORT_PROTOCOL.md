@@ -1,14 +1,14 @@
 # Phase 2 geometry-aware transport protocol
 
-**Protocol status:** source audit complete and frozen before implementation
+**Protocol status:** complete validation ladder executed; evaluator released
 
 **Development data:** synthetic known-answer fields and TCV/Hermes `85604`
 
 **Sequestered evaluation run:** `85606`
 
-**Current gate:** shifted-field-line derivative, shifted-`xy` face, and combined
-radial-flow conservation rungs passed; full transport is blocked on the
-remaining Section 9 native-grid, resampling, mask, unit, and ensemble checks
+**Current gate:** all Section 9 operator, native-grid, resampling, geometry,
+unit, and ensemble-semantics rungs passed; learned codec and rollout transport
+fidelity remain untested
 
 This document replaces the exploratory image-space flux proxy with the
 transport definition actually advanced by the Hermes-3 simulation. It does not
@@ -485,6 +485,13 @@ The full metric remains blocked until all of the following pass:
 8. **Resampling sensitivity:** truth transport on native 81 cells is compared
    with the 88-cell Fourier-resampled evaluation; the discrepancy is reported
    and cannot be tuned away.
+
+   **Execution record:** Rocky 9 job `6891664` passed every unchanged
+   round-trip and float-quantization gate over all 624 frames. Direct 88-cell
+   total face flow and divergence differed by about 1.6% and 3.5--3.8%,
+   respectively, prospectively labeled small. Therefore the primary evaluator
+   downsamples each 88-cell member to 81 before applying `Q_81`; direct
+   `Q_88` remains a sensitivity.
 9. **Geometry masks:** synthetic and real-grid tests verify cell/face indexing,
    the local/global radial map, separatrix membership, branch regions, and
    `+x` versus outward orientation.
@@ -493,6 +500,16 @@ The full metric remains blocked until all of the following pass:
 11. **Ensemble semantics:** a nonlinear known-answer case proves that transport
     is evaluated member-wise rather than from ensemble-mean fields.
 
+    **Execution record for rungs 9--11:** Rocky 9 job `6891709`, from clean
+    commit `9dd8780`, passed all 19 frozen gates in 16 seconds. The strict
+    region masks partition 1,869 operator cells; the exact confined
+    separatrix has 16 valid rows; all 2,016 radial `psi` differences establish
+    `+x` as outward there; source constants reproduce the SI scales to
+    `1e-14`; and the actual nonlinear two-member case gives mean member-wise
+    transport `10.8470` while transport of ensemble-mean fields is `0.0`.
+    The tracked result is
+    `paper0/results/phase2_geometry_units_6891709.json`.
+
 Only after this ladder passes may O1 be rerun with a transport gate. The
 current O1 field, spectral, and cross-field conclusions remain valid; the
 absence of a transport result is a documented blocker, not a zero or a pass.
@@ -500,9 +517,9 @@ absence of a transport result is a documented blocker, not a zero or a pass.
 ## 10. Immediate decision
 
 No architecture work or training is justified by the operator audit alone.
-The manufactured operator ladder through combined radial-flow conservation
-and the native real-state operator subgate have passed. The prospectively
-frozen 85604 prevalence audit has now also completed as job `6891583`.
+The complete evaluator ladder now passes through source-matched face flow,
+native state, pressure provenance, resampling, geometry, SI conversion, and
+member-wise nonlinear semantics.
 
 That audit found 3,412 negative evolved-`Pi` points, of which 1,421 occur in
 the fixed `y=1..30` operator interior. Every ion-pressure closure discrepancy
@@ -513,8 +530,8 @@ leading state candidate unless an explicit, source-matched floor policy is
 prospectively adopted and validated. This conclusion does not retroactively
 rename a historical channel or open 85606.
 
-After the state policy is frozen, the native-81 versus resampled-88
-sensitivity is the next transport rung. If the remaining exact ladder cannot
-be completed, Paper 0 must retain cross-spectrum and cross-phase as validated
-joint-field metrics and omit strong physical-transport claims rather than
-promote the historical proxy.
+The next transport question is representation fidelity: rerun O1 on 85604
+codec reconstructions with this released evaluator. The historical C5T codecs
+can be assessed exactly for particle flow and electron pressure flow; ion
+energy must retain the already documented direct-`Pi` limitation. This result
+still does not authorize 85606 or a learned-model transport claim.

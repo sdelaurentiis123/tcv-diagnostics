@@ -4,12 +4,14 @@ This module contains the radial ``x-z`` face-flow component of the executed
 Hermes-3 ``Div_n_bxGrad_f_B_XPPM`` operator, a source-matched shifted-field-line
 ``DDY`` primitive, and the shifted-poloidal ``x-y`` radial face component.
 Compiled jobs ``6891059``, ``6891343``, and ``6891373`` validate these
-primitives, their combined radial face flow, and its conservative divergence
-on manufactured fields and every declared single-null topology region. The
-native plasma-frame oracle, surface integration, units, and ensemble semantics
-are not yet released. Accordingly, every face-flow result and function remains
-explicitly named ``partial`` or ``xz_component`` and must not be reported as
-total particle or energy transport.
+primitives, their combined radial face flow, and its conservative divergence.
+Jobs ``6891379``, ``6891664``, and ``6891709`` then validate native plasma
+frames, the native-81 evaluation policy, the confined-separatrix surface,
+physical-unit conversion, and member-wise ensemble ordering. Face primitives
+retain ``partial`` in their names because target rows lack physical guard
+values; job ``6891709`` releases total particle and internal-energy transport
+only on the explicitly valid surfaces and masks defined by the frozen
+protocol. It does not validate any learned model's transport fidelity.
 
 The frozen definition and release blockers are in
 ``paper0/protocol/PHASE2_TRANSPORT_PROTOCOL.md``.
