@@ -165,11 +165,14 @@ class CandidateWriter:
                 shape=(len(frames), *NATIVE_SHAPE),
                 dtype="f4",
                 chunks=(1, *NATIVE_SHAPE),
-                compression="lzf",
+                compression="gzip",
+                compression_opts=1,
+                shuffle=True,
             )
             for field in NATIVE81_FIELDS[family]
         }
         self.boundary = None
+        self.model88 = None
         if family == "e6b":
             boundary = self.handle.create_group("boundary")
             self.boundary = boundary.create_dataset(
@@ -179,6 +182,19 @@ class CandidateWriter:
                 chunks=(1, 2, 32),
             )
             self.boundary.attrs["policy"] = "exact_bypass_from_model_dataset"
+            model88 = self.handle.create_group("model88")
+            self.model88 = {
+                field: model88.create_dataset(
+                    field,
+                    shape=(len(frames), *VOLUME_SHAPE),
+                    dtype="f4",
+                    chunks=(1, *VOLUME_SHAPE),
+                    compression="gzip",
+                    compression_opts=1,
+                    shuffle=True,
+                )
+                for field in ("Ne", "Pe", "Pi", "NVi")
+            }
         self.written = np.zeros(len(frames), dtype=bool)
 
     def write(
@@ -186,6 +202,7 @@ class CandidateWriter:
         start: int,
         values: dict[str, np.ndarray],
         boundary: np.ndarray | None,
+        model88: dict[str, np.ndarray] | None,
     ) -> None:
         count = next(iter(values.values())).shape[0]
         stop = start + count
@@ -199,13 +216,23 @@ class CandidateWriter:
                 raise ValueError(f"invalid native candidate field {field}")
             self.fields[field][start:stop] = data
         if self.boundary is None:
-            if boundary is not None:
-                raise ValueError("C5P candidate cannot contain a boundary")
+            if boundary is not None or model88 is not None:
+                raise ValueError("C5P candidate cannot contain E6B side state")
         else:
             data = np.asarray(boundary, dtype=np.float32)
             if data.shape != (count, 2, 32) or not np.all(np.isfinite(data)):
                 raise ValueError("invalid exact E6B boundary")
             self.boundary[start:stop] = data
+            if model88 is None or set(model88) != set(self.model88):
+                raise ValueError("E6B model-grid common-view fields are incomplete")
+            for field, array in model88.items():
+                data = np.asarray(array, dtype=np.float32)
+                if (
+                    data.shape != (count, *VOLUME_SHAPE)
+                    or not np.all(np.isfinite(data))
+                ):
+                    raise ValueError(f"invalid E6B model-grid field {field}")
+                self.model88[field][start:stop] = data
         self.written[start:stop] = True
 
     def finish(self) -> None:
@@ -325,14 +352,21 @@ def evaluate_split(
                     physical_reconstruction,
                 )
             boundary = None
+            model88 = None
             if family == "e6b":
                 boundary = np.stack(
                     [item["physical_boundary"] for item in items], axis=0
                 )
+                indices = {field: index for index, field in enumerate(fields)}
+                model88 = {
+                    field: physical_reconstruction[:, indices[field]]
+                    for field in ("Ne", "Pe", "Pi", "NVi")
+                }
             writer.write(
                 cursor - frames[0],
                 native81_candidate_fields(family, physical_reconstruction),
                 boundary,
+                model88,
             )
             cursor = stop
         writer.finish()

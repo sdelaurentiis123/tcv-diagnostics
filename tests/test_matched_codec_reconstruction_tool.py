@@ -59,9 +59,13 @@ class TestMatchedCodecReconstructionTool(unittest.TestCase):
                 for name in ("Ne", "Pe", "Pi", "Vort")
             }
             boundary = np.ones((1, 2, 32), dtype=np.float32)
-            writer.write(0, fields, boundary)
+            model88 = {
+                name: np.ones((1, *tool.VOLUME_SHAPE), dtype=np.float32)
+                for name in ("Ne", "Pe", "Pi", "NVi")
+            }
+            writer.write(0, fields, boundary, model88)
             with self.assertRaisesRegex(ValueError, "overlapping"):
-                writer.write(0, fields, boundary)
+                writer.write(0, fields, boundary, model88)
             writer.finish()
             with h5py.File(path, "r") as handle:
                 self.assertEqual(handle.attrs["family"], "e6b")
@@ -69,6 +73,7 @@ class TestMatchedCodecReconstructionTool(unittest.TestCase):
                     handle["coordinates/frame_index"][:], [496]
                 )
                 np.testing.assert_array_equal(handle["boundary/Bphi"][:], boundary)
+                np.testing.assert_array_equal(handle["model88/NVi"][:], model88["NVi"])
 
 
 if __name__ == "__main__":
