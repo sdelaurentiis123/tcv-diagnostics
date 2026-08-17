@@ -342,6 +342,17 @@ known structural observations are disclosed in the protocol manifest and will
 be rerun as execution gates. No round-trip or resampling-transport metric was
 calculated before its thresholds were frozen.
 
+`paper0/tools/audit_85604_resampling.py` and
+`paper0/tools/merge_85604_resampling_shards.py` are new Paper 0 code. The
+reader uses 17 non-overlapping intervals aligned to the source files' native
+40-frame HDF5 chunks, computes all frozen operator paths, and emits only
+framewise metrics and additive sufficient statistics. The reducer rejects any
+missing, duplicated, reordered, or out-of-interval frame before deriving a
+gate or materiality label. Synthetic tests lock interval coverage, source
+boundary mapping, held-out path rejection, energy factors, operator scopes,
+nonzero component behavior, paired scaling, strict JSON, linear quantiles, and
+order-sensitive digest trees. No predecessor audit implementation was copied.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

@@ -386,6 +386,16 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     linear-quantile tails, and materiality interval boundaries all have known
     answers. No 85604 round-trip or transport-sensitivity value was read by
     these unit tests.
+39. **The shot-level resampling audit is shard-complete by construction before
+    it is executable.** Seventeen half-open intervals align with the two
+    source files' 40-frame HDF5 chunks and concatenate exactly to `0..623`.
+    Each shard records framewise field round trips, native versus round-trip
+    transport, aligned native versus direct-88 transport, and the five-frame
+    raw-float64 quantization ladder. The reducer requires every interval and
+    frame exactly once before it can calculate a gate or label. Synthetic
+    transport tests exercise the exact `61 x 30` face and `60 x 30`
+    divergence scopes with nonzero `xz` and shifted-`xy` terms. No real
+    round-trip or resampling-transport metric has yet been evaluated.
 
 ## Exact commands
 
