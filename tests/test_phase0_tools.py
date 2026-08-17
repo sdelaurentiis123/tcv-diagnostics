@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -107,6 +108,32 @@ class DataAuditTests(unittest.TestCase):
             self.assertEqual(boundary["guard_frames"], 0)
             self.assertTrue(boundary["matches_raw_frame_count"])
             self.assertTrue(boundary["matches_raw_endpoints"])
+
+    def test_inventory_hashes_are_complete_and_launcher_matches(self) -> None:
+        manifest_path = ROOT / "paper0/manifests/legacy_phase0_inventory.json"
+        launcher_path = ROOT / "cluster/phase0_reproduce_legacy_valid.sbatch"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        launcher = launcher_path.read_text(encoding="utf-8")
+
+        hashes = []
+
+        def collect(value):
+            if isinstance(value, dict):
+                for key, child in value.items():
+                    if key.endswith("sha256"):
+                        hashes.append(child)
+                    collect(child)
+            elif isinstance(value, list):
+                for child in value:
+                    collect(child)
+
+        collect(manifest)
+        self.assertTrue(hashes)
+        for digest in hashes:
+            self.assertRegex(digest, re.compile(r"^[0-9a-f]{64}$"))
+
+        valid_digest = manifest["legacy_well_conversion"]["valid_sha256"]
+        self.assertIn(f'check_sha256 "{valid_digest}" "${{VALID_H5}}"', launcher)
 
     def test_sequestered_names_are_rejected(self) -> None:
         self.assertFalse(audit._path_is_allowed(Path("/tmp/85606/data.h5")))

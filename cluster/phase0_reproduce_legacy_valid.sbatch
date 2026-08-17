@@ -72,7 +72,7 @@ nvidia-smi --query-gpu=name,uuid,driver_version,memory.total --format=csv,nohead
 
 check_sha256 "f5ced68fc90bad8fdf073ef7be508002b69aba68e2084d603a6d8f04698c9d38" "${RAW_BOUT}"
 check_sha256 "f4aae5c13ecd944f51cec0c3539f57ff669cb0bb0405cb813c3f50ff6cb83817" "${TRAIN_H5}"
-check_sha256 "18a7f7a356a4f8d437647b73d4f8078a5309e1e8583a1089e622196ce4d43" "${VALID_H5}"
+check_sha256 "eed18a7f7a356a4f8d437647b73d4f8078a5309e1e8583a1089e622196ce4d43" "${VALID_H5}"
 check_sha256 "0bdf6ec083c32c9ef5e75ad4bcd6ac44b8dea4280a2b8a6d17c9ea36bdc249a0" "${GRID}"
 check_sha256 "5d8e14807b62e81e928628c8413c2563d00884bf339f50e9b221bd758c02e759" "${RUN}/state_best.pth"
 check_sha256 "b7ce08657d142cf9d7139798dff0aec847697dd4b198e41d79b6e03ea85a35a5" "${RUN}/config.yaml"
