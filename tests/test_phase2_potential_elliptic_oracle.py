@@ -164,6 +164,7 @@ class PotentialEllipticOracleImplementationTests(unittest.TestCase):
             "instantaneous_solver",
             "coord->g_23 /= SQ(rho_s0)",
             "BoutComm::size() != 4",
+            "mesh->getNYPE() != 4",
         ):
             self.assertIn(required, source)
         self.assertIn("type = cyclic", options)

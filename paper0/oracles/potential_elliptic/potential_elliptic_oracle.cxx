@@ -363,7 +363,7 @@ int main(int argc, char** argv) {
     throw std::runtime_error(
         "potential elliptic oracle requires exactly four MPI ranks");
   }
-  if (mesh->NXPE != 1 || mesh->NYPE != 4 ||
+  if (mesh->NXPE != 1 || mesh->getNYPE() != 4 ||
       mesh->yend - mesh->ystart + 1 != LOCAL_Y) {
     throw std::runtime_error(
         "potential elliptic oracle requires NXPE=1,NYPE=4,MYSUB=8");
