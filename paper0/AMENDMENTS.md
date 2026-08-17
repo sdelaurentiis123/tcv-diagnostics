@@ -48,3 +48,44 @@ No high-pass window, detrending hyperparameter, alternate block length, or
 field subset is added by this amendment. Any such analysis requires another
 prospectively committed rule. The immediate purpose is only to distinguish
 short-lived fluctuation patterns from the documented slow background evolution.
+
+## A003 - Separate axisymmetric background from non-axisymmetric fluctuations
+
+**Status:** proposed before calculation, following job `6890591`.
+
+The A002 calculation removes one scalar spatial mean per frame, but it retains
+the time-varying axisymmetric profile. Its density correlation therefore has a
+long positive tail: the first `1/e` crossing is approximately 19 frames and no
+non-positive crossing occurs within the frozen 108-frame lag. BOUT++ uses `z`
+as the periodic toroidal coordinate, and the stored domain has `zperiod = 5`.
+The toroidal mean is therefore the stored `k = 0`, full-torus `n = 0`
+component. Removing it is a physics-defined decomposition with no fitted
+timescale or cutoff.
+
+This amendment authorizes a second diagnostic-only autocorrelation:
+
+1. use the same candidate training frames `[0, 432)`, model transforms,
+   training-only normalization, `x=4` and `y=2` strides, lag range `0..108`,
+   and crossing definitions as A002;
+2. retain every toroidal sample while constructing
+   `delta_z X(t,x,y,z) = X(t,x,y,z) - mean_z X(t,x,y,z)`;
+3. after that subtraction, retain every fourth toroidal cell for the same
+   computational sampling density as A002;
+4. apply the existing per-cell temporal-mean removal inside the pattern
+   autocorrelation;
+5. report full-pattern and toroidal-residual curves side by side for every C5
+   field;
+6. report the fraction of temporally varying model-coordinate energy in the
+   axisymmetric and non-axisymmetric components, using a temporal-mean-removed
+   orthogonal decomposition over the sampled `x,y` cells and all 88 toroidal
+   cells.
+
+For density, the toroidal residual is taken after the declared logarithmic
+model transform. It therefore measures decorrelation of the representation the
+model is asked to forecast, not a linear-density transport fluctuation. The
+later transport metrics must still use physical linear density.
+
+The result cannot establish stationarity, choose a split, authorize training,
+or replace geometry-aware correlation measures. It exists to identify how
+much of the apparent memory belongs to the slowly evolving `n=0` background
+versus non-axisymmetric turbulent structure.
