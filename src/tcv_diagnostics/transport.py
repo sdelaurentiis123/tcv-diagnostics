@@ -76,6 +76,31 @@ class PartialShiftedYDerivative:
     component: str = "shifted_ddy_partial_physical_y_boundaries"
 
 
+@dataclass(frozen=True)
+class PartialFrommFaceStates:
+    """Fromm states on radial faces whose four-cell stencil is available."""
+
+    state_from_left: np.ndarray
+    state_from_right: np.ndarray
+    clipped_from_left: np.ndarray
+    clipped_from_right: np.ndarray
+    left_cell_indices: np.ndarray
+    component: str = "radial_fromm_states_partial"
+
+
+@dataclass(frozen=True)
+class CandidateShiftedRadialFaceFlow:
+    """Candidate shifted-``xy`` radial face term before compiled validation."""
+
+    flow: np.ndarray
+    velocity_factor: np.ndarray
+    upwind_state: np.ndarray
+    positivity_clipped_mask: np.ndarray
+    valid_mask: np.ndarray
+    left_cell_indices: np.ndarray
+    component: str = "radial_exb_xy_component_candidate_partial"
+
+
 def _real_finite(name: str, values: np.ndarray) -> np.ndarray:
     array = np.asarray(values)
     if np.iscomplexobj(array):
@@ -344,6 +369,66 @@ def mc_radial_face_states_partial(
     return state_from_left, state_from_right, left_indices
 
 
+def fromm_radial_face_states_partial(
+    advected: np.ndarray,
+    *,
+    positive: bool,
+) -> PartialFrommFaceStates:
+    """Return the executed Hermes Fromm states on safe radial faces.
+
+    The input axes are ``[..., x, y, z]``. For the face between radial cells
+    ``i`` and ``i+1``, Hermes uses
+
+    ``q_left = q_i + 0.25 * (q_{i+1} - q_{i-1})`` and
+    ``q_right = q_{i+1} - 0.25 * (q_{i+2} - q_i)``.
+
+    When ``positive`` is true, each candidate state is clipped to zero exactly
+    when it is negative. Only faces with all four radial cells present are
+    returned, so their left-cell indices are ``1 .. X-3``.
+    """
+
+    q = _real_finite("advected field", advected)
+    if q.ndim < 3:
+        raise ValueError("advected field must have trailing axes [x, y, z]")
+    n_x, n_y, n_z = q.shape[-3:]
+    if n_x < 4:
+        raise ValueError("at least four radial cells are required")
+    if n_y < 1 or n_z < 3:
+        raise ValueError("y must be nonempty and periodic z needs at least three cells")
+    if not isinstance(positive, (bool, np.bool_)):
+        raise TypeError("positive must be boolean")
+
+    left_indices = np.arange(1, n_x - 2, dtype=np.int64)
+    left_center = np.take(q, left_indices, axis=-3)
+    state_from_left = left_center + 0.25 * (
+        np.take(q, left_indices + 1, axis=-3)
+        - np.take(q, left_indices - 1, axis=-3)
+    )
+
+    right_indices = left_indices + 1
+    right_center = np.take(q, right_indices, axis=-3)
+    state_from_right = right_center - 0.25 * (
+        np.take(q, right_indices + 1, axis=-3)
+        - np.take(q, right_indices - 1, axis=-3)
+    )
+
+    clipped_from_left = np.zeros(state_from_left.shape, dtype=bool)
+    clipped_from_right = np.zeros(state_from_right.shape, dtype=bool)
+    if positive:
+        clipped_from_left = state_from_left < 0.0
+        clipped_from_right = state_from_right < 0.0
+        state_from_left = np.where(clipped_from_left, 0.0, state_from_left)
+        state_from_right = np.where(clipped_from_right, 0.0, state_from_right)
+
+    return PartialFrommFaceStates(
+        state_from_left=state_from_left,
+        state_from_right=state_from_right,
+        clipped_from_left=clipped_from_left,
+        clipped_from_right=clipped_from_right,
+        left_cell_indices=left_indices,
+    )
+
+
 def _cell_geometry(
     name: str,
     values: np.ndarray | float,
@@ -436,6 +521,114 @@ def radial_exb_xz_face_flow_partial(
     return PartialRadialFaceFlow(
         flow=velocity_factor * upwind_state,
         velocity_factor=velocity_factor,
+        left_cell_indices=left_indices,
+    )
+
+
+def radial_exb_xy_face_flow_candidate_partial(
+    advected: np.ndarray,
+    potential: np.ndarray,
+    jacobian: np.ndarray,
+    g11: np.ndarray,
+    g23: np.ndarray,
+    bxy: np.ndarray,
+    z_shift: np.ndarray,
+    dy: np.ndarray,
+    shift_angle: np.ndarray,
+    *,
+    topology: SingleNullTopology,
+    zperiod: int = 5,
+    positive: bool = True,
+) -> CandidateShiftedRadialFaceFlow:
+    """Evaluate the candidate shifted-poloidal radial ExB face term.
+
+    This is an independent NumPy transcription of the radial ``x``-face part
+    of Hermes-3's optional ``x-y`` advection. It combines the already validated
+    shifted ``DDY`` primitive with the exact Fromm face states and positivity
+    clipping used by the executed source revision.
+
+    Target-adjacent ``y`` cells are marked invalid because the model tensor
+    omits their physical guard values. This candidate cannot be reported as
+    physical transport until it passes the frozen compiled-Hermes oracle.
+    """
+
+    q = _real_finite("advected field", advected)
+    phi = _real_finite("potential", potential)
+    if q.shape != phi.shape:
+        raise ValueError(
+            f"advected field and potential shapes differ: {q.shape} versus {phi.shape}"
+        )
+    if q.ndim < 3:
+        raise ValueError("fields must have trailing axes [x, y, z]")
+    n_x, n_y, n_z = q.shape[-3:]
+
+    jacobian_array = _cell_geometry(
+        "jacobian", jacobian, n_x=n_x, n_y=n_y, require_positive=False
+    )
+    g11_array = _cell_geometry(
+        "g11", g11, n_x=n_x, n_y=n_y, require_positive=False
+    )
+    g23_array = _cell_geometry(
+        "g23", g23, n_x=n_x, n_y=n_y, require_positive=False
+    )
+    bxy_array = _cell_geometry(
+        "bxy", bxy, n_x=n_x, n_y=n_y, require_positive=False
+    )
+    if np.any(bxy_array == 0.0):
+        raise ValueError("bxy must be nonzero")
+
+    derivative = shifted_ddy_single_null_partial(
+        phi,
+        z_shift,
+        dy,
+        shift_angle,
+        topology=topology,
+        zperiod=zperiod,
+    )
+    states = fromm_radial_face_states_partial(q, positive=positive)
+    left_indices = states.left_cell_indices
+
+    metric_factor = g11_array * g23_array / np.square(bxy_array)
+    derivative_left = np.take(derivative.values, left_indices, axis=-3)
+    derivative_right = np.take(derivative.values, left_indices + 1, axis=-3)
+    face_metric_derivative = 0.5 * (
+        metric_factor[left_indices][..., None] * derivative_left
+        + metric_factor[left_indices + 1][..., None] * derivative_right
+    )
+    face_jacobian = 0.5 * (
+        jacobian_array[left_indices] + jacobian_array[left_indices + 1]
+    )
+    leading_singletons = (1,) * (q.ndim - 3)
+    face_geometry_shape = (*leading_singletons, left_indices.size, n_y, 1)
+    velocity_factor = face_jacobian.reshape(
+        face_geometry_shape
+    ) * face_metric_derivative
+
+    choose_left = velocity_factor > 0.0
+    upwind_state = np.where(
+        choose_left, states.state_from_left, states.state_from_right
+    )
+    positivity_clipped = np.where(
+        choose_left, states.clipped_from_left, states.clipped_from_right
+    )
+
+    valid_mask = (
+        derivative.valid_mask[left_indices]
+        & derivative.valid_mask[left_indices + 1]
+    )
+    valid_shape = (*leading_singletons, left_indices.size, n_y, 1)
+    valid_broadcast = valid_mask.reshape(valid_shape)
+    velocity_factor = np.where(valid_broadcast, velocity_factor, np.nan)
+    upwind_state = np.where(valid_broadcast, upwind_state, np.nan)
+    flow = np.where(valid_broadcast, velocity_factor * upwind_state, np.nan)
+    positivity_clipped = positivity_clipped & valid_broadcast
+
+    return CandidateShiftedRadialFaceFlow(
+        flow=flow,
+        velocity_factor=velocity_factor,
+        upwind_state=upwind_state,
+        positivity_clipped_mask=positivity_clipped,
+        valid_mask=valid_mask,
         left_cell_indices=left_indices,
     )
 

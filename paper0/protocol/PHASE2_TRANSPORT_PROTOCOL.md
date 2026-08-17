@@ -309,6 +309,12 @@ An intermediate API must include `_xz_component` or `_partial` in its public
 name and metadata. It cannot satisfy the transport gate, generate diagnostic
 rankings, or appear in a figure as “particle flux” or “heat flux.”
 
+The shifted-`DDY` primitive has passed its compiled oracle. The independently
+written Fromm and shifted-`xy` face routines are present only as
+`candidate_partial` APIs and remain blocked pending the separately committed
+compiled-Hermes face-flow oracle. Their synthetic tests are necessary but not
+sufficient evidence.
+
 As required by the general metric protocol, nonlinear transport is computed
 for every ensemble member before ensemble reduction.
 

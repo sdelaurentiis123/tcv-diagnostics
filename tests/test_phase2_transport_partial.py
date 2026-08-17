@@ -17,8 +17,10 @@ from tcv_diagnostics.transport import (  # noqa: E402
     PartialRadialFaceFlow,
     SingleNullTopology,
     divergence_from_xz_face_flow_partial,
+    fromm_radial_face_states_partial,
     mc_radial_face_states_partial,
     monotonized_central_slope,
+    radial_exb_xy_face_flow_candidate_partial,
     radial_exb_xz_face_flow_partial,
     shifted_ddy_single_null_partial,
     single_null_y_neighbors,
@@ -60,6 +62,31 @@ class LimiterTests(unittest.TestCase):
         np.testing.assert_array_equal(left_indices, np.asarray([1, 2]))
         np.testing.assert_allclose(from_left[:, 0, 0], [1.5, 2.75])
         np.testing.assert_allclose(from_right[:, 0, 0], [1.25, 2.5])
+
+    def test_fromm_states_match_executed_four_cell_formula(self) -> None:
+        radial_line = np.asarray([1.0, 2.0, 4.0, 8.0, 16.0])
+        field = np.broadcast_to(radial_line[:, None, None], (5, 1, 3))
+        states = fromm_radial_face_states_partial(field, positive=False)
+        np.testing.assert_array_equal(states.left_cell_indices, [1, 2])
+        np.testing.assert_allclose(states.state_from_left[:, 0, 0], [2.75, 5.5])
+        np.testing.assert_allclose(states.state_from_right[:, 0, 0], [2.5, 5.0])
+        self.assertFalse(np.any(states.clipped_from_left))
+        self.assertFalse(np.any(states.clipped_from_right))
+
+    def test_fromm_positivity_clips_only_negative_candidate_states(self) -> None:
+        radial_line = np.asarray([10.0, 1.0, 0.1, 10.0, 10.0])
+        field = np.broadcast_to(radial_line[:, None, None], (5, 1, 3))
+        unclipped = fromm_radial_face_states_partial(field, positive=False)
+        clipped = fromm_radial_face_states_partial(field, positive=True)
+        self.assertLess(float(unclipped.state_from_left[0, 0, 0]), 0.0)
+        self.assertLess(float(unclipped.state_from_right[0, 0, 0]), 0.0)
+        self.assertEqual(float(clipped.state_from_left[0, 0, 0]), 0.0)
+        self.assertEqual(float(clipped.state_from_right[0, 0, 0]), 0.0)
+        self.assertTrue(bool(clipped.clipped_from_left[0, 0, 0]))
+        self.assertTrue(bool(clipped.clipped_from_right[0, 0, 0]))
+        self.assertGreater(float(clipped.state_from_left[1, 0, 0]), 0.0)
+        with self.assertRaisesRegex(TypeError, "boolean"):
+            fromm_radial_face_states_partial(field, positive=1)
 
 
 class ShiftedDerivativeTests(unittest.TestCase):
@@ -334,6 +361,128 @@ class PartialFaceFlowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "consecutive"):
             divergence_from_xz_face_flow_partial(
                 bad, np.ones((5, 1)), dx=1.0
+            )
+
+
+class CandidateShiftedFaceFlowTests(unittest.TestCase):
+    @staticmethod
+    def topology() -> SingleNullTopology:
+        return SingleNullTopology(
+            separatrix_x_index=0,
+            core_lower_y=8,
+            core_upper_y=23,
+            pfr_lower_y=7,
+            pfr_upper_y=24,
+        )
+
+    @staticmethod
+    def fields(
+        radial_values: np.ndarray,
+        *,
+        n_y: int = 32,
+        n_z: int = 9,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        n_x = radial_values.size
+        advected = np.broadcast_to(
+            radial_values[:, None, None], (n_x, n_y, n_z)
+        ).copy()
+        potential = np.broadcast_to(
+            np.arange(n_y, dtype=np.float64)[None, :, None],
+            (n_x, n_y, n_z),
+        ).copy()
+        return advected, potential
+
+    def evaluate(
+        self,
+        radial_values: np.ndarray,
+        *,
+        g23: float,
+        positive: bool = True,
+    ):
+        advected, potential = self.fields(radial_values)
+        n_x, n_y, _ = advected.shape
+        return radial_exb_xy_face_flow_candidate_partial(
+            advected,
+            potential,
+            np.full((n_x, n_y), 4.0),
+            np.full((n_x, n_y), 2.0),
+            np.full((n_x, n_y), g23),
+            np.full((n_x, n_y), 2.0),
+            np.zeros((n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.zeros(n_x),
+            topology=self.topology(),
+            zperiod=5,
+            positive=positive,
+        )
+
+    def test_known_y_gradient_matches_geometry_formula_and_masks_targets(self) -> None:
+        result = self.evaluate(np.full(6, 2.0), g23=3.0)
+        np.testing.assert_allclose(result.velocity_factor[:, 1:-1], 6.0)
+        np.testing.assert_allclose(result.upwind_state[:, 1:-1], 2.0)
+        np.testing.assert_allclose(result.flow[:, 1:-1], 12.0)
+        self.assertTrue(np.all(np.isnan(result.flow[:, (0, -1), :])))
+        self.assertTrue(np.all(result.valid_mask[:, 1:-1]))
+        self.assertFalse(np.any(result.valid_mask[:, (0, -1)]))
+        self.assertIn("candidate", result.component)
+
+    def test_velocity_sign_selects_the_matching_fromm_side(self) -> None:
+        radial = np.asarray([1.0, 2.0, 4.0, 8.0, 16.0])
+        positive = self.evaluate(radial, g23=3.0)
+        negative = self.evaluate(radial, g23=-3.0)
+        np.testing.assert_allclose(
+            positive.upwind_state[:, 1:-1, 0],
+            np.broadcast_to(np.asarray([2.75, 5.5])[:, None], (2, 30)),
+        )
+        np.testing.assert_allclose(
+            negative.upwind_state[:, 1:-1, 0],
+            np.broadcast_to(np.asarray([2.5, 5.0])[:, None], (2, 30)),
+        )
+        self.assertTrue(np.all(positive.flow[:, 1:-1] > 0.0))
+        self.assertTrue(np.all(negative.flow[:, 1:-1] < 0.0))
+
+    def test_selected_negative_fromm_state_is_clipped_before_flux(self) -> None:
+        radial = np.asarray([10.0, 1.0, 0.1, 10.0, 10.0])
+        result = self.evaluate(radial, g23=3.0, positive=True)
+        self.assertTrue(np.all(result.positivity_clipped_mask[0, 1:-1]))
+        np.testing.assert_array_equal(result.flow[0, 1:-1], 0.0)
+        unbounded = self.evaluate(radial, g23=3.0, positive=False)
+        self.assertTrue(np.all(unbounded.flow[0, 1:-1] < 0.0))
+
+    def test_constant_potential_and_invalid_geometry_fail_safely(self) -> None:
+        advected, potential = self.fields(np.ones(6))
+        potential.fill(2.0)
+        n_x, n_y, _ = potential.shape
+        kwargs = {
+            "topology": self.topology(),
+            "zperiod": 5,
+            "positive": True,
+        }
+        result = radial_exb_xy_face_flow_candidate_partial(
+            advected,
+            potential,
+            np.ones((n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.zeros((n_x, n_y)),
+            np.ones((n_x, n_y)),
+            np.zeros(n_x),
+            **kwargs,
+        )
+        np.testing.assert_array_equal(result.flow[:, 1:-1], 0.0)
+        with self.assertRaisesRegex(ValueError, "bxy must be nonzero"):
+            radial_exb_xy_face_flow_candidate_partial(
+                advected,
+                potential,
+                np.ones((n_x, n_y)),
+                np.ones((n_x, n_y)),
+                np.ones((n_x, n_y)),
+                np.zeros((n_x, n_y)),
+                np.zeros((n_x, n_y)),
+                np.ones((n_x, n_y)),
+                np.zeros(n_x),
+                **kwargs,
             )
 
 

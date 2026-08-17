@@ -148,6 +148,16 @@ This accepts the NumPy shifted-`DDY` primitive for its declared interior scope.
 It does not accept the shifted-`xy` face term or total particle/internal-energy
 transport.
 
+`fromm_radial_face_states_partial` and
+`radial_exb_xy_face_flow_candidate_partial` are new independent NumPy
+transcriptions of the radial `x`-face code at Hermes-3 revision `920ba829`,
+`src/div_ops.cxx:273-326`; no GPL source text was copied. Synthetic tests lock
+the four-cell Fromm formulas, both velocity signs, positivity clipping,
+geometry factors, target masking, and constant-potential zero flow. The public
+name and metadata retain `candidate_partial`: these tests do not substitute for
+the prospective compiled-Hermes face-flow comparison and do not release a
+transport metric.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in
