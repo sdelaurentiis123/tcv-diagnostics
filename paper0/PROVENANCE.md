@@ -54,6 +54,12 @@ shot data and compiled no source. Its unique failed-attempt directory is kept
 under the external build cache; the correction is documented in
 `paper0/AUDIT.md` rather than deleting or reusing that directory.
 
+The second attempt, job `6890720`, passed all source locks but stopped while
+configuring netCDF C++ because HDF5 was not explicitly present in the module
+environment. It likewise read no shot data and did not compile BOUT++. The
+launcher correction adds only the `hdf5/1.14.5` Rocky 9 module; the unique
+failed-attempt directory is retained.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

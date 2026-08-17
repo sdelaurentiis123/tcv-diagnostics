@@ -24,6 +24,7 @@ class TransportOracleBuildLauncherTests(unittest.TestCase):
             "BOUT_ENABLE_MPI=ON",
             "BOUT_USE_NETCDF=ON",
             "BOUT_USE_FFTW=ON",
+            "hdf5/1.14.5",
             "VERSION_ID%%.*",
             "--no-requeue",
             "Refusing to overwrite",

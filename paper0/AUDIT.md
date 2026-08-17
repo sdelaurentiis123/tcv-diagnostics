@@ -217,6 +217,13 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890717`;
     the corrected launcher uses the gitlink actually recorded by BOUT++ commit
     `7d28d67`, namely `407c905e45ad75fc29bf0f9bb7c5c2fd3475976f`.
+20. **The second exact-BOUT build attempt stopped during dependency
+    configuration.** CPU job `6890720` passed every repository revision and
+    critical-file hash check, then netCDF C++ configuration exited because
+    CMake could not discover HDF5. No BOUT++ source was compiled and no shot
+    data were read. The immutable attempt remains under
+    `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890720`;
+    the launcher now loads the Rocky 9 `hdf5/1.14.5` module explicitly.
 
 ## Exact commands
 
