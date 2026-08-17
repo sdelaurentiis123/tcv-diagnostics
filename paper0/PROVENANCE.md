@@ -193,6 +193,17 @@ addition, constant-potential zero flow, and volume-weighted telescoping for
 batched fields. Both APIs retain `candidate_partial` pending a compiled Hermes
 comparison of each component, their sum, and their divergence.
 
+The prospective combined comparison under
+`paper0/oracles/hermes_radial_flow/` is GPL-3.0-or-later because its C++ driver
+adapts the private radial `xz` and shifted-`xy` face calculations from the
+locked Hermes source. It writes each component, their sum, and the radial
+finite-volume divergence. The independent comparator verifies native `dz`,
+each topology region, exact component addition, volume-weighted telescoping,
+both signs of nonconstant `xz` and total flow, and the precommitted tolerances.
+The launcher uses the same clean-commit, official-source, ABI, geometry,
+four-rank, no-plasma-frame, and no-blind-test gates as the accepted component
+oracle. No combined-flow execution result is claimed yet.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

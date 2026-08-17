@@ -1,0 +1,26 @@
+# Paper 0 manufactured total radial-face-flow and divergence oracle.
+# The launcher hash-checks the 85604 geometry and executed Hermes source.
+# No plasma-state frame is read.
+
+MZ = 81
+zperiod = 5
+NXPE = 1
+
+[mesh]
+file = "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc"
+extrapolate_y = false
+
+q_constant = 2.5
+phi_constant = 4.0
+
+q_smooth = 2.0 + 0.25*sin(11*x) + 0.1*cos(10*z) + 0.05*sin(3*y - 5*z)
+phi_smooth = sin(3*y - 20*z) + 0.2*cos(7*x + 10*z)
+
+q_signed = 1.5 + 0.3*cos(13*x - 5*z) + 0.1*sin(4*y + 10*z)
+phi_signed = sin(6*y - 15*z) + 0.35*sin(2*y + 10*z)
+
+q_clipping = sin(20*x + 3*y - 10*z) - 0.25
+phi_clipping = sin(5*y - 20*z) + 0.3*cos(9*x + 15*z)
+
+[mesh:paralleltransform]
+type = shifted

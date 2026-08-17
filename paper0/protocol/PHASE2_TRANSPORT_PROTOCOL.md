@@ -418,8 +418,38 @@ The full metric remains blocked until all of the following pass:
    non-finite. This releases only the shifted-`xy` radial face primitive, not
    total transport or any learned-model transport claim.
 
-6. **Conservation:** face-flow differences reproduce the source operator's
-   volume-weighted divergence on manufactured fields.
+6. **Combined radial flow and conservation:** face-flow differences reproduce
+   the source operator's volume-weighted divergence on manufactured fields.
+
+   The comparison is frozen before execution. A second GPL-marked driver
+   adapts only Hermes-3 `src/div_ops.cxx:128-229` and `:273-326` at the same
+   hash-locked revision. On the unchanged four manufactured pairs and real
+   85604 geometry it exposes `xz` radial face flow, shifted-`xy` radial face
+   flow, their pointwise sum, and
+
+   `D_i = (F_{i+1/2} - F_{i-1/2}) / (J_i dx_i)`.
+
+   The independent candidate is evaluated at native 81-cell toroidal
+   resolution with `zperiod=5`. The BOUT++ output `dz` must match
+   `2*pi/(5*81)` everywhere within absolute tolerance `1e-15`. Face quantities
+   use model-local left-cell indices `1:62`; divergence uses cells `2:62`;
+   both exclude target-dependent `y=0,31`. Every component and total face flow
+   must pass every face region from item 5. Divergence must pass all valid
+   cells, ordinary/sequential cells, both branch regions, the separatrix cell,
+   and open SOL. The continuous rule remains
+
+   `max_abs_error <= 5e-10 + 5e-10 * max_abs_reference`.
+
+   In both implementations the total face array must equal `xz + xy` exactly
+   at every valid point. For both reference and candidate, reconstructing the
+   face difference from `D_i * J_i * dx_i` must satisfy
+
+   `max_abs_residual <= 5e-12 + 5e-12 * max_abs_face_difference`.
+
+   Every nonconstant case must contain both positive and negative `xz` flow
+   and both signs of total flow. All inputs retain the item-5 noncollapse gate.
+   These fields, regions, formulas, and tolerances are committed before the
+   first combined-flow execution and are not relaxed after seeing its result.
 7. **Native-grid oracle:** selected raw 81-cell 85604 frames match the
    hash-locked Hermes/BOUT++ calculation to a prospectively set tolerance.
 8. **Resampling sensitivity:** truth transport on native 81 cells is compared
