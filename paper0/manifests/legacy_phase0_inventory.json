@@ -152,6 +152,11 @@
   },
   "critical_source_hashes": [
     {
+      "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/external/lola/lola/**/*.py",
+      "sha256": "3fb6e6be7649e86fc0626f5d847adf13649e213c82b543c714ae258332bfdf7d",
+      "hash_method": "find -type f -name '*.py' -print0 | sort -z | xargs -0 sha256sum | sha256sum"
+    },
+    {
       "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/lola_ext/experiments/da_anchored_rollout.py",
       "sha256": "3b70e4eadf3ba1c8ca0d5463a037ebe6fa78da6725ed5dca4331a96aea5df518"
     },
@@ -162,6 +167,10 @@
     {
       "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/lola_ext/experiments/diagnostic_layouts.py",
       "sha256": "7620a83b0299747418e4d83dceab3d52033f78a36aca25b56000b212f607f669"
+    },
+    {
+      "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/lola_ext/experiments/visualize_probe_data.py",
+      "sha256": "a913e1d4404de20afff0903107c944d21f6b6de3d2c6ed42008086d42f148d21"
     },
     {
       "path": "/mnt/home/sdelaurentiis/tcv-gaot-3d/external/lola/lola/data.py",
