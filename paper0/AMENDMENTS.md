@@ -294,3 +294,14 @@ runs from `285000` to `471900` in steps of `300`. The source-locked
 now require both checks and store the normalized coordinate without
 mislabeling it as physical time. No source, split, field, threshold, or
 scientific decision changed.
+
+## A013 - Block degenerate normalization before model training
+
+**Status:** frozen before converter execution and before any converted array
+was read.
+
+Exact count and moment recomputation alone would accept a channel with zero
+training variance even though it cannot be standardized. The dataset gate now
+also requires every fitted population standard deviation to be finite and
+strictly positive. This is a usability and fail-closed integrity condition; it
+does not alter a field, transform, split, or scientific acceptance threshold.

@@ -207,7 +207,8 @@ passes every gate below.
 9. An independent, single-pass recomputation over output training frames
    reproduces each stored count exactly and each stored mean, \(M_2\),
    variance, and standard deviation to relative tolerance \(10^{-12}\) and
-   absolute tolerance \(10^{-12}\).
+   absolute tolerance \(10^{-12}\). Every resulting standard deviation must
+   also be finite and strictly positive.
 10. The executing checkout is clean, matches the committed protocol/manifest
     hashes, runs on Rocky 9, and records versions, commands, Slurm identity,
     runtime, peak memory, and output sizes.

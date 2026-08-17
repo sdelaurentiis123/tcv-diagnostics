@@ -2,6 +2,28 @@
 
 Cluster scripts are committed, bounded, and provenance-locked before submission. They must print the repository revision and refuse dirty worktrees or mismatched inputs.
 
+## Phase 2 shared model dataset
+
+`phase2_85604_model_dataset.sbatch` builds the one common engineering input
+required by the matched exact-state and pragmatic-state comparison. Eight
+CPU workers read only 85604, independently convert the fixed 78-frame blocks,
+and write job-scoped HDF5 shards. The reducer reopens every array, proves exact
+coverage, verifies the historical z88 transform oracle and native round trip,
+and independently recomputes normalization from frames `[0,432)`.
+
+Submit only from the Rocky 9 login node after syncing the exact clean commit:
+
+~~~bash
+export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase2_85604_model_dataset.sbatch
+~~~
+
+The unique result directory is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_<id>`.
+The job performs no training and does not release training automatically.
+Passing it establishes a verified shared dataset; a separately committed
+matched O1/O2 model protocol remains required.
+
 ## Phase 2 evolved-state and momentum closure
 
 `phase2_85604_state_completeness.sbatch` is a CPU-only all-rank audit of the

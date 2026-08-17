@@ -4,7 +4,7 @@
   "protocol_status": "frozen_before_converter_implementation_or_converted_array_read",
   "protocol": {
     "path": "paper0/protocol/PHASE2_MODEL_DATASET_PROTOCOL.md",
-    "sha256": "88fa7e694ae3a19b9bec85ddc942e87d5f85a85baf879f680c167a66d8f39480"
+    "sha256": "3d6ffe8d0805e42b46c141a1af2b2fbf5a002cec4ad9c94a980614df0046575d"
   },
   "development_run": "85604",
   "sequestered_run": "85606",
@@ -177,6 +177,7 @@
     "Bphi_equals_explicit_float32_cast_bitwise": true,
     "normalization_recomputation_relative_tolerance": 1e-12,
     "normalization_recomputation_absolute_tolerance": 1e-12,
+    "normalization_standard_deviations_strictly_positive": true,
     "clean_git_checkout_required": true,
     "rocky_major_version_required": 9,
     "protocol_and_manifest_hash_lock_required": true,

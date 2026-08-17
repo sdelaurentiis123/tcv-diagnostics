@@ -147,6 +147,7 @@ def test_toroidal_mapping_and_numeric_gates_are_explicit():
     assert gates["legacy_z88_bitwise_all_frames"] is True
     assert gates["field_round_trip_max_per_frame_relative_l2"] == 2e-6
     assert gates["normalization_recomputation_relative_tolerance"] == 1e-12
+    assert gates["normalization_standard_deviations_strictly_positive"] is True
     assert gates["rocky_major_version_required"] == 9
 
 
