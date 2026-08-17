@@ -104,16 +104,7 @@ def source_record() -> dict:
         "field_round_trip": {
             field: copy.deepcopy(field_result) for field in summary.FIELDS
         },
-        "comparisons": {
-            comparison: {
-                category: {
-                    quantity: paired_result([0, 1])
-                    for quantity in summary.PRIMARY_QUANTITIES
-                }
-                for category in summary.COMPARISON_CATEGORIES
-            }
-            for comparison in summary.COMPARISON_PATHS
-        },
+        "comparisons": {},
         "acceptance": {"overall_passed": True},
         "scientific_findings": {
             "primary_transport_evaluator": (
@@ -123,9 +114,23 @@ def source_record() -> dict:
     }
 
 
+def complete_source_record() -> dict:
+    raw = source_record()
+    for comparison in summary.COMPARISON_PATHS:
+        raw["comparisons"][comparison] = {}
+        for category in summary.COMPARISON_CATEGORIES:
+            raw["comparisons"][comparison][category] = {}
+            for quantity in summary.PRIMARY_QUANTITIES:
+                result = paired_result([0, 1])
+                if comparison == "raw64_vs_float32":
+                    del result["relative_l2_by_temporal_block"]
+                raw["comparisons"][comparison][category][quantity] = result
+    return raw
+
+
 class CompactResamplingResultTests(unittest.TestCase):
     def test_valid_source_compacts_without_frame_arrays(self) -> None:
-        raw = source_record()
+        raw = complete_source_record()
         summary.validate_source(
             raw, expected_commit="a" * 40, expected_job=42
         )
@@ -142,11 +147,17 @@ class CompactResamplingResultTests(unittest.TestCase):
         self.assertEqual(particle["frame_coverage"]["count"], 2)
         self.assertTrue(particle["frame_coverage"]["strictly_increasing"])
         self.assertNotIn("per_frame_relative_l2", particle)
+        self.assertTrue(particle["temporal_block_metrics_available"])
+        raw_particle = compact["transport_comparisons"]["raw64_vs_float32"][
+            "face_total"
+        ]["particle"]
+        self.assertFalse(raw_particle["temporal_block_metrics_available"])
+        self.assertNotIn("relative_l2_by_temporal_block", raw_particle)
 
     def test_held_out_access_and_incomplete_merge_fail_closed(self) -> None:
         for mutation in ("held_out", "incomplete"):
             with self.subTest(mutation=mutation):
-                raw = source_record()
+                raw = complete_source_record()
                 if mutation == "held_out":
                     raw["held_out_85606_read"] = True
                 else:
@@ -159,8 +170,16 @@ class CompactResamplingResultTests(unittest.TestCase):
                     )
 
     def test_schema_drift_fails_closed(self) -> None:
-        raw = source_record()
+        raw = complete_source_record()
         del raw["comparisons"]["direct_88"]["face_total"]["particle"]
+        with self.assertRaises(ValueError):
+            summary.validate_source(raw, expected_commit="a" * 40, expected_job=42)
+
+    def test_raw_oracle_temporal_block_schema_is_explicit(self) -> None:
+        raw = complete_source_record()
+        raw["comparisons"]["raw64_vs_float32"]["face_total"]["particle"][
+            "relative_l2_by_temporal_block"
+        ] = []
         with self.assertRaises(ValueError):
             summary.validate_source(raw, expected_commit="a" * 40, expected_job=42)
 

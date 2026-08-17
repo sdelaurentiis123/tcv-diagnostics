@@ -121,6 +121,17 @@ def validate_source(
                 raw["comparisons"][comparison][category],
                 PRIMARY_QUANTITIES,
             )
+            for quantity in PRIMARY_QUANTITIES:
+                source = raw["comparisons"][comparison][category][quantity]
+                has_temporal_blocks = "relative_l2_by_temporal_block" in source
+                expects_temporal_blocks = comparison != "raw64_vs_float32"
+                if has_temporal_blocks != expects_temporal_blocks:
+                    raise ValueError(
+                        "temporal-block schema differs for "
+                        f"{comparison}.{category}.{quantity}: "
+                        f"present={has_temporal_blocks}, "
+                        f"expected={expects_temporal_blocks}"
+                    )
 
 
 def _compact_field(source: dict[str, Any]) -> dict[str, Any]:
@@ -136,11 +147,18 @@ def _compact_field(source: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _compact_comparison(source: dict[str, Any]) -> dict[str, Any]:
+def _compact_comparison(
+    source: dict[str, Any], *, temporal_blocks_expected: bool
+) -> dict[str, Any]:
     frame_indices = [int(value) for value in source["frame_indices"]]
     if not frame_indices:
         raise ValueError("comparison contains no frame indices")
-    return {
+    has_temporal_blocks = "relative_l2_by_temporal_block" in source
+    if has_temporal_blocks != temporal_blocks_expected:
+        raise ValueError(
+            "comparison temporal-block availability differs from its declared scope"
+        )
+    record = {
         "frame_coverage": {
             "count": len(frame_indices),
             "first": frame_indices[0],
@@ -171,8 +189,18 @@ def _compact_comparison(source: dict[str, Any]) -> dict[str, Any]:
         "per_frame_absolute_value_p99_ratio_summary": source[
             "per_frame_absolute_value_p99_ratio_summary"
         ],
-        "relative_l2_by_temporal_block": source["relative_l2_by_temporal_block"],
+        "temporal_block_metrics_available": has_temporal_blocks,
+        "temporal_block_scope": (
+            "all_624_development_frames"
+            if has_temporal_blocks
+            else "not_computed_for_five_selected_raw_oracle_frames"
+        ),
     }
+    if has_temporal_blocks:
+        record["relative_l2_by_temporal_block"] = source[
+            "relative_l2_by_temporal_block"
+        ]
+    return record
 
 
 def compact_record(
@@ -223,7 +251,8 @@ def compact_record(
             comparison: {
                 category: {
                     quantity: _compact_comparison(
-                        raw["comparisons"][comparison][category][quantity]
+                        raw["comparisons"][comparison][category][quantity],
+                        temporal_blocks_expected=comparison != "raw64_vs_float32",
                     )
                     for quantity in PRIMARY_QUANTITIES
                 }
