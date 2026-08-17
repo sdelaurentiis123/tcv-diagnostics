@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_potential_vorticity_all_frame_85604_attempt",
+  "paper0_commit": "ef1ca7500320f4e528b83578df7136a214356443",
+  "slurm": {
+    "job_id": 6892955,
+    "state": "CANCELLED",
+    "batch_exit_code": "0:15",
+    "submit": "2026-08-17T13:39:08-04:00",
+    "start": "2026-08-17T13:39:08-04:00",
+    "end": "2026-08-17T13:46:39-04:00",
+    "elapsed": "00:07:31",
+    "time_limit": "01:00:00",
+    "node": "worker5582",
+    "batch_max_rss_kib": 993024
+  },
+  "data_access": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "provenance_gates_passed": true,
+    "canonical_extraction_completed": false,
+    "compiled_oracle_started": false,
+    "shard_replay_count": 0,
+    "scientific_result_written": false
+  },
+  "outcome": {
+    "classification": "no_result_canonical_chunk_io_performance_failure",
+    "reason": "the canonical writer used one-frame 5 KiB chunks, causing thousands of small Ceph allocations per source rank and making completion impossible inside the frozen one-hour cap",
+    "read_only_rate_observations": [
+      {
+        "elapsed": "00:03:13",
+        "job_directory_du": "26M"
+      },
+      {
+        "elapsed": "00:04:47",
+        "batch_max_disk_read_bytes": 560160756,
+        "batch_max_disk_write_bytes": 52202685
+      }
+    ],
+    "partial_canonical_file_count": 8,
+    "partial_canonical_apparent_bytes_each": 13229939,
+    "partial_job_directory_du": "101M",
+    "scientific_statistics_accepted": false,
+    "protocol_or_tolerance_changed": false,
+    "planned_correction": "change only the canonical storage chunk from [1,4,2,81] to the exact per-assignment slab [78,4,2,81], preserving values, frame scope, one raw traversal, bounded memory, equations, replay order, and gates"
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_potential_vorticity_all_frame/job_6892955",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_vort_all_6892955.log",
+    "artifact_digests": {
+      "commands.sh": "55d7728c71b06291950829e92f5bf476c5dd014ee10438b35d4ca2840d7fb56b",
+      "environment.txt": "1ab4204e4b7fd552945ea2ec6ed75f7ae0d44991dae49a027290aff8c4935dab",
+      "modules.txt": "b383f226b959e93aab38ad41ee079f5e3f71158c337a80b142a0683610907ce7",
+      "slurm_job.txt": "c6dfd5d6c414d396eb72092e3299f3ee74a99d73a688490fa1a453c4727342a5",
+      "job.log": "aa4db39d63fff4de91a2aed123c13f8f03be033a4a8b9ec598123b8333ea8773",
+      "slurm_log": "e9df9612438d8a5910999aba4acb276af94252d6098ce34bafae9d5e86d5dee9"
+    }
+  }
+}

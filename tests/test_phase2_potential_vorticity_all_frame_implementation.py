@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import ExitStack
 import hashlib
 import json
 from pathlib import Path
@@ -16,6 +17,7 @@ from paper0.tools.compare_potential_vorticity_forward_oracle import (
 )
 from paper0.tools.extract_potential_vorticity_all_frame_85604 import (
     EXPECTED_SHARDS,
+    create_canonical_files,
     discrepancy_count,
     expected_times,
     update_pressure_inventory,
@@ -47,7 +49,7 @@ SELECTED_DRIVER_SHA256 = (
 FILE_HASHES = {
     DRIVER: "79daf7925cb6a8b7d8751eee51f3fa9f5e6139289700654999d659a8bce6d254",
     CMAKE: "b2ac21ea37793e24417320b7fef8c143f0db6a1ff80f65a0e6663328f019169e",
-    EXTRACTOR: "220886c1e258603c63e6ef751d3ef1bbfced5441f45080b0ba3ce3b60ba37b17",
+    EXTRACTOR: "5840704805b04c8586b1835064a5ae34b62ad22a95257722e6a416db5e2c191a",
     COMPARATOR: "ffd5efbb59abb0eef3bd9a187431f85d5a9c9700fd976627c1d9b89c8b64e967",
     MERGER: "3bedce322efbf22e4942afc84101422f807b179e82c9fa739f1c6800ab4e6fa6",
 }
@@ -58,6 +60,39 @@ def sha256(path: Path) -> str:
 
 
 class AllFrameExtractionTests(unittest.TestCase):
+    def test_canonical_chunk_matches_rank_write_slab_and_round_trips(self) -> None:
+        try:
+            import netCDF4
+        except ImportError:
+            self.skipTest("netCDF4 is unavailable")
+        manifest = {
+            "canonical_extraction": {
+                "volume_axes": ["frame", "x", "y", "z"],
+                "boundary_axes": ["frame", "side", "y"],
+            },
+            "frame_scope": {"physical_cadence_microseconds": 3.131905426352636},
+        }
+        times = 285000.0 + 300.0 * np.arange(624, dtype=np.float64)
+        block = np.arange(78 * 4 * 2 * 81, dtype=np.float64).reshape(
+            78, 4, 2, 81
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            output_dir = Path(directory)
+            with ExitStack() as stack:
+                _, variables = create_canonical_files(
+                    stack,
+                    netcdf4=netCDF4,
+                    output_dir=output_dir,
+                    manifest=manifest,
+                    times=times,
+                )
+                variables[0]["Ne"][:, 0:4, 0:2, :] = block
+            with netCDF4.Dataset(output_dir / "canonical_shard_0.nc", "r") as data:
+                self.assertEqual(data.variables["Ne"].chunking(), [78, 4, 2, 81])
+                np.testing.assert_array_equal(
+                    np.asarray(data.variables["Ne"][:, 0:4, 0:2, :]), block
+                )
+
     def test_shard_partition_is_value_independent_and_complete(self) -> None:
         self.assertEqual(
             EXPECTED_SHARDS,
@@ -219,6 +254,8 @@ class AllFrameCompiledImplementationTests(unittest.TestCase):
         self.assertIn("for path in paths:", source)
         self.assertIn("for shard_index, (start, stop) in enumerate(EXPECTED_SHARDS)", source)
         self.assertIn("rank_files_traversed_once", source)
+        self.assertIn("chunksizes=(78, 4, 2, 81)", source)
+        self.assertIn('"canonical_volume_chunks": [78, 4, 2, 81]', source)
         self.assertIn("refusing to overwrite all-frame extraction artifacts", source)
         self.assertNotIn("85606/", source)
 

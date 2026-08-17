@@ -147,7 +147,12 @@ def create_canonical_files(
                 "f8",
                 tuple(extraction["volume_axes"]),
                 zlib=False,
-                chunksizes=(1, 4, 2, 81),
+                # One chunk is exactly the 78-frame physical block written by
+                # one source rank.  A one-frame time chunk creates 78 small
+                # Ceph allocations for every assignment without changing any
+                # canonical value; matching the write slab keeps extraction
+                # streaming while avoiding that metadata bottleneck.
+                chunksizes=(78, 4, 2, 81),
             )
             for field in VOLUME_FIELDS
         }
@@ -528,6 +533,8 @@ def main() -> int:
         "normalized_times": times.tolist(),
         "shard_intervals": [list(item) for item in EXPECTED_SHARDS],
         "canonical_dtype": "float64",
+        "canonical_volume_chunks": [78, 4, 2, 81],
+        "canonical_boundary_chunks": [78, 1, 2],
         "canonical_volume_axes": ["frame", "x", "y", "z"],
         "canonical_boundary_axes": ["frame", "side", "y"],
         "boundary_side_order": list(phi_boundary.SIDES),

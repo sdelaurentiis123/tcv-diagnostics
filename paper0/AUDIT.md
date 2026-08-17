@@ -546,6 +546,19 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     relation in both directions on the selected frames. It does not establish
     all-frame stability, choose `S6+Bphi` versus a pragmatic observed state,
     authorize training, or read 85606.
+50. **The first all-frame potential/vorticity launch reached no scientific
+    gate because its canonical chunk layout was incompatible with Ceph.**
+    CPU-only Rocky 9 job `6892955`, from clean commit `ef1ca75`, passed every
+    repository, source, archive, ABI, OS, and dirty-state check. The extractor
+    then wrote each local 78-frame assignment as 78 separate 5-KiB chunks.
+    Read-only rate observations showed only 52,202,685 bytes written after
+    4:47, projecting far beyond the frozen one-hour cap. The job was cancelled
+    at 7:31 with no completed extraction, compilation, shard replay, result
+    JSON, accepted statistic, or 85606 access. All partial files and logs are
+    retained under its unique job directory. The correction changes only the
+    canonical NetCDF chunk from `[1,4,2,81]` to the exact assignment slab
+    `[78,4,2,81]`; it does not alter a canonical value, field, frame, equation,
+    tolerance, source lock, sequential replay, memory rule, or decision gate.
 
 ## Exact commands
 
