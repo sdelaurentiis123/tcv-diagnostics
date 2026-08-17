@@ -31,6 +31,8 @@ if str(SRC) not in sys.path:
 
 from tcv_diagnostics.data_protocol import (  # noqa: E402
     C5_FIELDS,
+    circular_shift_aligned_autocorrelation,
+    complex_toroidal_mode_coherence,
     DEFAULT_SPLIT,
     FIELD_TRANSFORMS,
     RunningMoments,
@@ -411,6 +413,8 @@ def compute_decorrelation(
     per_field: dict[str, Any] = {}
     toroidal_residual_per_field: dict[str, Any] = {}
     variability_energy: dict[str, Any] = {}
+    shift_aligned_per_field: dict[str, Any] = {}
+    mode_coherence_per_field: dict[str, Any] = {}
     for field in C5_FIELDS:
         frames = trajectory.read_field(
             field,
@@ -437,6 +441,35 @@ def compute_decorrelation(
             residual_curve, cadence_microseconds
         )
         variability_energy[field] = energy
+        shift_aligned_per_field[field] = circular_shift_aligned_autocorrelation(
+            toroidal_residual,
+            max_lag=32,
+            zperiod=5,
+        )
+        mode_coherence_per_field[field] = complex_toroidal_mode_coherence(
+            toroidal_residual,
+            max_lag=32,
+            zperiod=5,
+            max_k=16,
+        )
+
+    lag_one_summary: dict[str, Any] = {}
+    for field in C5_FIELDS:
+        modes = mode_coherence_per_field[field]["modes"]
+        target_band = [mode for mode in modes if 4 <= mode["k"] <= 7]
+        lag_one_summary[field] = {
+            "fixed_grid_rho": toroidal_residual_per_field[field]["rho"][1],
+            "shift_aligned_rho": shift_aligned_per_field[field]["max_rho"][1],
+            "optimal_signed_shift_cells": shift_aligned_per_field[field][
+                "signed_shift_cells"
+            ][1],
+            "optimal_signed_full_torus_degrees": shift_aligned_per_field[field][
+                "signed_full_torus_degrees"
+            ][1],
+            "mean_mode_coherence_k4_to_k7_n20_to_n35": float(
+                np.mean([mode["lag_one_magnitude"] for mode in target_band])
+            ),
+        }
     return {
         "definition": "uniform-grid Eulerian fluctuation-pattern autocorrelation",
         "training_indices": [
@@ -460,6 +493,23 @@ def compute_decorrelation(
             "representative": representative_decorrelation(
                 toroidal_residual_per_field, cadence_microseconds
             ),
+            "oracle_global_shift_alignment": {
+                "status": "verification_only_uses_future_frame",
+                "max_lag_frames": 32,
+                "per_field": shift_aligned_per_field,
+            },
+            "oracle_complex_mode_coherence": {
+                "status": "verification_only_uses_future_fourier_phase",
+                "max_lag_frames": 32,
+                "stored_k_range": [1, 16],
+                "full_torus_n_range": [5, 80],
+                "target_band": {
+                    "stored_k": [4, 7],
+                    "full_torus_n": [20, 35],
+                },
+                "per_field": mode_coherence_per_field,
+            },
+            "lag_one_oracle_summary": lag_one_summary,
         },
         "temporal_variability_energy_by_field": variability_energy,
     }
@@ -479,7 +529,7 @@ def label_decorrelation_scope(
         ),
         "learning_or_split_selection_authorized": bool(steady_state_passes),
         "amendment": None if steady_state_passes else "A002",
-        "amendments": [] if steady_state_passes else ["A002", "A003"],
+        "amendments": [] if steady_state_passes else ["A002", "A003", "A004"],
     }
 
 
@@ -557,7 +607,7 @@ def main() -> None:
             "active_amendment": (
                 None
                 if steady["passes"]
-                else "A002_A003_diagnostic_only_decorrelation"
+                else "A002_A003_A004_diagnostic_only_decorrelation"
             ),
         },
         "execution": {

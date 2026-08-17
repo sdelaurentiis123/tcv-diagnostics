@@ -310,19 +310,25 @@ def operational_steady_screen(
     }
 
 
-def pattern_autocorrelation(frames: np.ndarray, max_lag: int) -> np.ndarray:
-    """Normalized Eulerian pattern autocorrelation from fluctuation fields."""
-
+def _prepare_pattern_fluctuations(frames: np.ndarray) -> np.ndarray:
     array = np.asarray(frames, dtype=np.float64)
     if array.ndim < 2:
         raise ValueError("frames must have time and at least one spatial axis")
-    if max_lag < 0 or max_lag >= array.shape[0]:
-        raise ValueError("max_lag must be in [0, number of frames)")
     flat = array.reshape(array.shape[0], -1)
     flat = flat - np.mean(flat, axis=1, keepdims=True)
     flat = flat - np.mean(flat, axis=0, keepdims=True)
     if not np.all(np.isfinite(flat)):
         raise ValueError("decorrelation input contains non-finite values")
+    return flat.reshape(array.shape)
+
+
+def pattern_autocorrelation(frames: np.ndarray, max_lag: int) -> np.ndarray:
+    """Normalized Eulerian pattern autocorrelation from fluctuation fields."""
+
+    prepared = _prepare_pattern_fluctuations(frames)
+    if max_lag < 0 or max_lag >= prepared.shape[0]:
+        raise ValueError("max_lag must be in [0, number of frames)")
+    flat = prepared.reshape(prepared.shape[0], -1)
 
     frame_energy = np.einsum("td,td->t", flat, flat, optimize=True)
     result = np.empty(max_lag + 1, dtype=np.float64)
@@ -337,6 +343,134 @@ def pattern_autocorrelation(frames: np.ndarray, max_lag: int) -> np.ndarray:
             raise ValueError("decorrelation field has zero fluctuation energy")
         result[lag] = numerator / denominator
     return result
+
+
+def circular_shift_aligned_autocorrelation(
+    frames: np.ndarray,
+    max_lag: int,
+    *,
+    zperiod: int,
+) -> dict[str, object]:
+    """Oracle pattern correlation maximized over one global circular z shift.
+
+    The reported shift maximizes ``sum A(z) * B(z + shift)``. Positive signed
+    cells therefore indicate the forward index applied to the later frame.
+    """
+
+    if zperiod <= 0:
+        raise ValueError("zperiod must be positive")
+    prepared = _prepare_pattern_fluctuations(frames)
+    if prepared.shape[-1] < 2:
+        raise ValueError("shift alignment requires a nontrivial toroidal axis")
+    if max_lag < 0 or max_lag >= prepared.shape[0]:
+        raise ValueError("max_lag must be in [0, number of frames)")
+
+    spectrum = np.fft.rfft(prepared, axis=-1)
+    frame_energy = np.sum(
+        prepared * prepared,
+        axis=tuple(range(1, prepared.ndim)),
+        dtype=np.float64,
+    )
+    toroidal_cells = prepared.shape[-1]
+    max_rho: list[float] = []
+    unsigned_shift_cells: list[int] = []
+    signed_shift_cells: list[int] = []
+    signed_shift_degrees: list[float] = []
+    sum_axes = tuple(range(spectrum.ndim - 1))
+
+    for lag in range(max_lag + 1):
+        left = spectrum if lag == 0 else spectrum[:-lag]
+        right = spectrum if lag == 0 else spectrum[lag:]
+        cross_spectrum = np.sum(np.conj(left) * right, axis=sum_axes)
+        correlation_by_shift = np.fft.irfft(cross_spectrum, n=toroidal_cells)
+        left_energy = frame_energy if lag == 0 else frame_energy[:-lag]
+        right_energy = frame_energy if lag == 0 else frame_energy[lag:]
+        denominator = math.sqrt(float(np.sum(left_energy) * np.sum(right_energy)))
+        if denominator <= 0:
+            raise ValueError("shift-alignment field has zero fluctuation energy")
+        normalized = np.asarray(correlation_by_shift.real / denominator)
+        shift = int(np.argmax(normalized))
+        signed = shift if shift <= toroidal_cells // 2 else shift - toroidal_cells
+        max_rho.append(float(normalized[shift]))
+        unsigned_shift_cells.append(shift)
+        signed_shift_cells.append(signed)
+        signed_shift_degrees.append(
+            float(signed * 360.0 / (zperiod * toroidal_cells))
+        )
+
+    return {
+        "max_rho": max_rho,
+        "unsigned_shift_cells": unsigned_shift_cells,
+        "signed_shift_cells": signed_shift_cells,
+        "signed_full_torus_degrees": signed_shift_degrees,
+        "toroidal_cells": int(toroidal_cells),
+        "zperiod": int(zperiod),
+        "shift_convention": "maximize sum A(z) * B(z + shift)",
+    }
+
+
+def complex_toroidal_mode_coherence(
+    frames: np.ndarray,
+    max_lag: int,
+    *,
+    zperiod: int,
+    max_k: int,
+) -> dict[str, object]:
+    """Normalized complex lag coherence for stored toroidal Fourier modes."""
+
+    if zperiod <= 0:
+        raise ValueError("zperiod must be positive")
+    prepared = _prepare_pattern_fluctuations(frames)
+    if max_lag < 0 or max_lag >= prepared.shape[0]:
+        raise ValueError("max_lag must be in [0, number of frames)")
+    spectrum = np.fft.rfft(prepared, axis=-1)
+    available_max_k = spectrum.shape[-1] - 1
+    if max_k < 1 or max_k > available_max_k:
+        raise ValueError(
+            f"max_k must be in [1, {available_max_k}], got {max_k}"
+        )
+    sum_axes = tuple(range(spectrum.ndim - 1))
+    magnitude_by_lag = np.empty((max_lag + 1, max_k), dtype=np.float64)
+    phase_by_lag = np.empty((max_lag + 1, max_k), dtype=np.float64)
+
+    selected = spectrum[..., 1 : max_k + 1]
+    for lag in range(max_lag + 1):
+        left = selected if lag == 0 else selected[:-lag]
+        right = selected if lag == 0 else selected[lag:]
+        cross = np.sum(np.conj(left) * right, axis=sum_axes)
+        left_energy = np.sum(np.abs(left) ** 2, axis=sum_axes)
+        right_energy = np.sum(np.abs(right) ** 2, axis=sum_axes)
+        denominator = np.sqrt(left_energy * right_energy)
+        if np.any(denominator <= 0):
+            raise ValueError("one or more requested modes have zero energy")
+        coherence = cross / denominator
+        magnitude_by_lag[lag] = np.abs(coherence)
+        phase_by_lag[lag] = np.angle(coherence)
+
+    modes: list[dict[str, object]] = []
+    for offset, k in enumerate(range(1, max_k + 1)):
+        magnitude = magnitude_by_lag[:, offset]
+        phase = phase_by_lag[:, offset]
+        crossing = first_threshold_crossing(magnitude, math.exp(-1.0))
+        modes.append(
+            {
+                "k": k,
+                "n": zperiod * k,
+                "magnitude": [float(value) for value in magnitude],
+                "phase_radians": [float(value) for value in phase],
+                "lag_one_magnitude": float(magnitude[1]),
+                "lag_one_phase_radians": float(phase[1]),
+                "one_over_e_crossing_frames": crossing,
+                "one_over_e_right_censored": crossing is None,
+            }
+        )
+    return {
+        "max_lag_frames": int(max_lag),
+        "max_k": int(max_k),
+        "zperiod": int(zperiod),
+        "mode_mapping": f"n = {zperiod}k",
+        "modes": modes,
+    }
 
 
 def toroidal_variability_decomposition(

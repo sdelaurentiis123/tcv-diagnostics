@@ -16,6 +16,8 @@ if str(SRC) not in sys.path:
 
 from tcv_diagnostics.data_protocol import (  # noqa: E402
     C5_FIELDS,
+    circular_shift_aligned_autocorrelation,
+    complex_toroidal_mode_coherence,
     DEFAULT_SPLIT,
     RunningMoments,
     first_threshold_crossing,
@@ -172,6 +174,33 @@ class StatisticsTests(unittest.TestCase):
             places=14,
         )
         self.assertAlmostEqual(energy["orthogonality_cross_term"], 0.0, places=12)
+
+    def test_translating_wave_is_recovered_by_shift_and_mode_oracles(self) -> None:
+        toroidal_cells = 32
+        z = np.arange(toroidal_cells, dtype=np.float64)
+        base = (
+            np.cos(2.0 * np.pi * 3.0 * z / toroidal_cells)
+            + 0.7 * np.cos(2.0 * np.pi * 5.0 * z / toroidal_cells)
+        )
+        frames = np.stack(
+            [np.roll(base, 4 * time) for time in range(32)], axis=0
+        )[:, None, None, :]
+
+        fixed = pattern_autocorrelation(frames, max_lag=2)
+        self.assertLess(fixed[1], 0.0)
+        shifted = circular_shift_aligned_autocorrelation(
+            frames, max_lag=2, zperiod=5
+        )
+        self.assertAlmostEqual(shifted["max_rho"][1], 1.0, places=12)
+        self.assertEqual(abs(shifted["signed_shift_cells"][1]), 4)
+
+        modes = complex_toroidal_mode_coherence(
+            frames, max_lag=2, zperiod=5, max_k=5
+        )
+        by_k = {mode["k"]: mode for mode in modes["modes"]}
+        self.assertAlmostEqual(by_k[3]["lag_one_magnitude"], 1.0, places=12)
+        self.assertAlmostEqual(by_k[5]["lag_one_magnitude"], 1.0, places=12)
+        self.assertEqual(by_k[3]["n"], 15)
 
 
 if __name__ == "__main__":

@@ -129,7 +129,7 @@ exb_advection_simplified = false
             diagnostic["status"], "diagnostic_only_under_nonstationarity"
         )
         self.assertEqual(diagnostic["amendment"], "A002")
-        self.assertEqual(diagnostic["amendments"], ["A002", "A003"])
+        self.assertEqual(diagnostic["amendments"], ["A002", "A003", "A004"])
         self.assertFalse(diagnostic["learning_or_split_selection_authorized"])
 
         accepted = profiler.label_decorrelation_scope(
