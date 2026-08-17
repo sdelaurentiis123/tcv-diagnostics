@@ -639,9 +639,10 @@ ported explicitly and independently tested. The implementation is commit
 It imports nothing from the dirty predecessor checkout.
 
 No historical codec or forecast checkpoint initializes the matched models.
-A deterministic codec implementation and CPU result exist, but no trainer,
-checkpoint, GPU smoke result, or scientific training result exists under this
-section yet. On local PyTorch `2.8.0`, the 11 codec tests and then-current
+A deterministic codec implementation, verified data reader, data-only
+trainer, CPU portability result, and bounded GPU smoke now exist. No
+scientific training result exists under this section yet. On local PyTorch
+`2.8.0`, the 11 codec tests and then-current
 complete Paper 0 suite passed (`393 passed, 1 skipped`). CPU-only Rocky 9 job
 `6893674` ran clean commit `0d633164050281160f37b79f33d4332c536e7970`
 on worker `worker5582`, passed the expanded suite (`399 passed, 1 skipped, 29
@@ -651,3 +652,17 @@ performed no training. The immutable full result remains at
 its tracked byte-identical copy has SHA-256
 `d46bca572c52b8beab1f0bda18b3b869fe63ec6627b76382c350c52a972ed6f9`.
 No reconstruction-quality gate is implied by an implementation test.
+
+Bounded Rocky 9 H100 job `6893713` ran clean commit
+`c3d03289dd1e1e1a80eb03579febbb4255022a75` on `workergpu205` and
+completed `0:0` in 57 seconds. It used only 16 training and four validation
+frames for two epochs at seed 1701. Both the five-channel and six-channel
+`dcae_l20` models completed two real optimizer steps and reproduced their
+selected-checkpoint validation probe bit-for-bit after a fresh model reload.
+Peak allocated CUDA memory was 5,978,285,056 and 5,981,825,024 bytes,
+respectively. The tracked summary has SHA-256
+`f16bb41c2ce03d9ae3ec0128d759748a594bd0fb8120a38a24825f373cb725db`;
+the full checkpoints and artifact index remain under
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_gpu_smoke/job_6893713`.
+The two-epoch losses are explicitly non-scientific smoke outputs: no O1
+metric or acceptance gate was evaluated, and no 85606 file was accessed.

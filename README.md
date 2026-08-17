@@ -42,8 +42,12 @@ It first trains from-scratch codecs with data-only loss and requires
 field/spectral/cross-field/transport reconstruction gates before any one-step
 model may run. A three-arm one-step ladder then compares exact Hermes state,
 two-frame pragmatic state, and one-frame pragmatic state against persistence
-and uncompressed linear/spectral references. No model training has started;
-implementation and Rocky 9 smoke gates come next.
+and uncompressed linear/spectral references. The attributed DCAE port,
+verified 85604 reader, data-only optimizer, Rocky 9 CPU gate, and bounded H100
+smoke now pass. The smoke trained only 16 frames for two epochs and is not a
+scientific result. The next authorized step is the full three-seed C5P/E6B R1
+codec training followed by the complete O1 gate; O2 remains blocked until R1
+passes or the predeclared R2 repair is evaluated.
 
 The historical codecs have now been evaluated through the frozen O1 oracle;
 [`paper0/PHASE2_O1_READOUT.md`](paper0/PHASE2_O1_READOUT.md) records why neither

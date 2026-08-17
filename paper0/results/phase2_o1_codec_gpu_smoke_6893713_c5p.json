@@ -1,0 +1,85 @@
+{
+  "checkpoint_reload_bitwise_exact": true,
+  "completed_epochs": 2,
+  "completed_optimizer_steps": 2,
+  "config": {
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "channels": 5,
+    "codec": "dcae_l20",
+    "effective_batch": 16,
+    "epochs": 2,
+    "family": "c5p",
+    "fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "phi",
+      "Vi"
+    ],
+    "gradient_accumulation": 4,
+    "gradient_clip": 1.0,
+    "learning_rate": 0.0002,
+    "microbatch": 4,
+    "minimum_learning_rate": 2e-06,
+    "mode": "smoke",
+    "optimizer_steps_per_epoch": 1,
+    "physics_derived_loss_allowed": false,
+    "seed": 1701,
+    "total_optimizer_steps": 2,
+    "train_start": 0,
+    "train_stop": 16,
+    "training_loss": "equal_channel_standardized_MAE",
+    "training_precision": "bfloat16_autocast",
+    "validation_microbatch": 1,
+    "validation_start": 496,
+    "validation_stop": 500,
+    "warmup_epochs": 1,
+    "warmup_optimizer_steps": 1,
+    "weight_decay": 0.0001
+  },
+  "cudnn_deterministic_requested": true,
+  "development_run": "85604",
+  "final_training_state": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_gpu_smoke/job_6893713/c5p/final_training_state.pt",
+    "sha256": "7fc2acb989fd0609523ac9a04a502d91ed9dab142337cb4f103c63ade3a68d2a"
+  },
+  "final_validation_equal_channel_mae": 2.354576740338744,
+  "final_validation_mae_by_channel": {
+    "Ne": 2.435842823658718,
+    "Pe": 1.676929539166938,
+    "Pi": 2.183370037401784,
+    "Vi": 3.6300057913066013,
+    "phi": 1.8467355101596765
+  },
+  "held_out_85606_read": false,
+  "history": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_gpu_smoke/job_6893713/c5p/history.jsonl",
+    "sha256": "6e158c55c6acf9fc18ec4f4aae8ff9d1c149794c788bec4cc9074a08435d3ff0"
+  },
+  "latent_shape": [
+    64,
+    8,
+    4,
+    22
+  ],
+  "paper0_commit": "c3d03289dd1e1e1a80eb03579febbb4255022a75",
+  "parameter_count": 123007365,
+  "peak_cuda_bytes": 5978285056,
+  "physics_derived_loss_used": false,
+  "schema_version": 1,
+  "scope": "O1_codec_smoke",
+  "selected_checkpoint": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_gpu_smoke/job_6893713/c5p/selected.pt",
+    "sha256": "94e8fbdbc6b9baf92777ffe3e49a0ca3241ef0b3fd5bcf45abecfa7cf1992cc1"
+  },
+  "selected_epoch": 1,
+  "selected_validation_equal_channel_mae": 2.354576740338744,
+  "simulation_data_read": true,
+  "slurm_job_id": "6893713",
+  "strict_cuda_bitwise_determinism_claimed": false,
+  "tf32_allowed": false,
+  "wall_seconds": 8.117778289975831
+}

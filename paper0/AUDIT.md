@@ -673,6 +673,21 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     This closes the CPU portability portion of the implementation gate only;
     data-loading, optimizer, checkpoint, bounded GPU smoke, and O1 scientific
     gates remain open.
+59. **The complete data/optimizer/checkpoint path passes its bounded Rocky 9
+    H100 smoke gate for both state families.** Job `6893713` ran clean commit
+    `c3d0328`, passed the then-current repository suite, hash-verified the
+    official dataset records, and used only frames `[0,16)` and `[496,500)`.
+    The 123,007,365-parameter C5P model and 123,010,822-parameter E6B model
+    each completed two epochs and two optimizer steps without OOM or
+    non-finite values. Peak allocated CUDA memory was about 5.98 GB for each,
+    and both selected checkpoints reproduced a save-time validation probe
+    bit-for-bit after fresh reload. Job runtime was 57 seconds with exit
+    `0:0`. These deliberately undertrained losses are not model evidence: the
+    summary fixes `training_result_accepted=false` and
+    `O1_scientific_gate_evaluated=false`. This closes the implementation and
+    portability gates only. Full three-seed C5P/E6B R1 training, complete O1
+    evaluation, the predeclared R2 decision, and all later phases remain open;
+    85606 was not accessed.
 
 ## Exact commands
 
