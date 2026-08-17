@@ -18,7 +18,7 @@ class TransportOracleBuildLauncherTests(unittest.TestCase):
             "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
             "a43d6d4d415d407712c246faca553bd951730dc1",
             "027f9aee2d34dbe1c98f26224e1fbe1654cb4aae",
-            "407c905e45ad75fc29bf48133acc2695c7e5c6f1e7",
+            "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f",
             "23cb94f027d4ef33bf48133acc2695c7e5c6f1e7",
             "761bf5b8488edb21feb8c512860bf2f2a9283e4d6d9c7200bc0f6b1598fafe56",
             "BOUT_ENABLE_MPI=ON",

@@ -48,6 +48,12 @@ synthetic known-answer and finite-volume conservation tests. Its API and
 metadata say `partial`; it remains scientifically blocked from use as total
 transport until the shifted `x-y` component passes the BOUT++ oracle ladder.
 
+The first external BOUT++ build attempt, Slurm job `6890717`, stopped before
+configuration because the launcher mistyped the exact `fmt` gitlink. It read no
+shot data and compiled no source. Its unique failed-attempt directory is kept
+under the external build cache; the correction is documented in
+`paper0/AUDIT.md` rather than deleting or reusing that directory.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

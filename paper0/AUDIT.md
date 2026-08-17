@@ -210,6 +210,13 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
 16. **The deterministic artifact is not an apples-to-apples baseline.** It uses C4 rather than C5, a different density logarithm, different normalization, six context frames, and a different validation objective. It must be retrained under the common protocol.
 17. **The historical representation sweep is confounded.** z22, z44, and f8-short have different parentage, codec losses, and training exposure. No latent-resolution conclusion is accepted from those artifacts.
 18. **The historical CRPS fine-tune did not establish a calibration solution.** Its best-fair-CRPS score is slightly worse than the parent in the frozen history; separate objectives select separate epochs; and it does not validate cross-field transport statistics.
+19. **The first exact-BOUT build attempt stopped at its provenance gate.** CPU
+    job `6890717` read no shot data and compiled nothing. The launcher contained
+    a mistyped `fmt` submodule revision, so it exited with code 2 before the
+    dependency build. The immutable failed-attempt log remains under
+    `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890717`;
+    the corrected launcher uses the gitlink actually recorded by BOUT++ commit
+    `7d28d67`, namely `407c905e45ad75fc29bf0f9bb7c5c2fd3475976f`.
 
 ## Exact commands
 
