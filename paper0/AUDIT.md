@@ -647,6 +647,20 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     85606 access is authorized. Implementation, Rocky 9 CPU tests, and a
     bounded non-scientific GPU smoke remain required before the first full
     launch.
+57. **The deterministic codec is now isolated in an attributed, tested Paper
+    0 implementation.** Commit `c0cd66b` ports only the LOLA DCAE structure,
+    patch ordering, channel normalization, and `softclip2` saturation needed
+    by the frozen candidates. It also ports the audited predecessor repairs
+    for zero-wall `x/y` padding, periodic `z` padding, and per-transition
+    anisotropic strides. It imports no predecessor source or training code and
+    loads no historical checkpoint. Eleven CPU tests establish exact patch
+    inversion and ordering, known wall/wrap behavior, both frozen latent
+    shapes, config/manifest identity, anisotropic forward/backward shapes,
+    finite saturation, equal-channel loss semantics, and exact checkpoint
+    reload. The complete local suite passes (`393 passed, 1 skipped`) with
+    PyTorch `2.8.0`. This is an implementation gate, not evidence that the
+    codec reconstructs the simulation: no training, GPU smoke, O1 metric,
+    forecast result, or 85606 access has occurred.
 
 ## Exact commands
 

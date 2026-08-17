@@ -17,7 +17,14 @@ For Paper 0, the predecessor is an auditable, read-only source of candidate load
 
 | New path | Source path | Source commit | Modifications | Verification |
 |---|---|---|---|---|
-| _none yet_ | | | | |
+| `src/tcv_diagnostics/models/layers.py` | PolymathicAI/LOLA `lola/nn/layers.py`; predecessor evidence `external/lola/lola/nn/layers.py` | upstream `21a4354b327e6e5ee06da5075ba3bd1dd88c61f1`; predecessor file SHA-256 `ad6aab36d52ea7aba2a0c45006a33413304c0d9ceb9abffd52a497a24adf616f` | Minimum PyTorch-only port of channel normalization and patch ordering; removes `einops`; adds stricter argument checks; ports the predecessor's explicit per-axis padding so `x/y=zeros` and `z=circular`; retained under the upstream MIT license | Paper 0 commit `c0cd66b`; new file SHA-256 `87265976a250ef1de81f19a59607b1c1493906ca2b72bc561816bf956302d12b`; known-answer patch ordering, inverse, wall, and periodic-wrap tests |
+| `src/tcv_diagnostics/models/dcae.py` | PolymathicAI/LOLA `lola/nn/dcae.py` and `lola/autoencoder.py`; predecessor evidence `external/lola/lola/nn/dcae.py` | upstream `21a4354b327e6e5ee06da5075ba3bd1dd88c61f1`; predecessor file SHA-256 `281f8541aa09822147f8769e9a11fb63497aa54783dd9a806b173e76c5fbaede` | Minimum DCAE encoder/decoder and `softclip2` port; removes configuration-framework dependencies and optional attention; ports per-transition anisotropic strides; adds frozen named codec configs, latent-shape validation, and equal-channel standardized MAE | Paper 0 commit `c0cd66b`; new file SHA-256 `0f2e9a7445ae47915f334f01993fbf49adc4ac462bf69ef988a736e22bb9c554`; shape, backward, saturation, manifest-lock, and exact checkpoint-reload tests |
+
+The copied upstream MIT text is
+`src/tcv_diagnostics/models/LOLA_LICENSE.txt`, SHA-256
+`6a483108d787c61c7e2306216ecaa2e15f80a0a2e7fb44cb70d200bbbab63605`.
+No predecessor training script, optimizer, loss implementation, checkpoint,
+or configuration framework was ported.
 
 ## External method ledger
 
@@ -569,7 +576,14 @@ a model state, or authorize held-out access. The complete interpretation is
 
 ## Phase 0 execution evidence
 
-No predecessor code has been ported yet. The audit-only legacy reproduction executed the predecessor files in place after verifying their byte hashes. Job `6890428` used Paper 0 commit `7e2b5d2`, Rocky Linux 9.8, an NVIDIA H100, and only the legacy 85604 validation region. Its compact result record is `paper0/results/phase0_legacy_valid_6890428.json`; the full Rusty artifacts remain under `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428`.
+At the time of the Phase 0 reproduction, no predecessor code had been ported.
+The audit-only legacy reproduction executed the predecessor files in place
+after verifying their byte hashes. Job `6890428` used Paper 0 commit
+`7e2b5d2`, Rocky Linux 9.8, an NVIDIA H100, and only the legacy 85604
+validation region. Its compact result record is
+`paper0/results/phase0_legacy_valid_6890428.json`; the full Rusty artifacts
+remain under
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428`.
 
 The first submission, job `6890410`, stopped before model inference because the manifest contained a truncated validation-file hash. Commit `7e2b5d2` corrected the record and added a test that validates every JSON digest before launch.
 
@@ -616,14 +630,16 @@ The training and evaluation contract is frozen in
 `paper0/manifests/phase2_matched_o1_o2_85604.json` before any model code is
 ported or executed.
 
-The intended codec implementation is a minimum attributed port from
+The codec implementation is a minimum attributed port from
 [PolymathicAI/lola](https://github.com/PolymathicAI/lola), upstream commit
 `21a4354b327e6e5ee06da5075ba3bd1dd88c61f1`, under its MIT license. The
 predecessor project's per-axis padding and per-transition stride repairs are
-design evidence only at this point; the new implementation will be committed,
-tested, and hash-identified here rather than imported from the dirty
-predecessor checkout.
+ported explicitly and independently tested. The implementation is commit
+`c0cd66b`; exact source and license hashes appear in the ported-code ledger.
+It imports nothing from the dirty predecessor checkout.
 
 No historical codec or forecast checkpoint initializes the matched models.
-No model implementation, checkpoint, smoke result, or training result exists
-under this section yet.
+A deterministic codec implementation and CPU result exist, but no trainer,
+checkpoint, GPU smoke result, or scientific training result exists under this
+section yet. On local PyTorch `2.8.0`, the 11 codec tests and complete Paper 0
+suite pass (`393 passed, 1 skipped`). Rocky 9 execution remains required.
