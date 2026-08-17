@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_shifted_ddy_compiled_oracle",
+  "paper0_commit": "ec64322157ebaf9bad1d98c5ef79fc3751ffd20e",
+  "slurm": {
+    "job_id": 6890782,
+    "state": "FAILED",
+    "exit_code": "6:0",
+    "start": "2026-08-17T02:17:17-04:00",
+    "end": "2026-08-17T02:17:29-04:00",
+    "elapsed": "00:00:12",
+    "node": "worker5594"
+  },
+  "failure": {
+    "stage": "mesh_processor_decomposition_before_operator_evaluation",
+    "classification": "invalid_single_rank_topology_decomposition",
+    "observed": "The 8-cell leg region is not divisible by single-rank MYSUB=32.",
+    "root_cause": "A diverted single-null BOUT mesh requires process boundaries at its logical y-region boundaries; one MPI rank is not a valid decomposition.",
+    "operator_evaluated": false,
+    "candidate_compared": false,
+    "numerical_acceptance_rule_changed": false
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_shifted_ddy/job_6890782",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_shifted_ddy_6890782.log",
+    "artifact_digests": {
+      "slurm_log": "08023c5b3166a95cdee499df15fba85fc5aa8a9128c66bf62e35fab5bcfacada",
+      "job.log": "08023c5b3166a95cdee499df15fba85fc5aa8a9128c66bf62e35fab5bcfacada",
+      "build/shifted_ddy_oracle": "814bd1687fe7db1df2ca9d0672bc6452238cc2645ab4b4b1a030150d54627d2a",
+      "run/BOUT.inp": "2f74cc0a5248b40af6225e1f8c79e25d341371147abc2845f29d9a36d4c98fe6",
+      "run/BOUT.settings": "514bb6c72df7f4c997a2a9713b65261112e03b48ece246d32d7929605d78f250"
+    }
+  },
+  "data_access": {
+    "run_id": "85604_geometry_only",
+    "geometry_metadata_read": true,
+    "plasma_state_frames_read": 0,
+    "held_out_85606_read": false
+  },
+  "scientific_status": "no_result_execution_layout_failure"
+}

@@ -41,6 +41,8 @@ class CompiledShiftedDdyOracleTests(unittest.TestCase):
             "zperiod = 5",
             "--atol 5e-10",
             "--rtol 5e-10",
+            "--ntasks=4",
+            "NXPE = 1",
             "Refusing to overwrite",
             "--no-requeue",
         ):
@@ -76,6 +78,21 @@ class CompiledShiftedDdyOracleTests(unittest.TestCase):
         self.assertTrue(regions["open_sol_interior"][16, 12])
         self.assertFalse(regions["all_valid"][3, 0])
         self.assertFalse(regions["all_valid"][3, 31])
+
+    def test_rank_partitions_are_reassembled_by_explicit_y_index(self) -> None:
+        partitions = []
+        for pe_y in (2, 0, 3, 1):
+            local = np.full((3, 12, 5), -99.0)
+            local[:, 2:-2, :] = float(pe_y)
+            partitions.append((pe_y, local))
+        assembled = MODULE.assemble_y_partitions(partitions)
+        self.assertEqual(assembled.shape, (3, 32, 5))
+        for pe_y in range(4):
+            np.testing.assert_array_equal(
+                assembled[:, pe_y * 8 : (pe_y + 1) * 8, :], float(pe_y)
+            )
+        with self.assertRaisesRegex(ValueError, "exactly"):
+            MODULE.assemble_y_partitions([(0, partitions[0][1])] * 4)
 
     def test_acceptance_rule_is_scale_aware_and_rejects_nonfinite(self) -> None:
         reference = np.ones((1, 1, 3)) * 2.0

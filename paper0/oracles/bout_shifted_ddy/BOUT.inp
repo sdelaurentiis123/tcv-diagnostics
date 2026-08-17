@@ -4,6 +4,7 @@
 
 MZ = 81
 zperiod = 5
+NXPE = 1
 
 [mesh]
 file = "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc"
@@ -19,4 +20,3 @@ input_mixed = sin(2*x + 3*y - 20*z) + 0.2*cos(5*x - y + 35*z)
 
 [mesh:paralleltransform]
 type = shifted
-

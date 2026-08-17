@@ -247,6 +247,13 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     matching `netcdf-c/4.9.2`; no HDF5 `1.14` library appears. This clears the
     ABI blocker but not the shifted-derivative or transport gates. The exact
     numerical comparison must run unchanged against this install.
+24. **The diverted mesh requires a topology-compatible MPI layout.** Runtime
+    job `6890782` opened the ABI-clean geometry, then BOUT++ rejected the
+    one-rank layout because an 8-cell leg region is not divisible by
+    `MYSUB=32`. No derivative was evaluated. The corrected four-rank layout is
+    forced to `NXPE=1`, yielding `NYPE=4` and `MYSUB=8`; rank-local outputs are
+    reassembled only after verifying `NXPE`, `NYPE`, `MYSUB`, `PE_XIND`, and
+    `PE_YIND`.
 
 ## Exact commands
 

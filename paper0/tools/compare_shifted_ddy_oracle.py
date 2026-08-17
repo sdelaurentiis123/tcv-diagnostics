@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import ExitStack
 import hashlib
 import json
 from pathlib import Path
@@ -87,6 +88,40 @@ def strip_bout_y_guards(values: np.ndarray, *, physical_ny: int = 32) -> np.ndar
     return values[:, guard:-guard, :]
 
 
+def assemble_y_partitions(
+    partitions: list[tuple[int, np.ndarray]], *, global_ny: int = 32
+) -> np.ndarray:
+    """Assemble rank-local BOUT arrays ordered by explicit ``PE_YIND``."""
+
+    if not partitions:
+        raise ValueError("at least one y partition is required")
+    count = len(partitions)
+    if global_ny % count:
+        raise ValueError(f"global ny={global_ny} is not divisible by {count} ranks")
+    identifiers = [int(identifier) for identifier, _ in partitions]
+    if sorted(identifiers) != list(range(count)) or len(set(identifiers)) != count:
+        raise ValueError(f"PE_YIND values must be exactly 0..{count - 1}")
+    local_ny = global_ny // count
+    ordered = []
+    for identifier, values in sorted(partitions, key=lambda item: item[0]):
+        stripped = strip_bout_y_guards(values, physical_ny=local_ny)
+        if stripped.shape[1] != local_ny:
+            raise ValueError(f"rank y={identifier} did not yield {local_ny} cells")
+        ordered.append(stripped)
+    reference_shape = (ordered[0].shape[0], ordered[0].shape[2])
+    for values in ordered:
+        if (values.shape[0], values.shape[2]) != reference_shape:
+            raise ValueError("rank partitions disagree in x or z shape")
+    return np.concatenate(ordered, axis=1)
+
+
+def scalar_integer(dataset: Any, name: str) -> int:
+    values = np.asarray(dataset.variables[name][:])
+    if values.size != 1:
+        raise ValueError(f"{name} must be scalar in every rank output")
+    return int(values.reshape(-1)[0])
+
+
 def comparison_regions() -> dict[str, np.ndarray]:
     x = np.arange(64, dtype=np.int64)[:, None]
     y = np.arange(32, dtype=np.int64)[None, :]
@@ -149,7 +184,7 @@ def error_metrics(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--bout-output", type=Path, required=True)
+    parser.add_argument("--bout-output", type=Path, nargs="+", required=True)
     parser.add_argument("--grid", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--arrays", type=Path, required=True)
@@ -187,11 +222,45 @@ def main() -> int:
     regions = comparison_regions()
     case_metrics: dict[str, Any] = {}
     arrays: dict[str, np.ndarray] = {}
-    with netCDF4.Dataset(args.bout_output, "r") as output:
+    with ExitStack() as stack:
+        outputs = [
+            stack.enter_context(netCDF4.Dataset(path, "r"))
+            for path in args.bout_output
+        ]
+        decomposition = []
+        for path, output in zip(args.bout_output, outputs):
+            metadata = {
+                "path": str(path),
+                "NXPE": scalar_integer(output, "NXPE"),
+                "NYPE": scalar_integer(output, "NYPE"),
+                "MYSUB": scalar_integer(output, "MYSUB"),
+                "PE_XIND": scalar_integer(output, "PE_XIND"),
+                "PE_YIND": scalar_integer(output, "PE_YIND"),
+            }
+            if metadata["NXPE"] != 1 or metadata["NYPE"] != 4:
+                raise ValueError(f"expected NXPE=1,NYPE=4; got {metadata}")
+            if metadata["MYSUB"] != 8 or metadata["PE_XIND"] != 0:
+                raise ValueError(f"unexpected rank decomposition: {metadata}")
+            decomposition.append(metadata)
+
         for case in CASES:
-            field = strip_bout_y_guards(canonical_xyz(output.variables[f"input_{case}"]))
-            reference = strip_bout_y_guards(
-                canonical_xyz(output.variables[f"ddy_{case}"])
+            field = assemble_y_partitions(
+                [
+                    (
+                        metadata["PE_YIND"],
+                        canonical_xyz(output.variables[f"input_{case}"]),
+                    )
+                    for metadata, output in zip(decomposition, outputs)
+                ]
+            )
+            reference = assemble_y_partitions(
+                [
+                    (
+                        metadata["PE_YIND"],
+                        canonical_xyz(output.variables[f"ddy_{case}"]),
+                    )
+                    for metadata, output in zip(decomposition, outputs)
+                ]
             )
             if field.shape[:2] != (68, 32) or reference.shape[:2] != (68, 32):
                 raise ValueError(
@@ -254,6 +323,7 @@ def main() -> int:
                 "private_flux_connection": [7, 24],
             },
             "geometry_shapes": geometry_shapes,
+            "mpi_decomposition": decomposition,
         },
         "acceptance_rule_frozen_before_execution": {
             "atol": args.atol,
@@ -268,8 +338,10 @@ def main() -> int:
         if overall_passed
         else "rejected_pending_debug",
         "artifacts": {
-            "bout_output": str(args.bout_output),
-            "bout_output_digest": sha256_file(args.bout_output),
+            "bout_outputs": [str(path) for path in args.bout_output],
+            "bout_output_digests": {
+                str(path): sha256_file(path) for path in args.bout_output
+            },
             "geometry_grid": str(args.grid),
             "geometry_grid_digest": sha256_file(args.grid),
             "comparison_arrays": str(args.arrays),
@@ -289,4 +361,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

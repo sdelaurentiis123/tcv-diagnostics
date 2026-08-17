@@ -341,6 +341,15 @@ The full metric remains blocked until all of the following pass:
 
    This tolerance and all manufactured fields are committed before the first
    comparison job. A failure is recorded; it is not tuned away.
+
+   The single-null topology requires the 8-cell divertor-leg segments to align
+   with MPI `y` partitions. The minimal valid runtime therefore uses four ranks
+   with `NXPE=1`, `NYPE=4`, and `MYSUB=8`. Each rank writes its own NetCDF
+   output. Paper 0 removes exactly two `y` guards per side, orders blocks by the
+   output's explicit `PE_YIND`, verifies the full decomposition metadata, and
+   concatenates four 8-cell blocks into the original 32-cell domain before any
+   numerical comparison. This execution correction does not alter the fields,
+   masks, tolerance, or candidate implementation.
 5. **Conservation:** face-flow differences reproduce the source operator's
    volume-weighted divergence on manufactured fields.
 6. **Native-grid oracle:** selected raw 81-cell 85604 frames match the

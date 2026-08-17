@@ -89,6 +89,16 @@ shifts, core and private-flux neighbor maps, nonzero `ShiftAngle`, and an
 analytic field-aligned gradient. It remains explicitly `partial` and is not an
 accepted source oracle until its arrays match the compiled BOUT++ harness.
 
+Compiled runtime job `6890782` confirmed that the ABI-clean install opens the
+geometry and reads its topology, but the original one-rank harness layout is
+invalid for this diverted mesh: each 8-cell leg region must be divisible by
+`MYSUB`, whereas one rank gives `MYSUB=32`. BOUT++ stopped before any operator
+evaluation. The preserved no-result record is
+`paper0/results/phase2_shifted_ddy_6890782.json`. The corrected harness uses
+the minimal valid `NXPE=1`, `NYPE=4`, `MYSUB=8` decomposition and reconstructs
+the global `y` axis by verified `PE_YIND`; numerical acceptance settings and
+candidate code are unchanged.
+
 The compiled comparison harness under
 `paper0/oracles/bout_shifted_ddy/` uses the initialization, mesh-load,
 communication, derivative, and default-output pattern from BOUT++

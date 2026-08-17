@@ -4,8 +4,9 @@
 #SBATCH --job-name=p2_shifted_ddy
 #SBATCH --partition=preempt
 #SBATCH --qos=preempt
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --nodes=1
+#SBATCH --ntasks=4
+#SBATCH --cpus-per-task=1
 #SBATCH --mem=12G
 #SBATCH --time=00:15:00
 #SBATCH --no-requeue
@@ -24,7 +25,6 @@ readonly BUILD_DIR="${OUTDIR}/build"
 readonly RUN_DIR="${OUTDIR}/run"
 readonly ORACLE_SOURCE="${PAPER0_ROOT}/paper0/oracles/bout_shifted_ddy"
 readonly COMPARATOR="${PAPER0_ROOT}/paper0/tools/compare_shifted_ddy_oracle.py"
-readonly BOUT_OUTPUT="${RUN_DIR}/BOUT.dmp.0.nc"
 
 if [[ -e "${OUTDIR}" ]]; then
   echo "Refusing to overwrite existing result directory: ${OUTDIR}" >&2
@@ -85,8 +85,8 @@ cp "${ORACLE_SOURCE}/BOUT.inp" "${RUN_DIR}/BOUT.inp"
 {
   echo "cmake -S ${ORACLE_SOURCE} -B ${BUILD_DIR} -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=${BOUT_INSTALL}"
   echo "cmake --build ${BUILD_DIR} --parallel ${SLURM_CPUS_PER_TASK}"
-  echo "srun --ntasks=1 ${BUILD_DIR}/shifted_ddy_oracle -d ${RUN_DIR}"
-  echo "PYTHONPATH=${PAPER0_ROOT}/src python ${COMPARATOR} --bout-output ${BOUT_OUTPUT} --grid ${GRID} --output ${OUTDIR}/oracle_comparison.json --arrays ${OUTDIR}/comparison_arrays.npz --paper0-commit ${PAPER0_COMMIT} --slurm-job-id ${SLURM_JOB_ID} --atol 5e-10 --rtol 5e-10"
+  echo "srun --ntasks=4 ${BUILD_DIR}/shifted_ddy_oracle -d ${RUN_DIR}"
+  echo "PYTHONPATH=${PAPER0_ROOT}/src python ${COMPARATOR} --bout-output ${RUN_DIR}/BOUT.dmp.[0-3].nc --grid ${GRID} --output ${OUTDIR}/oracle_comparison.json --arrays ${OUTDIR}/comparison_arrays.npz --paper0-commit ${PAPER0_COMMIT} --slurm-job-id ${SLURM_JOB_ID} --atol 5e-10 --rtol 5e-10"
 } > "${OUTDIR}/commands.sh"
 
 cmake \
@@ -98,9 +98,10 @@ cmake \
 cmake --build "${BUILD_DIR}" --parallel "${SLURM_CPUS_PER_TASK}"
 
 export OMP_NUM_THREADS=1
-srun --ntasks=1 "${BUILD_DIR}/shifted_ddy_oracle" -d "${RUN_DIR}"
-if [[ ! -f "${BOUT_OUTPUT}" ]]; then
-  echo "Expected BOUT++ output is missing: ${BOUT_OUTPUT}" >&2
+srun --ntasks=4 "${BUILD_DIR}/shifted_ddy_oracle" -d "${RUN_DIR}"
+mapfile -t BOUT_OUTPUTS < <(find "${RUN_DIR}" -maxdepth 1 -name 'BOUT.dmp.*.nc' -type f | sort -V)
+if [[ "${#BOUT_OUTPUTS[@]}" -ne 4 ]]; then
+  echo "Expected four BOUT++ rank outputs; found ${#BOUT_OUTPUTS[@]}" >&2
   exit 2
 fi
 
@@ -108,7 +109,7 @@ set +e
 PYTHONPATH="${PAPER0_ROOT}/src" \
   /mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-data/bin/python \
   "${COMPARATOR}" \
-  --bout-output "${BOUT_OUTPUT}" \
+  --bout-output "${BOUT_OUTPUTS[@]}" \
   --grid "${GRID}" \
   --output "${OUTDIR}/oracle_comparison.json" \
   --arrays "${OUTDIR}/comparison_arrays.npz" \
@@ -123,7 +124,7 @@ sha256sum \
   "${OUTDIR}/commands.sh" \
   "${RUN_DIR}/BOUT.inp" \
   "${BUILD_DIR}/shifted_ddy_oracle" \
-  "${BOUT_OUTPUT}" \
+  "${BOUT_OUTPUTS[@]}" \
   "${OUTDIR}/oracle_comparison.json" \
   "${OUTDIR}/comparison_arrays.npz" \
   > "${OUTDIR}/artifact_sha256.txt"
