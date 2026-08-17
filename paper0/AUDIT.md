@@ -304,6 +304,21 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     only. The partial API is not yet a particle- or heat-transport metric;
     native 85604 plasma frames, resampling, masks/orientation, units, and
     member-wise ensemble semantics remain open, while 85606 remains untouched.
+31. **The native real-state operator passed, but the exact five-channel state
+    closure did not.** Four-rank Rocky 9 job `6891379` ran from clean commit
+    `7d5522c`. All 15 combinations of five value-independent 85604 frames and
+    direct `Ne`, `Pe`, and `Pi` inputs passed every frozen face-flow,
+    divergence, conservation, and topology comparison. The worst face error
+    was `6.341038805146582e-13`; the worst divergence error was
+    `6.941263563930988e-09` at scale `79885.99666953899`; and the worst
+    conservation residual was `3.552713678800501e-15`. The overall job
+    correctly exited nonzero because its separate full-domain closure gate
+    found one frame-312 cell with negative evolved `Pi` and approximately zero
+    floor-derived `Ti`. The source-backed cause is Hermes' deliberate use of
+    `floor(P, 0)` to derive temperature while retaining the evolved pressure.
+    No threshold, frame, or region was changed. This accepts the partial
+    operator on selected real states but blocks an implicit claim that
+    `[Ne, Te, Ti, phi, Vi]` exactly reconstructs the evolved Hermes state.
 
 ## Exact commands
 

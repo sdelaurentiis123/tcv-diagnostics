@@ -225,6 +225,38 @@ mandatory: no plasma frame, particle/internal-energy definition, physical
 surface integral, SI conversion, ensemble, learned model, diagnostic, or
 85606 data was evaluated by this job.
 
+The native-frame oracle was then frozen in
+`paper0/protocol/PHASE2_NATIVE_FRAME_PROTOCOL.md` and the machine-readable
+`paper0/manifests/phase2_native_frame_oracle.json` before its extractor read
+the selected 85604 state values. Its extractor assembles seven fields from all
+256 raw rank files by explicit processor coordinates, strips exactly two
+guards on each decomposed axis, retains native `z=81` and `zperiod=5`, verifies
+the archived times and source/configuration identities, and refuses existing
+output paths. The GPL-marked driver under
+`paper0/oracles/hermes_native_frames/` adapts the same locked private Hermes
+radial-flow calculations as the manufactured combined-flow oracle and reads
+only the resulting canonical 85604 file. The independent comparator checks
+the compiled operator and the prospectively required `Ni`, `Pe`, and `Pi`
+closures separately.
+
+Rocky 9 job `6891379` ran from clean Paper 0 commit
+`7d5522c2d060580e2ec292e8cb7354b8990305f4`. Its compiled four-rank step
+completed `0:0`; all 15 real-state operator cases passed every frozen quantity
+and region. The overall batch job intentionally exited `1:0` because one
+full-domain closure point failed: frame 312 at model `(6, 31, 73)` retains
+negative evolved `Pi`, whereas `Ti` is derived by the locked Hermes
+`EvolvePressure` source from `floor(Pi, 0)`. No acceptance setting changed.
+The compact record is
+`paper0/results/phase2_hermes_native_frames_6891379.json`; it records the
+immutable root
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_hermes_native_frames/job_6891379`
+and all artifact digests. In particular, the canonical input, full oracle
+JSON, and comparison arrays have SHA-256
+`61dee30a92bb1a3eefcece80faa42d143271bfe200f4024b9747aeb06747bc21`,
+`c31ef79e98669c54b2a005efeb4581f9cce84a75e7c277583422aa07a05d2987`,
+and `9c5fe8a72a4ed6a1d67dc94e93913be978dda603db609af1f7dcdceaf8237082`.
+This execution read no 85606 state.
+
 ### Phase 2 O1 historical codec execution
 
 The O1 representation oracle imports the existing predecessor LOLA package in

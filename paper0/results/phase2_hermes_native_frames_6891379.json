@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "phase": "phase2_hermes_native_85604_frame_oracle",
+  "paper0_commit": "7d5522c2d060580e2ec292e8cb7354b8990305f4",
+  "slurm": {
+    "job_id": 6891379,
+    "state": "FAILED",
+    "exit_code": "1:0",
+    "submit": "2026-08-17T03:36:57-04:00",
+    "start": "2026-08-17T03:37:31-04:00",
+    "end": "2026-08-17T03:43:54-04:00",
+    "elapsed": "00:06:23",
+    "time_limit": "00:30:00",
+    "requested_tasks": 4,
+    "cpus_per_task": 2,
+    "node": "worker5594",
+    "compiled_operator_step_state": "COMPLETED",
+    "compiled_operator_step_exit_code": "0:0"
+  },
+  "data_access": {
+    "run_id": "85604",
+    "frame_indices": [0, 156, 312, 467, 623],
+    "plasma_state_frames_read": 5,
+    "held_out_85606_read": false,
+    "native_z_samples": 81,
+    "zperiod": 5,
+    "canonical_shape_per_variable": [5, 64, 32, 81],
+    "rank_file_count": 256,
+    "unique_processor_coordinates": 256,
+    "model_x_grid_slice": [2, 66],
+    "safe_model_left_face_indices": [1, 62],
+    "safe_model_cell_indices": [2, 62],
+    "evaluated_y_slice": [1, 31]
+  },
+  "overall_acceptance": {
+    "overall_passed": false,
+    "compiled_native_operator_subgate_passed": true,
+    "five_channel_full_domain_closure_subgate_passed": false,
+    "tolerances_changed_after_execution": false,
+    "frame_selection_changed_after_execution": false,
+    "scientific_status": "native_operator_accepted_five_channel_full_domain_closure_failed"
+  },
+  "compiled_native_operator": {
+    "advected_fields": ["Ne", "Pe", "Pi"],
+    "case_count": 15,
+    "all_cases_passed": true,
+    "canonical_input_echo_max_abs_error": 0.0,
+    "native_dz_expected": 0.015514037795505151,
+    "native_dz_max_abs_error": 0.0,
+    "component_sum_max_abs_error": 0.0,
+    "largest_conservation_max_abs_residual": 3.552713678800501e-15,
+    "largest_face_max_abs_error": 6.341038805146582e-13,
+    "largest_face_reference_scale": 95.01553363949606,
+    "largest_face_relative_error": 6.6736864618426336e-15,
+    "largest_divergence_max_abs_error": 6.941263563930988e-09,
+    "largest_divergence_reference_scale": 79885.99666953899,
+    "largest_divergence_relative_error": 8.68896158690317e-14,
+    "per_advected_field": {
+      "Ne": {
+        "all_five_frames_passed": true,
+        "largest_face_max_abs_error": 3.8632985699393885e-13,
+        "largest_divergence_max_abs_error": 3.688910510390997e-09,
+        "largest_conservation_max_abs_residual": 1.7763568394002505e-15
+      },
+      "Pe": {
+        "all_five_frames_passed": true,
+        "largest_face_max_abs_error": 5.226374888422924e-13,
+        "largest_divergence_max_abs_error": 5.9881131164729595e-09,
+        "largest_conservation_max_abs_residual": 3.552713678800501e-15
+      },
+      "Pi": {
+        "all_five_frames_passed": true,
+        "largest_face_max_abs_error": 6.341038805146582e-13,
+        "largest_divergence_max_abs_error": 6.941263563930988e-09,
+        "largest_conservation_max_abs_residual": 3.552713678800501e-15
+      }
+    },
+    "continuous_atol": 5e-10,
+    "continuous_rtol": 5e-10,
+    "conservation_atol": 5e-12,
+    "conservation_rtol": 5e-12,
+    "reference": "compiled GPL source-derived Hermes-3 native-frame radial flow and divergence",
+    "candidate": "tcv_diagnostics.transport.radial_exb_face_flow_partial",
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "hermes_source_ranges": [
+      "src/div_ops.cxx:128-229",
+      "src/div_ops.cxx:273-326"
+    ]
+  },
+  "five_channel_closure": {
+    "atol": 1e-12,
+    "rtol": 1e-12,
+    "relations": {
+      "Ni_equals_Ne": {
+        "all_five_frames_passed": true,
+        "largest_max_abs_error": 1.9984014443252818e-15
+      },
+      "Pe_equals_Ne_times_Te": {
+        "all_five_frames_passed": true,
+        "largest_max_abs_error": 4.440892098500626e-15
+      },
+      "Pi_equals_Ni_times_Ti": {
+        "all_five_frames_passed": false,
+        "failed_frame_indices": [312],
+        "failed_point_count": 1,
+        "largest_max_abs_error": 5.799512988032527e-05
+      },
+      "Pi_equals_Ne_times_Ti": {
+        "all_five_frames_passed": false,
+        "failed_frame_indices": [312],
+        "failed_point_count": 1,
+        "largest_max_abs_error": 5.799512988032527e-05
+      }
+    },
+    "failure": {
+      "frame_index": 312,
+      "normalized_time": 378600.0,
+      "model_indices_xyz": [6, 31, 73],
+      "Pi": -5.799512988032478e-05,
+      "Ni": 0.004074141720031353,
+      "Ne": 0.0040741417200313495,
+      "Ti": 1.2051641668905164e-16,
+      "Ni_times_Ti": 4.910009611815481e-19,
+      "absolute_error": 5.799512988032527e-05,
+      "frame_reference_scale": 4.062048919888127,
+      "frozen_acceptance_tolerance": 5.062048919888127e-12,
+      "negative_Pi_points_across_all_five_selected_frames": 1,
+      "negative_Pe_points_across_all_five_selected_frames": 0,
+      "lies_on_target_dependent_excluded_y_row": true
+    },
+    "source_backed_diagnosis": {
+      "cause": "EvolvePressure retains the evolved negative P value while deriving T from floor(P, 0), so temperature cannot reconstruct a negative pressure undershoot",
+      "evolve_pressure_sha256": "d3abc5e32cdad3ea9c42faf432dcaed465070ee5792cb62e550b9baaad9953e6",
+      "posthoc_transport_scope_max_abs_error": 5.329070518200751e-15,
+      "posthoc_transport_scope_is_not_an_acceptance_redefinition": true
+    }
+  },
+  "canonical_extraction": {
+    "canonical_file_sha256": "61dee30a92bb1a3eefcece80faa42d143271bfe200f4024b9747aeb06747bc21",
+    "extraction_record_sha256": "43dd7001f137815c4d59beb58e272f71a3e4f703e7f89d0db13983a6076b865a",
+    "manifest_sha256": "f99c540e00b1f8f99ae0712a3b161e851b2b72199cff4ad609a7026b27b0ee5e",
+    "variable_digests": {
+      "Ne": "3423dd03d4f3cc2c8410439f7e5b242fcde774bd6f378b40fb20ecbfa72206d1",
+      "Ni": "e05da6c42e32dd2080e95e0e53640aa73765548f7848581f57c05b3d925b159a",
+      "Te": "9fcc9b84336109662503c8957a8bb3ddaa4d7c3855cb011aec285669fb0b49ad",
+      "Ti": "30fb6e8600e27b48d56e8f3e90560a010a81a63e734c5a56324d9ad9bf540d34",
+      "Pe": "a843d11c741ac24f22e3bafcad1b22143d19c19d8b70d360df91b481d416fb46",
+      "Pi": "e3f75aea2911e266f9489c9d2b3f9b75be4ae719dedf6646be4b9099d8cd29ee",
+      "phi": "e30cc303ac5c7fedf756741cd2399a5d95cf9d28398ee2f65fd17d66ff91502f"
+    }
+  },
+  "immutable_external_artifact": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_hermes_native_frames/job_6891379",
+    "slurm_log": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_native_flow_6891379.log",
+    "artifact_digests": {
+      "job.log": "d22f726c09cd23e53ecee117b2d7a2e92e47da1c09c9aa91b8c53720a46b5b71",
+      "commands.sh": "fe2bfc35a006c36f03b54e8c8d5be81483d9c0de9bcc648d04ea07dbb2c5556a",
+      "canonical_frames.nc": "61dee30a92bb1a3eefcece80faa42d143271bfe200f4024b9747aeb06747bc21",
+      "extraction_record.json": "43dd7001f137815c4d59beb58e272f71a3e4f703e7f89d0db13983a6076b865a",
+      "run/BOUT.inp": "e7372301217ef1300df799c2359498d7c99a4fc1f10b884e3aa05fa2d09e00cc",
+      "build/hermes_native_frames_oracle": "e9f98658613ba3db160624ffdecc2bf06a01463596d95d8aea9b0ada969d2f02",
+      "run/BOUT.dmp.0.nc": "863963affa90ab53429f383977f152eea015377ce7c85889c04d192f90e22193",
+      "run/BOUT.dmp.1.nc": "da7fb71456452fa447b2ccc47dc8187912c276db87d7dec26a3a100de1568270",
+      "run/BOUT.dmp.2.nc": "56ff3bcd7adeb32dcd1d77e2ddede1784b58e14515e1cf0c9ed6e368440631b0",
+      "run/BOUT.dmp.3.nc": "89f983fa4d179b3abb287e9108793b53a4b68f819f7bb1ac71b40cd372f1cf44",
+      "oracle_comparison.json": "c31ef79e98669c54b2a005efeb4581f9cce84a75e7c277583422aa07a05d2987",
+      "comparison_arrays.npz": "9c5fe8a72a4ed6a1d67dc94e93913be978dda603db609af1f7dcdceaf8237082",
+      "artifact_sha256.txt": "7b09e9a17bd715681cac730243879a033e069096dc444fdc39392bd691abcefa"
+    }
+  },
+  "remaining_blockers": [
+    "decide whether the canonical emulator state uses evolved Pe/Pi or derived Te/Ti with an explicit pressure-floor policy",
+    "quantify negative pressure undershoots across all 85604 frames",
+    "native-81 versus Fourier-resampled-88 sensitivity",
+    "authoritative geometry masks and outward orientation",
+    "normalized-to-SI conversion",
+    "member-wise nonlinear ensemble semantics"
+  ]
+}

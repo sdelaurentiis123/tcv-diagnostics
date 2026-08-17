@@ -470,6 +470,18 @@ The full metric remains blocked until all of the following pass:
    tolerances are frozen in
    `paper0/protocol/PHASE2_NATIVE_FRAME_PROTOCOL.md` and its machine-readable
    manifest before the first state-value read performed for this oracle.
+
+   **Execution record:** Rocky 9 job `6891379`, from clean commit `7d5522c`,
+   passed the compiled operator subgate for all five frames, all three direct
+   advected fields, and every frozen quantity and region. The largest
+   face-flow and divergence discrepancies were `6.341038805146582e-13` and
+   `6.941263563930988e-09`, respectively, and the largest conservation
+   residual was `3.552713678800501e-15`. The prospectively required overall
+   gate nevertheless failed because `Pi = Ni*Ti = Ne*Ti` failed at exactly one
+   full-domain point: Hermes retained a negative evolved `Pi` while deriving
+   `Ti` from pressure floored at zero. No acceptance setting was changed. This
+   accepts the partial native-state operator, but not the historical
+   five-channel state as an exact representation of all evolved variables.
 8. **Resampling sensitivity:** truth transport on native 81 cells is compared
    with the 88-cell Fourier-resampled evaluation; the discrepancy is reported
    and cannot be tuned away.
@@ -487,11 +499,15 @@ absence of a transport result is a documented blocker, not a zero or a pass.
 
 ## 10. Immediate decision
 
-No architecture work or training is justified by this audit. The manufactured
-operator ladder through combined radial-flow conservation has passed. The next
-safe step is to freeze the native-81 85604 plasma-frame comparison, including
-the authoritative advected variables and frame-selection rule, before reading
-any selected state frames. If the remaining exact oracle ladder cannot be
-completed, Paper 0 must retain cross-spectrum and cross-phase as validated
-joint-field metrics and omit strong physical-transport claims rather than
-promote the historical proxy.
+No architecture work or training is justified by this audit yet. The
+manufactured operator ladder through combined radial-flow conservation and the
+native real-state operator subgate have passed. The next safe step is a
+prospectively frozen, 85604-only prevalence audit of negative evolved pressure
+and pressure--temperature closure over all 624 frames. That audit will inform
+an explicit choice between evolved pressure and floor-derived temperature as
+the canonical learned state; it will not silently alter the state definition.
+After that decision, the native-81 versus resampled-88 sensitivity remains the
+next transport rung. If the remaining exact ladder cannot be completed, Paper
+0 must retain cross-spectrum and cross-phase as validated joint-field metrics
+and omit strong physical-transport claims rather than promote the historical
+proxy.

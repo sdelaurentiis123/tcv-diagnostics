@@ -18,6 +18,7 @@ COMPARATOR = TOOLS / "compare_hermes_native_frame_oracle.py"
 LAUNCHER = ROOT / "cluster" / "phase2_hermes_native_frame_oracle.sbatch"
 ORACLE_DIR = ROOT / "paper0" / "oracles" / "hermes_native_frames"
 MANIFEST = ROOT / "paper0" / "manifests" / "phase2_native_frame_oracle.json"
+RESULT = ROOT / "paper0" / "results" / "phase2_hermes_native_frames_6891379.json"
 
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
@@ -165,6 +166,36 @@ class NativeFrameOracleImplementationTests(unittest.TestCase):
         self.assertEqual(
             COMPARE.CONSERVATION_RTOL, operator["conservation_rtol"]
         )
+
+    def test_tracked_execution_records_split_gate_without_relaxation(self) -> None:
+        result = json.loads(RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(result["paper0_commit"], "7d5522c2d060580e2ec292e8cb7354b8990305f4")
+        self.assertEqual(result["slurm"]["job_id"], 6891379)
+        self.assertEqual(result["slurm"]["state"], "FAILED")
+        self.assertEqual(result["slurm"]["exit_code"], "1:0")
+        self.assertEqual(result["slurm"]["compiled_operator_step_state"], "COMPLETED")
+
+        gate = result["overall_acceptance"]
+        self.assertFalse(gate["overall_passed"])
+        self.assertTrue(gate["compiled_native_operator_subgate_passed"])
+        self.assertFalse(gate["five_channel_full_domain_closure_subgate_passed"])
+        self.assertFalse(gate["tolerances_changed_after_execution"])
+        self.assertFalse(gate["frame_selection_changed_after_execution"])
+
+        operator = result["compiled_native_operator"]
+        self.assertEqual(operator["case_count"], 15)
+        self.assertTrue(operator["all_cases_passed"])
+        for field in ("Ne", "Pe", "Pi"):
+            self.assertTrue(operator["per_advected_field"][field]["all_five_frames_passed"])
+
+        closure = result["five_channel_closure"]
+        self.assertTrue(closure["relations"]["Ni_equals_Ne"]["all_five_frames_passed"])
+        self.assertTrue(closure["relations"]["Pe_equals_Ne_times_Te"]["all_five_frames_passed"])
+        self.assertFalse(closure["relations"]["Pi_equals_Ni_times_Ti"]["all_five_frames_passed"])
+        self.assertEqual(closure["failure"]["frame_index"], 312)
+        self.assertEqual(closure["failure"]["model_indices_xyz"], [6, 31, 73])
+        self.assertEqual(closure["relations"]["Pi_equals_Ni_times_Ti"]["failed_point_count"], 1)
+        self.assertFalse(result["data_access"]["held_out_85606_read"])
 
 
 if __name__ == "__main__":

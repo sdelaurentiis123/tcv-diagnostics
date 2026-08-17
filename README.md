@@ -31,5 +31,10 @@ and
 [`paper0/PHASE2_XY_FACE_READOUT.md`](paper0/PHASE2_XY_FACE_READOUT.md).
 The combined-flow result is documented separately in
 [`paper0/PHASE2_RADIAL_FLOW_READOUT.md`](paper0/PHASE2_RADIAL_FLOW_READOUT.md).
-The next native-81, 85604-only comparison is frozen before execution in
+The native-81, 85604-only comparison was frozen before execution in
 [`paper0/protocol/PHASE2_NATIVE_FRAME_PROTOCOL.md`](paper0/protocol/PHASE2_NATIVE_FRAME_PROTOCOL.md).
+Its compiled transport-operator subgate passed all 15 real-state cases, while
+the prospectively required full-domain five-channel closure failed at one
+negative ion-pressure point. The exact split result and its implications for
+the emulator state are recorded in
+[`paper0/PHASE2_NATIVE_FRAME_READOUT.md`](paper0/PHASE2_NATIVE_FRAME_READOUT.md).

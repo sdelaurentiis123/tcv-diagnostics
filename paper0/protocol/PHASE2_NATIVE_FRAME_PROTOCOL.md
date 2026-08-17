@@ -179,3 +179,34 @@ does not establish:
 No tolerance, frame, variable, region, or closure may be changed after the
 first execution merely to turn a failure into a pass. A genuine implementation
 bug may be fixed only through a documented amendment and a consistent rerun.
+
+## 7. Execution record
+
+Rocky 9 job `6891379`, launched from clean commit `7d5522c`, completed the
+compiled four-rank operator step successfully and then exited `1:0` because
+the frozen overall acceptance rule required both the operator and closure
+subgates to pass.
+
+The operator subgate passed all 15 combinations of five selected frames and
+direct archived advected variables `Ne`, `Pe`, and `Pi`, in every frozen
+quantity and topology region. The largest face-flow discrepancy was
+`6.341038805146582e-13`; the largest divergence discrepancy was
+`6.941263563930988e-09` against a reference scale of
+`79885.99666953899`; and the largest conservation residual was
+`3.552713678800501e-15`.
+
+The full-domain closure subgate failed at exactly one stored cell in frame
+312: model index `(x, y, z) = (6, 31, 73)` has
+`Pi = -5.799512988032478e-05`, whereas the archived floor-derived
+`Ti = 1.2051641668905164e-16` makes `Ni*Ti` approximately
+`4.910009611815481e-19`. The locked Hermes `EvolvePressure` implementation
+derives temperature from `floor(P, 0)` while retaining the evolved pressure,
+so a negative pressure undershoot is not reconstructible as `N*T`.
+
+No frame, region, tolerance, or acceptance rule was changed. The failed point
+is on target-dependent row `y=31`, outside the independently frozen transport
+comparison scope; the post-hoc ion-pressure closure error over that scope is
+only `5.329070518200751e-15`, but that observation does not retroactively pass
+the full-domain closure gate. The operator is accepted for its declared
+partial scope. The five-channel state representation is not yet accepted as
+an exact representation of the evolved Hermes state.
