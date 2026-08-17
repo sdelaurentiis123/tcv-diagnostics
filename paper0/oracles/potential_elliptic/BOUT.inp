@@ -1,0 +1,19 @@
+# Paper 0 paired potential-elliptic oracle for native-81 85604 states.
+# The launcher supplies paper0:input_file on the command line.
+
+MZ = 81
+zperiod = 5
+NXPE = 1
+
+[mesh]
+file = "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc"
+extrapolate_y = false
+
+[mesh:paralleltransform]
+type = shifted
+
+[paper0]
+input_file = ""
+
+[paper0:laplacian]
+type = cyclic
