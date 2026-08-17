@@ -37,7 +37,7 @@ class TestO1CodecR1RunManifest(unittest.TestCase):
 
     def test_exact_family_seed_product_is_frozen(self) -> None:
         tasks = self.manifest["tasks"]
-        self.assertEqual([task["array_index"] for task in tasks], list(range(6)))
+        self.assertEqual([task["run_index"] for task in tasks], list(range(6)))
         self.assertEqual(
             [(task["family"], task["seed"]) for task in tasks],
             [
@@ -67,13 +67,29 @@ class TestO1CodecR1RunManifest(unittest.TestCase):
             )
             self.assertEqual(config.total_optimizer_steps, frozen["total_optimizer_steps"])
 
-    def test_execution_is_nonpreemptible_and_concurrency_limited(self) -> None:
+    def test_execution_is_nonpreemptible_and_matches_gpuxl_minimum(self) -> None:
         execution = self.manifest["execution"]
         self.assertEqual(execution["os_major"], 9)
         self.assertEqual(execution["partition"], "gpuxl")
         self.assertEqual(execution["qos"], "gpuxl")
-        self.assertEqual(execution["array_concurrency_cap"], 2)
-        self.assertEqual(execution["gpu_per_task"], 1)
+        self.assertEqual(execution["accelerator_constraint"], "h100")
+        self.assertEqual(execution["gpus_per_slurm_job"], 4)
+        self.assertEqual(execution["gpuxl_minimum_gpus_per_job_verified"], 4)
+        self.assertEqual(execution["execution_waves"], [[0, 1, 2, 3], [4, 5]])
+        for task in self.manifest["tasks"]:
+            self.assertIn(task["gpu_local_index"], range(4))
+
+    def test_online_wandb_tracking_is_frozen_and_local_results_are_authority(self) -> None:
+        tracking = self.manifest["tracking"]
+        self.assertTrue(tracking["required"])
+        self.assertEqual(tracking["mode"], "online")
+        self.assertEqual(tracking["project"], "tcv-diagnostics-paper0")
+        self.assertEqual(tracking["group"], "o1-dcae-l20-r1")
+        self.assertTrue(tracking["remote_finished_state_required"])
+        self.assertFalse(tracking["checkpoint_upload"])
+        self.assertTrue(
+            tracking["local_json_and_checkpoint_hashes_are_scientific_authority"]
+        )
 
     def test_training_cannot_decide_o1_or_open_later_phases(self) -> None:
         self.assertFalse(self.manifest["held_out_85606_access_allowed"])

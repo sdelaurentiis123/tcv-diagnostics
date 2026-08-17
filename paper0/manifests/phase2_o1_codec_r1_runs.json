@@ -40,23 +40,41 @@
     "final_optimizer_state_written_once": true
   },
   "tasks": [
-    {"array_index": 0, "family": "c5p", "seed": 1701},
-    {"array_index": 1, "family": "e6b", "seed": 1701},
-    {"array_index": 2, "family": "c5p", "seed": 1702},
-    {"array_index": 3, "family": "e6b", "seed": 1702},
-    {"array_index": 4, "family": "c5p", "seed": 1703},
-    {"array_index": 5, "family": "e6b", "seed": 1703}
+    {"run_index": 0, "wave": 0, "gpu_local_index": 0, "family": "c5p", "seed": 1701},
+    {"run_index": 1, "wave": 0, "gpu_local_index": 1, "family": "e6b", "seed": 1701},
+    {"run_index": 2, "wave": 0, "gpu_local_index": 2, "family": "c5p", "seed": 1702},
+    {"run_index": 3, "wave": 0, "gpu_local_index": 3, "family": "e6b", "seed": 1702},
+    {"run_index": 4, "wave": 1, "gpu_local_index": 0, "family": "c5p", "seed": 1703},
+    {"run_index": 5, "wave": 1, "gpu_local_index": 1, "family": "e6b", "seed": 1703}
   ],
   "execution": {
     "os_major": 9,
     "partition": "gpuxl",
     "qos": "gpuxl",
-    "accelerator_constraint": "h100|h200",
-    "gpu_per_task": 1,
-    "array_concurrency_cap": 2,
-    "wall_time": "05:00:00",
+    "accelerator_constraint": "h100",
+    "gpu_type": "h100",
+    "gpus_per_slurm_job": 4,
+    "gpuxl_minimum_gpus_per_job_verified": 4,
+    "slurm_job_count": 1,
+    "execution_waves": [[0, 1, 2, 3], [4, 5]],
+    "one_training_process_per_gpu_per_wave": true,
+    "wall_time": "08:00:00",
     "no_requeue": true,
-    "output_root_template": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_{array_job_id}/task_{array_index}_{family}_seed_{seed}"
+    "node_local_dataset_staging": true,
+    "output_root_template": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_{slurm_job_id}/task_{run_index}_{family}_seed_{seed}"
+  },
+  "tracking": {
+    "required": true,
+    "mode": "online",
+    "entity": "sdelaurentiis123-columbia-university",
+    "project": "tcv-diagnostics-paper0",
+    "group": "o1-dcae-l20-r1",
+    "run_id_template": "p0o1r1-{slurm_job_id}-{run_index}",
+    "run_name_template": "o1-r1-{family}-s{seed}-j{slurm_job_id}-t{run_index}",
+    "epoch_metrics_required": true,
+    "remote_finished_state_required": true,
+    "checkpoint_upload": false,
+    "local_json_and_checkpoint_hashes_are_scientific_authority": true
   },
   "post_training": {
     "all_six_runs_required_before_decision": true,
