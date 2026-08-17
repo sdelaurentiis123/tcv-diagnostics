@@ -368,6 +368,7 @@ class CodecFrameDataset:
         frames: Iterable[int],
         augment: bool,
         seed: int,
+        return_physical: bool = False,
     ) -> None:
         if family not in FAMILY_FIELDS:
             raise ValueError(f"unsupported state family {family!r}")
@@ -380,6 +381,7 @@ class CodecFrameDataset:
         self.frames = _strict_contiguous_frames(frames, split=split)
         self.augment = bool(augment)
         self.seed = int(seed)
+        self.return_physical = bool(return_physical)
         self.epoch = 0
         self._handles: dict[Path, h5py.File] = {}
         self.catalog.verify_consumed_frames(self.frames)
@@ -410,18 +412,33 @@ class CodecFrameDataset:
             raise ValueError(f"stored frame {stored_frame} differs from request {frame}")
         raw = [np.asarray(handle[f"fields/{field}"][local]) for field in self.fields]
         volume = self.catalog.normalization.encode_volume(self.fields, raw)
+        physical_volume = np.stack(raw, axis=0) if self.return_physical else None
         roll = 0
         if self.augment:
             roll = toroidal_roll(seed=self.seed, epoch=self.epoch, frame=frame)
             volume = np.ascontiguousarray(np.roll(volume, roll, axis=-1))
+            if physical_volume is not None:
+                physical_volume = np.ascontiguousarray(
+                    np.roll(physical_volume, roll, axis=-1)
+                )
         item: dict[str, Any] = {
             "volume": volume,
             "frame_index": np.int64(frame),
             "toroidal_roll": np.int64(roll),
         }
+        if physical_volume is not None:
+            item["physical_volume"] = np.ascontiguousarray(
+                physical_volume,
+                dtype=np.float32,
+            )
         if self.family == "e6b":
             boundary = np.asarray(handle["boundary/Bphi"][local])
             item["boundary"] = self.catalog.normalization.encode_boundary(boundary)
+            if self.return_physical:
+                item["physical_boundary"] = np.ascontiguousarray(
+                    boundary,
+                    dtype=np.float32,
+                )
         return item
 
     def close(self) -> None:

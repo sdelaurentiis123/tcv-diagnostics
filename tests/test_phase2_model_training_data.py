@@ -188,6 +188,7 @@ class TestModelTrainingData(unittest.TestCase):
             frames=[496],
             augment=False,
             seed=1701,
+            return_physical=True,
         )
         item = dataset[0]
 
@@ -195,6 +196,10 @@ class TestModelTrainingData(unittest.TestCase):
         self.assertEqual(tuple(item["boundary"].shape), (2, 32))
         self.assertEqual(float(item["boundary"][0, 0]), 1.0)
         self.assertEqual(float(item["boundary"][1, 0]), 1.0)
+        self.assertEqual(tuple(item["physical_volume"].shape), (6, *VOLUME_SHAPE))
+        self.assertEqual(tuple(item["physical_boundary"].shape), (2, 32))
+        self.assertEqual(float(item["physical_boundary"][0, 0]), 3.0)
+        self.assertEqual(float(item["physical_boundary"][1, 0]), 6.0)
         self.assertEqual(int(item["frame_index"]), 496)
         dataset.close()
 
