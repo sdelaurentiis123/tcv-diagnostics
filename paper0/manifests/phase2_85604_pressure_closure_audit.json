@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_before_all_frame_85604_state_value_read",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "prior_state_value_reads": {
+    "frame_indices": [0, 156, 312, 467, 623],
+    "source": "phase2 native-frame oracle job 6891379"
+  },
+  "new_state_value_reads_during_protocol_freeze": false,
+  "raw_archive": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604",
+    "expected_rank_file_count": 256,
+    "rank_file_pattern": "BOUT.dmp.<rank>.nc",
+    "rank_dimensions": {
+      "t": 624,
+      "x": 8,
+      "y": 6,
+      "z": 81
+    },
+    "mpi_decomposition": {
+      "NXPE": 16,
+      "NYPE": 16,
+      "MXSUB": 4,
+      "MYSUB": 2,
+      "MXG": 2,
+      "MYG": 2
+    },
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "slope_limiter": "MC",
+    "zperiod": 5,
+    "native_z_samples": 81,
+    "bout_input_sha256": "c1f7f63a4210b35680f338289916f6a588dcc7881928f26066a9af2e09fb95ad",
+    "bout_settings_sha256": "57148a0f3d829b72192363d4d6e5da9fc1ce8aa2bff63359491bdb0b9a075d57",
+    "geometry_sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+  },
+  "source_lock": {
+    "hermes_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "evolve_density_sha256": "3c766083078ec17d737a7ac595868adf1706e0596a9e614bb3ac73f071c1834d",
+    "evolve_pressure_sha256": "d3abc5e32cdad3ea9c42faf432dcaed465070ee5792cb62e550b9baaad9953e6"
+  },
+  "frame_scope": {
+    "first_index": 0,
+    "last_index": 623,
+    "frame_count": 624,
+    "expected_first_normalized_time": 285000.0,
+    "expected_last_normalized_time": 471900.0,
+    "expected_normalized_cadence": 300.0,
+    "omega_ci_per_second": 95788333.03066081,
+    "physical_cadence_microseconds": 3.131905426352636,
+    "selection_uses_field_values": false
+  },
+  "temporal_blocks": {
+    "rule": "eight contiguous nonoverlapping blocks of 78 frames",
+    "inclusive_index_ranges": [
+      [0, 77],
+      [78, 155],
+      [156, 233],
+      [234, 311],
+      [312, 389],
+      [390, 467],
+      [468, 545],
+      [546, 623]
+    ]
+  },
+  "canonical_cells": {
+    "shape_per_field": [624, 64, 32, 81],
+    "axes": ["time", "x", "y", "z"],
+    "total_points_per_field": 103514112,
+    "strip_guards_before_statistics": true,
+    "global_coordinate_key": ["PE_XIND", "PE_YIND"],
+    "stream_rank_files_without_writing_a_full_canonical_copy": true
+  },
+  "fields": ["Ne", "Ni", "Te", "Ti", "Pe", "Pi"],
+  "spatial_scopes": {
+    "full_physical_domain": {
+      "y_indices": [0, 31]
+    },
+    "guard_independent_transport_interior": {
+      "python_y_slice": [1, 31],
+      "included_y_indices": [1, 30]
+    },
+    "target_dependent_rows": {
+      "included_y_indices": [0, 31]
+    }
+  },
+  "value_statistics": {
+    "negative_definition": "value < 0 exactly",
+    "zero_definition": "value == 0 exactly",
+    "report_nonfinite_count": true,
+    "report_negative_count_and_fraction": true,
+    "report_zero_count_and_fraction": true,
+    "report_minimum_maximum_and_locations": true,
+    "report_negative_counts_by_frame_x_y_block_and_spatial_scope": true,
+    "report_twenty_most_negative_points": true
+  },
+  "closure_statistics": {
+    "relations": {
+      "Ni_equals_Ne": {
+        "reference": "Ni",
+        "candidate": "Ne"
+      },
+      "Pe_equals_Ne_times_Te": {
+        "reference": "Pe",
+        "candidate": "Ne * Te"
+      },
+      "Pi_equals_Ni_times_Ti": {
+        "reference": "Pi",
+        "candidate": "Ni * Ti"
+      },
+      "Pi_equals_Ne_times_Ti": {
+        "reference": "Pi",
+        "candidate": "Ne * Ti"
+      }
+    },
+    "atol": 1e-12,
+    "rtol": 1e-12,
+    "frame_pass_formula": "max_abs_error <= atol + rtol * frame_max_abs_reference",
+    "point_discrepancy_formula": "abs_error > atol + rtol * abs(reference_at_point)",
+    "report_frame_passes_and_failures": true,
+    "report_point_discrepancies_by_frame_x_y_block_and_spatial_scope": true,
+    "report_maximum_error_and_location": true,
+    "classify_pressure_closure_discrepancies_by_reference_pressure_sign": true
+  },
+  "completion_requirements": {
+    "all_256_rank_files_structurally_verified": true,
+    "all_624_times_verified_on_every_rank": true,
+    "all_six_fields_read_on_every_physical_cell": true,
+    "processor_coordinate_coverage_complete_and_unique": true,
+    "output_is_strict_json_without_nan_or_infinity": true,
+    "result_directory_is_immutable_and_refuses_overwrite": true,
+    "scientific_findings_do_not_change_process_exit_status": true
+  },
+  "decision_rules": {
+    "exact_full_state_compatibility": "all four closures pass every frame over the full physical domain and all fields are finite",
+    "temperature_state_reproduces_guard_independent_pressure_transport": "both pressure closures pass every frame over y=1..30",
+    "target_only_pressure_undershoots": "every negative Pe and Pi point lies on y=0 or y=31",
+    "interior_pressure_failure_action": "if either pressure closure fails in y=1..30, do not use temperature-only channels for exact pressure-based transport without an explicit documented floor policy",
+    "target_only_failure_action": "if failures occur only on y=0 or y=31, the temperature state may reproduce the current guard-independent operator scope but remains an inexact full evolved state; retain that limitation and seek simulator-owner input before choosing channels",
+    "automatic_channel_change_authorized": false,
+    "posthoc_prevalence_threshold_authorized": false
+  },
+  "scientific_scope": {
+    "characterizes_85604_only": true,
+    "selects_a_model": false,
+    "trains_a_model": false,
+    "evaluates_transport": false,
+    "evaluates_diagnostics": false,
+    "establishes_cross_shot_generalization": false
+  }
+}

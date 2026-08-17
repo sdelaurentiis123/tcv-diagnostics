@@ -1,0 +1,162 @@
+# Phase 2 all-frame pressure-closure audit protocol
+
+**Status:** frozen before reading any 85604 state values beyond the five frames
+already selected by native-frame oracle job `6891379`
+
+**Development run:** TCV/Hermes `85604` only
+
+**Sequestered run:** `85606`; prohibited from the implementation and launcher
+
+**Purpose:** determine whether the one negative ion-pressure point found by the
+native-frame oracle is an isolated target-row numerical undershoot or evidence
+that the historical temperature channels materially fail to represent evolved
+Hermes pressure throughout 85604
+
+The machine-readable authority is
+`paper0/manifests/phase2_85604_pressure_closure_audit.json`. This is a
+descriptive data-quality audit. It does not tune a model, evaluate a learned
+forecast, or alter the canonical channel set.
+
+## 1. Why this audit precedes resampling and training
+
+Hermes evolves `Ne`, `Pe`, and `Pi` directly. The historical emulator stores
+`Ne`, `Te`, `Ti`, `phi`, and `Vi`. At the locked simulator revision,
+`EvolvePressure` obtains temperature from pressure after applying a zero floor,
+but the evolved pressure can retain a negative numerical undershoot. Therefore
+
+```text
+Pe = Ne * Te
+Pi = Ni * Ti
+```
+
+need not hold at a point where evolved pressure is negative. The five-frame
+oracle found one such `Pi` point on `y=31`; all pressure-flow operator
+comparisons themselves passed. Before deciding whether Paper 0 should emulate
+temperature, evolved pressure, or both, we must measure the full-run behavior
+without selecting frames based on their values.
+
+## 2. Frozen data scope
+
+Read every frame `0..623` from all 256 distributed rank files under the locked
+85604 archive. Verify the existing source, configuration, geometry,
+decomposition, axis order, and processor-coordinate locks before aggregating
+statistics. Strip two `x` and `y` guards per rank, giving exactly
+
+```text
+[time=624, x=64, y=32, z=81]
+```
+
+or 103,514,112 physical cells per field. The six audited fields are `Ne`,
+`Ni`, `Te`, `Ti`, `Pe`, and `Pi`. No full canonical copy is needed: each rank
+may be processed in memory, but its explicit `PE_XIND` and `PE_YIND` determine
+global coordinates. The result records deterministic digests of each field's
+guard-stripped rank stream.
+
+Every rank must contain the exact time sequence from normalized time `285000`
+through `471900` at cadence `300`. With the frozen cyclotron frequency this is
+`3.131905426352636 us` per frame. This audit uses relative frame/time
+coordinates only; it does not add absolute time as a model feature.
+
+For temporal localization, report the eight predeclared contiguous 78-frame
+blocks: `[0,77]`, `[78,155]`, `[156,233]`, `[234,311]`, `[312,389]`,
+`[390,467]`, `[468,545]`, and `[546,623]`. These are summaries within one
+simulation, not independent shots.
+
+## 3. Frozen spatial scopes
+
+Every statistic is reported for:
+
+- the full physical domain, `y=0..31`;
+- the guard-independent transport interior, `y=1..30` (Python slice `1:31`);
+- the two target-dependent rows, `y in {0,31}`.
+
+This separation was fixed before the all-frame read. It tests the specific
+hypothesis suggested by frame 312 without deleting or relabeling the failing
+point.
+
+## 4. Value statistics
+
+For every field and spatial scope, report:
+
+- non-finite count;
+- exact negative count (`value < 0`) and fraction;
+- exact zero count (`value == 0`) and fraction;
+- minimum and maximum with `(frame,x,y,z)` locations;
+- negative counts by frame, global `x`, global `y`, and temporal block;
+- the twenty most-negative points, or all such points if fewer exist.
+
+There is no post-hoc magnitude threshold that converts a negative value into a
+positive one. Magnitudes and locations are evidence for interpretation, not a
+hidden acceptance rule.
+
+## 5. Closure statistics
+
+Evaluate four relations using the direct archived variable as reference:
+
+```text
+Ni == Ne
+Pe == Ne * Te
+Pi == Ni * Ti
+Pi == Ne * Ti
+```
+
+The tolerance remains the one frozen for the native-frame oracle:
+
+```text
+atol = 1e-12
+rtol = 1e-12
+```
+
+For each frame and spatial scope, the closure passes when
+
+```text
+max_abs_error <= atol + rtol * frame_max_abs_reference.
+```
+
+For prevalence counts, a point is discrepant when
+
+```text
+abs_error > atol + rtol * abs(reference_at_point).
+```
+
+These two named summaries answer different questions and must not be mixed.
+Report frame-level passes, point-level discrepancy counts, maximum errors and
+locations, and counts by frame, `x`, `y`, block, and spatial scope. For pressure
+closures, additionally classify discrepancies by whether the direct pressure
+is negative or nonnegative.
+
+## 6. Completion versus scientific findings
+
+The program exits nonzero for structural or provenance failures: wrong run,
+source, controls, ranks, dimensions, coordinates, times, axes, incomplete
+reads, overwrite attempts, or invalid JSON. Negative pressures, non-finite
+state values, and closure discrepancies are scientific findings that must be
+written completely; they do not by themselves make the audit process fail.
+
+The result is complete only if all 256 ranks, all 624 times, all six fields,
+and every physical cell were accounted for. The output must be strict JSON and
+must record the Paper 0 commit, dirty-state gate, exact command, immutable
+artifact path, and SHA-256 digests. `85606` access is forbidden.
+
+## 7. Frozen interpretation rules
+
+The historical five-channel state is exactly compatible with the audited
+Hermes quantities only if all four relations pass every frame over the full
+physical domain and all six fields are finite.
+
+The temperature channels reproduce pressure for the currently accepted
+guard-independent radial operator scope only if both pressure closures pass
+every frame over `y=1..30`.
+
+If either pressure closure fails inside `y=1..30`, Paper 0 must not use a
+temperature-only state for exact pressure-based transport without explicitly
+defining and validating a pressure-floor policy. If all negative `Pe` and `Pi`
+values and all pressure-closure failures are confined to `y=0` or `y=31`, the
+current temperature state may be adequate for the declared guard-independent
+operator scope, but it remains an inexact representation of the full evolved
+state.
+
+No frequency or magnitude discovered by this job automatically authorizes a
+channel change. The audit yields a recommendation to be reconciled with the
+scientific target and simulator-owner guidance. It cannot establish anything
+about 85606, learned forecasts, transport fidelity, or diagnostic ranking.
