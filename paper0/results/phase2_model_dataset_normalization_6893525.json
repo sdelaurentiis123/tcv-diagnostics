@@ -1,0 +1,119 @@
+{
+  "accumulator_dtype": "float64",
+  "development_run": "85604",
+  "fit_frames": [
+    0,
+    432
+  ],
+  "held_out_85606_read": false,
+  "manifest_sha256": "f60bcb4109c55b2927017017e0a59fc43173fbb8f648525c651f72656c910c97",
+  "paper0_commit": "929ed0cb2a861742bcab34101bc60fd53970d40c",
+  "phase": "phase2_85604_model_dataset_normalization",
+  "protocol_sha256": "3d6ffe8d0805e42b46c141a1af2b2fbf5a002cec4ad9c94a980614df0046575d",
+  "records": {
+    "Bphi/inner": {
+      "M2": 5694.693931824801,
+      "count": 13824,
+      "mean": 0.6608700983684583,
+      "population_standard_deviation": 0.6418275147777263,
+      "population_variance": 0.4119425587257524,
+      "transform": {
+        "name": "identity"
+      }
+    },
+    "Bphi/outer": {
+      "M2": 2949.842642446981,
+      "count": 13824,
+      "mean": 2.072935235997042,
+      "population_standard_deviation": 0.4619368006728826,
+      "population_variance": 0.2133856078158985,
+      "transform": {
+        "name": "identity"
+      }
+    },
+    "NVe": {
+      "M2": 17.008823671327566,
+      "count": 77856768,
+      "mean": -3.585398061157395e-05,
+      "population_standard_deviation": 0.000467400264485139,
+      "population_variance": 2.1846300724077792e-07,
+      "transform": {
+        "name": "identity"
+      }
+    },
+    "NVi": {
+      "M2": 5488131.11870302,
+      "count": 77856768,
+      "mean": -0.033417412037855164,
+      "population_standard_deviation": 0.2654997116290538,
+      "population_variance": 0.07049009687511071,
+      "transform": {
+        "name": "identity"
+      }
+    },
+    "Ne": {
+      "M2": 160405614.85532102,
+      "count": 77856768,
+      "mean": -1.9368449594652573,
+      "population_standard_deviation": 1.4353625058372068,
+      "population_variance": 2.060265523163266,
+      "transform": {
+        "name": "log_offset",
+        "offset": 1e-06,
+        "strictly_positive_argument_required": true
+      }
+    },
+    "Pe": {
+      "M2": 42052835.33087765,
+      "count": 77856768,
+      "mean": 0.4173277328694972,
+      "population_standard_deviation": 0.7349358888837066,
+      "population_variance": 0.540130760769284,
+      "transform": {
+        "name": "identity"
+      }
+    },
+    "Pi": {
+      "M2": 37444673.38202669,
+      "count": 77856768,
+      "mean": 0.47917410678897876,
+      "population_standard_deviation": 0.6935005945359226,
+      "population_variance": 0.4809430746216782,
+      "transform": {
+        "name": "identity"
+      }
+    },
+    "Vi": {
+      "M2": 66035311.163650066,
+      "count": 77856768,
+      "mean": -0.17667431880104253,
+      "population_standard_deviation": 0.9209582202997137,
+      "population_variance": 0.848164043537616,
+      "transform": {
+        "name": "identity"
+      }
+    },
+    "Vort": {
+      "M2": 116646.7150099018,
+      "count": 77856768,
+      "mean": -0.0008084904178521247,
+      "population_standard_deviation": 0.03870687150439763,
+      "population_variance": 0.0014982219016579496,
+      "transform": {
+        "name": "identity"
+      }
+    },
+    "phi": {
+      "M2": 127492513.3013314,
+      "count": 77856768,
+      "mean": 2.8485212396014736,
+      "population_standard_deviation": 1.2796587059175053,
+      "population_variance": 1.6375264036304642,
+      "transform": {
+        "name": "identity"
+      }
+    }
+  },
+  "schema_version": 1,
+  "slurm_job_id": 6893525
+}

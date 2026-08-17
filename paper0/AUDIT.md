@@ -616,6 +616,22 @@ The historical anchored-RMSE reference was `0.1770674`; the fresh value differs 
     `C5P-H1` on the same 430 training and 126 validation target frames. This
     commits the scientific comparison before training; it trains no model,
     changes no source data, and reads no 85606 file.
+55. **One verified shared 85604 model dataset now removes the remaining input
+    attribution ambiguity.** CPU-only Rocky 9 job `6893525`, from clean
+    commit `929ed0c`, completed with exit `0:0` in 1:03 and wrote eight
+    immutable 78-frame HDF5 shards containing the union
+    `[Ne,Pe,Pi,NVe,NVi,Vort,phi,Vi]` at model z88 plus the explicit
+    two-sided `Bphi` state. Source hashes, exact frame/time coverage, all
+    reopened array digests, all-frame legacy z88 equality for `Ne/phi/Vi`,
+    and the explicit boundary float32 cast pass. The worst native
+    81-to-88-to-81 per-frame relative L2 is `1.9675e-7`, below the frozen
+    `2e-6` bound for all eight fields. Float64 normalization recomputed
+    independently from output frames `[0,432)` matches every partial moment
+    at `1e-12`, with exact counts and finite positive scales. The complete
+    artifact index revalidates. This accepts common engineering provenance
+    only: no codec, one-step, rollout, stochastic, assimilation, ranking, or
+    85606 claim is accepted, and training remains closed pending a separately
+    committed matched O1/O2 protocol.
 
 ## Exact commands
 

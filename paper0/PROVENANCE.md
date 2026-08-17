@@ -572,3 +572,39 @@ a model state, or authorize held-out access. The complete interpretation is
 No predecessor code has been ported yet. The audit-only legacy reproduction executed the predecessor files in place after verifying their byte hashes. Job `6890428` used Paper 0 commit `7e2b5d2`, Rocky Linux 9.8, an NVIDIA H100, and only the legacy 85604 validation region. Its compact result record is `paper0/results/phase0_legacy_valid_6890428.json`; the full Rusty artifacts remain under `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase0_legacy_valid/job_6890428`.
 
 The first submission, job `6890410`, stopped before model inference because the manifest contained a truncated validation-file hash. Commit `7e2b5d2` corrected the record and added a test that validates every JSON digest before launch.
+
+### Phase 2 shared 85604 model dataset
+
+The conversion is governed by
+`paper0/protocol/PHASE2_MODEL_DATASET_PROTOCOL.md` and
+`paper0/manifests/phase2_model_dataset_85604.json`. New clean-room code is:
+
+- `src/tcv_diagnostics/model_data.py`;
+- `paper0/tools/build_85604_model_dataset_shard.py`;
+- `paper0/tools/merge_85604_model_dataset_shards.py`;
+- `cluster/phase2_85604_model_dataset.sbatch`.
+
+The code reuses only the already audited public
+`scipy.signal.resample` wrapper in `src/tcv_diagnostics/resampling.py`.
+It does not import or modify predecessor conversion code. Its inputs are the
+two native 85604 Well files, the two historical z88 files used only as a
+transform oracle, and the hash-locked `Bphi` extraction record from job
+`6893033`. All source hashes are frozen in the manifest and rechecked before
+output.
+
+CPU-only Rocky 9 job `6893525` ran from clean commit
+`929ed0cb2a861742bcab34101bc60fd53970d40c`. The immutable artifact root is:
+
+~~~text
+/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525
+~~~
+
+The full model-dataset result has SHA-256
+`27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18`;
+the normalization record has SHA-256
+`f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7`;
+and the complete artifact index has SHA-256
+`6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01`.
+The two compact records are tracked byte-for-byte under `paper0/results/`.
+All 3,599,761,472 HDF5 bytes remain on Ceph. The run explicitly records
+`held_out_85606_read=false` and `training_performed=false`.

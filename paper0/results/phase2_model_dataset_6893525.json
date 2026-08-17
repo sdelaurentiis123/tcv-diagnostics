@@ -1,0 +1,555 @@
+{
+  "dataset": {
+    "fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "NVe",
+      "NVi",
+      "Vort",
+      "phi",
+      "Vi"
+    ],
+    "frame_count": 624,
+    "normalization": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/normalization.json",
+      "sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7"
+    },
+    "shards": [
+      {
+        "Bphi_array_sha256": "9b0b71c3b8d327c3b1e4b6101ddbdd3726dc3bcd1fcb088792bf8c1b37159576",
+        "bytes": 449970184,
+        "field_array_sha256": {
+          "NVe": "f7b448079a425d49451eaf646079c3a2cd0f46eaf4845ad0f233956e8c825c1b",
+          "NVi": "236b8414b020a6f4b4787209ffb0710bbf9e7a1c86d8312791a2b08fba096f64",
+          "Ne": "03d275802b72622896e556d9bc642944f9ee6ddd626bf5fd74cb1840bcc3e463",
+          "Pe": "68f3bd74c8af35425e3922485ea69ed7c7b61cb69a023b84eb786fa1c2c6f9de",
+          "Pi": "2227f56ab025a6cdfc8c7e805eefe6eb99674b44ba6aaaa5e5ca551974f5e4e3",
+          "Vi": "73241056c1eaa9d15753f3e8ac290e2915dca26c4fda1553e05e643ee8e42bfc",
+          "Vort": "72acef54d5824db8e999c24653c25ccbaefc2a45a8dfe4e580b7f256cc1e94fe",
+          "phi": "2804705d4ed5edf16d870090040d0d3cbe667cb515aabea245cb3ab9a3cf34e5"
+        },
+        "global_start_inclusive": 0,
+        "global_stop_exclusive": 78,
+        "index": 0,
+        "partial_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/partials/partial_000.json",
+        "partial_sha256": "a2d2b3c2cd99e34e890fe5c06e74e0135f0c8c699de01c00f4142166bff6eb16",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/shards/model_dataset_shard_000.h5",
+        "sha256": "27046b8663c283254bf6a478265103e9c26a7d2f00c9bac3324658d849e4ee76"
+      },
+      {
+        "Bphi_array_sha256": "b541721f2c5d3a0874efcfb073c74d12ea5fea36d450e3bb3dc6347e71b546e2",
+        "bytes": 449970184,
+        "field_array_sha256": {
+          "NVe": "aaf72135fa1bef50492eeb6f9e9e7ba6c5095ea3962bcff07ed493039b3ecafd",
+          "NVi": "c3d5d6ab40e8508132b575ec05a45f9e9e6ef610ce67f6059ba59c3f1c767075",
+          "Ne": "dd82df548947e49fe8a57e9bf5211d27a8cf12f4adf28f302a87f2a4825aaa32",
+          "Pe": "85e8e0c8515fe2db528329a55d402e69eb6a4bb00bb25a2452475879c66e5982",
+          "Pi": "9a1bc4f410a61d5d85b71d8929a90c7977034df8fdf50c76c9425dc833bbc600",
+          "Vi": "ef0266a3c7c8e55f3ee1790e236cbf22b207facfaea4d58ffd6d49776518e2d3",
+          "Vort": "919f6c1f33a94b3916a45c7e3f6d40f1440357a8616e2096e0e4b583d5ea8cdf",
+          "phi": "bb581af065d1e962c1d07223f72d76e9b30087b4bf9fc2d8de1395fc3a2bd6f0"
+        },
+        "global_start_inclusive": 78,
+        "global_stop_exclusive": 156,
+        "index": 1,
+        "partial_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/partials/partial_001.json",
+        "partial_sha256": "2226add08b636ee7b0909c29fec063065bc3b3ed203d02af00f132fd068702d0",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/shards/model_dataset_shard_001.h5",
+        "sha256": "43849e3875ebef66312ae2961e12e13af7225eae6084bd2aa07c3b8c67794ecc"
+      },
+      {
+        "Bphi_array_sha256": "5f60f3570f17bf9a35c307fca4ab81a27d2272e4f1b0f71b893da589c1dbabed",
+        "bytes": 449970184,
+        "field_array_sha256": {
+          "NVe": "9352b20ea1c6c3a15e2f46abe129deaa0e8b94156b5f3ba010438c82de27d81e",
+          "NVi": "74cef4e1f5107e6ce8534f7476975c5cb6a9ffb0cef718da3ccaf2b0be3831a3",
+          "Ne": "4120b7e0ab57d43d36cb0c31fa1aecfc976a7a14f4e5ee378335f33a2ffd8352",
+          "Pe": "631633c20cbc41540515adb400349df8d3c0835e229f444cb9e89370e5d8e338",
+          "Pi": "ba05d1d99baf90412f2f97d1e8bb29643a1738664043b85dbaf4f5ea908708df",
+          "Vi": "cc05bd4a54327254407dbd6096add436e322f7d48468e8ac0d657893e43d6c8b",
+          "Vort": "5a7a955efa800fa3119ebae94280fa31fa0e74ada6e4dd15dba01f05b8a38d15",
+          "phi": "086e8e57cd94fe7baf6d06e3411c4f75e3971717821d3ce5cc3ee082db41bb0b"
+        },
+        "global_start_inclusive": 156,
+        "global_stop_exclusive": 234,
+        "index": 2,
+        "partial_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/partials/partial_002.json",
+        "partial_sha256": "67b1e6a8b9a08f6e913847d11b522c2111a1c70b5172a0d92372a4e407a32457",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/shards/model_dataset_shard_002.h5",
+        "sha256": "f93e37c9fea688aa1f9540f502722bb07221047f1ffe727bd0c998bc8084a1b4"
+      },
+      {
+        "Bphi_array_sha256": "22fdf1edacbc1c9710ad22875174612ed6a71dae7ab415a529ca7bfb462e05ae",
+        "bytes": 449970184,
+        "field_array_sha256": {
+          "NVe": "fd9e227aa59fac4d40bc882abc4832625d4d710e1492242ecb7e3d6046dd1ce8",
+          "NVi": "10aaff1c360eb8db54becbca777c989cfc7486d50d4833d18653da21ae04deba",
+          "Ne": "3191e56267fc96a958fdf35d2b70fb743ef721e7e2b634b58980c8b5762e8897",
+          "Pe": "b7c666992b85211fb13e2632c108720b9e70ed647f0da19d3f63b5d1e847283b",
+          "Pi": "073e0302175fc856f4cfd9cd3c10e0d1e31266d68d36923e8380798e47fa6235",
+          "Vi": "1e657a246bd3419a7e975f13bbe7a7442d1f4dd95ad74c392f609c06e0d78b9b",
+          "Vort": "35f1311ac10ac0317f0bc3fd323a00d4670af41bfa68578b753394c73dc5bf6f",
+          "phi": "aa0e20e0c2d675032d4942f5bd1fae8ad4c6fdcd45839bd3aceb8e53b1f65d19"
+        },
+        "global_start_inclusive": 234,
+        "global_stop_exclusive": 312,
+        "index": 3,
+        "partial_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/partials/partial_003.json",
+        "partial_sha256": "99a33eaf09c513173be4acff4f7a8b1fb72e80bb63da3a41c5891b35fc660577",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/shards/model_dataset_shard_003.h5",
+        "sha256": "73ac1179b90fbd702990452e7888349aedbe7e4ae3d3dd1a601c608a9026db59"
+      },
+      {
+        "Bphi_array_sha256": "98bb3805c50a0beb454c19e06af02f3ddd71082e8942697df0349ccd06034839",
+        "bytes": 449970184,
+        "field_array_sha256": {
+          "NVe": "cad36a1ebd9e1641b15cd287a53e2c1f45af67c0d5038b32ba03bce6febed83b",
+          "NVi": "afe13516afcb620e4b66fdc855c04e20b6bb27aecca36505a8152bfc3e7c00d1",
+          "Ne": "3bad3bbe8f6329223458d33f0febe8e597469b89ca01ba0aff29376623430e25",
+          "Pe": "391373ee2a3485b67cc445da171eba34b88347a03bd7cde7b7219dbe39aca54f",
+          "Pi": "1bfe41e9d7e735bfe6f44a3716d0d7685d6685f74d60f24a72378eb901f03fc4",
+          "Vi": "84e03147f57c9fe42c1fa0dc564f0bcd43351d7827c03de4b37687cfeb32f7f7",
+          "Vort": "22e5dd9edadefdc4ae43e71960e244f5916e331d216f354256770ebad1dfe790",
+          "phi": "4f98fccef537caa999f8ea8a2e5fbe1135508f588fdcb1021c118afb93e4a742"
+        },
+        "global_start_inclusive": 312,
+        "global_stop_exclusive": 390,
+        "index": 4,
+        "partial_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/partials/partial_004.json",
+        "partial_sha256": "477e3b6276a5149629889fb940672bffb32642da27e22c1febe02a4f61ca1724",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/shards/model_dataset_shard_004.h5",
+        "sha256": "3407264b601ad64fe38d511ae5f9a76dc271969729b3268e87996ac34d260723"
+      },
+      {
+        "Bphi_array_sha256": "76d537cd52d2044e3a6a3c50172270001bb5ecc76a0fd358c3ea321690150093",
+        "bytes": 449970184,
+        "field_array_sha256": {
+          "NVe": "6a8f68c85b2e420f1caa638db24743e216e987e5bb3789fe7fa51c2bfd56dbb1",
+          "NVi": "99a9660ed4f1197dec27ff42b687c27753b2663212e6ccb6259f7cc82d317106",
+          "Ne": "a7537e608c39b78707181354223d640da68577c63145d9864c6a84b0f9a4cf25",
+          "Pe": "5f9ea3afd3738fdf39a253e79e8002686db80923e621a85a94717114dc3957ee",
+          "Pi": "aafe9d3576622c7d356303e0d782d0a9c0046bd91fd3e1e4de0203d39450ef3f",
+          "Vi": "e3c09b449bdcefd7328650c4e104e6cd7b752108bb6b72bb5219ccfbb7fd10f5",
+          "Vort": "c7740879b657737ecb5bb5002a74146c6f3857c730955f07916e42b2f0a239f2",
+          "phi": "3994c4695fc3f1ac0f2eff72044552c440b748d77322445f79d9774794c68afd"
+        },
+        "global_start_inclusive": 390,
+        "global_stop_exclusive": 468,
+        "index": 5,
+        "partial_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/partials/partial_005.json",
+        "partial_sha256": "0a50d67eb385832cca9016abf685ec7ced1c6f03d93c3bed9bc2a6147b3cb015",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/shards/model_dataset_shard_005.h5",
+        "sha256": "d5e24da7730ba5bf434e56a087bc056e4c3e1aced89eb04781a069ce7bbbeebd"
+      },
+      {
+        "Bphi_array_sha256": "e915ac85d7cbad69112ce07235d1abf1c6b205ff29c85199cdf424f55151ef92",
+        "bytes": 449970184,
+        "field_array_sha256": {
+          "NVe": "7dacde617fd0ac440ea68cb7d443fda2c218f29b5f2b6c8d40420d1eabb6cb12",
+          "NVi": "e669156aa3fbdc8f704a4135c8daf50b237905701eef0df1516b1412ee72840c",
+          "Ne": "d3894c0fa745de607ba3893b9fdb323d83aac351999fbf0683c141d1aeaabcbb",
+          "Pe": "d7dd5502aa7af31b07832e2cdb25ce610986e82bb2822ba06fbe51e98ecc0bbf",
+          "Pi": "9ef48d65c33ca0297624b45ea8e9a0bc1a0ca3eb1621cadeae484727f40c5b67",
+          "Vi": "a941f7a1809e62e5ff5ea39a28adae0855c2bd2faf5a477f727b68bc9f6323e0",
+          "Vort": "802446f75b03bdb94a26a65370b67a28cfffa81724e0d63e4e2dc0caf3479a5a",
+          "phi": "05850d9d222a3d49dced46b77125323e2d7852921531748a44c29db705071c1d"
+        },
+        "global_start_inclusive": 468,
+        "global_stop_exclusive": 546,
+        "index": 6,
+        "partial_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/partials/partial_006.json",
+        "partial_sha256": "4353202015b468737cb777640d19e95fb1d8f642f707cabc2290f7b2e1827913",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/shards/model_dataset_shard_006.h5",
+        "sha256": "147945867524124f5c04ae6eaaf0db815569137f1dfbccc39c29b8cc67d923f4"
+      },
+      {
+        "Bphi_array_sha256": "97d4c31c3b0e8ab9cfc0a3eddcebe2404fd4b50fc8cc7eda7cf3a669b2af33f8",
+        "bytes": 449970184,
+        "field_array_sha256": {
+          "NVe": "4e53c74e7d93c7da4bb69cb72213ff6ba1f3ea3023daa01ad40660165d2390fe",
+          "NVi": "a3775586c4c64338702a02ab0f25775b304df341c50987b2ad1e3362e252b847",
+          "Ne": "4d41e80d8da26388bac9c90134b579ddd93ff3216ded8c4dac0a29473a1df931",
+          "Pe": "9f959e2ac4e99d5c698d42cbdaf43bda8f9541feb972aa18d99f4766f525a598",
+          "Pi": "4a0dd67f1cbe96806a4e5c8acd9e55d0cf601dda587b0cce3d40888224157b01",
+          "Vi": "e09e8e8bd46996accf30030f42832e3ae497c4928aac228b913004797a3d47a5",
+          "Vort": "3ac426ef17a75021eeb5fde631dd57d3c0596f6af2ab3ecfde5871d570f5f564",
+          "phi": "ac801d0b4ca2d5cbee0f3eda50efd449f9e47e6500f8679b36d2513dada8b006"
+        },
+        "global_start_inclusive": 546,
+        "global_stop_exclusive": 624,
+        "index": 7,
+        "partial_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/partials/partial_007.json",
+        "partial_sha256": "91cb63c7d9c4cc7a24ba310dfb0731ff8ff344a54bfb9eb5e55259d54c39ac30",
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/shards/model_dataset_shard_007.h5",
+        "sha256": "df74fb218acc2fa3ac9d34d7108e8eb140f7f6d95078798c404635edb1d025b8"
+      }
+    ],
+    "total_bytes": 3599761472
+  },
+  "decision": {
+    "dataset_gate_passed": true,
+    "meaning": "verified_shared_engineering_representation_only",
+    "next_required_gate": "committed_matched_O1_O2_model_protocol",
+    "training_released": false
+  },
+  "development_run": "85604",
+  "execution": {
+    "git": {
+      "actual_commit": "929ed0cb2a861742bcab34101bc60fd53970d40c",
+      "commit_matches": true,
+      "expected_commit": "929ed0cb2a861742bcab34101bc60fd53970d40c",
+      "worktree_clean": true
+    },
+    "hostname": "worker5582",
+    "os": {
+      "actual_major": 9,
+      "passed": true,
+      "pretty_name": "Rocky Linux 9.8 (Blue Onyx)",
+      "required_major": 9
+    }
+  },
+  "gates": {
+    "Bphi_explicit_float32_cast_bitwise_exact": true,
+    "all_inputs_and_reopened_outputs_finite": true,
+    "all_passed": true,
+    "clean_git_checkout": true,
+    "complete_unique_frame_coverage": true,
+    "field_round_trip": {
+      "NVe": {
+        "limit": 2e-06,
+        "maximum_per_frame_relative_l2": 1.9674525853459356e-07,
+        "passed": true
+      },
+      "NVi": {
+        "limit": 2e-06,
+        "maximum_per_frame_relative_l2": 1.5760109223463784e-07,
+        "passed": true
+      },
+      "Ne": {
+        "limit": 2e-06,
+        "maximum_per_frame_relative_l2": 1.5420411778074044e-07,
+        "passed": true
+      },
+      "Pe": {
+        "limit": 2e-06,
+        "maximum_per_frame_relative_l2": 1.6032685093155274e-07,
+        "passed": true
+      },
+      "Pi": {
+        "limit": 2e-06,
+        "maximum_per_frame_relative_l2": 1.5968112514544762e-07,
+        "passed": true
+      },
+      "Vi": {
+        "limit": 2e-06,
+        "maximum_per_frame_relative_l2": 1.5237029140525836e-07,
+        "passed": true
+      },
+      "Vort": {
+        "limit": 2e-06,
+        "maximum_per_frame_relative_l2": 1.9486527907344742e-07,
+        "passed": true
+      },
+      "phi": {
+        "limit": 2e-06,
+        "maximum_per_frame_relative_l2": 1.5751610579802045e-07,
+        "passed": true
+      }
+    },
+    "legacy_z88_bitwise_all_frames": true,
+    "normalization_recomputation": {
+      "Bphi/inner": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 13824,
+        "partial_record": {
+          "M2": 5694.693931824802,
+          "count": 13824,
+          "mean": 0.6608700983684586,
+          "population_standard_deviation": 0.6418275147777263,
+          "population_variance": 0.4119425587257525
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 5694.693931824801,
+          "count": 13824,
+          "mean": 0.6608700983684583,
+          "population_standard_deviation": 0.6418275147777263,
+          "population_variance": 0.4119425587257524
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "Bphi/outer": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 13824,
+        "partial_record": {
+          "M2": 2949.8426424469826,
+          "count": 13824,
+          "mean": 2.072935235997041,
+          "population_standard_deviation": 0.4619368006728828,
+          "population_variance": 0.21338560781589863
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 2949.842642446981,
+          "count": 13824,
+          "mean": 2.072935235997042,
+          "population_standard_deviation": 0.4619368006728826,
+          "population_variance": 0.2133856078158985
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "NVe": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 77856768,
+        "partial_record": {
+          "M2": 17.00882367132758,
+          "count": 77856768,
+          "mean": -3.585398061157393e-05,
+          "population_standard_deviation": 0.0004674002644851392,
+          "population_variance": 2.1846300724077808e-07
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 17.008823671327566,
+          "count": 77856768,
+          "mean": -3.585398061157395e-05,
+          "population_standard_deviation": 0.000467400264485139,
+          "population_variance": 2.1846300724077792e-07
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "NVi": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 77856768,
+        "partial_record": {
+          "M2": 5488131.11870302,
+          "count": 77856768,
+          "mean": -0.03341741203785514,
+          "population_standard_deviation": 0.2654997116290538,
+          "population_variance": 0.07049009687511071
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 5488131.11870302,
+          "count": 77856768,
+          "mean": -0.033417412037855164,
+          "population_standard_deviation": 0.2654997116290538,
+          "population_variance": 0.07049009687511071
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "Ne": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 77856768,
+        "partial_record": {
+          "M2": 160405614.855321,
+          "count": 77856768,
+          "mean": -1.9368449594652586,
+          "population_standard_deviation": 1.4353625058372068,
+          "population_variance": 2.0602655231632654
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 160405614.85532102,
+          "count": 77856768,
+          "mean": -1.9368449594652573,
+          "population_standard_deviation": 1.4353625058372068,
+          "population_variance": 2.060265523163266
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "Pe": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 77856768,
+        "partial_record": {
+          "M2": 42052835.33087764,
+          "count": 77856768,
+          "mean": 0.4173277328694974,
+          "population_standard_deviation": 0.7349358888837065,
+          "population_variance": 0.5401307607692839
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 42052835.33087765,
+          "count": 77856768,
+          "mean": 0.4173277328694972,
+          "population_standard_deviation": 0.7349358888837066,
+          "population_variance": 0.540130760769284
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "Pi": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 77856768,
+        "partial_record": {
+          "M2": 37444673.38202666,
+          "count": 77856768,
+          "mean": 0.4791741067889786,
+          "population_standard_deviation": 0.6935005945359224,
+          "population_variance": 0.4809430746216778
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 37444673.38202669,
+          "count": 77856768,
+          "mean": 0.47917410678897876,
+          "population_standard_deviation": 0.6935005945359226,
+          "population_variance": 0.4809430746216782
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "Vi": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 77856768,
+        "partial_record": {
+          "M2": 66035311.16365004,
+          "count": 77856768,
+          "mean": -0.17667431880104256,
+          "population_standard_deviation": 0.9209582202997135,
+          "population_variance": 0.8481640435376157
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 66035311.163650066,
+          "count": 77856768,
+          "mean": -0.17667431880104253,
+          "population_standard_deviation": 0.9209582202997137,
+          "population_variance": 0.848164043537616
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "Vort": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 77856768,
+        "partial_record": {
+          "M2": 116646.715009902,
+          "count": 77856768,
+          "mean": -0.0008084904178521246,
+          "population_standard_deviation": 0.038706871504397666,
+          "population_variance": 0.0014982219016579522
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 116646.7150099018,
+          "count": 77856768,
+          "mean": -0.0008084904178521247,
+          "population_standard_deviation": 0.03870687150439763,
+          "population_variance": 0.0014982219016579496
+        },
+        "standard_deviation_strictly_positive": true
+      },
+      "phi": {
+        "comparisons": {
+          "M2": true,
+          "count": true,
+          "mean": true,
+          "population_standard_deviation": true,
+          "population_variance": true
+        },
+        "expected_count": 77856768,
+        "partial_record": {
+          "M2": 127492513.30133134,
+          "count": 77856768,
+          "mean": 2.8485212396014736,
+          "population_standard_deviation": 1.2796587059175049,
+          "population_variance": 1.6375264036304633
+        },
+        "passed": true,
+        "recomputed_record": {
+          "M2": 127492513.3013314,
+          "count": 77856768,
+          "mean": 2.8485212396014736,
+          "population_standard_deviation": 1.2796587059175053,
+          "population_variance": 1.6375264036304642
+        },
+        "standard_deviation_strictly_positive": true
+      }
+    },
+    "normalized_time_sequence_exact": true,
+    "physical_cadence_conversion": true,
+    "rocky_major_version": true,
+    "source_hash_preflight": true,
+    "writer_echo_bitwise_exact": true
+  },
+  "held_out_85606_read": false,
+  "manifest": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/manifests/phase2_model_dataset_85604.json",
+    "sha256": "f60bcb4109c55b2927017017e0a59fc43173fbb8f648525c651f72656c910c97"
+  },
+  "paper0_commit": "929ed0cb2a861742bcab34101bc60fd53970d40c",
+  "phase": "phase2_85604_matched_model_dataset",
+  "protocol": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/protocol/PHASE2_MODEL_DATASET_PROTOCOL.md",
+    "sha256": "3d6ffe8d0805e42b46c141a1af2b2fbf5a002cec4ad9c94a980614df0046575d"
+  },
+  "schema_version": 1,
+  "slurm_job_id": 6893525,
+  "source_preflight": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525/source_sha256.txt",
+    "sha256": "328dba064080b376f88137193afd07c0d56d96401b45a96fac29e4a0f0c0476b"
+  },
+  "time": {
+    "coordinate": "normalized_ion_cyclotron_time",
+    "first": 285000.0,
+    "last": 471900.0,
+    "normalized_step": 300.0,
+    "omega_ci_per_second": 95788333.03066081,
+    "physical_cadence_microseconds": 3.131905426352636
+  },
+  "training_performed": false
+}

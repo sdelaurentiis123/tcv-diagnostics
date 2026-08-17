@@ -32,9 +32,12 @@ in
 It requires all three state views to come from the same eight-field 85604
 source union, the same exact saved `Bphi` boundary record, the same
 `zperiod=5` Fourier resampling, and normalization fit only on frames
-`[0,432)`. The non-overwriting Rocky 9 converter and independent reducer are
-implemented and tested; their hash-locked 85604 execution is the next step.
-No model training has started.
+`[0,432)`. Rocky 9 job `6893525` passed every source, coverage,
+resampling, legacy-equality, storage, boundary, and normalization gate. The
+compact evidence and its intentionally limited meaning are in
+[`paper0/PHASE2_MODEL_DATASET_READOUT.md`](paper0/PHASE2_MODEL_DATASET_READOUT.md).
+The next step is a separately committed matched O1/O2 model protocol. No model
+training has started.
 
 The historical codecs have now been evaluated through the frozen O1 oracle;
 [`paper0/PHASE2_O1_READOUT.md`](paper0/PHASE2_O1_READOUT.md) records why neither
