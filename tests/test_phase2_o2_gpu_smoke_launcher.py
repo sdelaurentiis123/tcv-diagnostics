@@ -67,3 +67,5 @@ def test_smoke_cannot_claim_science_or_open_later_stages():
     assert 'result["physics_derived_loss_used"] is not False' in text
     assert 'result["target_truth_used_as_model_input"] is not False' in text
     assert 'result["held_out_85606_read"] is not False' in text
+    assert '"one_gpu_smoke_passed": True' in text
+    assert '"h100_gpu_smoke_passed"' not in text

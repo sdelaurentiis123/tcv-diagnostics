@@ -1,0 +1,106 @@
+{
+  "O2_scientific_gate_evaluated": false,
+  "O3_launch_allowed": false,
+  "accelerator": {
+    "count": 1,
+    "driver_version": "590.48.01",
+    "memory_mib": 143771,
+    "name": "NVIDIA H200",
+    "uuid": "GPU-11d648a8-e162-38b2-9095-c8dfe75b8c59"
+  },
+  "captured_at": "2026-08-18T00:13:43-04:00",
+  "development_run": "85604",
+  "full_O2_training_allowed": true,
+  "held_out_85606_read": false,
+  "host": "workergpu323.cm.cluster",
+  "paper0_commit": "8abdddafcabd24f3f5b0774253c9a6cfd2fc4419",
+  "raw_artifacts": {
+    "environment_sha256": "2093cdf04c96b0595a31d284d85d848e366db062eb11b741f567490ec1a8bae7",
+    "raw_smoke_summary_sha256": "6b3701e1d67bbed0ced3dd8fee31dc284e158a3f825f61697e20027921d884c2",
+    "raw_summary_label_note": "The raw 8abddda summary field h100_gpu_smoke_passed is a stale label; the hash-locked environment identifies the successful allocated device as NVIDIA H200.",
+    "slurm_job_sha256": "1a3e62ce39b6b3bd86f4223797b8fb646ee9bee22ae7b34773670225f88f05b9",
+    "test_output_sha256": "9b3d23dcb67cee70550821b0832d2b01da044c4964dc0bec1a33d1d8b0f47ea0",
+    "wandb_preflight_sha256": "021ce1fd5813567c79f503cddc9412d4dea79027200a3898b56d2ebd2a2ff3e8"
+  },
+  "rocky_major": 9,
+  "runs": [
+    {
+      "arm": "C5P-H1",
+      "checkpoint_reload_bitwise_exact": true,
+      "codec_checkpoint_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d",
+      "completed_epochs": 2,
+      "completed_optimizer_steps": 2,
+      "finite_gradient_norms": true,
+      "history_sha256": "3fa7f6aa12358c9fe6f8255a27bab694338becf1225d0c20580d3c12c1ebd54f",
+      "maximum_observed_preclip_gradient_norm": 1.2645694017410278,
+      "parameter_count": 51612800,
+      "peak_cuda_bytes": 1752058368,
+      "physics_derived_loss_used": false,
+      "result_sha256": "e944130a45340894defbc5338ee4b7971dd88b7664b9d6d1d9d967a9a88052e9",
+      "seed": 1701,
+      "selected_checkpoint_sha256": "5b7d580575534d3e2a56c4c587acf77f3c75bb32e40d1ae087a052fb7d08ab0b",
+      "selected_epoch": 1,
+      "selected_validation_equal_channel_mae": 0.1663584665201244,
+      "target_truth_used_as_model_input": false,
+      "training_target_count": 16,
+      "validation_target_count": 4,
+      "wall_seconds": 8.29364044801332,
+      "wandb": {
+        "epochs_logged": 2,
+        "remote_state_after_finish": "finished",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o2smoke-6894971-c5p_h1",
+        "sha256": "1700b61fb3f8a20b172cf724945178b7624555f3b7ced0ff8fd6e14617a8af49"
+      }
+    },
+    {
+      "arm": "C5P-H2",
+      "checkpoint_reload_bitwise_exact": true,
+      "codec_checkpoint_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d",
+      "completed_epochs": 2,
+      "completed_optimizer_steps": 2,
+      "finite_gradient_norms": true,
+      "history_sha256": "215df09846442a7d30ef7f90638fdf7031cb0885383a648ebfeca51a070e8a75",
+      "maximum_observed_preclip_gradient_norm": 1.3294802904129028,
+      "parameter_count": 51612800,
+      "peak_cuda_bytes": 1771212288,
+      "physics_derived_loss_used": false,
+      "result_sha256": "b7605c0481494287f738594a92776d672b4ed4839d7086ac2d72b231a575d51a",
+      "seed": 1701,
+      "selected_checkpoint_sha256": "b884db5e00f2aee7559e4e92580b027e5b9c36c2c53ef923240da3ac04d96f70",
+      "selected_epoch": 1,
+      "selected_validation_equal_channel_mae": 0.16808599113074407,
+      "target_truth_used_as_model_input": false,
+      "training_target_count": 16,
+      "validation_target_count": 4,
+      "wall_seconds": 8.32134870509617,
+      "wandb": {
+        "epochs_logged": 2,
+        "remote_state_after_finish": "finished",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o2smoke-6894971-c5p_h2",
+        "sha256": "160d02b59251d0b2b7fefc03d65243af798d48090fd96ae2513993c30381def8"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "scientific_result": false,
+  "scope": "bounded_non_scientific_C5P_O2_Rocky9_GPU_smoke",
+  "slurm": {
+    "elapsed": "00:02:28",
+    "exit_code": "0:0",
+    "job_id": "6894971",
+    "partition": "gpupreempt",
+    "state": "COMPLETED"
+  },
+  "status": "passed",
+  "test_suite": {
+    "passed": 562,
+    "skipped": 1,
+    "subtests_passed": 29
+  },
+  "wandb_preflight": {
+    "authenticated": true,
+    "entity": "sdelaurentiis123-columbia-university",
+    "username": "sdelaurentiis123",
+    "version": "0.17.9"
+  }
+}
