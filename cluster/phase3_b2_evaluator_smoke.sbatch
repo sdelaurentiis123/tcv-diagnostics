@@ -92,7 +92,7 @@ fi
 
 check_sha256 "a5567dccb4e536bb33c3e160c2b5bb64b586e2465b20957e2a5d1144ffd2706c" "${EVALUATION_MANIFEST}"
 check_sha256 "8b0345cbff7de588e52c73a40232cdf0a97b5d3f0c18728dc35dadaca9d25490" "${EVALUATION_PROTOCOL}"
-check_sha256 "c59939d074d12eee361cf07eef0b031d9a5dda56fe51604e5246e2f490aa497c" "${EVALUATOR}"
+check_sha256 "196bc86c489231c529d51aed6b87f068db9af654ff61701b2ec93f5cca6a51d2" "${EVALUATOR}"
 check_sha256 "8f88bd4304fcc863cf774b75d4e1eccabb6b8afe18889398cdf3c4c455e502c4" "${WANDB_WRAPPER}"
 check_sha256 "b8f4efe71cc12c0593c61886a670312ffb88a71a32f0977ba96a404955db88b8" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_forecast.py"
 check_sha256 "002a0027e0d18c4bf99584bfda7f4e399960b02ae6947240f5a6c7513cb2ff90" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_scoring.py"
@@ -160,7 +160,7 @@ if [[ "${verified_shards}" -ne 8 ]]; then
   exit 2
 fi
 
-readonly EVALUATOR_SHA="c59939d074d12eee361cf07eef0b031d9a5dda56fe51604e5246e2f490aa497c"
+readonly EVALUATOR_SHA="196bc86c489231c529d51aed6b87f068db9af654ff61701b2ec93f5cca6a51d2"
 readonly RUN_ID="p0b2evalsmoke-${SLURM_JOB_ID}-s1701"
 COMMAND=(
   "${PYTHON}" -u "${WANDB_WRAPPER}"

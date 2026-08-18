@@ -128,6 +128,17 @@ def test_full_training_audit_accepts_only_the_frozen_complete_contract() -> None
         )
 
 
+def test_full_training_audit_accepts_the_persisted_json_wire_format() -> None:
+    record = json.loads(json.dumps(_training_record()))
+    assert record["config"]["betas"] == [0.9, 0.99]
+    audited = audit_full_training_result(
+        record,
+        seed=1701,
+        training_commit=TRAINING_COMMIT,
+    )
+    assert audited["selected_epoch"] == 37
+
+
 def test_history_audit_recomputes_earliest_minimum_and_matches_summaries(
     tmp_path: Path,
 ) -> None:

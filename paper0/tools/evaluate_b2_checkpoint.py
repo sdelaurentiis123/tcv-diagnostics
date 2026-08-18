@@ -164,8 +164,14 @@ def audit_full_training_result(
         if record.get(name) != expected:
             raise ValueError(f"B2 training result field {name!r} differs")
     run_config = record.get("config", {})
-    expected_config = config.to_record()
-    if any(run_config.get(name) != value for name, value in expected_config.items()):
+    # Training results are persisted as JSON, which canonically stores tuple
+    # fields such as Adam betas as lists.  Compare against that wire format so
+    # an exact save/load round trip is not mistaken for configuration drift.
+    expected_config = json.loads(json.dumps(config.to_record()))
+    persisted_config = json.loads(json.dumps(run_config))
+    if any(
+        persisted_config.get(name) != value for name, value in expected_config.items()
+    ):
         raise ValueError("B2 training frozen configuration differs")
     if run_config.get("model") != LatentDiffusionViTConfig().to_record():
         raise ValueError("B2 training model configuration differs")
@@ -289,10 +295,8 @@ def frozen_training_run(
     paper0_commit: str,
 ) -> Mapping[str, Any]:
     if (
-        matrix.get("scope")
-        != "phase3_B2_LDM_H2_full_training_matrix_frozen"
-        or matrix.get("status")
-        != "completed_pending_bounded_evaluator_smoke"
+        matrix.get("scope") != "phase3_B2_LDM_H2_full_training_matrix_frozen"
+        or matrix.get("status") != "completed_pending_bounded_evaluator_smoke"
         or matrix.get("paper0_commit") != paper0_commit
         or matrix.get("training_commit") != training_commit
         or matrix.get("development_run") != "85604"
@@ -329,8 +333,7 @@ def validate_bounded_smoke_result(
     training_matrix_sha256: str,
 ) -> None:
     if (
-        record.get("scope")
-        != "bounded_non_scientific_B2_evaluator_smoke_85604"
+        record.get("scope") != "bounded_non_scientific_B2_evaluator_smoke_85604"
         or record.get("status") != "bounded_evaluator_smoke_completed"
         or record.get("paper0_commit") != paper0_commit
         or record.get("seed") != 1701
@@ -339,12 +342,10 @@ def validate_bounded_smoke_result(
         or record.get("ensemble_members") != 32
         or record.get("held_out_85606_read") is not False
         or record.get("truth_opened_only_after_forecast_hash") is not True
-        or record.get("full_probabilistic_evaluation_preconditions_passed")
-        is not True
+        or record.get("full_probabilistic_evaluation_preconditions_passed") is not True
         or record.get("probabilistic_scientific_gate_evaluated") is not False
         or record.get("O3_launch_allowed") is not False
-        or record.get("training_matrix", {}).get("sha256")
-        != training_matrix_sha256
+        or record.get("training_matrix", {}).get("sha256") != training_matrix_sha256
     ):
         raise RuntimeError("B2 bounded evaluator smoke contract differs")
 
@@ -365,11 +366,7 @@ def _write_index(
 
     index.write_text(
         "\n".join(
-            (
-                f"{digest(path)}  "
-                f"{path.resolve(strict=True)}"
-            )
-            for path in artifacts
+            (f"{digest(path)}  " f"{path.resolve(strict=True)}") for path in artifacts
         )
         + "\n",
         encoding="utf-8",
@@ -396,12 +393,8 @@ def main() -> None:
     for path in paths:
         assert_development_path(path)
     verify_checkout(args.paper0_commit)
-    matrix_path = verify_input(
-        args.training_matrix, args.training_matrix_sha256
-    )
-    training_path = verify_input(
-        args.training_result, args.training_result_sha256
-    )
+    matrix_path = verify_input(args.training_matrix, args.training_matrix_sha256)
+    training_path = verify_input(args.training_result, args.training_result_sha256)
     native_path = verify_input(
         args.native_truth_result, args.native_truth_result_sha256
     )
@@ -435,8 +428,7 @@ def main() -> None:
         or manifest.get("development_run") != "85604"
         or manifest.get("held_out_85606_access_allowed") is not False
         or manifest.get("probabilistic_evaluation_authorized") is not True
-        or manifest.get("protocol", {}).get("sha256")
-        != args.evaluation_protocol_sha256
+        or manifest.get("protocol", {}).get("sha256") != args.evaluation_protocol_sha256
     ):
         raise RuntimeError("B2 full evaluation manifest contract differs")
     matrix = load_strict_json(matrix_path)
@@ -496,11 +488,7 @@ def main() -> None:
         geometry_manifest=load_strict_json(geometry_manifest_path),
     )
     bounded_smoke = args.mode == "smoke"
-    targets = (
-        tuple(range(498, 502))
-        if bounded_smoke
-        else tuple(range(498, 624))
-    )
+    targets = tuple(range(498, 502)) if bounded_smoke else tuple(range(498, 624))
     model = load_selected_b2_model(
         checkpoint=checkpoint_path,
         expected_checkpoint_sha256=training["selected_checkpoint"]["sha256"],

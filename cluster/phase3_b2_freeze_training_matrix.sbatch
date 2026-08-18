@@ -62,7 +62,7 @@ if [[ "${ID}" != "rocky" || "${VERSION_ID%%.*}" != "9" ]]; then
   exit 2
 fi
 check_sha256 "3e5158aca0f8284227018344445ce1eb6a2b80340e2126d3d71d6c41bd5f6206" "${ENTRYPOINT}"
-check_sha256 "c59939d074d12eee361cf07eef0b031d9a5dda56fe51604e5246e2f490aa497c" "${PAPER0_ROOT}/paper0/tools/evaluate_b2_checkpoint.py"
+check_sha256 "196bc86c489231c529d51aed6b87f068db9af654ff61701b2ec93f5cca6a51d2" "${PAPER0_ROOT}/paper0/tools/evaluate_b2_checkpoint.py"
 
 declare -a result_args=()
 for task in 0 1 2; do
