@@ -27,6 +27,9 @@ B3_EVALUATION_SCOPE = "B3_FGN_H1_full_probabilistic_evaluation_85604"
 B3_SCORE_SCOPE = "B3_FGN_H1_truth_separated_probabilistic_scoring_85604"
 B3_COMPARATOR_SCOPE = "phase3_B3_frozen_matched_H1_comparators_85604"
 B3_TRAINING_SCOPE = "B3_FGN_H1_seed1701_full_training_85604"
+B3_MANIFEST_SHA256 = (
+    "2f1f83b3c4ce50a789d26ed6877142400b5f9f8e994b3e6bc92f997840832ad2"
+)
 B3_SCIENTIFIC_NOISE_SHA256 = (
     "1449777a61d40af49ccb3bd6bed5edcba0fd8afe24d113e6175218c04865aa9c"
 )
@@ -186,6 +189,34 @@ def evaluate_b3_integrity(
         "integrity.training.selected_checkpoint_member_probe_noncollapsed",
         training.get("member_probe", {}).get("nonzero_field_diversity") is True,
     )
+    book.boolean(
+        "integrity.training.preoptimization_parent_bitwise_identity",
+        training.get("preoptimization_parent_identity", {}).get("bitwise_exact")
+        is True,
+    )
+    book.boolean(
+        "integrity.training.deterministic_parent_load_audit",
+        training.get("deterministic_parent_load_audit", {}).get("passed") is True,
+    )
+    parent_manifest = manifest.get("deterministic_parent", {})
+    codec_manifest = manifest.get("codec", {})
+    book.boolean(
+        "integrity.training.parent_checkpoint_lock",
+        training.get("deterministic_parent", {}).get("sha256")
+        == parent_manifest.get("checkpoint_sha256"),
+    )
+    book.boolean(
+        "integrity.training.codec_checkpoint_lock",
+        training.get("codec_checkpoint", {}).get("sha256")
+        == codec_manifest.get("checkpoint_sha256")
+        and training.get("codec_checkpoint", {}).get("trainable") is False,
+    )
+    book.boolean(
+        "integrity.training.latent_normalization_lock",
+        training.get("latent_normalization", {}).get("sha256")
+        == codec_manifest.get("latent_normalization_sha256")
+        and training.get("latent_normalization", {}).get("refit") is False,
+    )
 
     book.boolean(
         "integrity.evaluation.scope", result.get("scope") == B3_EVALUATION_SCOPE
@@ -223,6 +254,36 @@ def evaluate_b3_integrity(
     book.boolean(
         "integrity.evaluation.checkpoint_matches_training",
         result.get("selected_checkpoint") == training.get("selected_checkpoint"),
+    )
+    history_audit = result.get("training_history_audit", {})
+    book.boolean(
+        "integrity.evaluation.complete_training_history_audit",
+        history_audit.get("epochs") == 100
+        and history_audit.get("optimizer_steps") == 2700
+        and history_audit.get("selection_metric")
+        == "fixed_M2_all126_equal_channel_decoded_field_fair_CRPS"
+        and history_audit.get("earliest_validation_minimum_epoch")
+        == training.get("selected_epoch")
+        and history_audit.get("finite") is True,
+    )
+    book.boolean(
+        "integrity.evaluation.checkpoint_selection_noise_matches_training",
+        result.get("checkpoint_selection_noise", {}).get("sha256")
+        == training.get("validation_noise_bank", {}).get("sha256")
+        and result.get("checkpoint_selection_noise", {}).get(
+            "used_for_scientific_ensemble"
+        )
+        is False,
+    )
+    book.boolean(
+        "integrity.evaluation.manifest_lock",
+        result.get("evaluation_manifest", {}).get("sha256")
+        == B3_MANIFEST_SHA256,
+    )
+    book.boolean(
+        "integrity.evaluation.protocol_lock",
+        result.get("evaluation_protocol", {}).get("sha256")
+        == manifest.get("protocol", {}).get("sha256"),
     )
     book.boolean(
         "integrity.evaluation.scientific_noise",

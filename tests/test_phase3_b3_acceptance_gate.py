@@ -43,6 +43,19 @@ def _training() -> dict[str, object]:
             "sha256": "selection-noise",
         },
         "member_probe": {"nonzero_field_diversity": True},
+        "preoptimization_parent_identity": {"bitwise_exact": True},
+        "deterministic_parent_load_audit": {"passed": True},
+        "deterministic_parent": {
+            "sha256": MANIFEST["deterministic_parent"]["checkpoint_sha256"]
+        },
+        "codec_checkpoint": {
+            "sha256": MANIFEST["codec"]["checkpoint_sha256"],
+            "trainable": False,
+        },
+        "latent_normalization": {
+            "sha256": MANIFEST["codec"]["latent_normalization_sha256"],
+            "refit": False,
+        },
         "selected_epoch": 40,
         "selected_checkpoint": {"path": "/development/selected.pt", "sha256": "a" * 64},
     }
@@ -74,6 +87,21 @@ def _result(training: dict[str, object]) -> dict[str, object]:
         "seed": 1701,
         "selected_epoch": training["selected_epoch"],
         "selected_checkpoint": training["selected_checkpoint"],
+        "training_history_audit": {
+            "epochs": 100,
+            "optimizer_steps": 2700,
+            "selection_metric": (
+                "fixed_M2_all126_equal_channel_decoded_field_fair_CRPS"
+            ),
+            "earliest_validation_minimum_epoch": training["selected_epoch"],
+            "finite": True,
+        },
+        "checkpoint_selection_noise": {
+            "sha256": training["validation_noise_bank"]["sha256"],
+            "used_for_scientific_ensemble": False,
+        },
+        "evaluation_manifest": {"sha256": gate.B3_MANIFEST_SHA256},
+        "evaluation_protocol": {"sha256": MANIFEST["protocol"]["sha256"]},
         "scientific_noise": {
             "seed": 31032,
             "shape": [126, 32, 32],

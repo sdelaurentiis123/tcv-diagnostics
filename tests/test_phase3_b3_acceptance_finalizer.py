@@ -80,7 +80,7 @@ def test_launcher_is_cpu_only_and_locks_the_frozen_gate_sources() -> None:
     assert "B3_EVALUATION_JOB_ID" in text
     assert "B3_COMPARATOR_JOB_ID" in text
     assert "36640742fea989cc5e94604fc6a2970cf431802ca32f176ca06302158a454737" in text
-    assert "d649a19560dc4aa8a05b06d54594a8d4b6cc19f3fada359afbc2ce2f4a1a3b32" in text
+    assert "6fdda026ec520fa16a8aadac32a64b76912585a44184601c5505537b7e119a85" in text
     assert "6bb5d825b30c9c8292cda020d3bec824d9b04198617dc89afafa264daab44ea5" in text
     assert "899bf42d7d709badd2631e5b94db11e6c6603635d2ce5f0cf341e747216f86d3" in text
     assert '"seed1702_1703_training_authorized"' in text
