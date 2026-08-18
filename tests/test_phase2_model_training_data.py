@@ -21,6 +21,10 @@ from tcv_diagnostics.model_training_data import (
     epoch_order,
     toroidal_roll,
 )
+from tcv_diagnostics.o2_training_data import (
+    OneStepWindowDataset,
+    strict_o2_targets,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -101,12 +105,16 @@ def _create_sparse_shards(root: Path) -> dict:
                 for channel, field in enumerate(fields):
                     values = base + np.float32(channel + 2)
                     group[field][0] = values
+                    group[field][1] = values + np.float32(10)
+                    group[field][2] = values + np.float32(20)
                 boundary["Bphi"][0, 0] = np.arange(32, dtype=np.float32) + 1
                 boundary["Bphi"][0, 1] = np.arange(32, dtype=np.float32) + 2
             if index == 6:
                 local = 496 - start
                 for channel, field in enumerate(fields):
                     group[field][local] = np.float32(channel + 3)
+                    group[field][local + 1] = np.float32(channel + 13)
+                    group[field][local + 2] = np.float32(channel + 23)
                 boundary["Bphi"][local, 0] = np.arange(32, dtype=np.float32) + 3
                 boundary["Bphi"][local, 1] = np.arange(32, dtype=np.float32) + 6
 
@@ -241,6 +249,85 @@ class TestModelTrainingData(unittest.TestCase):
         self.assertEqual(first, again)
         self.assertEqual(sorted(first), list(frames))
         self.assertNotEqual(first, next_epoch)
+
+    def test_o2_h2_window_order_and_target_are_exact(self) -> None:
+        dataset = OneStepWindowDataset(
+            self.catalog,
+            split="train",
+            target_frames=[2],
+            context_frames=2,
+            augment=False,
+            seed=1701,
+            return_physical=True,
+        )
+        item = dataset[0]
+
+        self.assertEqual(tuple(item["context"].shape), (2, 5, *VOLUME_SHAPE))
+        self.assertEqual(tuple(item["target"].shape), (5, *VOLUME_SHAPE))
+        np.testing.assert_array_equal(item["context_frame_indices"], [0, 1])
+        self.assertEqual(int(item["target_frame_index"]), 2)
+        self.assertEqual(dataset.consumed_frames, (0, 1, 2))
+        self.assertEqual(float(item["physical_context"][0, 1, 0, 0, 0]), 3.0)
+        self.assertEqual(float(item["physical_context"][1, 1, 0, 0, 0]), 13.0)
+        self.assertEqual(float(item["physical_target"][1, 0, 0, 0]), 23.0)
+        self.assertNotIn("time", item)
+        dataset.close()
+
+    def test_o2_roll_is_identical_for_every_context_and_target_field(self) -> None:
+        plain = OneStepWindowDataset(
+            self.catalog,
+            split="train",
+            target_frames=[2],
+            context_frames=2,
+            augment=False,
+            seed=1702,
+        )
+        augmented = OneStepWindowDataset(
+            self.catalog,
+            split="train",
+            target_frames=[2],
+            context_frames=2,
+            augment=True,
+            seed=1702,
+        )
+        augmented.set_epoch(5)
+        reference = plain[0]
+        actual = augmented[0]
+        expected_roll = toroidal_roll(seed=1702, epoch=5, frame=2)
+        self.assertEqual(int(actual["toroidal_roll"]), expected_roll)
+        np.testing.assert_array_equal(
+            actual["context"], np.roll(reference["context"], expected_roll, axis=-1)
+        )
+        np.testing.assert_array_equal(
+            actual["target"], np.roll(reference["target"], expected_roll, axis=-1)
+        )
+        plain.close()
+        augmented.close()
+
+    def test_o2_validation_window_stays_after_guard(self) -> None:
+        dataset = OneStepWindowDataset(
+            self.catalog,
+            split="validation",
+            target_frames=[498],
+            context_frames=2,
+            augment=False,
+            seed=1703,
+        )
+        item = dataset[0]
+        np.testing.assert_array_equal(item["context_frame_indices"], [496, 497])
+        self.assertEqual(int(item["target_frame_index"]), 498)
+        self.assertEqual(dataset.consumed_frames, (496, 497, 498))
+        dataset.close()
+
+    def test_o2_target_guards_reject_unmatched_or_guard_crossing_windows(self) -> None:
+        with self.assertRaisesRegex(ValueError, "frozen interval"):
+            strict_o2_targets([1], split="train", context_frames=1)
+        with self.assertRaisesRegex(ValueError, "frozen interval"):
+            strict_o2_targets([496], split="validation", context_frames=2)
+        with self.assertRaisesRegex(ValueError, "contiguous"):
+            strict_o2_targets([2, 4], split="train", context_frames=2)
+        with self.assertRaisesRegex(ValueError, "one or two"):
+            strict_o2_targets([2], split="train", context_frames=3)
 
     def test_guard_and_validation_augmentation_are_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "frozen"):
