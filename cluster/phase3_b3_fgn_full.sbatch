@@ -1,7 +1,7 @@
 #!/bin/bash
-# Rocky 9 one-GPU implementation gate for the frozen B3-FGN-H1 retrofit.
-# Non-scientific: seed 1701, 16 train targets, 4 validation targets, 2 epochs.
-#SBATCH --job-name=p3_b3_smoke
+# Frozen one-seed full B3-FGN-H1 training on 85604 only.
+# Training completion is not scientific acceptance; the separate evaluator decides.
+#SBATCH --job-name=p3_b3_full
 #SBATCH --partition=gpupreempt
 #SBATCH --qos=gpupreempt
 #SBATCH --gres=gpu:1
@@ -10,9 +10,9 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=160G
-#SBATCH --time=02:00:00
+#SBATCH --time=24:00:00
 #SBATCH --no-requeue
-#SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase3_b3_smoke_%j.log
+#SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase3_b3_full_%j.log
 
 set -euo pipefail
 
@@ -21,26 +21,27 @@ set -euo pipefail
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
 readonly MODEL_DATA_SOURCE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525"
-readonly NODE_LOCAL_ROOT="/tmp/${USER}/tcv_diagnostics_b3_smoke_${SLURM_JOB_ID}"
+readonly NODE_LOCAL_ROOT="/tmp/${USER}/tcv_diagnostics_b3_full_${SLURM_JOB_ID}"
 readonly MODEL_DATA_STAGED="${NODE_LOCAL_ROOT}/phase2_model_dataset_85604"
-readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_gpu_smoke"
+readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_full"
 readonly JOB_ROOT="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly RUN_OUTPUT="${JOB_ROOT}/b3_fgn_h1_seed_1701"
-readonly B3_MANIFEST="${PAPER0_ROOT}/paper0/manifests/phase3_b3_fgn_85604.json"
-readonly B3_PROTOCOL="${PAPER0_ROOT}/paper0/protocol/PHASE3_B3_FGN_PROTOCOL.md"
+readonly FULL_MANIFEST="${PAPER0_ROOT}/paper0/manifests/phase3_b3_full_evaluation_85604.json"
+readonly FULL_PROTOCOL="${PAPER0_ROOT}/paper0/protocol/PHASE3_B3_FULL_EVALUATION_PROTOCOL.md"
+readonly IMPLEMENTATION_PROTOCOL="${PAPER0_ROOT}/paper0/protocol/PHASE3_B3_FGN_PROTOCOL.md"
+readonly B3_SMOKE_RESULT="${PAPER0_ROOT}/paper0/results/phase3_b3_fgn_gpu_smoke_6898604.json"
 readonly B2_RESULT="${PAPER0_ROOT}/paper0/results/phase3_b2_event_eligibility_amendment_6898348.json"
 readonly O2_RESULT="${PAPER0_ROOT}/paper0/results/phase2_o2_evaluation_full_6896117.json"
-readonly O2_MANIFEST="${PAPER0_ROOT}/paper0/manifests/phase2_c5p_o2_full_runs_85604.json"
 readonly PARENT_CHECKPOINT="/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/selected.pt"
 readonly PARENT_SHA="5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e"
 readonly C5P_CODEC="/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt"
 readonly C5P_CODEC_SHA="9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
 readonly LATENT_NORMALIZATION="/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/latent_normalization.json"
 readonly LATENT_NORMALIZATION_SHA="afcb0eda5d611d58f6eb2340aa55cfecd1a231b83a6912d9db398be706296738"
-readonly ENTRYPOINT="${PAPER0_ROOT}/paper0/tools/train_b3_fgn.py"
+readonly ENTRYPOINT="${PAPER0_ROOT}/paper0/tools/train_b3_fgn_full.py"
 readonly WANDB_ENTITY="sdelaurentiis123-columbia-university"
 readonly WANDB_PROJECT="tcv-diagnostics-paper0"
-readonly WANDB_GROUP="b3-fgn-h1-smoke"
+readonly WANDB_GROUP="b3-fgn-h1-full"
 
 if [[ -e "${JOB_ROOT}" ]]; then
   echo "Refusing to overwrite existing result directory: ${JOB_ROOT}" >&2
@@ -78,7 +79,7 @@ check_sha256() {
 
 source /etc/os-release
 if [[ "${ID}" != "rocky" || "${VERSION_ID%%.*}" != "9" ]]; then
-  echo "This B3 smoke requires Rocky Linux 9" >&2
+  echo "Full B3 training requires Rocky Linux 9" >&2
   exit 2
 fi
 nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total --format=csv,noheader
@@ -91,11 +92,12 @@ if nvidia-smi --query-gpu=name --format=csv,noheader | grep -Evq "H100|H200"; th
   exit 2
 fi
 
-check_sha256 "c31d24d843050c5708440018217e48ca66f5c3a3f4ee0ddb110a3287a73292d1" "${B3_PROTOCOL}"
-check_sha256 "8789c1a922bbeb9817144344563107f6e72a7a7c549436ae698155d93daba900" "${B3_MANIFEST}"
+check_sha256 "db717c5605ad9653d2b051ec13254b43bf230f514cb173d295e95d3c68af8030" "${FULL_PROTOCOL}"
+check_sha256 "2f1f83b3c4ce50a789d26ed6877142400b5f9f8e994b3e6bc92f997840832ad2" "${FULL_MANIFEST}"
+check_sha256 "c31d24d843050c5708440018217e48ca66f5c3a3f4ee0ddb110a3287a73292d1" "${IMPLEMENTATION_PROTOCOL}"
+check_sha256 "dbac54c033917abbfec7e380d96a0c9be93667ae58240b4403400b57c76e2808" "${B3_SMOKE_RESULT}"
 check_sha256 "15bcfc0b4c9cec2a858848e1d8fbc0fdf2da6f8a3bc6fd001e5c233abae7b397" "${B2_RESULT}"
 check_sha256 "251820a6f81d97ffdb046eba7a23cd12505c1179e600e7942231de2fd1feeacb" "${O2_RESULT}"
-check_sha256 "1f49699396a8529a1ee42fd5b0d746c75c98a750c3e376f3720c23dfae4ed203" "${O2_MANIFEST}"
 check_sha256 "87265976a250ef1de81f19a59607b1c1493906ca2b72bc561816bf956302d12b" "${PAPER0_ROOT}/src/tcv_diagnostics/models/layers.py"
 check_sha256 "0f2e9a7445ae47915f334f01993fbf49adc4ac462bf69ef988a736e22bb9c554" "${PAPER0_ROOT}/src/tcv_diagnostics/models/dcae.py"
 check_sha256 "5425b76d501c7385bb63e53f2a01e8882f29759b64f41d71d8372bb55e628ceb" "${PAPER0_ROOT}/src/tcv_diagnostics/models/o2.py"
@@ -109,7 +111,7 @@ check_sha256 "57b40c3d1be4b065c71d1598876fe2edb69e76f25fe6ce4e87c6dea08d9a6690" 
 check_sha256 "1a8ec4227f5de595f27e9d2679ca3b830e598516d56e19d01910cc1c0413fef6" "${PAPER0_ROOT}/src/tcv_diagnostics/fgn_training.py"
 check_sha256 "74c514cc09c77c7d3b44da71cd450116772d576c7949d11c4a7393642b2fc849" "${PAPER0_ROOT}/src/tcv_diagnostics/wandb_tracking.py"
 check_sha256 "10529f5be61306c8ceb50314075a4a678254cb553cf9638e368e4e0ea9be29b5" "${PAPER0_ROOT}/src/tcv_diagnostics/fgn_wandb_tracking.py"
-check_sha256 "2bd4573b2588a199b164b49997f2ce6a9a355c813b6e3d66b9da39768be110fe" "${ENTRYPOINT}"
+check_sha256 "acb20cc56ee277e5b2c18ebfa0c435d56354394c6eddd3cff452c6be0040e77d" "${ENTRYPOINT}"
 check_sha256 "4492111f3089d871ad77ffc06729b16ebb8822f6b737cd6422e5dc18086b2751" "${PAPER0_ROOT}/pyproject.toml"
 check_sha256 "${PARENT_SHA}" "${PARENT_CHECKPOINT}"
 check_sha256 "${C5P_CODEC_SHA}" "${C5P_CODEC}"
@@ -133,6 +135,7 @@ export MKL_NUM_THREADS=4
   echo "captured_at=$(date --iso-8601=seconds)"
   echo "host=$(hostname --fqdn)"
   echo "paper0_commit=${PAPER0_COMMIT}"
+  echo "slurm_job_id=${SLURM_JOB_ID}"
   echo "os_id=${ID}"
   echo "os_version=${VERSION_ID}"
   "${PYTHON}" --version
@@ -161,7 +164,7 @@ print(json.dumps({
 }, sort_keys=True))
 PY
 
-echo "Running the complete Rocky 9 suite before the B3 GPU smoke"
+echo "Running the complete Rocky 9 suite before full B3 training"
 cd "${PAPER0_ROOT}"
 "${PYTHON}" -m pytest -p no:cacheprovider -q | tee "${JOB_ROOT}/test_output.txt"
 
@@ -189,8 +192,9 @@ if [[ "${verified_shards}" -ne 8 ]]; then
   exit 2
 fi
 
+readonly RUN_ID="p0b3full-${SLURM_JOB_ID}-s1701"
 "${PYTHON}" -u "${ENTRYPOINT}" \
-  --mode smoke \
+  --mode full \
   --seed 1701 \
   --artifact-root "${MODEL_DATA_STAGED}" \
   --codec-checkpoint "${C5P_CODEC}" \
@@ -202,12 +206,12 @@ fi
   --output "${RUN_OUTPUT}" \
   --paper0-commit "${PAPER0_COMMIT}" \
   --slurm-job-id "${SLURM_JOB_ID}" \
-  --b3-manifest "${B3_MANIFEST}" \
+  --full-manifest "${FULL_MANIFEST}" \
   --wandb-entity "${WANDB_ENTITY}" \
   --wandb-project "${WANDB_PROJECT}" \
   --wandb-group "${WANDB_GROUP}" \
-  --wandb-run-id "p0b3smoke-${SLURM_JOB_ID}-s1701" \
-  --wandb-run-name "b3-fgn-h1-smoke-s1701-j${SLURM_JOB_ID}"
+  --wandb-run-id "${RUN_ID}" \
+  --wandb-run-name "b3-fgn-h1-full-s1701-j${SLURM_JOB_ID}"
 
 "${PYTHON}" -m json.tool "${RUN_OUTPUT}/result.json" >/dev/null
 "${PYTHON}" -m json.tool "${RUN_OUTPUT}/wandb.json" >/dev/null
@@ -222,9 +226,10 @@ sha256sum \
   "${RUN_OUTPUT}/wandb.json" \
   > "${RUN_OUTPUT}/artifact_sha256.txt"
 
-export PAPER0_B3_SMOKE_JOB_ROOT="${JOB_ROOT}"
-export PAPER0_B3_SMOKE_COMMIT="${PAPER0_COMMIT}"
-export PAPER0_B3_SMOKE_JOB_ID="${SLURM_JOB_ID}"
+export PAPER0_B3_FULL_JOB_ROOT="${JOB_ROOT}"
+export PAPER0_B3_FULL_RUN_OUTPUT="${RUN_OUTPUT}"
+export PAPER0_B3_FULL_COMMIT="${PAPER0_COMMIT}"
+export PAPER0_B3_FULL_JOB_ID="${SLURM_JOB_ID}"
 "${PYTHON}" - <<'PY'
 import json
 import os
@@ -233,73 +238,85 @@ from pathlib import Path
 from tcv_diagnostics.codec_training import sha256_path
 from tcv_diagnostics.model_data import write_strict_json_atomic
 
-root = Path(os.environ["PAPER0_B3_SMOKE_JOB_ROOT"])
-output = root / "b3_fgn_h1_seed_1701"
+root = Path(os.environ["PAPER0_B3_FULL_JOB_ROOT"])
+output = Path(os.environ["PAPER0_B3_FULL_RUN_OUTPUT"])
 result = json.loads((output / "result.json").read_text())
 tracking = json.loads((output / "wandb.json").read_text())
 
-if result["scope"] != "bounded_non_scientific_B3_FGN_H1_GPU_smoke":
-    raise RuntimeError("B3 smoke scope differs")
+if result["scope"] != "B3_FGN_H1_seed1701_full_training_85604":
+    raise RuntimeError("full B3 scope differs")
 config = result["config"]
-if config["seed"] != 1701 or config["mode"] != "smoke":
-    raise RuntimeError("B3 smoke identity differs")
-if config["train_targets"] != [2, 18] or config["validation_targets"] != [498, 502]:
-    raise RuntimeError("B3 smoke target bounds differ")
+if config["seed"] != 1701 or config["mode"] != "full":
+    raise RuntimeError("full B3 identity differs")
+if config["train_targets"] != [2, 432] or config["validation_targets"] != [498, 624]:
+    raise RuntimeError("full B3 target intervals differ")
 if config["ensemble_members"] != 2:
-    raise RuntimeError("B3 smoke ensemble count differs")
-if result["completed_epochs"] != 2 or result["completed_optimizer_steps"] != 2:
-    raise RuntimeError("B3 smoke optimization budget differs")
+    raise RuntimeError("full B3 training member count differs")
+if result["completed_epochs"] != 100 or result["completed_optimizer_steps"] != 2700:
+    raise RuntimeError("full B3 did not complete the frozen budget")
+if not 0 <= result["selected_epoch"] < 100:
+    raise RuntimeError("full B3 selected epoch differs")
 if result["preoptimization_parent_identity"]["bitwise_exact"] is not True:
-    raise RuntimeError("B3 noise-disabled parent identity failed")
+    raise RuntimeError("full B3 parent identity failed")
 if result["deterministic_parent_load_audit"]["passed"] is not True:
-    raise RuntimeError("B3 deterministic parent load audit failed")
+    raise RuntimeError("full B3 parent load audit failed")
 if result["checkpoint_reload_bitwise_exact"] is not True:
-    raise RuntimeError("B3 selected-checkpoint reload identity failed")
+    raise RuntimeError("full B3 selected-checkpoint reload failed")
 if result["codec_bitwise_unchanged"] is not True:
-    raise RuntimeError("B3 frozen codec changed")
-if result["common_parameter_gradient_seen"] is not True:
-    raise RuntimeError("B3 common parameters received no gradient")
-if result["new_parameter_gradient_seen"] is not True:
-    raise RuntimeError("B3 new parameters received no gradient")
-
-probe = result["member_probe"]
-if probe["finite"] is not True:
-    raise RuntimeError("B3 probe is non-finite")
-if probe["nonzero_latent_diversity"] is not True or probe["nonzero_field_diversity"] is not True:
-    raise RuntimeError("B3 members collapsed")
-if probe["canonical_forecast_shape"] != [1, 2, 1, 5, 64, 32, 88]:
-    raise RuntimeError("B3 canonical forecast axes differ")
+    raise RuntimeError("full B3 frozen codec changed")
+if result["common_parameter_gradient_seen"] is not True or result["new_parameter_gradient_seen"] is not True:
+    raise RuntimeError("full B3 missed a staged parameter gradient")
 if result["validation_noise_bank"]["shape"] != [126, 2, 32]:
-    raise RuntimeError("B3 validation-noise bank shape differs")
-
+    raise RuntimeError("full B3 checkpoint-selection noise shape differs")
+if result["member_probe"]["canonical_forecast_shape"] != [1, 2, 1, 5, 64, 32, 88]:
+    raise RuntimeError("full B3 canonical forecast axes differ")
+if result["member_probe"]["nonzero_field_diversity"] is not True:
+    raise RuntimeError("full B3 selected checkpoint collapsed")
+if result["full_B3_training_authorized"] is not True:
+    raise RuntimeError("full B3 result lacks full-training authorization")
+if result["training_complete_is_scientific_acceptance"] is not False:
+    raise RuntimeError("full B3 training was mislabeled as scientific acceptance")
 for flag in (
     "held_out_85606_read",
     "physics_derived_loss_used",
     "target_truth_used_as_model_input",
     "absolute_time_used_as_model_input",
     "scientific_result",
-    "full_B3_training_authorized",
     "probabilistic_scientific_gate_evaluated",
     "O3_launch_allowed",
     "assimilation_allowed",
     "diagnostic_ranking_allowed",
 ):
     if result[flag] is not False:
-        raise RuntimeError(f"B3 smoke scope flag {flag} differs")
+        raise RuntimeError(f"full B3 scope flag {flag} differs")
 if tracking["mode"] != "online" or tracking["remote_state_after_finish"] != "finished":
-    raise RuntimeError("B3 smoke lacks a finished online W&B run")
-if tracking["epochs_logged"] != 2:
-    raise RuntimeError("B3 W&B epoch count differs")
+    raise RuntimeError("full B3 lacks a finished online W&B run")
+if tracking["epochs_logged"] != 100:
+    raise RuntimeError("full B3 did not log all 100 epochs")
+if sum(1 for line in (output / "history.jsonl").read_text().splitlines() if line.strip()) != 100:
+    raise RuntimeError("full B3 history does not contain 100 epochs")
 
 summary = {
     "schema_version": 1,
-    "scope": "phase3_B3_FGN_H1_bounded_GPU_smoke",
-    "status": "passed",
-    "scientific_result": False,
+    "scope": "phase3_B3_FGN_H1_seed1701_full_training",
+    "status": "training_completed",
+    "scientific_acceptance": False,
     "development_run": "85604",
     "held_out_85606_read": False,
-    "paper0_commit": os.environ["PAPER0_B3_SMOKE_COMMIT"],
-    "slurm_job_id": os.environ["PAPER0_B3_SMOKE_JOB_ID"],
+    "paper0_commit": os.environ["PAPER0_B3_FULL_COMMIT"],
+    "slurm_job_id": os.environ["PAPER0_B3_FULL_JOB_ID"],
+    "completed_epochs": result["completed_epochs"],
+    "completed_optimizer_steps": result["completed_optimizer_steps"],
+    "selected_epoch": result["selected_epoch"],
+    "selected_validation": result["selected_validation"],
+    "selected_checkpoint": result["selected_checkpoint"],
+    "final_training_state": result["final_training_state"],
+    "validation_noise_bank": result["validation_noise_bank"],
+    "member_probe": result["member_probe"],
+    "parameter_count": result["parameter_count"],
+    "peak_cuda_bytes": result["peak_cuda_bytes"],
+    "wall_seconds": result["wall_seconds"],
+    "wandb": tracking,
     "run_result": {
         "path": str(output / "result.json"),
         "sha256": sha256_path(output / "result.json"),
@@ -308,16 +325,21 @@ summary = {
         "path": str(output / "artifact_sha256.txt"),
         "sha256": sha256_path(output / "artifact_sha256.txt"),
     },
-    "selected_checkpoint": result["selected_checkpoint"],
-    "preoptimization_parent_identity": result["preoptimization_parent_identity"],
-    "checkpoint_reload_bitwise_exact": result["checkpoint_reload_bitwise_exact"],
-    "codec_bitwise_unchanged": result["codec_bitwise_unchanged"],
-    "member_probe": result["member_probe"],
-    "wandb": tracking,
-    "full_B3_training_authorized": False,
+    "probabilistic_scientific_gate_evaluated": False,
+    "O3_launch_allowed": False,
 }
 write_strict_json_atomic(root / "result.json", summary)
 PY
 
+sha256sum \
+  "${JOB_ROOT}/environment.txt" \
+  "${JOB_ROOT}/slurm_job.txt" \
+  "${JOB_ROOT}/test_output.txt" \
+  "${JOB_ROOT}/wandb_preflight.json" \
+  "${JOB_ROOT}/result.json" \
+  "${RUN_OUTPUT}/artifact_sha256.txt" \
+  > "${JOB_ROOT}/artifact_sha256.txt"
+
 sha256sum "${JOB_ROOT}/result.json" "${RUN_OUTPUT}/artifact_sha256.txt"
-echo "B3 bounded smoke passed at ${JOB_ROOT}"
+echo "Completed full B3 seed 1701 training at ${JOB_ROOT}"
+echo "B3 remains scientifically undecided until the frozen M32 evaluator runs"

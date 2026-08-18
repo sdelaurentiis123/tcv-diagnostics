@@ -1,4 +1,4 @@
-"""Strict online W&B mirror for the bounded B3 FGN smoke."""
+"""Strict online W&B mirror for bounded and full B3 FGN training."""
 
 from __future__ import annotations
 

@@ -1,8 +1,8 @@
-"""Frozen 85604-only mechanics for the bounded B3 FGN implementation smoke.
+"""Frozen 85604-only mechanics for B3 FGN smoke and full training.
 
-This module deliberately exposes no full-training public entrypoint. The
-prospective full budget is represented for regression testing, but remains
-unauthorized until the bounded smoke passes and a later protocol says so.
+The public smoke and full wrappers are deliberately disjoint and fail closed
+against their exact budgets.  They share one private optimizer engine so the
+scientific run cannot drift from the implementation that passed the smoke.
 """
 
 from __future__ import annotations
@@ -47,7 +47,7 @@ FGN_VALIDATION_MEMBER_COUNT = 2
 
 @dataclass(frozen=True)
 class FGNRunConfig:
-    """Immutable bounded-smoke or prospective full B3 budget."""
+    """Immutable bounded-smoke or authorized full B3 budget."""
 
     mode: str
     seed: int
@@ -166,8 +166,8 @@ class FGNRunConfig:
                 "absolute_time_input_allowed": False,
                 "early_stopping": False,
                 "scientific_result": False,
-                "prospective_full_budget": self.mode == "full",
-                "full_training_authorized": False,
+                "prospective_full_budget": False,
+                "full_training_authorized": self.mode == "full",
             }
         )
         return record
@@ -751,7 +751,7 @@ def _reload_identity_and_diversity(
     return record
 
 
-def train_fgn_smoke(
+def _train_fgn(
     *,
     config: FGNRunConfig,
     catalog: ModelDatasetCatalog,
@@ -764,13 +764,13 @@ def train_fgn_smoke(
     model_config: O2ViTConfig = O2ViTConfig(),
     noise_config: FunctionalNoiseConfig = FunctionalNoiseConfig(),
 ) -> dict[str, Any]:
-    """Execute only the bounded, explicitly non-scientific B3 smoke."""
+    """Private shared optimizer engine reached only through frozen wrappers."""
 
-    frozen = FGNRunConfig.frozen(mode="smoke", seed=FGN_SMOKE_SEED)
-    if config != frozen:
-        raise ValueError("B3 smoke config differs from the frozen bounded budget")
-    if config.mode != "smoke":
-        raise ValueError("this entrypoint cannot execute full B3 training")
+    if config not in (
+        FGNRunConfig.frozen(mode="smoke", seed=FGN_SMOKE_SEED),
+        FGNRunConfig.frozen(mode="full", seed=FGN_SMOKE_SEED),
+    ):
+        raise ValueError("B3 config differs from every frozen training budget")
     output = Path(output_directory)
     if "85606" in str(output).lower():
         raise ValueError("held-out paths are prohibited")
@@ -778,7 +778,7 @@ def train_fgn_smoke(
         raise FileExistsError(f"refusing to overwrite B3 run {output}")
     output.mkdir(parents=True)
     if device.type != "cuda" or not torch.cuda.is_available():
-        raise RuntimeError("B3 smoke execution requires one CUDA worker")
+        raise RuntimeError("B3 execution requires one CUDA worker")
 
     seed_everything(config.seed)
     model, load_audit, parent_payload, normalization = _build_model(
@@ -1104,7 +1104,7 @@ def train_fgn_smoke(
         or selected_probe is None
     ):
         validation_dataset.close()
-        raise RuntimeError("B3 smoke completed without a selected checkpoint")
+        raise RuntimeError("B3 training completed without a selected checkpoint")
     final_validation = validation_fair_crps(
         model=model,
         dataset=validation_dataset,
@@ -1177,12 +1177,16 @@ def train_fgn_smoke(
     if not codec_unchanged:
         raise RuntimeError("frozen B3 codec changed during optimization")
     if not common_gradient_seen or not new_gradient_seen:
-        raise RuntimeError("B3 smoke did not exercise both staged parameter groups")
+        raise RuntimeError("B3 training did not exercise both staged parameter groups")
     torch.cuda.synchronize(device)
 
     result = {
         "schema_version": 1,
-        "scope": "bounded_non_scientific_B3_FGN_H1_GPU_smoke",
+        "scope": (
+            "bounded_non_scientific_B3_FGN_H1_GPU_smoke"
+            if config.mode == "smoke"
+            else "B3_FGN_H1_seed1701_full_training_85604"
+        ),
         "paper0_commit": str(paper0_commit),
         "slurm_job_id": str(slurm_job_id),
         "config": run_record,
@@ -1249,7 +1253,8 @@ def train_fgn_smoke(
         "development_run": "85604",
         "held_out_85606_read": False,
         "scientific_result": False,
-        "full_B3_training_authorized": False,
+        "training_complete_is_scientific_acceptance": False,
+        "full_B3_training_authorized": config.mode == "full",
         "probabilistic_scientific_gate_evaluated": False,
         "O3_launch_allowed": False,
         "assimilation_allowed": False,
@@ -1257,3 +1262,67 @@ def train_fgn_smoke(
     }
     write_strict_json_atomic(output / "result.json", result)
     return result
+
+
+def train_fgn_smoke(
+    *,
+    config: FGNRunConfig,
+    catalog: ModelDatasetCatalog,
+    artifacts: ParentArtifacts,
+    output_directory: Path,
+    paper0_commit: str,
+    slurm_job_id: str,
+    device: torch.device,
+    epoch_callback: Callable[[Mapping[str, Any]], None] | None = None,
+    model_config: O2ViTConfig = O2ViTConfig(),
+    noise_config: FunctionalNoiseConfig = FunctionalNoiseConfig(),
+) -> dict[str, Any]:
+    """Execute only the bounded, explicitly non-scientific B3 smoke."""
+
+    frozen = FGNRunConfig.frozen(mode="smoke", seed=FGN_SMOKE_SEED)
+    if config != frozen:
+        raise ValueError("B3 smoke config differs from the frozen bounded budget")
+    return _train_fgn(
+        config=config,
+        catalog=catalog,
+        artifacts=artifacts,
+        output_directory=output_directory,
+        paper0_commit=paper0_commit,
+        slurm_job_id=slurm_job_id,
+        device=device,
+        epoch_callback=epoch_callback,
+        model_config=model_config,
+        noise_config=noise_config,
+    )
+
+
+def train_fgn_full(
+    *,
+    config: FGNRunConfig,
+    catalog: ModelDatasetCatalog,
+    artifacts: ParentArtifacts,
+    output_directory: Path,
+    paper0_commit: str,
+    slurm_job_id: str,
+    device: torch.device,
+    epoch_callback: Callable[[Mapping[str, Any]], None] | None = None,
+    model_config: O2ViTConfig = O2ViTConfig(),
+    noise_config: FunctionalNoiseConfig = FunctionalNoiseConfig(),
+) -> dict[str, Any]:
+    """Execute only the frozen seed-1701 100-epoch B3 full budget."""
+
+    frozen = FGNRunConfig.frozen(mode="full", seed=FGN_SMOKE_SEED)
+    if config != frozen:
+        raise ValueError("B3 full config differs from the frozen 100-epoch budget")
+    return _train_fgn(
+        config=config,
+        catalog=catalog,
+        artifacts=artifacts,
+        output_directory=output_directory,
+        paper0_commit=paper0_commit,
+        slurm_job_id=slurm_job_id,
+        device=device,
+        epoch_callback=epoch_callback,
+        model_config=model_config,
+        noise_config=noise_config,
+    )

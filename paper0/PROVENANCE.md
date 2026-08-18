@@ -897,3 +897,26 @@ cross-field, member-wise transport, block-robustness, and M16-versus-M32
 stability thresholds. Improving marginal CRPS alone cannot pass. A complete
 pass authorizes only writing a later seed-replication protocol; it does not
 authorize O3, 85606, assimilation, diagnostic ranking, or another B3 seed.
+
+The full training implementation was then added without changing the frozen
+architecture or loss. `src/tcv_diagnostics/fgn_training.py` now routes the
+historical bounded smoke and the full run through one private optimizer engine,
+but exposes disjoint public wrappers that reject each other's budgets before
+creating an output directory. The inherited `C5POneStepModel.train()` override
+keeps the frozen codec in evaluation mode even while the stochastic transition
+is trained. The full result explicitly marks training completion as not being
+scientific acceptance.
+
+`paper0/tools/train_b3_fgn_full.py` is a separate full-only entrypoint. It
+authorizes only seed 1701, verifies the passing smoke and all parent artifacts,
+requires the exact full manifest and both protocol hashes, rejects 85606 paths,
+and starts the required online W&B run only after authorization. The matching
+`cluster/phase3_b3_fgn_full.sbatch` requests one Rocky 9 H100/H200, refuses
+existing output and node-local paths, verifies exact source and evidence
+hashes, passes the complete suite, stages and rehashes only the eight 85604
+shards, and enforces 100 epochs, 2,700 optimizer steps, codec identity,
+checkpoint reload, noncollapsed members, and a finished 100-epoch W&B record.
+
+At this provenance point no full B3 job has been submitted and no new
+scientific result exists. The separate M32 forecast writer and scientific
+scorer still remain to be implemented and smoke-tested before evaluation.

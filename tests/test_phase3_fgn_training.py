@@ -18,6 +18,7 @@ from tcv_diagnostics.fgn_training import (
     _verify_parent_payload,
     learning_rate_at_step,
     save_validation_noise_bank,
+    train_fgn_full,
     train_fgn_smoke,
     validation_noise_bank,
 )
@@ -62,8 +63,8 @@ def test_frozen_smoke_and_prospective_full_budgets() -> None:
     assert full.optimizer_steps_per_epoch == 27
     assert full.total_optimizer_steps == 2700
     assert full.warmup_optimizer_steps == 270
-    assert full.to_record()["prospective_full_budget"] is True
-    assert full.to_record()["full_training_authorized"] is False
+    assert full.to_record()["prospective_full_budget"] is False
+    assert full.to_record()["full_training_authorized"] is True
     with pytest.raises(ValueError, match="seed 1701"):
         FGNRunConfig.frozen(mode="smoke", seed=1702)
 
@@ -246,3 +247,43 @@ def test_smoke_entrypoint_rejects_full_or_modified_budget_before_writes(
         )
     assert not (tmp_path / "full").exists()
     assert not (tmp_path / "modified").exists()
+
+
+def test_full_entrypoint_rejects_smoke_or_modified_budget_before_writes(
+    tmp_path: Path,
+) -> None:
+    dummy = ParentArtifacts(
+        checkpoint_path=tmp_path / "parent.pt",
+        checkpoint_sha256="0" * 64,
+        codec_path=tmp_path / "codec.pt",
+        codec_sha256="0" * 64,
+        latent_normalization_path=tmp_path / "normalization.json",
+        latent_normalization_sha256="0" * 64,
+    )
+    smoke = FGNRunConfig.frozen(mode="smoke", seed=1701)
+    with pytest.raises(ValueError, match="100-epoch budget"):
+        train_fgn_full(
+            config=smoke,
+            catalog=None,  # type: ignore[arg-type]
+            artifacts=dummy,
+            output_directory=tmp_path / "smoke",
+            paper0_commit="deadbeef",
+            slurm_job_id="0",
+            device=torch.device("cpu"),
+        )
+    modified = replace(
+        FGNRunConfig.frozen(mode="full", seed=1701),
+        epochs=101,
+    )
+    with pytest.raises(ValueError, match="100-epoch budget"):
+        train_fgn_full(
+            config=modified,
+            catalog=None,  # type: ignore[arg-type]
+            artifacts=dummy,
+            output_directory=tmp_path / "modified-full",
+            paper0_commit="deadbeef",
+            slurm_job_id="0",
+            device=torch.device("cpu"),
+        )
+    assert not (tmp_path / "smoke").exists()
+    assert not (tmp_path / "modified-full").exists()
