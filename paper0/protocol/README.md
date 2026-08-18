@@ -25,6 +25,10 @@ The loader guard and release format will be implemented during Phase 1. No relea
 
 Development-only protocol locks that do not authorize held-out access include:
 
+- `PHASE2_C5P_O2_CONTINUATION_PROTOCOL.md`: the transparent post-O1,
+  pre-O2 decision to retain the 3/3-passing C5P representation, keep E6B as a
+  failed representation ablation, and run only the frozen C5P-H1/H2
+  teacher-forced comparison;
 - `PHASE2_MODEL_DATASET_PROTOCOL.md`: the shared, hash-locked 85604
   native-81 to model-88 conversion, boundary-state storage, training-only
   normalization, and hard integrity gates required before matched O1/O2

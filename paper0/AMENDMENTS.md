@@ -305,3 +305,29 @@ training variance even though it cannot be standardized. The dataset gate now
 also requires every fitted population standard deviation to be finite and
 strictly positive. This is a usability and fail-closed integrity condition; it
 does not alter a field, transform, split, or scientific acceptance threshold.
+
+## A014 - Select O2 eligibility within a representation, not across all representations
+
+**Status:** frozen after the complete R2 O1 result and before O2
+implementation, smoke testing, or training.
+
+The original matched protocol correctly recorded the complete six-run R2
+matrix as failed because its escalation rule required all three C5P and all
+three E6B checkpoints to pass. That result remains unchanged. Within the
+matrix, however, `C5P-dcae_l10` passed every complete O1 field, spectral,
+cross-field, positivity, and authoritative transport gate at all three frozen
+seeds, while `E6B-dcae_l10` failed at all three seeds.
+
+Paper 0 now separates robustness within a candidate from success of every
+candidate. A representation may enter O2 only when all three of its seeds pass
+the already frozen complete O1 gate; seed averaging cannot rescue failure.
+Failure of a different representation is retained as a negative ablation but
+does not veto the passing representation. This outcome-informed amendment
+therefore authorizes only the already specified `C5P-H1` and `C5P-H2`
+teacher-forced one-step comparison on 85604. E6B O2, autonomous rollout,
+stochastic models, assimilation, diagnostic ranking, and 85606 remain closed.
+
+The rationale, immutable evidence hashes, exact C5P checkpoint identities,
+unchanged O2 settings, W&B requirement, and stop/go rules are frozen in
+`protocol/PHASE2_C5P_O2_CONTINUATION_PROTOCOL.md` and
+`manifests/phase2_c5p_o2_continuation_85604.json`.

@@ -1,0 +1,243 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_after_complete_R2_O1_and_before_O2_implementation_or_training",
+  "decision_timing": {
+    "relative_to_O1": "outcome_informed_after_complete_R2_result",
+    "relative_to_O2": "prospective_before_implementation_smoke_or_training"
+  },
+  "protocol": {
+    "path": "paper0/protocol/PHASE2_C5P_O2_CONTINUATION_PROTOCOL.md",
+    "sha256": "e969311c0b8012242d44815201f135bd012aa6a9b9c6dc7ca4c6c9043df753eb"
+  },
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "authorized_scope": [
+    "C5P_H1_teacher_forced_one_step_training_85604",
+    "C5P_H1_teacher_forced_one_step_evaluation_85604",
+    "C5P_H2_teacher_forced_one_step_training_85604",
+    "C5P_H2_teacher_forced_one_step_evaluation_85604"
+  ],
+  "forbidden_scope": [
+    "E6B_O2",
+    "O3_or_longer_rollout",
+    "stochastic_model_training",
+    "diffusion",
+    "FGN",
+    "PDE_Refiner",
+    "assimilation",
+    "diagnostic_ranking",
+    "85606_access"
+  ],
+  "historical_matrix_decision": {
+    "must_remain_unchanged": true,
+    "R2_accepted": false,
+    "O2_launch_allowed": false,
+    "status": "fail",
+    "reason": "original_all_representations_conjunction_failed"
+  },
+  "evidence_locks": {
+    "complete_R2_O1_result": {
+      "path": "paper0/results/phase2_matched_o1_finalize_r2_6894863.json",
+      "sha256": "ad1cf868d9532869b918ba5892e3926bb06f9961653ac718857b42ac0a182f89",
+      "slurm_job_id": "6894863",
+      "paper0_commit": "1eb42f46c92dbddf3c35fc72a94d779692de176f"
+    },
+    "R2_checkpoint_freeze": {
+      "path": "paper0/results/phase2_o1_codec_r2_freeze_6894703.json",
+      "sha256": "6184a2596631ecfc7139c489495aa6311cd065062172535a1604dcf4bbc19be8",
+      "slurm_job_id": "6894703"
+    },
+    "original_matched_protocol": {
+      "path": "paper0/protocol/PHASE2_MATCHED_O1_O2_PROTOCOL.md",
+      "sha256": "2148880b998f71b309e553d0712170b2f25a0d5c69c204ea1a089a1407a03de4"
+    },
+    "original_matched_manifest": {
+      "path": "paper0/manifests/phase2_matched_o1_o2_85604.json",
+      "sha256": "6cbbf991e311565ab2cc2d3ae0eb4f1d2572f4c23fb804723c990d5b2401c562"
+    }
+  },
+  "continuation_selection": {
+    "unit": "representation",
+    "rule": "all_three_frozen_seeds_must_pass_complete_O1_with_no_seed_averaging",
+    "competing_representation_failure_is_a_veto": false,
+    "selected_representation": "C5P-dcae_l10",
+    "selected_seeds": [1701, 1702, 1703],
+    "selected_pass_count": 3,
+    "selected_required_count": 3,
+    "rejected_representations": {
+      "E6B-dcae_l10": {
+        "pass_count": 0,
+        "required_count": 3,
+        "disposition": "closed_negative_representation_ablation"
+      },
+      "dcae_l20_matrix": {
+        "disposition": "closed_after_original_R1_failure"
+      }
+    }
+  },
+  "dataset": {
+    "job_id": "6893525",
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+    "volume_shape": [64, 32, 88],
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "cadence_microseconds": 3.131905426352636,
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "o2_training_target_frames": [2, 432],
+    "o2_validation_target_frames": [498, 624],
+    "absolute_time_input_allowed": false,
+    "future_truth_input_allowed": false
+  },
+  "normalization": {
+    "fit_region": [0, 432],
+    "Ne": "log_offset_1e-6_then_scalar_standardization",
+    "other_fields": "identity_then_scalar_standardization",
+    "refit_allowed": false,
+    "clipping_allowed": false
+  },
+  "codec": {
+    "name": "dcae_l10",
+    "family": "c5p",
+    "trainable_during_O2": false,
+    "evaluation_mode_required": true,
+    "hidden_channels": [64, 128, 256],
+    "latent_channels": 32,
+    "strides": [[2, 2, 2], [2, 2, 2]],
+    "latent_grid": [16, 8, 22],
+    "predictor_patch": [2, 2, 1],
+    "tokens_per_frame": 704,
+    "selected_checkpoints": [
+      {
+        "seed": 1701,
+        "selected_epoch": 197,
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+        "sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
+      },
+      {
+        "seed": 1702,
+        "selected_epoch": 198,
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_2_c5p_seed_1702/selected.pt",
+        "sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836"
+      },
+      {
+        "seed": 1703,
+        "selected_epoch": 199,
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_4_c5p_seed_1703/selected.pt",
+        "sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d"
+      }
+    ]
+  },
+  "arms": {
+    "C5P-H1": {
+      "context_frames": 1,
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"]
+    },
+    "C5P-H2": {
+      "context_frames": 2,
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"]
+    }
+  },
+  "references": {
+    "persistence": true,
+    "C5P_H2_linear_extrapolation": true,
+    "toroidal_spectral_AR1": {
+      "fit_region": [0, 432],
+      "relative_ridge": 1e-8,
+      "pooled_axes": ["time", "x", "y"],
+      "one_complex_coefficient_per_channel_and_k": true
+    },
+    "validation_tuning_allowed": false
+  },
+  "model": {
+    "family": "deterministic_masked_latent_ViT_residual",
+    "hidden_channels": 512,
+    "transformer_blocks": 16,
+    "attention_heads": 4,
+    "ffn_factor": 4,
+    "qk_normalization": true,
+    "rope": true,
+    "dropout": 0.05,
+    "noise_features": 0,
+    "activation_checkpointing": true,
+    "tokens_per_frame": 704,
+    "target_slot_masked": true,
+    "context_mask_channel": true,
+    "loss_applies_to_target_only": true,
+    "prediction": "standardized_latent_increment",
+    "training_loss": "equal_channel_standardized_field_MAE_after_frozen_decode",
+    "physics_derived_loss_allowed": false,
+    "H1_H2_predictor_initialization_matched_within_seed": true,
+    "H1_H2_weights_shared": false
+  },
+  "training": {
+    "seeds": [1701, 1702, 1703],
+    "epochs": 200,
+    "targets_per_epoch": 430,
+    "microbatch": 1,
+    "gradient_accumulation": 16,
+    "effective_batch_except_final_partial_step": 16,
+    "final_partial_step_divisor": "actual_microbatch_count",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "betas": [0.9, 0.95],
+    "weight_decay": 0.0001,
+    "gradient_clip": 1.0,
+    "warmup_epochs": 10,
+    "minimum_learning_rate": 0.000002,
+    "scheduler": "linear_warmup_cosine",
+    "validation_targets": 126,
+    "validation_every_epoch": true,
+    "checkpoint_selection": "earliest_numerically_lowest_full_validation_equal_channel_data_loss",
+    "early_stopping": false
+  },
+  "o2_gate": {
+    "validation_blocks": 6,
+    "targets_per_block": 21,
+    "arm_acceptance_requires_all_three_seeds": true,
+    "seed_averaging_can_rescue_failure": false,
+    "must_beat_best_uncompressed_reference_in_aggregate_rmse_and_mae": true,
+    "minimum_common_fields_beating_persistence": 4,
+    "maximum_per_field_persistence_ratio": 1.05,
+    "spectral_power_ratio": [0.75, 1.3],
+    "forecast_truth_coherence_min": 0.8,
+    "cross_phase_degrees_max": 20.0,
+    "cross_coherence_change_max": 0.15,
+    "strict_face_transport": {
+      "relative_l2_max": 0.4,
+      "correlation_min": 0.7,
+      "weighted_sign_disagreement_max": 0.2
+    },
+    "separatrix_transport": {
+      "relative_l2_max": 0.3,
+      "absolute_normalized_bias_max": 0.15,
+      "correlation_min": 0.8,
+      "weighted_sign_disagreement_max": 0.15
+    },
+    "required_passing_blocks": 5,
+    "all_required_values_finite": true
+  },
+  "wandb": {
+    "project": "tcv-diagnostics-paper0",
+    "full_run_mode": "online",
+    "successful_initialization_required_before_training": true,
+    "smoke_external_logging_may_be_disabled": true
+  },
+  "implementation_gate": {
+    "rocky9_only": true,
+    "clean_exact_commit_required": true,
+    "full_cpu_suite_required": true,
+    "synthetic_overfit_test_required": true,
+    "gpu_smoke_max_frames": 16,
+    "gpu_smoke_max_epochs": 2,
+    "full_array_run_count": 6,
+    "array_order": {
+      "arms": ["C5P-H1", "C5P-H2"],
+      "seeds": [1701, 1702, 1703]
+    }
+  },
+  "next_stage_authorized": false
+}
