@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "scope": "phase2_matched_e6b_candidate_phi_r1",
+  "protocol_status": "frozen_after_r1_reconstruction_before_exact_candidate_phi",
+  "development_run": "85604",
+  "held_out_85606_access_allowed": false,
+  "source_reconstruction_summary": {
+    "path": "paper0/results/phase2_matched_o1_reconstruction_r1_6894345.json",
+    "sha256": "47fb0904d462d6802f44296b9105f108e59683e9f82a42c9c8f14f74a5c6a7eb",
+    "job_id": "6894345",
+    "status": "completed_pending_exact_e6b_phi_and_authoritative_transport"
+  },
+  "exact_operator_prerequisite": {
+    "path": "paper0/results/phase2_matched_e6b_truth_replay_6894325.json",
+    "sha256": "031ca578e7db5ef5a3cbd9d4688dadc244c0da542b66f82fd79e1c10d5712f27",
+    "status": "pass",
+    "coverage": [0, 624],
+    "boundary_only_zero_interior_seed": true,
+    "maximum_absolute_difference": 2.8066438062523957e-13,
+    "maximum_relative_l2": 2.0831143066739132e-14
+  },
+  "identity": {
+    "codec": "dcae_l20",
+    "family": "e6b",
+    "seeds": [1701, 1702, 1703],
+    "zperiod": 5,
+    "mode_mapping": "n=5k"
+  },
+  "operator": {
+    "implementation": "source-matched Hermes/BOUT++ compiled elliptic solve",
+    "bout_source_revision": "7d28d67c3f12c24ec281c0982e870f5369c65a6f",
+    "hermes_source_revision": "920ba829cc78cdab0dbf6101c69fecc4689bd8dd",
+    "laplacian_type": "cyclic",
+    "interior_phi_seed": "zero",
+    "radial_boundary_phi": "exact bypassed Bphi side midpoints",
+    "truth_phi_read": false,
+    "candidate_fields": ["Ne", "Pe", "Pi", "Vort"],
+    "candidate_grid": [64, 32, 81]
+  },
+  "runs": [
+    {
+      "run_index": 1,
+      "seed": 1701,
+      "reconstruction_result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_1_e6b_seed_1701/result.json",
+        "sha256": "5fde882773aab9378131231b9adfb9556e75bc67d6446a8b93e602d8b4a99f39"
+      },
+      "training_candidate": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_1_e6b_seed_1701/train_candidate_native81.h5",
+        "sha256": "a03bddb359dfff720b5ed226d7612892d905d77b64be1a8f59d4795282d070e2",
+        "frames": [0, 432]
+      },
+      "validation_candidate": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_1_e6b_seed_1701/validation_candidate_native81.h5",
+        "sha256": "660a233085ec07a7188e3ad2c255e06f452f28611fa037950982854ed99bb421",
+        "frames": [496, 624]
+      }
+    },
+    {
+      "run_index": 3,
+      "seed": 1702,
+      "reconstruction_result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_3_e6b_seed_1702/result.json",
+        "sha256": "9f108d4560d5b5dfe3fe8ee46900eefcd6710acae4ba0662540388b1ee1eca2e"
+      },
+      "training_candidate": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_3_e6b_seed_1702/train_candidate_native81.h5",
+        "sha256": "88cb4cbd0bdd3885bb66a76d3ea7d52b92453670fec513df7c872fce2a6810db",
+        "frames": [0, 432]
+      },
+      "validation_candidate": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_3_e6b_seed_1702/validation_candidate_native81.h5",
+        "sha256": "153eeed402e2043e54841dc2ee1eef048740867ca7f7c886253ed51a60cf58c9",
+        "frames": [496, 624]
+      }
+    },
+    {
+      "run_index": 5,
+      "seed": 1703,
+      "reconstruction_result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_5_e6b_seed_1703/result.json",
+        "sha256": "620d840a70c4f0ce2ed052221276758edb1d38d33294fcaf1598307f5e713133"
+      },
+      "training_candidate": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_5_e6b_seed_1703/train_candidate_native81.h5",
+        "sha256": "8aa9833e8510fc5c47590ab546b409031f28d4de21de6e1c64231230e4e89e4c",
+        "frames": [0, 432]
+      },
+      "validation_candidate": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_matched_o1_reconstruction_r1/job_6894345/task_5_e6b_seed_1703/validation_candidate_native81.h5",
+        "sha256": "b2fc25b790ba7e9c4cdeb1c3ce2f52e19820e8cc5f4d8c83f2048174000c80d9",
+        "frames": [496, 624]
+      }
+    }
+  ],
+  "output_contract": {
+    "one_exact_phi_result_per_seed_and_split": true,
+    "derived_phi_dtype": "float64",
+    "candidate_result_count": 6,
+    "complete_o1_decision_allowed": false,
+    "authoritative_transport_finalization_required_next": true,
+    "r2_launch_allowed_from_this_stage_alone": false
+  }
+}
