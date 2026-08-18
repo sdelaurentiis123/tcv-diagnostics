@@ -1,0 +1,333 @@
+{
+  "O2_accepted_arms": [],
+  "O2_scientific_evaluation_completed": false,
+  "O3_launch_allowed": false,
+  "audit_commit": "ac164eb06fe62cf91dd0be11ee3cbb5565cec639",
+  "audit_slurm_job_id": "6895637",
+  "checkpoint_choice_frozen_before_reference_or_physics_metrics": true,
+  "completed_at_utc": "2026-08-18T13:29:55.079446+00:00",
+  "development_run": "85604",
+  "full_run_manifest": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics-o2-ac164eb/paper0/manifests/phase2_c5p_o2_full_runs_85604.json",
+    "sha256": "1f49699396a8529a1ee42fd5b0d746c75c98a750c3e376f3720c23dfae4ed203"
+  },
+  "held_out_85606_read": false,
+  "run_count": 6,
+  "runs": [
+    {
+      "arm": "C5P-H1",
+      "artifact_index_sha256": "14ce9ffb3833c341707ccfc6c0b7b247bf62e0190d219c1ed66239e87f8e0cef",
+      "codec_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+        "sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d",
+        "trainable_during_O2": false
+      },
+      "config_sha256": "6a40239c002adb32bfbf8df106619b59370cea9140fb256ac76d8606f2e6e6d9",
+      "context_frames": 1,
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/final_training_state.pt",
+        "sha256": "9e435effdda1e7ee3e47194e907c331736506e82ffaaef04e00d84def255a4cb"
+      },
+      "final_validation_mae_by_channel": {
+        "Ne": 0.04593058413190609,
+        "Pe": 0.030679349960540586,
+        "Pi": 0.039332809803755954,
+        "Vi": 0.06598698317561906,
+        "phi": 0.04618590956949843
+      },
+      "history_sha256": "b713256a48fe9be95a8269527f937082c23509ad4f9091250bfd5fec8f474ada",
+      "latent_normalization_sha256": "afcb0eda5d611d58f6eb2340aa55cfecd1a231b83a6912d9db398be706296738",
+      "parameter_count": 51612800,
+      "peak_cuda_bytes": 1755410944,
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701",
+      "run_index": 0,
+      "seed": 1701,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/selected.pt",
+        "sha256": "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e"
+      },
+      "selected_epoch": 193,
+      "selected_global_step": 5238,
+      "selected_validation_equal_channel_mae": 0.04558250684515488,
+      "training_gpu_index": 0,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/result.json",
+        "sha256": "75f60b90615c2b3d894286af0b266eb32cb60dc836d5dfdca5d3763ca8be3314"
+      },
+      "wall_seconds": 8176.608056095894,
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o2full-6894980-0",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o2full-6894980-0"
+      },
+      "wandb_record_sha256": "b9c52a5902ed1be5e39b7b1166e16691ab044f539ce9cc2ac5a02439f18d13fe"
+    },
+    {
+      "arm": "C5P-H1",
+      "artifact_index_sha256": "fb9abfc4efb0d30d5f97390e38c08ee2e66093cf1c08807818fdfa1fd8e21089",
+      "codec_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_2_c5p_seed_1702/selected.pt",
+        "sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836",
+        "trainable_during_O2": false
+      },
+      "config_sha256": "fba7abd9bafb5d1ff89206d83bb950b5147721cd4fcd5f2ffea06ced5108c01e",
+      "context_frames": 1,
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_1_c5p_h1_seed_1702/final_training_state.pt",
+        "sha256": "9e966119b970529922787d5bbb82d4c64220398a571aa48dbde1155d983e01b5"
+      },
+      "final_validation_mae_by_channel": {
+        "Ne": 0.04595701431365168,
+        "Pe": 0.030638613883740673,
+        "Pi": 0.03943098093026185,
+        "Vi": 0.06620187078199558,
+        "phi": 0.04607954039494579
+      },
+      "history_sha256": "1c4a9196b168a781a54a89b59fe6d08b2310d774c41d0639e462bc7080c6c3a8",
+      "latent_normalization_sha256": "485f7dfb7a2411f91f4f9d2e956abf68df6a76d0a44f1510a458d9322ee2df69",
+      "parameter_count": 51612800,
+      "peak_cuda_bytes": 1755410944,
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_1_c5p_h1_seed_1702",
+      "run_index": 1,
+      "seed": 1702,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_1_c5p_h1_seed_1702/selected.pt",
+        "sha256": "d15c74717fad6a3ccf5b5af895e3eefb7271667f4bbde2164514a61a526bc0e8"
+      },
+      "selected_epoch": 198,
+      "selected_global_step": 5373,
+      "selected_validation_equal_channel_mae": 0.04565840546488402,
+      "training_gpu_index": 2,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_1_c5p_h1_seed_1702/result.json",
+        "sha256": "5e0a9297c619ce726c81884d0366cb58a6df435afa3763f249af2cd9b9d5dae9"
+      },
+      "wall_seconds": 8156.966368459049,
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o2full-6894980-1",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o2full-6894980-1"
+      },
+      "wandb_record_sha256": "f8445f21cc0574ec0e4e58bc3f03227ffad250895d214f10c728303b6223fe6e"
+    },
+    {
+      "arm": "C5P-H1",
+      "artifact_index_sha256": "1436d50099a24ae11b3bdd10a52aaea6ba1edf294d2b231885ed6e25e2ece4d6",
+      "codec_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_4_c5p_seed_1703/selected.pt",
+        "sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d",
+        "trainable_during_O2": false
+      },
+      "config_sha256": "2554238e86db01d7fc3c747afddd837c61cacbde01ba119bbecb398ff5d6d3bb",
+      "context_frames": 1,
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_2_c5p_h1_seed_1703/final_training_state.pt",
+        "sha256": "dc825fffc2a4902214201091f87dea24990d550560b635f7606e55446e36e9cd"
+      },
+      "final_validation_mae_by_channel": {
+        "Ne": 0.04536449322092192,
+        "Pe": 0.03042818390059393,
+        "Pi": 0.03873942134866353,
+        "Vi": 0.06614415026536641,
+        "phi": 0.04494540479992268
+      },
+      "history_sha256": "557e74a2a468034b753bd2abc8854da866236591d51332349230e56311a5253d",
+      "latent_normalization_sha256": "171afcf3de63c19677754ab999c73615a0ae5dc83d681954e6e22217edf94d05",
+      "parameter_count": 51612800,
+      "peak_cuda_bytes": 1755410944,
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_2_c5p_h1_seed_1703",
+      "run_index": 2,
+      "seed": 1703,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_2_c5p_h1_seed_1703/selected.pt",
+        "sha256": "a718b2135c7019d05541bd5ffb029ce9408df8225603cffc957c42d2ce5abae3"
+      },
+      "selected_epoch": 198,
+      "selected_global_step": 5373,
+      "selected_validation_equal_channel_mae": 0.04511471522327758,
+      "training_gpu_index": 0,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_2_c5p_h1_seed_1703/result.json",
+        "sha256": "f5141de3f58ce7d850b0dfd0f77620840cfe3d1f000f6ab6f40f9a5adc9f2ca7"
+      },
+      "wall_seconds": 8190.002562967013,
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o2full-6894980-2",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o2full-6894980-2"
+      },
+      "wandb_record_sha256": "6eb7e5f56d768ec66343ebbc7de4900193838b4f8b21693edf853e9fb691ad5a"
+    },
+    {
+      "arm": "C5P-H2",
+      "artifact_index_sha256": "34199045ce0383f4479a135fcb22d125654d4f55fe0da8b5987348cd5a1415c5",
+      "codec_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+        "sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d",
+        "trainable_during_O2": false
+      },
+      "config_sha256": "ac15c4c4323727459c1bfa631093a980c2cd6b581e3d8b969fdbc2c24f29af48",
+      "context_frames": 2,
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_3_c5p_h2_seed_1701/final_training_state.pt",
+        "sha256": "451800c929af8df8a0d9304f5e85eb6a32827c9e5838d2612eccf194700e11ba"
+      },
+      "final_validation_mae_by_channel": {
+        "Ne": 0.04589826029927063,
+        "Pe": 0.030335268268027387,
+        "Pi": 0.03913195294618601,
+        "Vi": 0.06645094509145133,
+        "phi": 0.045584056212366254
+      },
+      "history_sha256": "7f075c7b1570d27bb59b97490370510d17a4f0040901688f2f4daad414510df1",
+      "latent_normalization_sha256": "afcb0eda5d611d58f6eb2340aa55cfecd1a231b83a6912d9db398be706296738",
+      "parameter_count": 51612800,
+      "peak_cuda_bytes": 1772729856,
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_3_c5p_h2_seed_1701",
+      "run_index": 3,
+      "seed": 1701,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_3_c5p_h2_seed_1701/selected.pt",
+        "sha256": "3b971b2081901469e1f98adbe27b5cdbf3281d08a99ee28e0d8d8b1577722a84"
+      },
+      "selected_epoch": 198,
+      "selected_global_step": 5373,
+      "selected_validation_equal_channel_mae": 0.045447522504021676,
+      "training_gpu_index": 1,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_3_c5p_h2_seed_1701/result.json",
+        "sha256": "2f5cec309a50a7ffb6ba2e9be95b372a28050cb924d3bf65b45832e0e3e9e6b6"
+      },
+      "wall_seconds": 9160.90111632098,
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o2full-6894980-3",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o2full-6894980-3"
+      },
+      "wandb_record_sha256": "868aacf04ce1d7e660306a08762dcc807dbe3d9bcc7b5fc79474a58e7a4bc957"
+    },
+    {
+      "arm": "C5P-H2",
+      "artifact_index_sha256": "ade7c08cf71ac4a36bfd027ddff2d7366a072629f91609421188902ec7189d89",
+      "codec_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_2_c5p_seed_1702/selected.pt",
+        "sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836",
+        "trainable_during_O2": false
+      },
+      "config_sha256": "48a9ab35d45d6e849d33a69afacaaabf14476db29b706dcccc726ddd63539cd4",
+      "context_frames": 2,
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_4_c5p_h2_seed_1702/final_training_state.pt",
+        "sha256": "2483dd7d0683548c6230407f92c835ae0ee3c9813b15510b00f9fc29e14a3a4a"
+      },
+      "final_validation_mae_by_channel": {
+        "Ne": 0.04585810020438927,
+        "Pe": 0.0307313731775023,
+        "Pi": 0.03958862476810893,
+        "Vi": 0.06636424017675674,
+        "phi": 0.04603806322368359
+      },
+      "history_sha256": "8b838ae8f0c1b260c9da58958d6df59ccc8ea250641493673eaac6466bd90c07",
+      "latent_normalization_sha256": "485f7dfb7a2411f91f4f9d2e956abf68df6a76d0a44f1510a458d9322ee2df69",
+      "parameter_count": 51612800,
+      "peak_cuda_bytes": 1772729856,
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_4_c5p_h2_seed_1702",
+      "run_index": 4,
+      "seed": 1702,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_4_c5p_h2_seed_1702/selected.pt",
+        "sha256": "5edc3e002730eb78232967255cfab66ee860b8b3858eed007f7061341b5c36eb"
+      },
+      "selected_epoch": 199,
+      "selected_global_step": 5400,
+      "selected_validation_equal_channel_mae": 0.04571608031008816,
+      "training_gpu_index": 3,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_4_c5p_h2_seed_1702/result.json",
+        "sha256": "d5270e4ca10df81739d3e0265f7141c708a36f0392a5eef858abc8c01006523e"
+      },
+      "wall_seconds": 9080.930642670952,
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o2full-6894980-4",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o2full-6894980-4"
+      },
+      "wandb_record_sha256": "bf6f9ab3366c0e4bacda64e62723ce92f1ee6e7e428f7081d5e035f2f8610102"
+    },
+    {
+      "arm": "C5P-H2",
+      "artifact_index_sha256": "2dc4c17a9746f6f23b82e3fe81dc7bbba45139854dbdfdcae632742ba718eb54",
+      "codec_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_4_c5p_seed_1703/selected.pt",
+        "sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d",
+        "trainable_during_O2": false
+      },
+      "config_sha256": "e771badbe4f4b4dde3251149a95373aec1aedede006eea710cdcd817b0de23f6",
+      "context_frames": 2,
+      "final_training_state": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_5_c5p_h2_seed_1703/final_training_state.pt",
+        "sha256": "e821b14da0e039bdb185c7dc55a825517e81d74a1b2699d68bfac7bfc68352f4"
+      },
+      "final_validation_mae_by_channel": {
+        "Ne": 0.045938007200287206,
+        "Pe": 0.030953010885593008,
+        "Pi": 0.039391917990599726,
+        "Vi": 0.0667974203924592,
+        "phi": 0.046484678024976786
+      },
+      "history_sha256": "bc7f9cc5fb782558dce6167154ffc4c6f7337b652f7b2e5c361e7e6119337796",
+      "latent_normalization_sha256": "171afcf3de63c19677754ab999c73615a0ae5dc83d681954e6e22217edf94d05",
+      "parameter_count": 51612800,
+      "peak_cuda_bytes": 1772729856,
+      "run_directory": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_5_c5p_h2_seed_1703",
+      "run_index": 5,
+      "seed": 1703,
+      "selected_checkpoint": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_5_c5p_h2_seed_1703/selected.pt",
+        "sha256": "a70bd271117f1b0afb21258e4c5d7d4eb4919dc4a528509ccbf6ac2464622d85"
+      },
+      "selected_epoch": 191,
+      "selected_global_step": 5184,
+      "selected_validation_equal_channel_mae": 0.045906610302654485,
+      "training_gpu_index": 1,
+      "training_result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_5_c5p_h2_seed_1703/result.json",
+        "sha256": "88f9d7945e47a2c4fc438723a1d07ecc4d36939e7e2fef073510438ff45cdec8"
+      },
+      "wall_seconds": 9113.916578460019,
+      "wandb": {
+        "remote_state": "finished",
+        "run_id": "p0o2full-6894980-5",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0o2full-6894980-5"
+      },
+      "wandb_record_sha256": "f9e64a43cac570cb92ba77984d04b5086754c5b22624da7592bbf7fe75f1c7f4"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "phase2_C5P_O2_full_training_matrix_frozen",
+  "status": "completed_pending_scientific_O2_evaluation",
+  "training_artifact_index_sha256": "c0336239c94d204328e17a2b05822f210937a5e935e8857d0375664d94e2690a",
+  "training_commit": "9035bc3ce9d2351cd17586f4429af8116d43a47e",
+  "training_loss_comparison_only": {
+    "C5P-H1": {
+      "maximum": 0.04565840546488402,
+      "mean_selected_validation_equal_channel_mae": 0.04545187584443883,
+      "minimum": 0.04511471522327758,
+      "population_standard_deviation": 0.00024041368993962082,
+      "seed_count": 3
+    },
+    "C5P-H2": {
+      "maximum": 0.045906610302654485,
+      "mean_selected_validation_equal_channel_mae": 0.04569007103892144,
+      "minimum": 0.045447522504021676,
+      "population_standard_deviation": 0.0001883219996944025,
+      "seed_count": 3
+    },
+    "may_select_an_arm": false
+  },
+  "training_slurm_job_id": "6894980",
+  "training_summary": {
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/training_summary.json",
+    "sha256": "6d539b540a61d35df34d368499f7468f6931342abf512097f5dbd4774f8597df"
+  }
+}

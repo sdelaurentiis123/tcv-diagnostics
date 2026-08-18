@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_O2_scientific_evaluation",
+  "decision_timing": {
+    "after_training_checkpoint_freeze": true,
+    "before_reference_forecast_generation": true,
+    "before_physics_metric_evaluation": true,
+    "training_loss_already_observed": true,
+    "training_loss_may_select_arm": false
+  },
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "authorized_scope": [
+    "C5P_H1_teacher_forced_one_step_evaluation_85604",
+    "C5P_H2_teacher_forced_one_step_evaluation_85604",
+    "uncompressed_reference_evaluation_85604",
+    "field_spectral_cross_field_and_transport_metrics_85604"
+  ],
+  "forbidden_scope": [
+    "85606_access",
+    "O3_or_longer_rollout",
+    "diffusion",
+    "FGN",
+    "PDE_Refiner",
+    "stochastic_residual_model",
+    "assimilation",
+    "diagnostic_ranking",
+    "checkpoint_reselection",
+    "threshold_tuning"
+  ],
+  "protocol": {
+    "path": "paper0/protocol/PHASE2_O2_SCIENTIFIC_EVALUATION_PROTOCOL.md",
+    "sha256": "61200fa6224a035f6f5b129eaa27e849ad3b55bb4c3901c751c3a3fbf7b65aa4"
+  },
+  "evidence_locks": {
+    "training_checkpoint_freeze": {
+      "path": "paper0/results/phase2_o2_training_freeze_6895637.json",
+      "sha256": "dd8951e39e60d1631866ebe7af7c4d529ad543daf211233369b8fec9936ee837",
+      "slurm_job_id": "6895637",
+      "audit_commit": "ac164eb06fe62cf91dd0be11ee3cbb5565cec639"
+    },
+    "training_job": {
+      "slurm_job_id": "6894980",
+      "commit": "9035bc3ce9d2351cd17586f4429af8116d43a47e",
+      "training_summary_sha256": "6d539b540a61d35df34d368499f7468f6931342abf512097f5dbd4774f8597df",
+      "artifact_index_sha256": "c0336239c94d204328e17a2b05822f210937a5e935e8857d0375664d94e2690a"
+    },
+    "continuation_protocol": {
+      "path": "paper0/protocol/PHASE2_C5P_O2_CONTINUATION_PROTOCOL.md",
+      "sha256": "e969311c0b8012242d44815201f135bd012aa6a9b9c6dc7ca4c6c9043df753eb"
+    },
+    "original_matched_protocol": {
+      "path": "paper0/protocol/PHASE2_MATCHED_O1_O2_PROTOCOL.md",
+      "sha256": "2148880b998f71b309e553d0712170b2f25a0d5c69c204ea1a089a1407a03de4"
+    },
+    "native_truth_result": {
+      "path": "paper0/results/phase2_potential_vorticity_all_frame_6893033.json",
+      "sha256": "cc6b00b72605c6457ae3a3b24db7e90dac16989c852df92036a57272f62eddae"
+    },
+    "geometry_manifest": {
+      "path": "paper0/manifests/phase2_85604_geometry_units.json",
+      "sha256": "76426ca83f711aaf9dec79c6df4c4503c2c8eece847b78027633e93e4b2cd460"
+    }
+  },
+  "dataset": {
+    "artifact_root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+    "model_dataset_manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+    "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+    "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01",
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "volume_shape": [64, 32, 88],
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_target_frames": [498, 624],
+    "validation_blocks": [
+      [498, 519],
+      [519, 540],
+      [540, 561],
+      [561, 582],
+      [582, 603],
+      [603, 624]
+    ],
+    "targets_per_block": 21,
+    "cadence_microseconds": 3.131905426352636,
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "absolute_time_input_allowed": false,
+    "future_truth_input_allowed": false
+  },
+  "forecast_artifact": {
+    "axes": ["target_frame", "channel", "x", "y", "stored_toroidal_z"],
+    "full_shape": [126, 5, 64, 32, 88],
+    "dtype": "float32",
+    "horizon_frames": 1,
+    "ensemble_size": 1,
+    "prediction_and_truth_scoring_separate": true,
+    "context_loader_reads_target": false,
+    "target_truth_read_during_generation_allowed": false
+  },
+  "checkpoints": [
+    {
+      "run_index": 0,
+      "arm": "C5P-H1",
+      "context_frames": 1,
+      "seed": 1701,
+      "selected_epoch": 193,
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/selected.pt",
+      "sha256": "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e",
+      "codec_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+      "codec_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
+    },
+    {
+      "run_index": 1,
+      "arm": "C5P-H1",
+      "context_frames": 1,
+      "seed": 1702,
+      "selected_epoch": 198,
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_1_c5p_h1_seed_1702/selected.pt",
+      "sha256": "d15c74717fad6a3ccf5b5af895e3eefb7271667f4bbde2164514a61a526bc0e8",
+      "codec_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_2_c5p_seed_1702/selected.pt",
+      "codec_sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836"
+    },
+    {
+      "run_index": 2,
+      "arm": "C5P-H1",
+      "context_frames": 1,
+      "seed": 1703,
+      "selected_epoch": 198,
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_2_c5p_h1_seed_1703/selected.pt",
+      "sha256": "a718b2135c7019d05541bd5ffb029ce9408df8225603cffc957c42d2ce5abae3",
+      "codec_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_4_c5p_seed_1703/selected.pt",
+      "codec_sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d"
+    },
+    {
+      "run_index": 3,
+      "arm": "C5P-H2",
+      "context_frames": 2,
+      "seed": 1701,
+      "selected_epoch": 198,
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_3_c5p_h2_seed_1701/selected.pt",
+      "sha256": "3b971b2081901469e1f98adbe27b5cdbf3281d08a99ee28e0d8d8b1577722a84",
+      "codec_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+      "codec_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
+    },
+    {
+      "run_index": 4,
+      "arm": "C5P-H2",
+      "context_frames": 2,
+      "seed": 1702,
+      "selected_epoch": 199,
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_4_c5p_h2_seed_1702/selected.pt",
+      "sha256": "5edc3e002730eb78232967255cfab66ee860b8b3858eed007f7061341b5c36eb",
+      "codec_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_2_c5p_seed_1702/selected.pt",
+      "codec_sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836"
+    },
+    {
+      "run_index": 5,
+      "arm": "C5P-H2",
+      "context_frames": 2,
+      "seed": 1703,
+      "selected_epoch": 191,
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_5_c5p_h2_seed_1703/selected.pt",
+      "sha256": "a70bd271117f1b0afb21258e4c5d7d4eb4919dc4a528509ccbf6ac2464622d85",
+      "codec_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_4_c5p_seed_1703/selected.pt",
+      "codec_sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d"
+    }
+  ],
+  "references": {
+    "persistence": {
+      "applicable_arms": ["C5P-H1", "C5P-H2"],
+      "context_frames": 1
+    },
+    "spectral_ar1": {
+      "applicable_arms": ["C5P-H1", "C5P-H2"],
+      "context_frames": 1,
+      "fit_frames": [0, 432],
+      "pair_count": 431,
+      "relative_ridge": 1e-8,
+      "pooled_axes": ["training_time", "x", "y"],
+      "validation_tuning_allowed": false
+    },
+    "linear_extrapolation": {
+      "applicable_arms": ["C5P-H2"],
+      "context_frames": 2
+    },
+    "best_reference_selected_separately_for": ["aggregate_RMSE", "aggregate_MAE"]
+  },
+  "metrics": {
+    "field_coordinates": "training_only_standardized",
+    "aggregate_equal_channel": true,
+    "anomaly_definition": "standardized_field_relative_to_training_only_normalization_mean",
+    "anomaly_correlation_used_for_gate": false,
+    "spectral_coordinates": "physical",
+    "stored_mode_bands": [[1, 3], [4, 5], [6, 7]],
+    "full_torus_mode_bands": [[5, 15], [20, 25], [30, 35]],
+    "training_material_fraction_min": 0.01,
+    "cross_pairs": [["Ne", "phi"], ["Pe", "phi"], ["Pi", "phi"]],
+    "one_step_mode_lifetime": {
+      "definition": "negative_inverse_log_of_normalized_complex_lag_correlation_magnitude",
+      "finite_only_when_magnitude_strictly_between_zero_and_one": true,
+      "descriptive_only": true
+    },
+    "transport": {
+      "truth_grid_z": 81,
+      "forecast_grid_z": 88,
+      "resampling": "unwindowed_periodic_scipy_signal_resample_float32",
+      "state": ["Ne", "Pe", "Pi", "phi"],
+      "quantities": ["particle", "electron_internal_energy", "ion_internal_energy", "total_internal_energy"],
+      "operator_applied_before_reduction": true
+    }
+  },
+  "gate": {
+    "aggregate_must_beat_best_applicable_reference_rmse_and_mae": true,
+    "minimum_fields_beating_persistence": 4,
+    "maximum_field_persistence_rmse_ratio": 1.05,
+    "spectral_power_ratio": [0.75, 1.3],
+    "forecast_truth_coherence_min": 0.8,
+    "cross_phase_error_degrees_max": 20.0,
+    "cross_coherence_change_max": 0.15,
+    "strict_faces": {
+      "relative_l2_max": 0.4,
+      "pearson_correlation_min": 0.7,
+      "weighted_sign_disagreement_max": 0.2
+    },
+    "separatrix": {
+      "relative_l2_max": 0.3,
+      "absolute_normalized_bias_max": 0.15,
+      "pearson_correlation_min": 0.8,
+      "weighted_sign_disagreement_max": 0.15
+    },
+    "required_passing_blocks_per_component": 5,
+    "validation_block_count": 6,
+    "all_required_values_finite": true,
+    "arm_acceptance_requires_all_three_seeds": true,
+    "seed_averaging_can_rescue_failure": false
+  },
+  "execution": {
+    "rocky9_only": true,
+    "clean_exact_commit_required": true,
+    "full_cpu_suite_required": true,
+    "smoke_targets": [498, 502],
+    "smoke_scientific_authority": false,
+    "full_target_count": 126,
+    "forecast_artifacts_outside_git": true,
+    "compact_results_and_hashes_tracked": true
+  },
+  "next_stage": {
+    "O2_scientific_evaluation_completed": false,
+    "accepted_arms": [],
+    "new_O3_protocol_may_be_frozen": false,
+    "O3_launch_allowed": false,
+    "stochastic_model_authorized": false,
+    "held_out_85606_access_allowed": false
+  }
+}
