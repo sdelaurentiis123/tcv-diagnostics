@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze six completed R1 codec runs before scientific O1 evaluation."""
+"""Freeze six completed codec runs before scientific O1 evaluation."""
 
 from __future__ import annotations
 
@@ -40,6 +40,12 @@ ARTIFACTS = (
     "final_training_state.pt",
     "wandb.json",
 )
+STAGE_CODECS = {"R1": "dcae_l20", "R2": "dcae_l10"}
+
+
+def _validate_stage_codec(stage: str, codec: str) -> None:
+    if STAGE_CODECS.get(stage) != codec:
+        raise ValueError(f"unsupported stage/codec pairing: {stage}/{codec}")
 
 
 def parse_args() -> argparse.Namespace:
@@ -50,6 +56,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--audit-commit", required=True)
     parser.add_argument("--audit-slurm-job-id", required=True)
+    parser.add_argument("--stage", choices=("R1", "R2"), default="R1")
+    parser.add_argument(
+        "--codec", choices=("dcae_l20", "dcae_l10"), default="dcae_l20"
+    )
     return parser.parse_args()
 
 
@@ -84,7 +94,10 @@ def freeze_run(
     seed: int,
     training_commit: str,
     training_slurm_job_id: str,
+    stage: str = "R1",
+    codec: str = "dcae_l20",
 ) -> dict[str, Any]:
+    _validate_stage_codec(stage, codec)
     expected_name = f"task_{run_index}_{family}_seed_{seed}"
     directory = Path(run_dir).resolve(strict=True)
     assert_development_path(directory)
@@ -97,7 +110,7 @@ def freeze_run(
         json.dumps(
             CodecRunConfig.frozen(
                 mode="full",
-                codec="dcae_l20",
+                codec=codec,
                 family=family,
                 seed=seed,
             ).to_record()
@@ -144,7 +157,7 @@ def freeze_run(
         if indexed[paths[name].resolve(strict=True)] != hashes[name]:
             raise ValueError(f"codec run {run_index} indexed {name} hash differs")
 
-    expected_run_id = f"p0o1r1-{training_slurm_job_id}-{run_index}"
+    expected_run_id = f"p0o1{stage.lower()}-{training_slurm_job_id}-{run_index}"
     if (
         tracking.get("required") is not True
         or tracking.get("mode") != "online"
@@ -189,6 +202,7 @@ def freeze_run(
 
 def main() -> int:
     args = parse_args()
+    _validate_stage_codec(args.stage, args.codec)
     for path in (args.job_root, args.output):
         assert_development_path(path)
     root = args.job_root.resolve(strict=True)
@@ -197,7 +211,7 @@ def main() -> int:
     summary_path = root / "training_summary.json"
     summary = load_strict_json(summary_path)
     if (
-        summary.get("scope") != "phase2_O1_R1_full_codec_training"
+        summary.get("scope") != f"phase2_O1_{args.stage}_full_codec_training"
         or summary.get("paper0_commit") != args.training_commit
         or str(summary.get("slurm_job_id")) != args.training_slurm_job_id
         or summary.get("development_run") != "85604"
@@ -207,6 +221,8 @@ def main() -> int:
         or summary.get("O1_scientific_evaluation_completed") is not False
     ):
         raise ValueError("training matrix summary contract differs")
+    if summary.get("codec") not in (None, args.codec):
+        raise ValueError("training matrix summary codec differs")
     runs = [
         freeze_run(
             root / f"task_{index}_{family}_seed_{seed}",
@@ -215,17 +231,21 @@ def main() -> int:
             seed=seed,
             training_commit=args.training_commit,
             training_slurm_job_id=args.training_slurm_job_id,
+            stage=args.stage,
+            codec=args.codec,
         )
         for index, family, seed in RUNS
     ]
     result = {
         "schema_version": 1,
-        "scope": "phase2_O1_R1_training_matrix_frozen",
+        "scope": f"phase2_O1_{args.stage}_training_matrix_frozen",
         "status": "completed_pending_scientific_O1_evaluation",
         "development_run": "85604",
         "held_out_85606_read": False,
         "training_commit": args.training_commit,
         "training_slurm_job_id": args.training_slurm_job_id,
+        "stage": args.stage,
+        "codec": args.codec,
         "audit_commit": args.audit_commit,
         "audit_slurm_job_id": args.audit_slurm_job_id,
         "training_summary": {
@@ -236,7 +256,7 @@ def main() -> int:
         "run_count": len(runs),
         "checkpoint_choice_frozen_before_physics_metrics": True,
         "O1_scientific_evaluation_completed": False,
-        "R1_accepted": False,
+        f"{args.stage}_accepted": False,
         "completed_at_utc": datetime.now(timezone.utc).isoformat(),
     }
     output = args.output.resolve(strict=False)

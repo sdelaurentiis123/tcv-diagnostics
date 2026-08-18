@@ -18,11 +18,17 @@ MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
 
-def _write_run(root: Path) -> Path:
+def _write_run(
+    root: Path,
+    *,
+    stage: str = "R1",
+    codec: str = "dcae_l20",
+    training_slurm_job_id: str = "6893802",
+) -> Path:
     run = root / "task_0_c5p_seed_1701"
     run.mkdir()
     config = CodecRunConfig.frozen(
-        mode="full", codec="dcae_l20", family="c5p", seed=1701
+        mode="full", codec=codec, family="c5p", seed=1701
     ).to_record()
     (run / "config.json").write_text(json.dumps(config), encoding="utf-8")
     history = []
@@ -67,7 +73,9 @@ def _write_run(root: Path) -> Path:
         "remote_presence_verified_after_finish": True,
         "remote_state_after_finish": "finished",
         "local_artifacts_are_scientific_authority": True,
-        "spec": {"run_id": "p0o1r1-6893802-0"},
+        "spec": {
+            "run_id": f"p0o1{stage.lower()}-{training_slurm_job_id}-0"
+        },
         "run_url": "https://wandb.invalid/run",
     }
     (run / "wandb.json").write_text(json.dumps(wandb), encoding="utf-8")
@@ -123,3 +131,45 @@ def test_freeze_run_refuses_a_late_nonminimal_checkpoint() -> None:
             assert "checkpoint selection" in str(error)
         else:
             raise AssertionError("a nonminimal selected epoch was accepted")
+
+
+def test_freeze_run_supports_explicit_r2_l10_contract() -> None:
+    with tempfile.TemporaryDirectory() as temporary:
+        run = _write_run(
+            Path(temporary),
+            stage="R2",
+            codec="dcae_l10",
+            training_slurm_job_id="6894463",
+        )
+        result = MODULE.freeze_run(
+            run,
+            run_index=0,
+            family="c5p",
+            seed=1701,
+            training_commit="training-commit",
+            training_slurm_job_id="6894463",
+            stage="R2",
+            codec="dcae_l10",
+        )
+        assert result["selected_epoch"] == 199
+        assert result["wandb"]["run_id"] == "p0o1r2-6894463-0"
+
+
+def test_freeze_run_refuses_crossed_stage_and_codec() -> None:
+    with tempfile.TemporaryDirectory() as temporary:
+        run = _write_run(Path(temporary))
+        try:
+            MODULE.freeze_run(
+                run,
+                run_index=0,
+                family="c5p",
+                seed=1701,
+                training_commit="training-commit",
+                training_slurm_job_id="6893802",
+                stage="R2",
+                codec="dcae_l20",
+            )
+        except ValueError as error:
+            assert "stage/codec pairing" in str(error)
+        else:
+            raise AssertionError("a crossed R2/L20 contract was accepted")

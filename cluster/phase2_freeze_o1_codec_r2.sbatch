@@ -1,7 +1,7 @@
 #!/bin/bash
-# Freeze all six completed R1 training artifacts before physics evaluation.
+# Freeze all six completed R2 training artifacts before physics evaluation.
 # CPU-only; this job reads hashes and metadata but performs no model inference.
-#SBATCH --job-name=p2_o1_freeze
+#SBATCH --job-name=p2_o1_frz_r2
 #SBATCH --partition=gen
 #SBATCH --qos=gen
 #SBATCH --nodes=1
@@ -10,18 +10,18 @@
 #SBATCH --mem=16G
 #SBATCH --time=00:10:00
 #SBATCH --no-requeue
-#SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_o1_freeze_%j.log
+#SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase2_o1_freeze_r2_%j.log
 
 set -euo pipefail
 
 : "${PAPER0_EXPECTED_COMMIT:?submit with PAPER0_EXPECTED_COMMIT set}"
 
-readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
+readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics-eval-8a6e20d}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
-readonly TRAINING_COMMIT="a5adc57499239702a8b28b661357b3dcfcbaa167"
-readonly TRAINING_JOB_ID="6893802"
-readonly TRAINING_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_r1/job_${TRAINING_JOB_ID}"
-readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_r1_freeze"
+readonly TRAINING_COMMIT="9ba2a59ee94708a64e0255b25c29653740389fbe"
+readonly TRAINING_JOB_ID="6894463"
+readonly TRAINING_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_${TRAINING_JOB_ID}"
+readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_r2_freeze"
 readonly OUTDIR="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly RESULT="${OUTDIR}/frozen_training_matrix.json"
 readonly FREEZER="${PAPER0_ROOT}/paper0/tools/freeze_o1_codec_training_matrix.py"
@@ -76,8 +76,10 @@ export PYTHONPATH="${PAPER0_ROOT}/src"
   --training-slurm-job-id "${TRAINING_JOB_ID}" \
   --output "${RESULT}" \
   --audit-commit "${PAPER0_COMMIT}" \
-  --audit-slurm-job-id "${SLURM_JOB_ID}"
+  --audit-slurm-job-id "${SLURM_JOB_ID}" \
+  --stage R2 \
+  --codec dcae_l10
 
 "${PYTHON}" -m json.tool "${RESULT}" >/dev/null
 sha256sum "${OUTDIR}/slurm_job.txt" "${RESULT}" > "${OUTDIR}/artifact_sha256.txt"
-echo "Frozen R1 training matrix: ${RESULT}"
+echo "Frozen R2 training matrix: ${RESULT}"
