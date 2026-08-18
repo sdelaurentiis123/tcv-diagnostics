@@ -331,3 +331,23 @@ The rationale, immutable evidence hashes, exact C5P checkpoint identities,
 unchanged O2 settings, W&B requirement, and stop/go rules are frozen in
 `protocol/PHASE2_C5P_O2_CONTINUATION_PROTOCOL.md` and
 `manifests/phase2_c5p_o2_continuation_85604.json`.
+
+## A015 - Move the unstarted full O2 job from H100 to H200
+
+**Status:** frozen after the bounded H200 smoke and before any full O2
+optimizer step.
+
+Full O2 job `6894979` was submitted for four H100 GPUs but remained pending
+with runtime `00:00:00`. Queue inspection showed that nearly every available
+H100 node was fragmented by a one-GPU job, while multiple Rocky 9 H200 nodes
+were reserved and idle. The pending H100 job was placed on user hold before
+preparing its replacement, preventing duplicate execution.
+
+The full six-run matrix therefore uses four H200 GPUs on one nonpreemptible
+`gpuxl` node. The same implementation already passed the bounded Rocky 9 H200
+smoke in job `6894971`. This is an execution-only revision: data, split,
+fields, codecs, model weights at initialization, seeds, loss, optimizer,
+schedule, training budget, W&B policy, checkpoint selection, evaluation
+metrics, acceptance thresholds, and claims boundaries are unchanged. All six
+runs remain on one accelerator type, and the exact device identities and
+compute usage are recorded for fairness.

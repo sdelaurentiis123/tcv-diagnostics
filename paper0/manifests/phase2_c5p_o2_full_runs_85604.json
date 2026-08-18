@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "frozen_after_passing_Rocky9_GPU_smoke_before_full_O2_training",
+  "status": "frozen_execution_revision_after_zero_compute_H100_hold_before_full_O2_training",
   "development_run": "85604",
   "sequestered_run": "85606",
   "held_out_85606_access_allowed": false,
@@ -133,7 +133,14 @@
     "logical_order": [0, 1, 2, 3, 4, 5],
     "gpu_wave_0": [0, 3, 1, 4],
     "gpu_wave_1": [2, 5],
-    "accelerators": "four Rocky 9 H100 GPUs on one nonpreemptible gpuxl node",
+    "accelerators": "four Rocky 9 H200 GPUs on one nonpreemptible gpuxl node",
+    "execution_only_revision": {
+      "reason": "H100 nodes were fragmented by one-GPU jobs while multiple Rocky 9 H200 nodes were reserved and idle",
+      "scientific_protocol_changed": false,
+      "superseded_job_id": "6894979",
+      "superseded_job_runtime": "00:00:00",
+      "superseded_job_state_at_revision": "PENDING_USER_HOLD"
+    },
     "walltime": "12:00:00"
   },
   "post_training": {

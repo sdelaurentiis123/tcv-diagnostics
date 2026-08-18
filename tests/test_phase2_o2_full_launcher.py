@@ -34,14 +34,14 @@ LOCKED = (
 )
 
 
-def test_full_launcher_is_nonpreemptible_four_h100_rocky9_bash() -> None:
+def test_full_launcher_is_nonpreemptible_four_h200_rocky9_bash() -> None:
     subprocess.run(["bash", "-n", str(LAUNCHER)], check=True)
     text = LAUNCHER.read_text(encoding="utf-8")
     for required in (
         "#SBATCH --partition=gpuxl",
         "#SBATCH --qos=gen",
-        "#SBATCH --gres=gpu:h100:4",
-        "#SBATCH --constraint=h100",
+        "#SBATCH --gres=gpu:h200:4",
+        "#SBATCH --constraint=h200",
         "#SBATCH --time=12:00:00",
         "#SBATCH --no-requeue",
         '"${VERSION_ID%%.*}" != "9"',
@@ -55,11 +55,11 @@ def test_full_launcher_is_nonpreemptible_four_h100_rocky9_bash() -> None:
 
 def test_full_manifest_is_frozen_six_run_c5p_matrix() -> None:
     assert hashlib.sha256(MANIFEST.read_bytes()).hexdigest() == (
-        "fd7d601e592eb05fb391fea03dbe6aad4b4d1dd8b4a2ecad4156802a64a19aac"
+        "1f49699396a8529a1ee42fd5b0d746c75c98a750c3e376f3720c23dfae4ed203"
     )
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     assert manifest["status"] == (
-        "frozen_after_passing_Rocky9_GPU_smoke_before_full_O2_training"
+        "frozen_execution_revision_after_zero_compute_H100_hold_before_full_O2_training"
     )
     assert manifest["development_run"] == "85604"
     assert manifest["held_out_85606_access_allowed"] is False
@@ -85,6 +85,10 @@ def test_full_manifest_is_frozen_six_run_c5p_matrix() -> None:
     ]
     assert manifest["execution"]["gpu_wave_0"] == [0, 3, 1, 4]
     assert manifest["execution"]["gpu_wave_1"] == [2, 5]
+    revision = manifest["execution"]["execution_only_revision"]
+    assert revision["scientific_protocol_changed"] is False
+    assert revision["superseded_job_id"] == "6894979"
+    assert revision["superseded_job_runtime"] == "00:00:00"
 
 
 def test_full_launcher_matches_frozen_task_order_and_budget() -> None:

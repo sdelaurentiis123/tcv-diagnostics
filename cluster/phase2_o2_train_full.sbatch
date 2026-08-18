@@ -1,11 +1,11 @@
 #!/bin/bash
-# Six frozen C5P O2 one-step training runs on one nonpreemptible H100 node.
+# Six frozen C5P O2 one-step training runs on one nonpreemptible H200 node.
 # Training remains data-only; a separate committed evaluator decides O2.
 #SBATCH --job-name=p2_o2_full
 #SBATCH --partition=gpuxl
 #SBATCH --qos=gen
-#SBATCH --gres=gpu:h100:4
-#SBATCH --constraint=h100
+#SBATCH --gres=gpu:h200:4
+#SBATCH --constraint=h200
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
@@ -78,15 +78,15 @@ if [[ "${VERSION_ID%%.*}" != "9" ]]; then
 fi
 nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total --format=csv,noheader
 if [[ "$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)" -ne 4 ]]; then
-  echo "Exactly four allocated H100 GPUs are required" >&2
+  echo "Exactly four allocated H200 GPUs are required" >&2
   exit 2
 fi
-if nvidia-smi --query-gpu=name --format=csv,noheader | grep -vq "H100"; then
-  echo "A non-H100 accelerator was allocated" >&2
+if nvidia-smi --query-gpu=name --format=csv,noheader | grep -vq "H200"; then
+  echo "A non-H200 accelerator was allocated" >&2
   exit 2
 fi
 
-check_sha256 "fd7d601e592eb05fb391fea03dbe6aad4b4d1dd8b4a2ecad4156802a64a19aac" "${FULL_RUN_MANIFEST}"
+check_sha256 "1f49699396a8529a1ee42fd5b0d746c75c98a750c3e376f3720c23dfae4ed203" "${FULL_RUN_MANIFEST}"
 check_sha256 "7ad5cd207b2b2c69fb82a2b22f65d55e81fad941a508f977966485611ba078d6" "${CONTINUATION_MANIFEST}"
 check_sha256 "e969311c0b8012242d44815201f135bd012aa6a9b9c6dc7ca4c6c9043df753eb" "${CONTINUATION_PROTOCOL}"
 check_sha256 "a812a5642c5d3d9dedc25711af6d92994bcebf5432d9dd7a99911fc1f5e53451" "${SMOKE_RESULT}"
@@ -150,7 +150,7 @@ expected = [
     (4, "C5P-H2", 2, 1702),
     (5, "C5P-H2", 2, 1703),
 ]
-if manifest["status"] != "frozen_after_passing_Rocky9_GPU_smoke_before_full_O2_training":
+if manifest["status"] != "frozen_execution_revision_after_zero_compute_H100_hold_before_full_O2_training":
     raise RuntimeError("full O2 run manifest status differs")
 if manifest["development_run"] != "85604" or manifest["held_out_85606_access_allowed"] is not False:
     raise RuntimeError("full O2 run manifest data scope differs")
