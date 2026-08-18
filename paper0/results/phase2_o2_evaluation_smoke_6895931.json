@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "scope": "phase2_C5P_O2_scientific_evaluator_Rocky9_smoke_audit",
+  "status": "passed",
+  "scientific_authority": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "guard_frames_read": false,
+  "paper0_commit": "6fb0c1455dac0dc7b75953c2fc6f091788bbc7a5",
+  "slurm_job_id": "6895931",
+  "compute": {
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 116,
+    "allocated_cpus": 16,
+    "requested_memory": "128G",
+    "batch_max_rss_kib": 9157244,
+    "node": "workergpu217",
+    "operating_system": "Rocky Linux 9.8",
+    "accelerator": "NVIDIA H100",
+    "accelerator_memory_mib": 95830,
+    "python": "3.11.11",
+    "torch": "2.5.1+cu124",
+    "cuda": "12.4"
+  },
+  "authorized_work": {
+    "mode": "smoke",
+    "target_frames": [498, 502],
+    "target_count": 4,
+    "reference_names": [
+      "linear_extrapolation",
+      "persistence",
+      "spectral_ar1"
+    ],
+    "candidate": {
+      "arm": "C5P-H1",
+      "seed": 1701,
+      "checkpoint_sha256": "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e",
+      "codec_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
+    },
+    "forecast_truth_generation_separated": true,
+    "target_truth_read_during_forecast_generation": false,
+    "native_geometry_aware_transport_scored": true,
+    "physics_derived_training_loss_used": false
+  },
+  "verification": {
+    "complete_Rocky9_CPU_suite": {
+      "passed": true,
+      "pytest_passed": 610,
+      "pytest_skipped": 1,
+      "subtests_passed": 29,
+      "wall_seconds": 22.53
+    },
+    "all_reference_artifact_hashes_reverified": true,
+    "all_candidate_artifact_hashes_reverified": true,
+    "all_top_level_artifact_hashes_reverified": true,
+    "reference_inventory_exact": true,
+    "candidate_checkpoint_and_codec_match_freeze": true,
+    "wandb_online_and_finished": true
+  },
+  "descriptive_only": {
+    "candidate_aggregate_equal_channel_RMSE_standardized_on_four_frames": 0.07393388613027543,
+    "may_be_used_for_scientific_model_acceptance": false,
+    "reason": "The smoke uses only frames 498 through 501 and never evaluates the frozen O2 gate."
+  },
+  "external_artifacts": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931",
+    "smoke_summary": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/smoke_summary.json",
+      "sha256": "48ad15865133e6321ffe509dcb1b91e53dc6a78b55838b0436d53a7a9abc5b28"
+    },
+    "artifact_index": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/artifact_sha256.txt",
+      "sha256": "324eaf4e33936a75d6e5d3cb92f05650b7d098d09d38a33af16e6bdf488072ee"
+    },
+    "references_result": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/references/result.json",
+      "sha256": "cea99550b8d82f59960e10167e322325da6bfe93b71196038fc55487eb802ec6"
+    },
+    "references_artifact_index": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/references/artifact_sha256.txt",
+      "sha256": "fa6ba030d88741692186c597739fd6535bb5c355803ae6d192c5c21c036c3209"
+    },
+    "candidate_result": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/c5p_h1_seed_1701/result.json",
+      "sha256": "194dd6d5a9ebdf9e61a0b88658c3a842463694bb267c972bf1cf26d9fe0693cf"
+    },
+    "candidate_artifact_index": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/c5p_h1_seed_1701/artifact_sha256.txt",
+      "sha256": "041343586ffa6b649c21f9b11da7488f12069919bfb435223729c85284b8237b"
+    },
+    "slurm_job": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/slurm_job.txt",
+      "sha256": "62a21086fd82b2363d22f5c8c4226666c208d1b31112762997d2341b8da3d65a"
+    },
+    "environment": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/environment.txt",
+      "sha256": "507c4838820a81689025d571e4bff8a78bc34397a355b3754826db151714026c"
+    },
+    "test_output": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/test_output.txt",
+      "sha256": "d31a3ca19cb23bdab4275e024f6fb06b56afe1e2b49bba04d39f43c4caeb4b6f"
+    },
+    "job_log": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/job.log",
+      "sha256": "104b2f8a0bf47c1ebbbc12c8f8733cb5b7c784d98778c9cbc0503920f1b75b4d"
+    },
+    "wandb_record": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o2_evaluation_smoke/job_6895931/wandb.json",
+      "sha256": "04c080668242d48988d12381ce3edfc48e8ae8d1f4d7196df371d8bcbc098beb"
+    }
+  },
+  "wandb": {
+    "mode": "online",
+    "remote_state_after_finish": "finished",
+    "entity": "sdelaurentiis123-columbia-university",
+    "project": "tcv-diagnostics-paper0",
+    "group": "o2-scientific-evaluation-smoke",
+    "run_id": "p0-o2-eval-smoke-6895931",
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0-o2-eval-smoke-6895931"
+  },
+  "decision": {
+    "smoke_passed": true,
+    "O2_scientific_gate_evaluated": false,
+    "O2_seed_accepted": false,
+    "full_85604_O2_evaluation_may_be_launched": true,
+    "O3_launch_allowed": false,
+    "stochastic_model_authorized": false,
+    "held_out_85606_access_allowed": false
+  }
+}
