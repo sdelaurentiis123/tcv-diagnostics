@@ -871,3 +871,29 @@ The exact interpretation is `paper0/PHASE3_B3_SMOKE_READOUT.md`.
 This accepts implementation mechanics only. The four-frame, two-epoch loss
 is explicitly non-scientific: no B3 scientific metric, 85606 access,
 autonomous rollout, assimilation, or diagnostic result exists yet.
+
+### Phase 3 B3 full-training and evaluation authorization
+
+After the bounded smoke passed, the one-seed 85604-only training and
+scientific-development evaluation contract was frozen independently in
+`paper0/protocol/PHASE3_B3_FULL_EVALUATION_PROTOCOL.md` and
+`paper0/manifests/phase3_b3_full_evaluation_85604.json`. The protocol has
+SHA-256 `db717c5605ad9653d2b051ec13254b43bf230f514cb173d295e95d3c68af8030`;
+the manifest has SHA-256
+`2f1f83b3c4ce50a789d26ed6877142400b5f9f8e994b3e6bc92f997840832ad2`.
+They were committed before a full B3 entrypoint, forecast writer, B3 scorer,
+or full-run launcher was implemented.
+
+The authorized model is only B3-FGN-H1 seed 1701. It retains the previously
+declared 100-epoch, 2,700-step M2 fair-CRPS budget and selects the earliest
+minimum on the complete fixed-noise 126-target validation calculation. A
+separate PCG64 seed-31032 M32 noise bank is frozen for scientific evaluation,
+so forecast scoring does not reuse the checkpoint-selection draws. The exact
+deterministic H1 seed-1701 parent is the primary comparator; the completed B2
+H2 seed-1701 ensemble is secondary context only.
+
+The one-seed gate inherits B2's absolute field-calibration, material-spectrum,
+cross-field, member-wise transport, block-robustness, and M16-versus-M32
+stability thresholds. Improving marginal CRPS alone cannot pass. A complete
+pass authorizes only writing a later seed-replication protocol; it does not
+authorize O3, 85606, assimilation, diagnostic ranking, or another B3 seed.

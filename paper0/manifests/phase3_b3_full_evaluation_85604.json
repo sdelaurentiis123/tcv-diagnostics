@@ -1,0 +1,503 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_after_passing_B3_smoke_before_full_training_or_scientific_evaluation_implementation",
+  "decision_timing": "after_completed_B3_seed1701_smoke_before_full_B3_training_checkpoint_selection_or_scientific_ensemble_generation",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "full_training_authorized": true,
+  "probabilistic_evaluation_authorized": true,
+  "authorized_scope": [
+    "B3_FGN_H1_seed1701_full_training_85604",
+    "B3_FGN_H1_seed1701_one_step_M32_generation_85604_validation",
+    "B3_FGN_H1_seed1701_probabilistic_scientific_evaluation_85604_validation",
+    "B3_full_trainer_and_evaluator_CPU_tests",
+    "B3_four_target_evaluator_GPU_smoke"
+  ],
+  "forbidden_scope": [
+    "85606_access",
+    "B3_seeds_1702_or_1703_training",
+    "B3_architecture_or_noise_ablation",
+    "B3_hyperparameter_tuning_after_result",
+    "O3_or_longer_rollout",
+    "PDE_Refiner_training",
+    "joint_residual_training",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering_or_control",
+    "physics_derived_training_loss",
+    "checkpoint_selection_by_scientific_metric",
+    "member_posthoc_calibration"
+  ],
+  "protocol": {
+    "path": "paper0/protocol/PHASE3_B3_FULL_EVALUATION_PROTOCOL.md",
+    "sha256": "db717c5605ad9653d2b051ec13254b43bf230f514cb173d295e95d3c68af8030"
+  },
+  "implementation_protocol": {
+    "path": "paper0/protocol/PHASE3_B3_FGN_PROTOCOL.md",
+    "sha256": "c31d24d843050c5708440018217e48ca66f5c3a3f4ee0ddb110a3287a73292d1"
+  },
+  "evidence_locks": {
+    "B3_smoke": {
+      "path": "paper0/results/phase3_b3_fgn_gpu_smoke_6898604.json",
+      "sha256": "dbac54c033917abbfec7e380d96a0c9be93667ae58240b4403400b57c76e2808",
+      "job_id": "6898604",
+      "paper0_commit": "fb89828f6837ce0568fe7fc565b931810da68262",
+      "status": "passed_bounded_implementation_gate",
+      "scientific_result": false
+    },
+    "deterministic_O2_result": {
+      "path": "paper0/results/phase2_o2_evaluation_full_6896117.json",
+      "sha256": "251820a6f81d97ffdb046eba7a23cd12505c1179e600e7942231de2fd1feeacb",
+      "job_id": "6896117"
+    },
+    "amended_B2_result": {
+      "path": "paper0/results/phase3_b2_event_eligibility_amendment_6898348.json",
+      "sha256": "15bcfc0b4c9cec2a858848e1d8fbc0fdf2da6f8a3bc6fd001e5c233abae7b397",
+      "job_id": "6898348",
+      "status": "completed_failed_amended_one_step_gate"
+    },
+    "model_dataset": {
+      "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+      "job_id": "6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    },
+    "geometry": {
+      "path": "paper0/results/phase2_geometry_units_6891709.json"
+    }
+  },
+  "data": {
+    "fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "phi",
+      "Vi"
+    ],
+    "input_channels": "physically_valid_complete_C5P_state",
+    "training_frames": [
+      0,
+      432
+    ],
+    "training_targets": [
+      2,
+      432
+    ],
+    "guard_frames": [
+      432,
+      496
+    ],
+    "validation_frames": [
+      496,
+      624
+    ],
+    "validation_targets": [
+      498,
+      624
+    ],
+    "validation_blocks": [
+      [498, 519],
+      [519, 540],
+      [540, 561],
+      [561, 582],
+      [582, 603],
+      [603, 624]
+    ],
+    "cadence_microseconds": 3.131905426352636,
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "volume_shape": [
+      5,
+      64,
+      32,
+      88
+    ],
+    "absolute_time_input_allowed": false,
+    "normalized_frame_index_input_allowed": false,
+    "shot_label_input_allowed": false,
+    "future_truth_input_allowed": false,
+    "guard_frames_read_allowed": false
+  },
+  "codec": {
+    "name": "C5P-dcae_l10",
+    "family": "c5p",
+    "checkpoint_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+    "checkpoint_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d",
+    "latent_channels": 32,
+    "latent_grid": [
+      16,
+      8,
+      22
+    ],
+    "latent_normalization_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/latent_normalization.json",
+    "latent_normalization_sha256": "afcb0eda5d611d58f6eb2340aa55cfecd1a231b83a6912d9db398be706296738",
+    "evaluation_mode_required": true,
+    "trainable_during_B3": false,
+    "normalization_refit_allowed": false
+  },
+  "deterministic_parent": {
+    "arm": "C5P-H1",
+    "seed": 1701,
+    "checkpoint_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/selected.pt",
+    "checkpoint_sha256": "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e",
+    "selected_epoch_zero_based": 193,
+    "selected_optimizer_step": 5238,
+    "selected_validation_equal_channel_MAE": 0.04558250684515488,
+    "parameter_count": 51612800,
+    "exact_shape_matched_load_required": true,
+    "noise_disabled_preoptimization_bitwise_identity_required": true
+  },
+  "model": {
+    "arm": "B3-FGN-H1",
+    "family": "functional_generative_retrofit",
+    "context_frames": 1,
+    "future_frames": 1,
+    "prediction": "standardized_latent_increment",
+    "latent_channels": 32,
+    "hidden_channels": 512,
+    "transformer_blocks": 16,
+    "attention_heads": 4,
+    "dropout_during_training": 0.05,
+    "dropout_during_evaluation": 0.0,
+    "global_attention": true,
+    "physical_time_input": false,
+    "physics_derived_loss_allowed": false
+  },
+  "functional_noise": {
+    "raw_distribution": "standard_normal",
+    "raw_dimension": 32,
+    "embedded_dimension": 256,
+    "spatial_semantics": "one_global_vector_shared_across_all_tokens",
+    "layer_semantics": "same_embedding_supplied_to_all_16_blocks",
+    "member_semantics": "independent_raw_vector_per_ensemble_member",
+    "noise_layers": "all"
+  },
+  "training": {
+    "seed": 1701,
+    "epochs": 100,
+    "targets_per_epoch": 430,
+    "validation_targets": 126,
+    "microbatch": 1,
+    "ensemble_members_per_target": 2,
+    "gradient_accumulation": 16,
+    "final_partial_accumulation": 14,
+    "optimizer_steps_per_epoch": 27,
+    "total_optimizer_steps": 2700,
+    "optimizer": "AdamW",
+    "betas": [
+      0.9,
+      0.99
+    ],
+    "weight_decay": 0.0,
+    "common_parameter_peak_learning_rate": 0.00003,
+    "new_parameter_peak_learning_rate": 0.0001,
+    "warmup_epochs": 10,
+    "warmup_optimizer_steps": 270,
+    "scheduler": "independent_linear_warmup_cosine_to_zero_per_optimizer_step",
+    "gradient_clip": 1.0,
+    "precision": "bfloat16_autocast",
+    "early_stopping": false,
+    "objective": "equal_channel_decoded_standardized_field_fair_CRPS_M2",
+    "physics_derived_loss_allowed": false,
+    "checkpoint_selection": "earliest_numerically_lowest_fixed_noise_all126_validation_equal_channel_decoded_field_fair_CRPS_after_100_epochs"
+  },
+  "selection_noise": {
+    "generator": "numpy.random.Generator(numpy.random.PCG64(31003))",
+    "seed": 31003,
+    "dtype": "float32",
+    "shape": [
+      126,
+      2,
+      32
+    ],
+    "ordering": "chronological_target_then_member_then_raw_feature",
+    "persisted_and_hashed": true
+  },
+  "scientific_ensemble": {
+    "generator": "numpy.random.Generator(numpy.random.PCG64(31032))",
+    "seed": 31032,
+    "independent_of_checkpoint_selection_noise": true,
+    "dtype": "float32",
+    "noise_shape": [
+      126,
+      32,
+      32
+    ],
+    "canonical_axes": [
+      "target",
+      "ensemble_member",
+      "future_time",
+      "channel",
+      "x",
+      "y",
+      "z"
+    ],
+    "forecast_shape": [
+      126,
+      32,
+      1,
+      5,
+      64,
+      32,
+      88
+    ],
+    "members": 32,
+    "member_prefix_sensitivity": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "context_only_generation_required": true,
+    "truth_loaded_after_forecast_hash_only": true,
+    "regeneration_for_member_prefixes_allowed": false,
+    "posthoc_calibration_allowed": false
+  },
+  "comparators": {
+    "primary_deterministic_parent": {
+      "arm": "C5P-H1",
+      "seed": 1701,
+      "forecast_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/task_0_c5p_h1_seed_1701/forecast.h5",
+      "forecast_sha256": "a76b389dfc090d1d3061ec4be3526c524645b4cd9cec2f309601af0dd405f1ed",
+      "score_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/task_0_c5p_h1_seed_1701/score.json",
+      "score_sha256": "ebdc707e2be500af7de492038ae8bfb4d126b81b271b340345b85a7fba1d5593",
+      "retraining_or_reselection_allowed": false
+    },
+    "secondary_B2": {
+      "arm": "B2-LDM-H2",
+      "seed": 1701,
+      "forecast_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b2_evaluation_full/job_6897563/task_0/b2_ldm_h2_seed_1701/forecast_M32.h5",
+      "forecast_sha256": "0e3f1f2ea7dc733293dab526d0f7312d83f4d62fd9cd6708744900c5cbdb5e18",
+      "score_path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b2_evaluation_full/job_6897563/task_0/b2_ldm_h2_seed_1701/score.json",
+      "score_sha256": "b9982b48d893865d82d76197fdba6c6b8a6c4886fa139f45c6654a94404fe53e",
+      "primary_gate_comparator": false
+    },
+    "uncompressed": [
+      "persistence",
+      "training_only_toroidal_spectral_AR1"
+    ]
+  },
+  "normalization_and_gauge": {
+    "latent": "frozen_training_only_H1_seed1701_moments",
+    "volume": "immutable_job_6893525_training_only_statistics",
+    "phi_primary_marginal_policy": "subtract_each_truth_and_member_full_spatial_mean_per_target",
+    "phi_raw_stored_gauge_metrics": "descriptive_only"
+  },
+  "geometry_regions": {
+    "implementation": "src/tcv_diagnostics/geometry.py",
+    "strict_wall_interior_only": true,
+    "primary_partition": [
+      "confined_edge",
+      "private_flux",
+      "scrape_off_layer"
+    ],
+    "overlapping_reports": [
+      "separatrix_cell_band",
+      "outboard_midplane",
+      "x_point_topology_stencil",
+      "inner_divertor_leg",
+      "outer_divertor_leg"
+    ]
+  },
+  "spectral": {
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "bands": [
+      {
+        "stored_k": [1, 3],
+        "full_torus_n": [5, 15]
+      },
+      {
+        "stored_k": [4, 5],
+        "full_torus_n": [20, 25]
+      },
+      {
+        "stored_k": [6, 7],
+        "full_torus_n": [30, 35]
+      }
+    ],
+    "cross_pairs": [
+      ["Ne", "phi"],
+      ["Pe", "phi"],
+      ["Pi", "phi"]
+    ],
+    "training_materiality_fraction_minimum": 0.01,
+    "memberwise_first": true,
+    "ensemble_mean_fields_for_nonlinear_cross_spectrum_allowed": false
+  },
+  "transport": {
+    "quantities": [
+      "radial_ExB_particle",
+      "radial_ExB_electron_internal_energy",
+      "radial_ExB_ion_internal_energy",
+      "radial_ExB_total_internal_energy"
+    ],
+    "reductions": [
+      "strict_face_contributions",
+      "confined_separatrix_wedge"
+    ],
+    "resample_z": [
+      88,
+      81
+    ],
+    "memberwise_first": true,
+    "ensemble_mean_fields_for_transport_allowed": false,
+    "complete_heat_flux_claim_allowed": false,
+    "truth_empty_event_rule": "A016_explicit_not_applicable_after_integrity_checks"
+  },
+  "calibration": {
+    "fair_CRPS_primary": true,
+    "ordinary_empirical_CRPS_reported": true,
+    "corrected_spread_skill_finite_member_factor": "sqrt((M+1)/M)",
+    "M32_intervals": {
+      "I17": {
+        "bounds_one_indexed": [8, 25],
+        "nominal": 0.5151515151515151
+      },
+      "I27": {
+        "bounds_one_indexed": [3, 30],
+        "nominal": 0.8181818181818182
+      },
+      "I31": {
+        "bounds_one_indexed": [1, 32],
+        "nominal": 0.9393939393939394
+      }
+    },
+    "rank_bins": 33,
+    "voxel_iid_pvalue_allowed": false
+  },
+  "bootstrap": {
+    "method": "moving_block_bootstrap",
+    "block_length_frames": 21,
+    "replicates": 2000,
+    "sampled_blocks_per_replicate": 6,
+    "valid_start_count": 106,
+    "seed": 85604032,
+    "conditional_on_single_run": true,
+    "voxel_count_as_independent_sample_size_allowed": false
+  },
+  "gates": {
+    "blocks_total": 6,
+    "blocks_required_passing": 5,
+    "integrity": {
+      "full_epochs": 100,
+      "full_optimizer_steps": 2700,
+      "canonical_member_count": 32,
+      "canonical_shape_required": true,
+      "checkpoint_reload_required": true,
+      "codec_frozen_required": true,
+      "finite_required": true,
+      "nonzero_spread_every_field_primary_region": true
+    },
+    "field": {
+      "aggregate_mean_mae_relative_to_parent_H1_max": 1.05,
+      "aggregate_mean_rmse_relative_to_parent_H1_max": 1.05,
+      "aggregate_fair_crps_strictly_below_parent_H1_mae": true,
+      "aggregate_fair_crps_strictly_below_best_uncompressed_mae": true,
+      "fields_required_fair_crps_better_than_parent_H1": 4,
+      "fifth_field_fair_crps_relative_max": 1.05,
+      "primary_fields_required_calibrated": 4,
+      "primary_spread_skill_range": [0.8, 1.25],
+      "remaining_spread_skill_range": [0.67, 1.5],
+      "coverage_tolerance_primary_fields": {
+        "I17": 0.1,
+        "I27": 0.08,
+        "I31": 0.06
+      },
+      "region_I31_coverage_range": [0.75, 0.995]
+    },
+    "spectral": {
+      "member_expected_power_ratio_range": [0.75, 1.3],
+      "ensemble_mean_realization_coherence_min": 0.8,
+      "cross_phase_error_degrees_max": 20.0,
+      "cross_coherence_absolute_change_max": 0.15,
+      "material_calibration_spread_skill_range": [0.67, 1.5],
+      "material_calibration_I31_range": [0.75, 0.995]
+    },
+    "transport": {
+      "quantities_required": 4,
+      "strict_faces": {
+        "relative_l2_max": 0.4,
+        "correlation_min": 0.7,
+        "weighted_sign_disagreement_max": 0.2
+      },
+      "separatrix": {
+        "relative_l2_max": 0.3,
+        "absolute_normalized_bias_max": 0.15,
+        "correlation_min": 0.8,
+        "weighted_sign_disagreement_max": 0.15,
+        "fair_crps_better_than_parent_H1_required": 3,
+        "fourth_fair_crps_relative_max": 1.05,
+        "probabilistically_calibrated_required": 3
+      },
+      "separatrix_calibration": {
+        "spread_skill_range": [0.67, 1.5],
+        "I27_coverage_tolerance": 0.12,
+        "I31_coverage_tolerance": 0.1
+      },
+      "event_conditioned_magnitude_relative_error_max": 0.5,
+      "event_conditioned_weighted_sign_disagreement_max": 0.25
+    },
+    "monte_carlo": {
+      "comparison": "M16_vs_M32",
+      "relative_difference_max": 0.1,
+      "absolute_floor": 1e-08
+    }
+  },
+  "decision_rule": {
+    "one_seed_complete_gate_must_pass": true,
+    "passing_disposition": "authorize_writing_separate_seed1702_1703_replication_protocol_only",
+    "marginal_calibration_pass_joint_physics_fail_disposition": "record_marginal_CRPS_insufficient_and_select_next_oracle_motivated_model_rung",
+    "point_skill_or_integrity_fail_disposition": "stop_B3_and_diagnose_before_replication",
+    "O3_authorized_by_this_result": false,
+    "85606_authorized_by_this_result": false
+  },
+  "locked_metric_sources": {
+    "src/tcv_diagnostics/b2_probabilistic_metrics.py": "edef6fbbe7b40348fa450c7428d796f4b5ebc3d9b2070e135c7bb3f58a2b6650",
+    "src/tcv_diagnostics/b2_field_metrics.py": "c2d0f5e764b783f7a6a240fbd3f11f6c0a4fd52a173d9f1dd1eb97ccff62a0db",
+    "src/tcv_diagnostics/b2_spectral_metrics.py": "382fc683519d01185d0e5314196cd0c62f5e39e60f5e1aa06478e74acda8761e",
+    "src/tcv_diagnostics/b2_transport_metrics.py": "b78ea33f641fe6409ca5a55503f3729013f2da3cc78f93671f63c6fadafcb02e",
+    "src/tcv_diagnostics/b2_scoring.py": "2dfdf6f7b620302826971c9fec4ed8233f46fa1950c8461ed9d79194411178fe",
+    "src/tcv_diagnostics/geometry.py": "4f5eda7001bf9b42cefb224842a1dee4a955028a1aa063a57db6c447879f424c",
+    "src/tcv_diagnostics/codec_transport.py": "201a9628564b1ad5e476cbee52edf5eac458c61dadc1c7057a5b6e205de46d45"
+  },
+  "literature": [
+    {
+      "identifier": "10.1198/016214506000001437",
+      "purpose": "proper_CRPS_and_energy_score"
+    },
+    {
+      "identifier": "arXiv:2603.01949",
+      "purpose": "functional_probabilistic_retrofitting"
+    },
+    {
+      "identifier": "arXiv:2412.15832",
+      "purpose": "finite_ensemble_CRPS_spread_skill_and_spectra"
+    },
+    {
+      "identifier": "arXiv:2602.15830",
+      "purpose": "fair_score_exchangeability_limit"
+    }
+  ],
+  "execution": {
+    "cluster": "Rusty",
+    "operating_system": "Rocky9",
+    "accelerator": "one_H100_or_H200",
+    "GPU_outside_Rusty_allowed": false,
+    "clean_exact_commit_required": true,
+    "complete_local_suite_required": true,
+    "complete_Rocky9_suite_required": true,
+    "four_target_evaluator_smoke_required_before_full_scoring": true
+  },
+  "wandb": {
+    "entity": "sdelaurentiis123-columbia-university",
+    "project": "tcv-diagnostics-paper0",
+    "mode": "online",
+    "successful_initialization_required_before_training": true,
+    "finished_remote_state_required": true,
+    "checkpoint_upload": false,
+    "local_Ceph_artifacts_are_scientific_authority": true
+  }
+}
