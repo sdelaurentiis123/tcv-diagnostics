@@ -1,35 +1,39 @@
 #!/bin/bash
-# Four-target M32 non-scientific preflight of the frozen B3 FGN evaluator.
-# Submit only after the exact seed-1701 full training job completes.
-#SBATCH --job-name=p3_b3_esmk
+# Full 126-target M32 B3-FGN-H1 evaluation on 85604 validation only.
+# This scores the model but does not apply or prejudge the frozen acceptance gate.
+#SBATCH --job-name=p3_b3_eval
 #SBATCH --partition=gpupreempt
 #SBATCH --qos=gpupreempt
 #SBATCH --gres=gpu:1
 #SBATCH --constraint=h100|h200
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=12
-#SBATCH --mem=120G
-#SBATCH --time=04:00:00
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=128G
+#SBATCH --time=12:00:00
 #SBATCH --no-requeue
-#SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase3_b3_eval_smoke_%j.log
+#SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/phase3_b3_eval_%j.log
 
 set -euo pipefail
 
 : "${PAPER0_EXPECTED_COMMIT:?submit with PAPER0_EXPECTED_COMMIT set}"
 : "${B3_TRAINING_JOB_ID:?submit with B3_TRAINING_JOB_ID set}"
+: "${B3_SMOKE_JOB_ID:?submit with B3_SMOKE_JOB_ID set}"
 
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
 readonly MODEL_DATA_SOURCE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525"
-readonly NODE_LOCAL_ROOT="/tmp/${USER}/tcv_diagnostics_b3_eval_smoke_${SLURM_JOB_ID}"
+readonly NODE_LOCAL_ROOT="/tmp/${USER}/tcv_diagnostics_b3_eval_full_${SLURM_JOB_ID}"
 readonly MODEL_DATA_STAGED="${NODE_LOCAL_ROOT}/phase2_model_dataset_85604"
 readonly TRAINING_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_full/job_${B3_TRAINING_JOB_ID}"
 readonly TRAINING_OUTPUT="${TRAINING_ROOT}/b3_fgn_h1_seed_1701"
 readonly TRAINING_RESULT="${TRAINING_OUTPUT}/result.json"
+readonly SMOKE_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluator_smoke/job_${B3_SMOKE_JOB_ID}"
+readonly SMOKE_OUTPUT="${SMOKE_ROOT}/b3_fgn_h1_seed_1701"
+readonly SMOKE_RESULT="${SMOKE_OUTPUT}/result.json"
 readonly THRESHOLD_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_transport_event_thresholds/job_6897493"
 readonly THRESHOLD_RESULT="${THRESHOLD_ROOT}/thresholds/result.json"
-readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluator_smoke"
+readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluation_full"
 readonly OUTDIR="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly RUN_OUTPUT="${OUTDIR}/b3_fgn_h1_seed_1701"
 readonly EVALUATION_MANIFEST="${PAPER0_ROOT}/paper0/manifests/phase3_b3_full_evaluation_85604.json"
@@ -42,10 +46,10 @@ readonly WANDB_WRAPPER="${PAPER0_ROOT}/paper0/tools/run_b3_fgn_evaluation_wandb.
 readonly TRAINING_COMMIT="a2a17cf3fc30fd504bc3eee3274e78623bf15e2b"
 readonly WANDB_ENTITY="sdelaurentiis123-columbia-university"
 readonly WANDB_PROJECT="tcv-diagnostics-paper0"
-readonly WANDB_GROUP="b3-fgn-h1-evaluator-smoke-85604"
+readonly WANDB_GROUP="b3-fgn-h1-full-evaluation-85604"
 
 if [[ -e "${OUTDIR}" || -e "${NODE_LOCAL_ROOT}" ]]; then
-  echo "Refusing to overwrite a B3 evaluator smoke directory" >&2
+  echo "Refusing to overwrite a full B3 evaluation directory" >&2
   exit 2
 fi
 mkdir -p "${OUTDIR}"
@@ -76,7 +80,7 @@ check_sha256() {
 
 source /etc/os-release
 if [[ "${ID}" != "rocky" || "${VERSION_ID%%.*}" != "9" ]]; then
-  echo "B3 evaluator smoke requires Rocky Linux 9" >&2
+  echo "Full B3 evaluation requires Rocky Linux 9" >&2
   exit 2
 fi
 nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total --format=csv,noheader
@@ -85,7 +89,7 @@ if [[ "$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)" -ne 1 ]]; t
   exit 2
 fi
 if nvidia-smi --query-gpu=name --format=csv,noheader | grep -Evq "H100|H200"; then
-  echo "The B3 evaluator smoke requires H100 or H200" >&2
+  echo "Full B3 evaluation requires H100 or H200" >&2
   exit 2
 fi
 
@@ -114,8 +118,11 @@ check_sha256 "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01" 
 
 sha256sum -c "${TRAINING_OUTPUT}/artifact_sha256.txt"
 sha256sum -c "${TRAINING_ROOT}/artifact_sha256.txt"
+sha256sum -c "${SMOKE_OUTPUT}/artifact_sha256.txt"
+sha256sum -c "${SMOKE_ROOT}/artifact_sha256.txt"
 sha256sum -c "${THRESHOLD_ROOT}/thresholds/artifact_sha256.txt"
 readonly TRAINING_RESULT_SHA="$(sha256sum "${TRAINING_RESULT}" | awk '{print $1}')"
+readonly SMOKE_RESULT_SHA="$(sha256sum "${SMOKE_RESULT}" | awk '{print $1}')"
 readonly THRESHOLD_RESULT_SHA="$(sha256sum "${THRESHOLD_RESULT}" | awk '{print $1}')"
 
 scontrol show job -dd "${SLURM_JOB_ID}" > "${OUTDIR}/slurm_job.txt"
@@ -124,21 +131,22 @@ export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPATH="${PAPER0_ROOT}/src:${PAPER0_ROOT}"
 export WANDB_MODE=online
 export WANDB_REQUIRE_SERVICE=true
-export OMP_NUM_THREADS=8
-export OPENBLAS_NUM_THREADS=8
-export MKL_NUM_THREADS=8
+export OMP_NUM_THREADS=12
+export OPENBLAS_NUM_THREADS=12
+export MKL_NUM_THREADS=12
 {
   echo "captured_at=$(date --iso-8601=seconds)"
   echo "host=$(hostname --fqdn)"
   echo "paper0_commit=${PAPER0_COMMIT}"
   echo "training_commit=${TRAINING_COMMIT}"
   echo "training_job_id=${B3_TRAINING_JOB_ID}"
+  echo "evaluator_smoke_job_id=${B3_SMOKE_JOB_ID}"
   echo "threshold_job_id=6897493"
   "${PYTHON}" --version
   "${PYTHON}" -c 'import h5py,numpy,pytest,scipy,torch,wandb; print("h5py="+h5py.__version__); print("numpy="+numpy.__version__); print("torch="+torch.__version__); print("torch_cuda="+str(torch.version.cuda)); print("wandb="+wandb.__version__)'
 } > "${OUTDIR}/environment.txt" 2>&1
 
-echo "Running complete Rocky 9 suite before B3 evaluator smoke"
+echo "Running complete Rocky 9 suite before full B3 evaluation"
 cd "${PAPER0_ROOT}"
 "${PYTHON}" -m pytest -p no:cacheprovider -q | tee "${OUTDIR}/test_output.txt"
 
@@ -164,7 +172,7 @@ if [[ "${verified_shards}" -ne 8 ]]; then
 fi
 
 readonly EVALUATOR_SHA="114545c375bbb985d20ca8bd014720981e6495686f45cc78b17458df16c18673"
-readonly RUN_ID="p0b3evalsmoke-${SLURM_JOB_ID}-s1701"
+readonly RUN_ID="p0b3eval-${SLURM_JOB_ID}-s1701"
 COMMAND=(
   "${PYTHON}" -u "${WANDB_WRAPPER}"
   --evaluator "${EVALUATOR}"
@@ -176,9 +184,9 @@ COMMAND=(
   --wandb-project "${WANDB_PROJECT}"
   --wandb-group "${WANDB_GROUP}"
   --wandb-run-id "${RUN_ID}"
-  --wandb-run-name "b3-fgn-evaluator-smoke-s1701-j${SLURM_JOB_ID}"
+  --wandb-run-name "b3-fgn-full-evaluation-s1701-j${SLURM_JOB_ID}"
   --
-  --mode smoke
+  --mode full
   --seed 1701
   --training-result "${TRAINING_RESULT}"
   --training-result-sha256 "${TRAINING_RESULT_SHA}"
@@ -196,6 +204,8 @@ COMMAND=(
   --evaluation-manifest-sha256 "2f1f83b3c4ce50a789d26ed6877142400b5f9f8e994b3e6bc92f997840832ad2"
   --evaluation-protocol "${EVALUATION_PROTOCOL}"
   --evaluation-protocol-sha256 "db717c5605ad9653d2b051ec13254b43bf230f514cb173d295e95d3c68af8030"
+  --smoke-result "${SMOKE_RESULT}"
+  --smoke-result-sha256 "${SMOKE_RESULT_SHA}"
   --output-directory "${RUN_OUTPUT}"
   --paper0-commit "${PAPER0_COMMIT}"
   --slurm-job-id "${SLURM_JOB_ID}"
@@ -205,10 +215,10 @@ printf '%q ' "${COMMAND[@]}" > "${OUTDIR}/command.sh"
 printf '\n' >> "${OUTDIR}/command.sh"
 "${COMMAND[@]}" | tee "${OUTDIR}/stdout.jsonl"
 
-export PAPER0_B3_SMOKE_OUTPUT="${RUN_OUTPUT}"
-export PAPER0_B3_SMOKE_ROOT="${OUTDIR}"
-export PAPER0_B3_SMOKE_COMMIT="${PAPER0_COMMIT}"
-export PAPER0_B3_SMOKE_JOB_ID="${SLURM_JOB_ID}"
+export PAPER0_B3_FULL_EVAL_OUTPUT="${RUN_OUTPUT}"
+export PAPER0_B3_FULL_EVAL_ROOT="${OUTDIR}"
+export PAPER0_B3_FULL_EVAL_COMMIT="${PAPER0_COMMIT}"
+export PAPER0_B3_FULL_EVAL_JOB_ID="${SLURM_JOB_ID}"
 "${PYTHON}" - <<'PY'
 import json
 import os
@@ -217,48 +227,52 @@ from pathlib import Path
 from tcv_diagnostics.codec_training import sha256_path
 from tcv_diagnostics.model_data import write_strict_json_atomic
 
-output = Path(os.environ["PAPER0_B3_SMOKE_OUTPUT"])
-root = Path(os.environ["PAPER0_B3_SMOKE_ROOT"])
+output = Path(os.environ["PAPER0_B3_FULL_EVAL_OUTPUT"])
+root = Path(os.environ["PAPER0_B3_FULL_EVAL_ROOT"])
 result = json.loads((output / "result.json").read_text())
 generation = json.loads((output / "generation.json").read_text())
 score = json.loads((output / "score.json").read_text())
 tracking = json.loads((output / "wandb.json").read_text())
-if result["scope"] != "bounded_non_scientific_B3_FGN_H1_evaluator_smoke_85604":
-    raise RuntimeError("B3 evaluator smoke scope differs")
-if result["status"] != "bounded_evaluator_smoke_completed":
-    raise RuntimeError("B3 evaluator smoke did not complete")
-if result["target_frames"] != [498, 502] or result["ensemble_members"] != 32:
-    raise RuntimeError("B3 evaluator smoke size differs")
-if score["scope"] != "bounded_non_scientific_B3_FGN_H1_evaluator_smoke_scoring_85604":
-    raise RuntimeError("B3 evaluator smoke scoring scope differs")
+if result["scope"] != "B3_FGN_H1_full_probabilistic_evaluation_85604":
+    raise RuntimeError("full B3 evaluation scope differs")
+if result["status"] != "completed_pending_frozen_acceptance_gate":
+    raise RuntimeError("full B3 evaluation status differs")
+if result["target_frames"] != [498, 624] or result["target_count"] != 126:
+    raise RuntimeError("full B3 evaluation target interval differs")
+if result["ensemble_members"] != 32 or result["scientific_authority"] is not True:
+    raise RuntimeError("full B3 evaluation ensemble/scientific scope differs")
+if score["scope"] != "B3_FGN_H1_truth_separated_probabilistic_scoring_85604":
+    raise RuntimeError("full B3 scoring scope differs")
 if tracking["mode"] != "online" or tracking["remote_state_after_finish"] != "finished":
-    raise RuntimeError("B3 evaluator smoke W&B record differs")
+    raise RuntimeError("full B3 evaluation W&B record differs")
 if result["full_probabilistic_evaluation_preconditions_passed"] is not True:
-    raise RuntimeError("B3 evaluator smoke preconditions did not pass")
+    raise RuntimeError("full B3 evaluation preconditions differ")
 if result["truth_opened_only_after_forecast_hash"] is not True:
-    raise RuntimeError("B3 evaluator smoke truth separation differs")
+    raise RuntimeError("full B3 truth separation differs")
+if result["probabilistic_scientific_gate_evaluated"] is not False:
+    raise RuntimeError("full B3 evaluator prejudged the gate")
 if result["O3_launch_allowed"] is not False:
-    raise RuntimeError("B3 evaluator smoke authorized O3")
+    raise RuntimeError("full B3 evaluator authorized O3")
 if result["scientific_noise"]["sha256"] != "1449777a61d40af49ccb3bd6bed5edcba0fd8afe24d113e6175218c04865aa9c":
-    raise RuntimeError("B3 scientific-noise bank differs")
+    raise RuntimeError("full B3 scientific-noise bank differs")
 if generation["inference"]["network_evaluations_per_member"] != 1:
-    raise RuntimeError("B3 evaluator did not use direct single-pass members")
+    raise RuntimeError("full B3 evaluation was not direct single-pass sampling")
 
 summary = {
     "schema_version": 1,
-    "scope": "phase3_B3_FGN_H1_bounded_evaluator_smoke",
-    "status": "passed_bounded_evaluator_smoke",
-    "scientific_result": False,
+    "scope": "phase3_B3_FGN_H1_full_probabilistic_evaluation",
+    "status": "completed_pending_frozen_acceptance_gate",
+    "scientific_result": True,
     "development_run": "85604",
     "held_out_85606_read": False,
-    "paper0_commit": os.environ["PAPER0_B3_SMOKE_COMMIT"],
+    "paper0_commit": os.environ["PAPER0_B3_FULL_EVAL_COMMIT"],
     "training_commit": result["training_commit"],
-    "slurm_job_id": os.environ["PAPER0_B3_SMOKE_JOB_ID"],
-    "target_frames": [498, 502],
+    "slurm_job_id": os.environ["PAPER0_B3_FULL_EVAL_JOB_ID"],
+    "target_frames": [498, 624],
+    "target_count": 126,
     "ensemble_members": 32,
     "truth_opened_only_after_forecast_hash": True,
     "direct_network_evaluations_per_member": 1,
-    "full_probabilistic_evaluation_preconditions_passed": True,
     "probabilistic_scientific_gate_evaluated": False,
     "O3_launch_allowed": False,
     "run_result": {
@@ -285,5 +299,5 @@ sha256sum \
   > "${OUTDIR}/artifact_sha256.txt"
 
 sha256sum "${OUTDIR}/result.json" "${RUN_OUTPUT}/artifact_sha256.txt"
-echo "Bounded four-target B3 FGN evaluator smoke completed"
-echo "Full 85604 evaluation may run; O3 and 85606 remain closed"
+echo "Full B3 FGN M32 evaluation completed on 85604 validation"
+echo "The frozen one-seed acceptance gate remains unevaluated; O3 and 85606 remain closed"
