@@ -155,8 +155,8 @@ def pointwise_ensemble_diagnostics(
         raise ValueError("spatial cell indices must be one integer per point")
     if np.any(indices < 0) or np.unique(indices).size != cells:
         raise ValueError("spatial cell indices must be unique and nonnegative")
-    if not 0 <= int(channel_index) < len(B2_FIELDS):
-        raise ValueError("B2 channel index is outside the five-field state")
+    if int(channel_index) < 0:
+        raise ValueError("B2 diagnostic variable index must be nonnegative")
 
     ensemble_mean = np.mean(forecast_array, axis=0)
     error = ensemble_mean - truth_array
