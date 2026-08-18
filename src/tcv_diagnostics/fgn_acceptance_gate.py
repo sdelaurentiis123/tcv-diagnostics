@@ -30,6 +30,9 @@ B3_TRAINING_SCOPE = "B3_FGN_H1_seed1701_full_training_85604"
 B3_MANIFEST_SHA256 = (
     "2f1f83b3c4ce50a789d26ed6877142400b5f9f8e994b3e6bc92f997840832ad2"
 )
+B3_EVENT_THRESHOLD_SHA256 = (
+    "14c977ee0ce5ebac0ec3ed05682b71f7d2a517448ed8d563974def62498f1fcb"
+)
 B3_SCIENTIFIC_NOISE_SHA256 = (
     "1449777a61d40af49ccb3bd6bed5edcba0fd8afe24d113e6175218c04865aa9c"
 )
@@ -286,6 +289,11 @@ def evaluate_b3_integrity(
         == manifest.get("protocol", {}).get("sha256"),
     )
     book.boolean(
+        "integrity.evaluation.training_only_event_threshold_lock",
+        result.get("event_threshold_result", {}).get("sha256")
+        == B3_EVENT_THRESHOLD_SHA256,
+    )
+    book.boolean(
         "integrity.evaluation.scientific_noise",
         result.get("scientific_noise", {}).get("seed") == 31032
         and result.get("scientific_noise", {}).get("shape") == [126, 32, 32]
@@ -409,6 +417,33 @@ def evaluate_b3_integrity(
         comparator.get("best_uncompressed", {}).get("name")
         == "training_only_toroidal_spectral_AR1",
     )
+    field_score = score.get("field_and_marginal_calibration", {})
+    block_counts = {
+        "field_score": len(
+            field_score.get("chronological_blocks_eligible_union", [])
+        ),
+        "spectral_score": len(
+            score.get("spectral_and_cross_field", {}).get(
+                "chronological_blocks", []
+            )
+        ),
+        "transport_score": len(
+            score.get("memberwise_transport", {}).get("chronological_blocks", [])
+        ),
+        "H1_field_comparator": len(
+            comparator.get("field", {}).get("chronological_blocks", [])
+        ),
+        "H1_transport_comparator": len(
+            comparator.get("transport", {}).get("chronological_blocks", [])
+        ),
+        "uncompressed_field_comparator": len(
+            comparator.get("best_uncompressed", {})
+            .get("field", {})
+            .get("chronological_blocks", [])
+        ),
+    }
+    for name, count in block_counts.items():
+        book.boolean(f"integrity.six_blocks.{name}", count == 6)
 
     for label, tracking, expected_epochs in (
         ("training", training_wandb, 100),
@@ -427,7 +462,6 @@ def evaluate_b3_integrity(
                 tracking.get("epochs_logged") == expected_epochs,
             )
 
-    field_score = score.get("field_and_marginal_calibration", {})
     for region in ("eligible_union", *B2_PRIMARY_REGIONS):
         for field in B2_FIELDS:
             nonzero = (
@@ -454,6 +488,7 @@ def evaluate_b3_integrity(
     record = book.record()
     record["material_field_band_count"] = field_band_count
     record["material_cross_band_count"] = cross_band_count
+    record["chronological_block_counts"] = block_counts
     return record
 
 

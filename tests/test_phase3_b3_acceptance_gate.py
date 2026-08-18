@@ -102,6 +102,7 @@ def _result(training: dict[str, object]) -> dict[str, object]:
         },
         "evaluation_manifest": {"sha256": gate.B3_MANIFEST_SHA256},
         "evaluation_protocol": {"sha256": MANIFEST["protocol"]["sha256"]},
+        "event_threshold_result": {"sha256": gate.B3_EVENT_THRESHOLD_SHA256},
         "scientific_noise": {
             "seed": 31032,
             "shape": [126, 32, 32],
@@ -181,9 +182,14 @@ def _score(result: dict[str, object]) -> dict[str, object]:
             "source_sha256": MANIFEST["locked_metric_sources"],
         },
         "transport_event_thresholds": {"spectral_materiality": _materiality()},
-        "field_and_marginal_calibration": {"regions": regions},
-        "spectral_and_cross_field": {},
-        "memberwise_transport": {},
+        "field_and_marginal_calibration": {
+            "regions": regions,
+            "chronological_blocks_eligible_union": [{} for _ in range(6)],
+        },
+        "spectral_and_cross_field": {
+            "chronological_blocks": [{} for _ in range(6)]
+        },
+        "memberwise_transport": {"chronological_blocks": [{} for _ in range(6)]},
     }
 
 
@@ -204,11 +210,14 @@ def _comparator() -> dict[str, object]:
         "arm": "C5P-H1",
         "forecast": {"sha256": parent["forecast_sha256"]},
         "score": {"sha256": parent["score_sha256"]},
-        "field": {"context_frames": 1},
-        "transport": {},
+        "field": {
+            "context_frames": 1,
+            "chronological_blocks": [{} for _ in range(6)],
+        },
+        "transport": {"chronological_blocks": [{} for _ in range(6)]},
         "best_uncompressed": {
             "name": "training_only_toroidal_spectral_AR1",
-            "field": {},
+            "field": {"chronological_blocks": [{} for _ in range(6)]},
         },
     }
 
@@ -275,6 +284,7 @@ def test_B3_integrity_accepts_known_answer_and_rejects_held_out_contamination() 
     assert record["passes"] is True
     assert record["material_field_band_count"] == 1
     assert record["material_cross_band_count"] == 1
+    assert set(record["chronological_block_counts"].values()) == {6}
 
     contaminated = deepcopy(inputs)
     contaminated["result"]["held_out_85606_read"] = True
