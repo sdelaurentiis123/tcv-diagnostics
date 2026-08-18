@@ -1,9 +1,9 @@
-"""Bounded training mechanics for the frozen Paper 0 B2 LDM smoke.
+"""Frozen 85604-only training mechanics for the Paper 0 B2 LDM arm.
 
-This module deliberately authorizes only the non-scientific, 85604-only smoke
-defined by ``phase3_b2_ldm_85604.json``.  Full B2 training remains locked until
-the smoke and a separate probabilistic evaluation protocol are committed.
-Physics-derived quantities are absent by construction.
+The bounded smoke and the full three-seed training run through separate,
+fail-closed public functions.  Neither path computes physics-derived losses;
+scientific forecast acceptance remains the responsibility of the separately
+frozen probabilistic evaluator.
 """
 
 from __future__ import annotations
@@ -52,7 +52,7 @@ B2_SMOKE_SEED = 1701
 
 @dataclass(frozen=True)
 class B2RunConfig:
-    """Prospective full budget and currently authorized bounded-smoke budget."""
+    """Immutable bounded-smoke or full-training budget."""
 
     mode: str
     seed: int
@@ -187,8 +187,8 @@ class B2RunConfig:
                     "earliest_lowest_fixed_noise_validation_complete_loss"
                 ),
                 "physics_derived_loss_allowed": False,
-                "full_training_authorized": False,
-                "scientific_result": False if self.mode == "smoke" else None,
+                "full_training_authorized": self.mode == "full",
+                "scientific_result": False,
             }
         )
         return record
@@ -543,7 +543,7 @@ def _reload_identity(
     return identity, metrics
 
 
-def train_b2_smoke(
+def _train_b2_authorized(
     *,
     config: B2RunConfig,
     catalog: ModelDatasetCatalog,
@@ -555,19 +555,19 @@ def train_b2_smoke(
     device: torch.device,
     epoch_callback: Callable[[Mapping[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
-    """Execute the sole authorized B2 smoke; full training fails closed."""
+    """Execute one already-authorized B2 run without making a science claim."""
 
-    if config.mode != "smoke":
-        raise RuntimeError("full B2 training is not authorized by the frozen protocol")
-    if config.seed != B2_SMOKE_SEED:
+    if config.mode not in {"smoke", "full"}:
+        raise RuntimeError(f"unsupported authorized B2 mode {config.mode!r}")
+    if config.mode == "smoke" and config.seed != B2_SMOKE_SEED:
         raise RuntimeError("the authorized B2 smoke seed is 1701")
     output = Path(output_directory)
     if "85606" in str(output).lower():
         raise ValueError("held-out paths are prohibited")
     if output.exists():
-        raise FileExistsError(f"refusing to overwrite B2 smoke {output}")
+        raise FileExistsError(f"refusing to overwrite B2 run {output}")
     if device.type != "cuda" or not torch.cuda.is_available():
-        raise RuntimeError("B2 smoke execution requires a CUDA worker")
+        raise RuntimeError("B2 execution requires a CUDA worker")
     output.mkdir(parents=True)
 
     model_config = LatentDiffusionViTConfig()
@@ -593,7 +593,7 @@ def train_b2_smoke(
         device=device,
         batch_size=config.latent_fit_microbatch,
         expected_channels=model_config.latent_channels,
-        scientific_authority=False,
+        scientific_authority=config.mode == "full",
     )
     latent_dataset.close()
     write_strict_json_atomic(
@@ -786,7 +786,7 @@ def train_b2_smoke(
         or selected_validation is None
         or selected_state is None
     ):
-        raise RuntimeError("B2 smoke completed without a selected checkpoint")
+        raise RuntimeError("B2 run completed without a selected checkpoint")
 
     final_validation = validation_loss(
         model=model,
@@ -860,7 +860,11 @@ def train_b2_smoke(
 
     result = {
         "schema_version": 1,
-        "scope": "bounded_non_scientific_B2_LDM_H2_GPU_smoke",
+        "scope": (
+            "bounded_non_scientific_B2_LDM_H2_GPU_smoke"
+            if config.mode == "smoke"
+            else "B2_LDM_H2_full_training_85604"
+        ),
         "paper0_commit": str(paper0_commit),
         "slurm_job_id": str(slurm_job_id),
         "config": run_record,
@@ -915,7 +919,8 @@ def train_b2_smoke(
         "development_run": "85604",
         "held_out_85606_read": False,
         "scientific_result": False,
-        "full_B2_training_authorized": False,
+        "full_B2_training_authorized": config.mode == "full",
+        "training_complete_is_scientific_acceptance": False,
         "probabilistic_scientific_gate_evaluated": False,
         "O3_launch_allowed": False,
         "assimilation_allowed": False,
@@ -924,3 +929,68 @@ def train_b2_smoke(
     write_strict_json_atomic(output / "result.json", result)
     return result
 
+
+def train_b2_smoke(
+    *,
+    config: B2RunConfig,
+    catalog: ModelDatasetCatalog,
+    codec_checkpoint: Path,
+    codec_checkpoint_sha256: str,
+    output_directory: Path,
+    paper0_commit: str,
+    slurm_job_id: str,
+    device: torch.device,
+    epoch_callback: Callable[[Mapping[str, Any]], None] | None = None,
+) -> dict[str, Any]:
+    """Execute only the historical bounded smoke authorization."""
+
+    if config.mode != "smoke":
+        raise RuntimeError("full B2 training is not authorized by the smoke path")
+    if config.seed != B2_SMOKE_SEED:
+        raise RuntimeError("the authorized B2 smoke seed is 1701")
+    if config != B2RunConfig.frozen(mode="smoke", seed=config.seed):
+        raise RuntimeError("the bounded B2 smoke config differs from its freeze")
+    return _train_b2_authorized(
+        config=config,
+        catalog=catalog,
+        codec_checkpoint=codec_checkpoint,
+        codec_checkpoint_sha256=codec_checkpoint_sha256,
+        output_directory=output_directory,
+        paper0_commit=paper0_commit,
+        slurm_job_id=slurm_job_id,
+        device=device,
+        epoch_callback=epoch_callback,
+    )
+
+
+def train_b2_full(
+    *,
+    config: B2RunConfig,
+    catalog: ModelDatasetCatalog,
+    codec_checkpoint: Path,
+    codec_checkpoint_sha256: str,
+    output_directory: Path,
+    paper0_commit: str,
+    slurm_job_id: str,
+    device: torch.device,
+    epoch_callback: Callable[[Mapping[str, Any]], None] | None = None,
+) -> dict[str, Any]:
+    """Execute one seed of the separately frozen full B2 training matrix."""
+
+    if config.mode != "full":
+        raise RuntimeError("the full B2 path requires mode='full'")
+    if config.seed not in (1701, 1702, 1703):
+        raise RuntimeError("the full B2 seed is outside the frozen three-seed matrix")
+    if config != B2RunConfig.frozen(mode="full", seed=config.seed):
+        raise RuntimeError("the full B2 config differs from its frozen budget")
+    return _train_b2_authorized(
+        config=config,
+        catalog=catalog,
+        codec_checkpoint=codec_checkpoint,
+        codec_checkpoint_sha256=codec_checkpoint_sha256,
+        output_directory=output_directory,
+        paper0_commit=paper0_commit,
+        slurm_job_id=slurm_job_id,
+        device=device,
+        epoch_callback=epoch_callback,
+    )

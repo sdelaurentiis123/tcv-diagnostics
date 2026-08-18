@@ -728,3 +728,39 @@ This accepts implementation mechanics only. The result explicitly leaves
 scientific quality, full B2 training, probabilistic evaluation, O3,
 assimilation, diagnostic ranking, and 85606 access unauthorized. The exact
 interpretation is `paper0/PHASE3_B2_SMOKE_READOUT.md`.
+
+### Phase 3 B2 full-training authorization and launcher
+
+After the bounded smoke passed, the complete 85604-only training and
+probabilistic-evaluation contract was frozen independently in
+`paper0/protocol/PHASE3_B2_FULL_EVALUATION_PROTOCOL.md` and
+`paper0/manifests/phase3_b2_full_evaluation_85604.json`. The protocol file has
+SHA-256 `8b0345cbff7de588e52c73a40232cdf0a97b5d3f0c18728dc35dadaca9d25490`;
+the manifest has SHA-256
+`a5567dccb4e536bb33c3e160c2b5bb64b586e2465b20957e2a5d1144ffd2706c`.
+They were committed before the full trainer, launcher, or probabilistic
+metrics were implemented.
+
+The historical smoke entrypoint remains smoke-only. Full training uses the
+separate fail-closed entrypoint `paper0/tools/train_b2_ldm_full.py`, which
+requires the exact post-smoke manifest, its exact protocol and evidence
+hashes, one of seeds 1701--1703, and the same-seed accepted C5P codec. The
+shared optimizer core in `src/tcv_diagnostics/b2_training.py` now exposes
+separate smoke and full wrappers and rejects a forged dataclass budget before
+opening data or CUDA. Full latent moments use all training frames `[0,432)`
+and are marked authoritative; the historical 16-frame smoke moments remain
+non-scientific.
+
+`cluster/phase3_b2_ldm_full.sbatch` is a three-task Rocky 9 `gpuxl` array with
+one non-preemptible H100/H200 allocation per seed. Every task verifies the
+clean commit, immutable 85604 data, codec, protocol, evidence, source, and
+Azula hashes; passes the complete test suite; stages and rehashes all eight
+85604 shards; starts a required online W&B run; and enforces exactly 200
+epochs and 5,400 optimizer steps. Checkpoints and decoded artifacts remain on
+Ceph and compact provenance will be tracked after completion.
+
+Completing this array is not scientific acceptance. Training computes only
+the frozen complete-trajectory denoising loss. It neither computes nor
+selects on CRPS, field error, spectra, cross-phase, coherence, transport, or
+diagnostic performance. It does not authorize O3, assimilation, diagnostic
+ranking, control, or any access to 85606.

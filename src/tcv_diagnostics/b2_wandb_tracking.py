@@ -1,4 +1,4 @@
-"""Fail-closed online W&B mirror for the bounded Paper 0 B2 smoke."""
+"""Fail-closed online W&B mirror for Paper 0 B2 training runs."""
 
 from __future__ import annotations
 
@@ -48,7 +48,7 @@ def b2_wandb_epoch_metrics(record: Mapping[str, Any]) -> dict[str, int | float]:
 def b2_wandb_result_summary(
     result: Mapping[str, Any],
 ) -> dict[str, int | float | str | bool]:
-    """Select compact smoke facts; checkpoints remain local scientific artifacts."""
+    """Select compact run facts; checkpoints remain local scientific artifacts."""
 
     selected = result["selected_validation"]
     final = result["final_validation"]
@@ -245,4 +245,3 @@ class B2OnlineWandbTracker:
             self._run.finish(exit_code=1)
         finally:
             self._finished = True
-

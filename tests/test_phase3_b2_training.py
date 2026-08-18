@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 import torch
 
@@ -10,6 +12,7 @@ from tcv_diagnostics.b2_training import (
     FixedValidationNoiseBank,
     fixed_validation_perturbation,
     learning_rate_at_step,
+    train_b2_full,
     train_b2_smoke,
 )
 
@@ -34,6 +37,8 @@ def test_b2_full_and_smoke_budgets_match_the_frozen_protocol() -> None:
     assert full.optimizer_steps_per_epoch == 27
     assert full.total_optimizer_steps == 5400
     assert full.final_accumulation_count == 14
+    assert full.to_record()["full_training_authorized"] is True
+    assert full.to_record()["scientific_result"] is False
 
 
 def test_b2_unfrozen_smoke_seed_mode_and_schedule_steps_are_rejected() -> None:
@@ -102,3 +107,33 @@ def test_full_training_fails_before_any_data_or_cuda_access() -> None:
             device=torch.device("cpu"),
         )
 
+
+def test_full_entry_rejects_smoke_before_any_data_or_cuda_access() -> None:
+    smoke = B2RunConfig.frozen(mode="smoke", seed=1701)
+    with pytest.raises(RuntimeError, match="requires mode='full'"):
+        train_b2_full(
+            config=smoke,
+            catalog=None,  # type: ignore[arg-type]
+            codec_checkpoint=None,  # type: ignore[arg-type]
+            codec_checkpoint_sha256="",
+            output_directory=None,  # type: ignore[arg-type]
+            paper0_commit="a" * 40,
+            slurm_job_id="test",
+            device=torch.device("cpu"),
+        )
+
+
+def test_full_entry_rejects_a_forged_budget_before_data_access() -> None:
+    full = B2RunConfig.frozen(mode="full", seed=1701)
+    forged = replace(full, epochs=201)
+    with pytest.raises(RuntimeError, match="frozen budget"):
+        train_b2_full(
+            config=forged,
+            catalog=None,  # type: ignore[arg-type]
+            codec_checkpoint=None,  # type: ignore[arg-type]
+            codec_checkpoint_sha256="",
+            output_directory=None,  # type: ignore[arg-type]
+            paper0_commit="a" * 40,
+            slurm_job_id="test",
+            device=torch.device("cpu"),
+        )
