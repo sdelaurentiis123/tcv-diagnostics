@@ -1,0 +1,50 @@
+{
+  "O3_launch_allowed": false,
+  "allowed_accelerators": [
+    "NVIDIA H100",
+    "NVIDIA H200"
+  ],
+  "development_run": "85604",
+  "epochs": 2,
+  "full_B2_training_authorized": false,
+  "held_out_85606_read": false,
+  "one_gpu_smoke_passed": true,
+  "optimizer_steps": 2,
+  "paper0_commit": "d58b4cc261a901b69c772b01270f38a89deb042f",
+  "probabilistic_evaluation_protocol_still_required": true,
+  "rocky9_cpu_suite_passed": true,
+  "sampler_probe": {
+    "canonical_forecast_shape": [
+      1,
+      2,
+      1,
+      5,
+      64,
+      32,
+      88
+    ],
+    "ensemble_size": 2,
+    "field_member_rms_difference": 0.40717558917264185,
+    "finite": true,
+    "latent_member_rms_difference": 1.5679228541491845,
+    "nonzero_decoded_diversity": true,
+    "nonzero_latent_diversity": true,
+    "sampler_seed": 3131905,
+    "target_frame_index": 498
+  },
+  "schema_version": 1,
+  "scientific_result": false,
+  "scope": "phase3_B2_LDM_H2_Rocky9_GPU_smoke",
+  "seed": 1701,
+  "selected_checkpoint_sha256": "ca4a7b7fd0cec04d8c1f580ea42655ea90562d8dee809bf762e2b00212f3b35a",
+  "selected_epoch": 0,
+  "selected_validation": {
+    "complete": 0.8660569339990616,
+    "context": 0.6750625781714916,
+    "examples": 4,
+    "target": 1.2480457127094269
+  },
+  "slurm_job_id": "6896402",
+  "training_targets": 16,
+  "wandb_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0b2smoke-6896402-s1701"
+}

@@ -704,3 +704,27 @@ the full checkpoints and artifact index remain under
 `/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_o1_codec_gpu_smoke/job_6893713`.
 The two-epoch losses are explicitly non-scientific smoke outputs: no O1
 metric or acceptance gate was evaluated, and no 85606 file was accessed.
+
+### Phase 3 B2 latent-diffusion implementation smoke
+
+Bounded Rocky 9 H100 job `6896402` ran clean commit
+`d58b4cc261a901b69c772b01270f38a89deb042f` on worker `workergpu217` and
+completed with exit `0:0` in 54 seconds. It first passed the complete Rocky 9
+suite (`652 passed, 1 skipped, 29 subtests`) and re-verified every frozen code,
+codec, and 85604 data hash. The required W&B run completed online.
+
+The job used seed 1701, 16 training targets, four validation targets, two
+epochs, and two optimizer steps. It exercised the exact Azula 0.3.1 16-step,
+order-three sampler with two members. Both members were finite and distinct in
+latent and decoded field space; a fresh same-process reload reproduced both
+tensors bit-for-bit. The immutable full artifact root is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_ldm_gpu_smoke/job_6896402`.
+Its artifact index has SHA-256
+`b3e2ed075c7fa3dc635cafce00014ac598886ef0cf88aecaa883d75588ac3dbf`.
+The byte-identical tracked compact summary has SHA-256
+`fa2b29665b4b39b60c9ce24c1e8b067ebc6165322d40bb8de169bf9492ae5360`.
+
+This accepts implementation mechanics only. The result explicitly leaves
+scientific quality, full B2 training, probabilistic evaluation, O3,
+assimilation, diagnostic ranking, and 85606 access unauthorized. The exact
+interpretation is `paper0/PHASE3_B2_SMOKE_READOUT.md`.
