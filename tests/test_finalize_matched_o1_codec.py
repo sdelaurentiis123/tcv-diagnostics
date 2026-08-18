@@ -74,3 +74,9 @@ def test_json_safe_rejects_nonfinite_results() -> None:
     }
     with pytest.raises(ValueError, match="non-finite"):
         MODULE._json_safe({"bad": np.nan})
+
+
+def test_finalizer_does_not_import_training_dependencies() -> None:
+    text = TOOL.read_text(encoding="utf-8")
+    assert "tcv_diagnostics.codec_training" not in text
+    assert "sha256_file as sha256_path" in text

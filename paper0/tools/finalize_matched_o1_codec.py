@@ -21,7 +21,6 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from tcv_diagnostics.codec_training import sha256_path  # noqa: E402
 from tcv_diagnostics.codec_transport import (  # noqa: E402
     build_matched_o1_transport_gate,
 )
@@ -42,6 +41,7 @@ from tcv_diagnostics.matched_o1_transport import (  # noqa: E402
 from tcv_diagnostics.model_data import (  # noqa: E402
     assert_development_path,
     load_strict_json,
+    sha256_file as sha256_path,
     write_strict_json_atomic,
 )
 from tcv_diagnostics.model_training_data import (  # noqa: E402
