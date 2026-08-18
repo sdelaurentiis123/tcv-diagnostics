@@ -1,0 +1,485 @@
+{
+  "architecture_decision_rule": {
+    "at_least_passing_seeds": 2,
+    "median_seed_metrics_must_pass": true,
+    "nonpassing_seed_catastrophic_bounds": {
+      "aggregate_field_error_relative_to_paired_deterministic_max": 1.2,
+      "ensemble_collapse_allowed": false,
+      "integrity_failure_allowed": false,
+      "nonfinite_allowed": false,
+      "separatrix_transport_relative_l2_max": 0.6
+    },
+    "seed_count": 3
+  },
+  "authorized_scope": [
+    "B2_LDM_H2_full_training_three_seeds_85604",
+    "B2_LDM_H2_one_step_ensemble_generation_85604_validation",
+    "B2_LDM_H2_probabilistic_scientific_evaluation_85604_validation",
+    "B2_LDM_H2_evaluator_CPU_tests_and_bounded_GPU_smoke"
+  ],
+  "bootstrap": {
+    "block_length_frames": 21,
+    "conditional_on_single_run": true,
+    "method": "moving_block_bootstrap",
+    "replicates": 2000,
+    "sampled_blocks_per_replicate": 6,
+    "seed": 85604032,
+    "valid_start_count": 106,
+    "voxel_count_as_independent_sample_size_allowed": false
+  },
+  "calibration": {
+    "coverage": {
+      "I17": {
+        "lower_order_statistic_one_indexed": 8,
+        "nominal": 0.5151515151515151,
+        "upper_order_statistic_one_indexed": 25
+      },
+      "I27": {
+        "lower_order_statistic_one_indexed": 3,
+        "nominal": 0.8181818181818182,
+        "upper_order_statistic_one_indexed": 30
+      },
+      "I31": {
+        "lower_order_statistic_one_indexed": 1,
+        "nominal": 0.9393939393939394,
+        "upper_order_statistic_one_indexed": 32
+      }
+    },
+    "fair_crps": {
+      "first_term": "mean_m_abs_member_minus_truth",
+      "member_assumption": "conditionally_independent_exchangeable",
+      "pair_term": "sum_m_lt_mprime_abs_difference_divided_by_M_times_M_minus_1",
+      "primary": true
+    },
+    "ordinary_empirical_crps_reported": true,
+    "rank_bins": 33,
+    "rank_iid_voxel_pvalue_allowed": false,
+    "tie_break_seed_key": [
+      "target_frame",
+      "channel",
+      "spatial_cell_index",
+      "sampler_evaluation_seed"
+    ],
+    "training_metric": false
+  },
+  "comparators": {
+    "deterministic": {
+      "arm": "C5P-H2",
+      "paired_by_seed": true,
+      "reselection_allowed": false,
+      "result_path": "paper0/results/phase2_o2_evaluation_full_6896117.json",
+      "result_sha256": "251820a6f81d97ffdb046eba7a23cd12505c1179e600e7942231de2fd1feeacb"
+    },
+    "uncompressed": [
+      "persistence",
+      "two_frame_linear_extrapolation",
+      "training_only_toroidal_spectral_AR1"
+    ]
+  },
+  "data": {
+    "absolute_time_input_allowed": false,
+    "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01",
+    "cadence_microseconds": 3.131905426352636,
+    "fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "phi",
+      "Vi"
+    ],
+    "future_truth_input_allowed": false,
+    "guard_frames": [
+      432,
+      496
+    ],
+    "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+    "mode_mapping": "n=5k",
+    "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+    "training_frames": [
+      0,
+      432
+    ],
+    "training_targets": [
+      2,
+      432
+    ],
+    "validation_blocks": [
+      [
+        498,
+        519
+      ],
+      [
+        519,
+        540
+      ],
+      [
+        540,
+        561
+      ],
+      [
+        561,
+        582
+      ],
+      [
+        582,
+        603
+      ],
+      [
+        603,
+        624
+      ]
+    ],
+    "validation_frames": [
+      496,
+      624
+    ],
+    "validation_targets": [
+      498,
+      624
+    ],
+    "volume_shape": [
+      5,
+      64,
+      32,
+      88
+    ],
+    "zperiod": 5
+  },
+  "decision_timing": "after_passing_B2_smoke_before_full_training_or_scientific_metric_implementation",
+  "development_run": "85604",
+  "evidence_locks": {
+    "B2_implementation_manifest": {
+      "path": "paper0/manifests/phase3_b2_ldm_85604.json",
+      "sha256": "75d6f812fc7d203d5c92c588515f4a59d4b3b0cb8688fdd7514b6d09b842f9c3"
+    },
+    "B2_smoke": {
+      "artifact_index_sha256": "b3e2ed075c7fa3dc635cafce00014ac598886ef0cf88aecaa883d75588ac3dbf",
+      "job_id": "6896402",
+      "paper0_commit": "d58b4cc261a901b69c772b01270f38a89deb042f",
+      "path": "paper0/results/phase3_b2_ldm_gpu_smoke_6896402.json",
+      "sha256": "fa2b29665b4b39b60c9ce24c1e8b067ebc6165322d40bb8de169bf9492ae5360"
+    },
+    "geometry": {
+      "path": "paper0/results/phase2_geometry_units_6891709.json"
+    },
+    "model_dataset": {
+      "job_id": "6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18"
+    }
+  },
+  "ensemble_generation": {
+    "canonical_axes": [
+      "target",
+      "ensemble_member",
+      "future_time",
+      "channel",
+      "x",
+      "y",
+      "z"
+    ],
+    "canonical_shape": [
+      126,
+      32,
+      1,
+      5,
+      64,
+      32,
+      88
+    ],
+    "context_only_generation_required": true,
+    "dtype": "float32",
+    "member_interaction_allowed": false,
+    "member_prefix_sensitivity": [
+      4,
+      8,
+      16,
+      32
+    ],
+    "members": 32,
+    "regeneration_for_member_prefixes_allowed": false,
+    "sampler_seed_key": [
+      "model_seed",
+      "target_frame",
+      1110590806
+    ],
+    "truth_loaded_after_forecast_hash_only": true
+  },
+  "forbidden_scope": [
+    "85606_access",
+    "O3_or_longer_rollout",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering_or_control",
+    "physics_derived_training_loss",
+    "checkpoint_selection_by_scientific_metric",
+    "validation_tuning",
+    "member_posthoc_calibration",
+    "FGN_training",
+    "PDE_Refiner_training",
+    "joint_residual_training"
+  ],
+  "full_training_authorized": true,
+  "gates": {
+    "blocks_required_passing": 5,
+    "blocks_total": 6,
+    "field": {
+      "aggregate_fair_crps_strictly_below_best_uncompressed_mae": true,
+      "aggregate_fair_crps_strictly_below_paired_deterministic_mae": true,
+      "aggregate_mean_mae_relative_to_paired_deterministic_max": 1.05,
+      "aggregate_mean_rmse_relative_to_paired_deterministic_max": 1.05,
+      "coverage_tolerance_primary_fields": {
+        "I17": 0.1,
+        "I27": 0.08,
+        "I31": 0.06
+      },
+      "fields_required_fair_crps_better_than_paired_deterministic": 4,
+      "fifth_field_fair_crps_relative_max": 1.05,
+      "primary_fields_required_calibrated": 4,
+      "primary_spread_skill_range": [
+        0.8,
+        1.25
+      ],
+      "remaining_spread_skill_range": [
+        0.67,
+        1.5
+      ],
+      "region_I31_coverage_range": [
+        0.75,
+        0.995
+      ]
+    },
+    "integrity": {
+      "canonical_member_count": 32,
+      "canonical_shape_required": true,
+      "checkpoint_reload_required": true,
+      "codec_frozen_required": true,
+      "finite_required": true,
+      "full_epochs": 200,
+      "full_optimizer_steps": 5400,
+      "nonzero_spread_every_field_primary_region": true
+    },
+    "monte_carlo": {
+      "absolute_floor": 1e-08,
+      "comparison": "M16_vs_M32",
+      "relative_difference_max": 0.1
+    },
+    "spectral": {
+      "cross_coherence_absolute_change_max": 0.15,
+      "cross_phase_error_degrees_max": 20.0,
+      "ensemble_mean_realization_coherence_min": 0.8,
+      "material_calibration_I31_range": [
+        0.75,
+        0.995
+      ],
+      "material_calibration_spread_skill_range": [
+        0.67,
+        1.5
+      ],
+      "member_expected_power_ratio_range": [
+        0.75,
+        1.3
+      ],
+      "training_materiality_fraction_min": 0.01
+    },
+    "transport": {
+      "event_conditioned_magnitude_relative_error_max": 0.5,
+      "event_conditioned_weighted_sign_disagreement_max": 0.25,
+      "quantities_required": 4,
+      "separatrix": {
+        "absolute_normalized_bias_max": 0.15,
+        "correlation_min": 0.8,
+        "fair_crps_better_than_paired_deterministic_required": 3,
+        "fourth_fair_crps_relative_max": 1.05,
+        "probabilistically_calibrated_required": 3,
+        "relative_l2_max": 0.3,
+        "weighted_sign_disagreement_max": 0.15
+      },
+      "separatrix_calibration": {
+        "I27_coverage_tolerance": 0.12,
+        "I31_coverage_tolerance": 0.1,
+        "spread_skill_range": [
+          0.67,
+          1.5
+        ]
+      },
+      "strict_faces": {
+        "correlation_min": 0.7,
+        "relative_l2_max": 0.4,
+        "weighted_sign_disagreement_max": 0.2
+      }
+    }
+  },
+  "geometry_regions": {
+    "implementation": "src/tcv_diagnostics/geometry.py",
+    "overlapping_reports": [
+      "separatrix_cell_band",
+      "outboard_midplane",
+      "x_point_topology_stencil",
+      "inner_divertor_leg",
+      "outer_divertor_leg"
+    ],
+    "primary_partition": [
+      "confined_edge",
+      "private_flux",
+      "scrape_off_layer"
+    ],
+    "strict_wall_interior_only": true
+  },
+  "held_out_85606_access_allowed": false,
+  "literature": [
+    {
+      "identifier": "10.1198/016214506000001437",
+      "purpose": "proper_CRPS_and_energy_score"
+    },
+    {
+      "identifier": "arXiv:2412.15832",
+      "purpose": "finite_ensemble_CRPS_spread_skill_and_spectra"
+    },
+    {
+      "identifier": "arXiv:2602.15830",
+      "purpose": "fair_score_exchangeability_limit"
+    },
+    {
+      "identifier": "arXiv:2507.02608",
+      "purpose": "LOLA_control"
+    },
+    {
+      "identifier": "arXiv:2603.01949",
+      "purpose": "separate_probabilistic_retrofitting_motivation"
+    }
+  ],
+  "model": {
+    "arm": "B2-LDM-H2",
+    "context_frames": 2,
+    "family": "LOLA_style_masked_latent_diffusion",
+    "future_frames": 1,
+    "representation": "C5P-dcae_l10",
+    "trajectory_frames": 3
+  },
+  "normalization_and_gauge": {
+    "latent": "per_channel_training_only_population_moments_per_codec_seed",
+    "phi_primary_marginal_policy": "subtract_each_truth_and_member_spatial_mean_per_target",
+    "phi_raw_stored_gauge_metrics": "descriptive_only",
+    "volume": "immutable_job_6893525_training_only_statistics"
+  },
+  "probabilistic_evaluation_authorized": true,
+  "protocol": {
+    "path": "paper0/protocol/PHASE3_B2_FULL_EVALUATION_PROTOCOL.md",
+    "sha256": "8b0345cbff7de588e52c73a40232cdf0a97b5d3f0c18728dc35dadaca9d25490"
+  },
+  "protocol_status": "frozen_before_B2_full_training_or_scientific_metric_implementation",
+  "sampler": {
+    "algorithm": "Azula_0.3.1_ABSampler",
+    "independent_initial_noise_per_member": true,
+    "order": 3,
+    "start": 1.0,
+    "steps": 16,
+    "stop": 0.0
+  },
+  "schema_version": 1,
+  "sequestered_run": "85606",
+  "spectral": {
+    "bands": [
+      {
+        "full_torus_n": [
+          5,
+          15
+        ],
+        "stored_k": [
+          1,
+          3
+        ]
+      },
+      {
+        "full_torus_n": [
+          20,
+          25
+        ],
+        "stored_k": [
+          4,
+          5
+        ]
+      },
+      {
+        "full_torus_n": [
+          30,
+          35
+        ],
+        "stored_k": [
+          6,
+          7
+        ]
+      }
+    ],
+    "cross_pairs": [
+      [
+        "Ne",
+        "phi"
+      ],
+      [
+        "Pe",
+        "phi"
+      ],
+      [
+        "Pi",
+        "phi"
+      ]
+    ],
+    "ensemble_mean_fields_for_nonlinear_cross_spectrum_allowed": false,
+    "memberwise_first": true
+  },
+  "training": {
+    "betas": [
+      0.9,
+      0.99
+    ],
+    "checkpoint_selection": "earliest_numerically_lowest_fixed_noise_full_validation_complete_trajectory_denoising_loss",
+    "early_stopping": false,
+    "epochs": 200,
+    "gradient_accumulation": 16,
+    "gradient_clip": 1.0,
+    "learning_rate": 0.0001,
+    "microbatch": 1,
+    "optimizer": "AdamW",
+    "optimizer_steps_per_epoch": 27,
+    "physics_derived_loss_allowed": false,
+    "precision": "bfloat16_autocast",
+    "scheduler": "cosine_to_zero_per_optimizer_step",
+    "seeds": [
+      1701,
+      1702,
+      1703
+    ],
+    "targets_per_epoch": 430,
+    "total_optimizer_steps": 5400,
+    "validation_targets": 126,
+    "warmup_steps": 0,
+    "weight_decay": 0.0
+  },
+  "transport": {
+    "complete_heat_flux_claim_allowed": false,
+    "ensemble_mean_fields_for_transport_allowed": false,
+    "memberwise_first": true,
+    "quantities": [
+      "radial_ExB_particle",
+      "radial_ExB_electron_internal_energy",
+      "radial_ExB_ion_internal_energy",
+      "radial_ExB_total_internal_energy"
+    ],
+    "reductions": [
+      "strict_face_contributions",
+      "confined_separatrix_wedge"
+    ],
+    "resample_z": [
+      88,
+      81
+    ]
+  },
+  "wandb": {
+    "checkpoint_upload": false,
+    "local_artifacts_are_scientific_authority": true,
+    "online_required": true,
+    "project": "tcv-diagnostics-paper0"
+  }
+}
