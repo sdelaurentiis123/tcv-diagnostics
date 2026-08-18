@@ -271,13 +271,27 @@ def audit_history(
     }
 
 
-def _write_index(output: Path, artifacts: list[Path]) -> Path:
+def _write_index(
+    output: Path,
+    artifacts: list[Path],
+    *,
+    verified_sha256: Mapping[Path, str] | None = None,
+) -> Path:
     index = output / "artifact_sha256.txt"
     if index.exists():
         raise FileExistsError(index)
+    known = {} if verified_sha256 is None else dict(verified_sha256)
+
+    def digest(path: Path) -> str:
+        return known[path] if path in known else sha256_path(path)
+
     index.write_text(
         "\n".join(
-            f"{sha256_path(path)}  {path.resolve(strict=True)}" for path in artifacts
+            (
+                f"{digest(path)}  "
+                f"{path.resolve(strict=True)}"
+            )
+            for path in artifacts
         )
         + "\n",
         encoding="utf-8",
@@ -490,7 +504,7 @@ def main() -> None:
         },
         "forecast": {
             "path": str(forecast_path.resolve(strict=True)),
-            "sha256": sha256_path(forecast_path),
+            "sha256": generation["forecast"]["sha256"],
             "bytes": forecast_path.stat().st_size,
         },
         "score": {
@@ -515,6 +529,7 @@ def main() -> None:
     index = _write_index(
         output,
         [generation_path, forecast_path, score_path, result_path],
+        verified_sha256={forecast_path: generation["forecast"]["sha256"]},
     )
     print(
         json.dumps(

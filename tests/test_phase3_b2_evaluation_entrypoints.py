@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from paper0.tools.evaluate_b2_checkpoint import (
+    _write_index,
     audit_full_training_result,
     audit_history,
 )
@@ -177,3 +178,25 @@ def test_history_audit_rejects_wrong_selection_truncation_and_tampering(
             selected_validation=_validation(1.0),
             final_validation=final,
         )
+
+
+def test_artifact_index_reuses_an_already_independently_verified_large_hash(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    artifact = tmp_path / "forecast.h5"
+    artifact.write_bytes(b"large-forecast-placeholder")
+
+    def forbidden_rehash(path: Path) -> str:
+        raise AssertionError(f"unexpected redundant hash of {path}")
+
+    monkeypatch.setattr(
+        "paper0.tools.evaluate_b2_checkpoint.sha256_path",
+        forbidden_rehash,
+    )
+    index = _write_index(
+        tmp_path,
+        [artifact],
+        verified_sha256={artifact: "f" * 64},
+    )
+    assert index.read_text() == f"{'f' * 64}  {artifact.resolve()}\n"
