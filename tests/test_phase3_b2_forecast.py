@@ -92,6 +92,16 @@ def test_sampler_seed_rejects_unfrozen_model_seed():
         sampler_seed(42, 498)
 
 
+def test_source_freezes_a_distinct_four_target_non_scientific_smoke() -> None:
+    import inspect
+    from tcv_diagnostics.b2_forecast import generate_selected_b2_forecasts
+
+    source = inspect.getsource(generate_selected_b2_forecasts)
+    assert "tuple(range(498, 502))" in source
+    assert "bounded_non_scientific_B2_LDM_H2_M32_forecast_smoke_85604" in source
+    assert "bounded_smoke: bool = False" in source
+
+
 def test_external_initialization_matches_azula_default_unit_prior_formula():
     class Schedule:
         def __call__(self, time: torch.Tensor):

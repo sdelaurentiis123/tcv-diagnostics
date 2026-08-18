@@ -8,6 +8,7 @@ import pytest
 import tcv_diagnostics.b2_scoring as scoring
 from tcv_diagnostics.b2_scoring import (
     compute_b2_transport_event_thresholds,
+    score_b2_forecast_smoke,
     validate_b2_transport_event_thresholds,
 )
 from tcv_diagnostics.codec_transport import TRANSPORT_QUANTITIES
@@ -102,3 +103,16 @@ def test_transport_event_threshold_contract_rejects_wrong_quantity_order():
     }
     with pytest.raises(ValueError, match="order"):
         validate_b2_transport_event_thresholds(record)
+
+
+def test_bounded_smoke_scorer_rejects_any_interval_other_than_four_targets():
+    with pytest.raises(ValueError, match="bounded smoke"):
+        score_b2_forecast_smoke(
+            catalog=None,  # type: ignore[arg-type]
+            forecast_artifact=None,  # type: ignore[arg-type]
+            native_truth=None,  # type: ignore[arg-type]
+            geometry=None,  # type: ignore[arg-type]
+            event_threshold_record={},
+            target_frames=tuple(range(498, 503)),
+            model_seed=1701,
+        )

@@ -175,13 +175,66 @@ def score_b2_forecast(
 ) -> dict[str, Any]:
     """Score one closed and hash-verified M32 artifact against 85604 truth."""
 
+    return _score_b2_forecast(
+        catalog=catalog,
+        forecast_artifact=forecast_artifact,
+        native_truth=native_truth,
+        geometry=geometry,
+        event_threshold_record=event_threshold_record,
+        target_frames=target_frames,
+        model_seed=model_seed,
+        bounded_smoke=False,
+    )
+
+
+def score_b2_forecast_smoke(
+    *,
+    catalog: ModelDatasetCatalog,
+    forecast_artifact: B2ForecastArtifact,
+    native_truth: NativeTruthCatalog,
+    geometry: CodecTransportGeometry,
+    event_threshold_record: Mapping[str, Any],
+    target_frames: Sequence[int],
+    model_seed: int,
+) -> dict[str, Any]:
+    """Run the same scorer on four targets as a non-scientific preflight."""
+
+    return _score_b2_forecast(
+        catalog=catalog,
+        forecast_artifact=forecast_artifact,
+        native_truth=native_truth,
+        geometry=geometry,
+        event_threshold_record=event_threshold_record,
+        target_frames=target_frames,
+        model_seed=model_seed,
+        bounded_smoke=True,
+    )
+
+
+def _score_b2_forecast(
+    *,
+    catalog: ModelDatasetCatalog,
+    forecast_artifact: B2ForecastArtifact,
+    native_truth: NativeTruthCatalog,
+    geometry: CodecTransportGeometry,
+    event_threshold_record: Mapping[str, Any],
+    target_frames: Sequence[int],
+    model_seed: int,
+    bounded_smoke: bool,
+) -> dict[str, Any]:
+    """Shared full/smoke scorer with an explicit immutable scope switch."""
+
     targets = strict_o2_targets(
         target_frames,
         split="validation",
         context_frames=2,
     )
-    if targets != B2_VALIDATION_TARGETS:
-        raise ValueError("scientific B2 scoring requires targets 498..623")
+    required_targets = (
+        tuple(range(498, 502)) if bounded_smoke else B2_VALIDATION_TARGETS
+    )
+    if targets != required_targets:
+        purpose = "bounded smoke" if bounded_smoke else "scientific"
+        raise ValueError(f"{purpose} B2 scoring target interval differs")
     if forecast_artifact.target_frames != targets:
         raise ValueError("B2 forecast artifact/scorer target frames differ")
     if forecast_artifact.model_seed != int(model_seed):
@@ -195,11 +248,14 @@ def score_b2_forecast(
         masks.strict_wall_interior & masks.operator_interior,
         dtype=bool,
     )
+    validation_blocks = (
+        (targets,) if bounded_smoke else B2_VALIDATION_BLOCKS
+    )
     field = B2FieldScoreAccumulator(
         model_seed=model_seed,
         target_frames=targets,
         region_masks=region_masks,
-        validation_blocks=B2_VALIDATION_BLOCKS,
+        validation_blocks=validation_blocks,
     )
     spectral = B2SpectralAccumulator(
         model_seed=model_seed,
@@ -212,7 +268,7 @@ def score_b2_forecast(
             target_frames=block,
             eligible_xy_mask=eligible_xy,
         )
-        for block in B2_VALIDATION_BLOCKS
+        for block in validation_blocks
     ]
     transport = B2TransportAccumulator(
         model_seed=model_seed,
@@ -227,11 +283,11 @@ def score_b2_forecast(
             event_thresholds=thresholds,
             detailed=False,
         )
-        for block in B2_VALIDATION_BLOCKS
+        for block in validation_blocks
     ]
     block_for_target = {
         target: index
-        for index, block in enumerate(B2_VALIDATION_BLOCKS)
+        for index, block in enumerate(validation_blocks)
         for target in block
     }
     truth_dataset = OneStepWindowDataset(
@@ -288,7 +344,12 @@ def score_b2_forecast(
     return _json_safe(
         {
             "schema_version": 1,
-            "scope": "B2_truth_separated_probabilistic_scoring_85604",
+            "scope": (
+                "bounded_non_scientific_B2_evaluator_smoke_scoring_85604"
+                if bounded_smoke
+                else "B2_truth_separated_probabilistic_scoring_85604"
+            ),
+            "bounded_non_scientific_smoke": bool(bounded_smoke),
             "development_run": "85604",
             "held_out_85606_read": False,
             "guard_frames_read": False,

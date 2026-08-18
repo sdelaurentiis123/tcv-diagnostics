@@ -24,7 +24,10 @@ from tcv_diagnostics.b2_forecast import (  # noqa: E402
     generate_selected_b2_forecasts,
     load_selected_b2_model,
 )
-from tcv_diagnostics.b2_scoring import score_b2_forecast  # noqa: E402
+from tcv_diagnostics.b2_scoring import (  # noqa: E402
+    score_b2_forecast,
+    score_b2_forecast_smoke,
+)
 from tcv_diagnostics.b2_training import B2RunConfig  # noqa: E402
 from tcv_diagnostics.codec_training import sha256_path  # noqa: E402
 from tcv_diagnostics.matched_o1_transport import (  # noqa: E402
@@ -45,7 +48,10 @@ from tcv_diagnostics.o2_context_data import OneStepContextDataset  # noqa: E402
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--mode", choices=("smoke", "full"), required=True)
     parser.add_argument("--seed", type=int, choices=(1701, 1702, 1703), required=True)
+    parser.add_argument("--training-matrix", type=Path, required=True)
+    parser.add_argument("--training-matrix-sha256", required=True)
     parser.add_argument("--training-result", type=Path, required=True)
     parser.add_argument("--training-result-sha256", required=True)
     parser.add_argument("--training-commit", required=True)
@@ -62,6 +68,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--evaluation-manifest-sha256", required=True)
     parser.add_argument("--evaluation-protocol", type=Path, required=True)
     parser.add_argument("--evaluation-protocol-sha256", required=True)
+    parser.add_argument("--smoke-result", type=Path)
+    parser.add_argument("--smoke-result-sha256")
     parser.add_argument("--output-directory", type=Path, required=True)
     parser.add_argument("--paper0-commit", required=True)
     parser.add_argument("--slurm-job-id", required=True)
@@ -271,6 +279,76 @@ def audit_history(
     }
 
 
+def frozen_training_run(
+    matrix: Mapping[str, Any],
+    *,
+    seed: int,
+    training_result: Path,
+    training_result_sha256: str,
+    training_commit: str,
+    paper0_commit: str,
+) -> Mapping[str, Any]:
+    if (
+        matrix.get("scope")
+        != "phase3_B2_LDM_H2_full_training_matrix_frozen"
+        or matrix.get("status")
+        != "completed_pending_bounded_evaluator_smoke"
+        or matrix.get("paper0_commit") != paper0_commit
+        or matrix.get("training_commit") != training_commit
+        or matrix.get("development_run") != "85604"
+        or matrix.get("held_out_85606_read") is not False
+        or matrix.get("seed_count") != 3
+        or matrix.get("seeds") != [1701, 1702, 1703]
+        or matrix.get("all_training_histories_complete") is not True
+        or matrix.get("all_checkpoint_choices_frozen_before_probabilistic_metrics")
+        is not True
+        or matrix.get("bounded_evaluator_smoke_required") is not True
+        or matrix.get("bounded_evaluator_smoke_completed") is not False
+        or matrix.get("full_probabilistic_evaluation_allowed") is not False
+        or matrix.get("O3_launch_allowed") is not False
+    ):
+        raise RuntimeError("B2 frozen training matrix contract differs")
+    runs = matrix.get("runs", [])
+    if [run.get("seed") for run in runs] != [1701, 1702, 1703]:
+        raise RuntimeError("B2 frozen training run order differs")
+    selected = runs[[1701, 1702, 1703].index(int(seed))]
+    expected_result = selected.get("training_result", {})
+    if (
+        Path(expected_result.get("path", "")).resolve(strict=True)
+        != training_result.resolve(strict=True)
+        or expected_result.get("sha256") != training_result_sha256
+    ):
+        raise RuntimeError("B2 training result differs from frozen matrix")
+    return selected
+
+
+def validate_bounded_smoke_result(
+    record: Mapping[str, Any],
+    *,
+    paper0_commit: str,
+    training_matrix_sha256: str,
+) -> None:
+    if (
+        record.get("scope")
+        != "bounded_non_scientific_B2_evaluator_smoke_85604"
+        or record.get("status") != "bounded_evaluator_smoke_completed"
+        or record.get("paper0_commit") != paper0_commit
+        or record.get("seed") != 1701
+        or record.get("target_frames") != [498, 502]
+        or record.get("target_count") != 4
+        or record.get("ensemble_members") != 32
+        or record.get("held_out_85606_read") is not False
+        or record.get("truth_opened_only_after_forecast_hash") is not True
+        or record.get("full_probabilistic_evaluation_preconditions_passed")
+        is not True
+        or record.get("probabilistic_scientific_gate_evaluated") is not False
+        or record.get("O3_launch_allowed") is not False
+        or record.get("training_matrix", {}).get("sha256")
+        != training_matrix_sha256
+    ):
+        raise RuntimeError("B2 bounded evaluator smoke contract differs")
+
+
 def _write_index(
     output: Path,
     artifacts: list[Path],
@@ -301,7 +379,8 @@ def _write_index(
 
 def main() -> None:
     args = parse_args()
-    for path in (
+    paths = [
+        args.training_matrix,
         args.training_result,
         args.artifact_root,
         args.native_truth_result,
@@ -311,9 +390,15 @@ def main() -> None:
         args.evaluation_manifest,
         args.evaluation_protocol,
         args.output_directory,
-    ):
+    ]
+    if args.smoke_result is not None:
+        paths.append(args.smoke_result)
+    for path in paths:
         assert_development_path(path)
     verify_checkout(args.paper0_commit)
+    matrix_path = verify_input(
+        args.training_matrix, args.training_matrix_sha256
+    )
     training_path = verify_input(
         args.training_result, args.training_result_sha256
     )
@@ -333,6 +418,16 @@ def main() -> None:
     protocol_path = verify_input(
         args.evaluation_protocol, args.evaluation_protocol_sha256
     )
+    if args.mode == "smoke":
+        if args.seed != 1701:
+            raise RuntimeError("the bounded B2 evaluator smoke requires seed 1701")
+        if args.smoke_result is not None or args.smoke_result_sha256 is not None:
+            raise RuntimeError("the bounded B2 smoke cannot consume a smoke result")
+        smoke_path = None
+    else:
+        if args.smoke_result is None or args.smoke_result_sha256 is None:
+            raise RuntimeError("full B2 evaluation requires the bounded smoke result")
+        smoke_path = verify_input(args.smoke_result, args.smoke_result_sha256)
     manifest = load_strict_json(manifest_path)
     if (
         manifest.get("protocol_status")
@@ -344,6 +439,21 @@ def main() -> None:
         != args.evaluation_protocol_sha256
     ):
         raise RuntimeError("B2 full evaluation manifest contract differs")
+    matrix = load_strict_json(matrix_path)
+    frozen_training_run(
+        matrix,
+        seed=args.seed,
+        training_result=training_path,
+        training_result_sha256=args.training_result_sha256,
+        training_commit=args.training_commit,
+        paper0_commit=args.paper0_commit,
+    )
+    if smoke_path is not None:
+        validate_bounded_smoke_result(
+            load_strict_json(smoke_path),
+            paper0_commit=args.paper0_commit,
+            training_matrix_sha256=args.training_matrix_sha256,
+        )
     training_record = load_strict_json(training_path)
     training = audit_full_training_result(
         training_record,
@@ -385,7 +495,12 @@ def main() -> None:
         geometry_path=geometry_path,
         geometry_manifest=load_strict_json(geometry_manifest_path),
     )
-    targets = tuple(range(498, 624))
+    bounded_smoke = args.mode == "smoke"
+    targets = (
+        tuple(range(498, 502))
+        if bounded_smoke
+        else tuple(range(498, 624))
+    )
     model = load_selected_b2_model(
         checkpoint=checkpoint_path,
         expected_checkpoint_sha256=training["selected_checkpoint"]["sha256"],
@@ -413,7 +528,13 @@ def main() -> None:
         "training_commit": args.training_commit,
         "evaluation_commit": args.paper0_commit,
         "slurm_job_id": args.slurm_job_id,
+        "evaluation_mode": args.mode,
+        "bounded_non_scientific_smoke": bounded_smoke,
         "target_truth_read": False,
+        "training_matrix": {
+            "path": str(matrix_path),
+            "sha256": args.training_matrix_sha256,
+        },
         "evaluation_manifest": {
             "path": str(manifest_path),
             "sha256": args.evaluation_manifest_sha256,
@@ -433,6 +554,7 @@ def main() -> None:
             metadata=metadata,
             device=device,
             member_batch_size=args.member_batch_size,
+            bounded_smoke=bounded_smoke,
         )
     finally:
         context.close()
@@ -450,7 +572,10 @@ def main() -> None:
         target_frames=targets,
         model_seed=args.seed,
     ) as artifact:
-        score = score_b2_forecast(
+        scoring_function = (
+            score_b2_forecast_smoke if bounded_smoke else score_b2_forecast
+        )
+        score = scoring_function(
             catalog=catalog,
             forecast_artifact=artifact,
             native_truth=native_truth,
@@ -463,15 +588,28 @@ def main() -> None:
     write_strict_json_atomic(score_path, score)
     result = {
         "schema_version": 1,
-        "scope": "B2_LDM_H2_full_probabilistic_evaluation_85604",
-        "status": "completed_pending_frozen_acceptance_gate",
-        "scientific_authority": True,
+        "scope": (
+            "bounded_non_scientific_B2_evaluator_smoke_85604"
+            if bounded_smoke
+            else "B2_LDM_H2_full_probabilistic_evaluation_85604"
+        ),
+        "status": (
+            "bounded_evaluator_smoke_completed"
+            if bounded_smoke
+            else "completed_pending_frozen_acceptance_gate"
+        ),
+        "scientific_authority": not bounded_smoke,
+        "bounded_non_scientific_smoke": bounded_smoke,
         "development_run": "85604",
         "held_out_85606_read": False,
         "guard_frames_read": False,
         "target_truth_used_during_forecast_generation": False,
         "truth_opened_only_after_forecast_hash": True,
+        "target_frames": [targets[0], targets[-1] + 1],
+        "target_count": len(targets),
+        "ensemble_members": 32,
         "physics_derived_training_loss_used": False,
+        "full_probabilistic_evaluation_preconditions_passed": bounded_smoke,
         "probabilistic_scientific_gate_evaluated": False,
         "O3_launch_allowed": False,
         "assimilation_allowed": False,
@@ -487,6 +625,18 @@ def main() -> None:
             "path": str(training_path),
             "sha256": args.training_result_sha256,
         },
+        "training_matrix": {
+            "path": str(matrix_path),
+            "sha256": args.training_matrix_sha256,
+        },
+        "bounded_smoke_result": (
+            None
+            if smoke_path is None
+            else {
+                "path": str(smoke_path),
+                "sha256": args.smoke_result_sha256,
+            }
+        ),
         "training_history_audit": history_audit,
         "selected_checkpoint": {
             "path": str(checkpoint_path),

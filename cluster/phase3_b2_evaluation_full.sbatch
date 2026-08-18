@@ -19,7 +19,9 @@ set -euo pipefail
 
 : "${PAPER0_EXPECTED_COMMIT:?submit with PAPER0_EXPECTED_COMMIT set}"
 : "${B2_TRAINING_JOB_ID:?submit with B2_TRAINING_JOB_ID set}"
+: "${B2_TRAINING_FREEZE_JOB_ID:?submit with B2_TRAINING_FREEZE_JOB_ID set}"
 : "${B2_THRESHOLD_JOB_ID:?submit with B2_THRESHOLD_JOB_ID set}"
+: "${B2_SMOKE_JOB_ID:?submit with B2_SMOKE_JOB_ID set}"
 
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
@@ -30,8 +32,12 @@ readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3
 readonly JOB_ROOT="${RESULT_BASE}/job_${SLURM_ARRAY_JOB_ID}"
 readonly TASK_ROOT="${JOB_ROOT}/task_${SLURM_ARRAY_TASK_ID}"
 readonly TRAINING_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_ldm_full/job_${B2_TRAINING_JOB_ID}"
+readonly MATRIX_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_training_freeze/job_${B2_TRAINING_FREEZE_JOB_ID}"
+readonly TRAINING_MATRIX="${MATRIX_ROOT}/training_matrix.json"
 readonly THRESHOLD_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_transport_event_thresholds/job_${B2_THRESHOLD_JOB_ID}"
 readonly THRESHOLD_RESULT="${THRESHOLD_ROOT}/thresholds/result.json"
+readonly SMOKE_ROOT="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_evaluator_smoke/job_${B2_SMOKE_JOB_ID}"
+readonly SMOKE_RESULT="${SMOKE_ROOT}/b2_ldm_h2_seed_1701/result.json"
 readonly EVALUATION_MANIFEST="${PAPER0_ROOT}/paper0/manifests/phase3_b2_full_evaluation_85604.json"
 readonly EVALUATION_PROTOCOL="${PAPER0_ROOT}/paper0/protocol/PHASE3_B2_FULL_EVALUATION_PROTOCOL.md"
 readonly NATIVE_TRUTH_RESULT="${PAPER0_ROOT}/paper0/results/phase2_potential_vorticity_all_frame_6893033.json"
@@ -110,13 +116,13 @@ fi
 
 check_sha256 "a5567dccb4e536bb33c3e160c2b5bb64b586e2465b20957e2a5d1144ffd2706c" "${EVALUATION_MANIFEST}"
 check_sha256 "8b0345cbff7de588e52c73a40232cdf0a97b5d3f0c18728dc35dadaca9d25490" "${EVALUATION_PROTOCOL}"
-check_sha256 "9f37f15d8e5d6c26554cc9afd015a614f1f6e3f56f39fb26cbbcd54fe8769981" "${EVALUATOR}"
+check_sha256 "c59939d074d12eee361cf07eef0b031d9a5dda56fe51604e5246e2f490aa497c" "${EVALUATOR}"
 check_sha256 "8f88bd4304fcc863cf774b75d4e1eccabb6b8afe18889398cdf3c4c455e502c4" "${WANDB_WRAPPER}"
 check_sha256 "cc6b00b72605c6457ae3a3b24db7e90dac16989c852df92036a57272f62eddae" "${NATIVE_TRUTH_RESULT}"
 check_sha256 "76426ca83f711aaf9dec79c6df4c4503c2c8eece847b78027633e93e4b2cd460" "${GEOMETRY_MANIFEST}"
 check_sha256 "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8" "${GEOMETRY}"
-check_sha256 "a1af83a4a92a020bf1f44ef2c40367cd7544eb3dfc9ff31b7a95991e09574d06" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_forecast.py"
-check_sha256 "0beb9404f1818e34490475d3fd28dab6eb21b53d7996fa0a46dde245be0819ad" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_scoring.py"
+check_sha256 "b8f4efe71cc12c0593c61886a670312ffb88a71a32f0977ba96a404955db88b8" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_forecast.py"
+check_sha256 "504f1cadb592e0df5b807e729bd175f98a165b91476ffd70909106b461c98747" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_scoring.py"
 check_sha256 "c2d0f5e764b783f7a6a240fbd3f11f6c0a4fd52a173d9f1dd1eb97ccff62a0db" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_field_metrics.py"
 check_sha256 "9bc110067a7124de015202e7eac40030fccda655322f8386dc1d1adca20b9112" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_field_scoring.py"
 check_sha256 "382fc683519d01185d0e5314196cd0c62f5e39e60f5e1aa06478e74acda8761e" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_spectral_metrics.py"
@@ -140,10 +146,18 @@ if [[ ! -f "${THRESHOLD_RESULT}" ]]; then
   echo "Frozen B2 event thresholds are unavailable: ${THRESHOLD_RESULT}" >&2
   exit 2
 fi
+if [[ ! -f "${TRAINING_MATRIX}" || ! -f "${SMOKE_RESULT}" ]]; then
+  echo "B2 training matrix or bounded evaluator smoke is unavailable" >&2
+  exit 2
+fi
 sha256sum -c "${TRAINING_OUTPUT}/artifact_sha256.txt"
+sha256sum -c "${MATRIX_ROOT}/artifact_sha256.txt"
 sha256sum -c "${THRESHOLD_ROOT}/thresholds/artifact_sha256.txt"
+sha256sum -c "${SMOKE_ROOT}/artifact_sha256.txt"
 readonly TRAINING_RESULT_SHA="$(sha256sum "${TRAINING_RESULT}" | awk '{print $1}')"
+readonly TRAINING_MATRIX_SHA="$(sha256sum "${TRAINING_MATRIX}" | awk '{print $1}')"
 readonly THRESHOLD_RESULT_SHA="$(sha256sum "${THRESHOLD_RESULT}" | awk '{print $1}')"
+readonly SMOKE_RESULT_SHA="$(sha256sum "${SMOKE_RESULT}" | awk '{print $1}')"
 
 scontrol show job -dd "${SLURM_JOB_ID}" > "${TASK_ROOT}/slurm_job.txt"
 export PYTHONNOUSERSITE=1
@@ -162,7 +176,9 @@ export MKL_NUM_THREADS=8
   echo "paper0_commit=${PAPER0_COMMIT}"
   echo "training_commit=${TRAINING_COMMIT}"
   echo "training_job_id=${B2_TRAINING_JOB_ID}"
+  echo "training_freeze_job_id=${B2_TRAINING_FREEZE_JOB_ID}"
   echo "threshold_job_id=${B2_THRESHOLD_JOB_ID}"
+  echo "smoke_job_id=${B2_SMOKE_JOB_ID}"
   echo "array_job_id=${SLURM_ARRAY_JOB_ID}"
   echo "array_task_id=${TASK_INDEX}"
   echo "seed=${SEED}"
@@ -210,7 +226,7 @@ fi
 
 readonly EVALUATION_MANIFEST_SHA="a5567dccb4e536bb33c3e160c2b5bb64b586e2465b20957e2a5d1144ffd2706c"
 readonly EVALUATION_PROTOCOL_SHA="8b0345cbff7de588e52c73a40232cdf0a97b5d3f0c18728dc35dadaca9d25490"
-readonly EVALUATOR_SHA="9f37f15d8e5d6c26554cc9afd015a614f1f6e3f56f39fb26cbbcd54fe8769981"
+readonly EVALUATOR_SHA="c59939d074d12eee361cf07eef0b031d9a5dda56fe51604e5246e2f490aa497c"
 readonly RUN_ID="p0b2eval-${SLURM_ARRAY_JOB_ID}-${TASK_INDEX}-s${SEED}"
 
 COMMAND=(
@@ -226,7 +242,10 @@ COMMAND=(
   --wandb-run-id "${RUN_ID}"
   --wandb-run-name "b2-eval-s${SEED}-j${SLURM_ARRAY_JOB_ID}-t${TASK_INDEX}"
   --
+  --mode full
   --seed "${SEED}"
+  --training-matrix "${TRAINING_MATRIX}"
+  --training-matrix-sha256 "${TRAINING_MATRIX_SHA}"
   --training-result "${TRAINING_RESULT}"
   --training-result-sha256 "${TRAINING_RESULT_SHA}"
   --training-commit "${TRAINING_COMMIT}"
@@ -243,6 +262,8 @@ COMMAND=(
   --evaluation-manifest-sha256 "${EVALUATION_MANIFEST_SHA}"
   --evaluation-protocol "${EVALUATION_PROTOCOL}"
   --evaluation-protocol-sha256 "${EVALUATION_PROTOCOL_SHA}"
+  --smoke-result "${SMOKE_RESULT}"
+  --smoke-result-sha256 "${SMOKE_RESULT_SHA}"
   --output-directory "${RUN_OUTPUT}"
   --paper0-commit "${PAPER0_COMMIT}"
   --slurm-job-id "${SLURM_ARRAY_JOB_ID}_${TASK_INDEX}"

@@ -10,6 +10,8 @@ from paper0.tools.evaluate_b2_checkpoint import (
     _write_index,
     audit_full_training_result,
     audit_history,
+    frozen_training_run,
+    validate_bounded_smoke_result,
 )
 from tcv_diagnostics.b2_training import B2RunConfig
 from tcv_diagnostics.codec_training import sha256_path
@@ -200,3 +202,74 @@ def test_artifact_index_reuses_an_already_independently_verified_large_hash(
         verified_sha256={artifact: "f" * 64},
     )
     assert index.read_text() == f"{'f' * 64}  {artifact.resolve()}\n"
+
+
+def test_full_evaluator_is_bound_to_frozen_matrix_and_passing_bounded_smoke(
+    tmp_path: Path,
+) -> None:
+    training = tmp_path / "training.json"
+    training.write_text("{}\n")
+    digest = sha256_path(training)
+    matrix = {
+        "scope": "phase3_B2_LDM_H2_full_training_matrix_frozen",
+        "status": "completed_pending_bounded_evaluator_smoke",
+        "paper0_commit": "a" * 40,
+        "training_commit": TRAINING_COMMIT,
+        "development_run": "85604",
+        "held_out_85606_read": False,
+        "seed_count": 3,
+        "seeds": [1701, 1702, 1703],
+        "all_training_histories_complete": True,
+        "all_checkpoint_choices_frozen_before_probabilistic_metrics": True,
+        "bounded_evaluator_smoke_required": True,
+        "bounded_evaluator_smoke_completed": False,
+        "full_probabilistic_evaluation_allowed": False,
+        "O3_launch_allowed": False,
+        "runs": [
+            {
+                "seed": seed,
+                "training_result": {
+                    "path": str(training),
+                    "sha256": digest,
+                },
+            }
+            for seed in (1701, 1702, 1703)
+        ],
+    }
+    selected = frozen_training_run(
+        matrix,
+        seed=1702,
+        training_result=training,
+        training_result_sha256=digest,
+        training_commit=TRAINING_COMMIT,
+        paper0_commit="a" * 40,
+    )
+    assert selected["seed"] == 1702
+
+    smoke = {
+        "scope": "bounded_non_scientific_B2_evaluator_smoke_85604",
+        "status": "bounded_evaluator_smoke_completed",
+        "paper0_commit": "a" * 40,
+        "seed": 1701,
+        "target_frames": [498, 502],
+        "target_count": 4,
+        "ensemble_members": 32,
+        "held_out_85606_read": False,
+        "truth_opened_only_after_forecast_hash": True,
+        "full_probabilistic_evaluation_preconditions_passed": True,
+        "probabilistic_scientific_gate_evaluated": False,
+        "O3_launch_allowed": False,
+        "training_matrix": {"sha256": "m" * 64},
+    }
+    validate_bounded_smoke_result(
+        smoke,
+        paper0_commit="a" * 40,
+        training_matrix_sha256="m" * 64,
+    )
+    smoke["target_count"] = 126
+    with pytest.raises(RuntimeError, match="smoke contract"):
+        validate_bounded_smoke_result(
+            smoke,
+            paper0_commit="a" * 40,
+            training_matrix_sha256="m" * 64,
+        )

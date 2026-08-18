@@ -635,15 +635,27 @@ def generate_selected_b2_forecasts(
     metadata: Mapping[str, Any],
     device: torch.device,
     member_batch_size: int = 4,
+    bounded_smoke: bool = False,
 ) -> dict[str, Any]:
-    """Generate frozen M32 forecasts while preserving the future-truth lock."""
+    """Generate frozen M32 forecasts while preserving the future-truth lock.
+
+    ``bounded_smoke`` executes the exact same sampler on the first four
+    validation targets, but labels the artifact non-scientific.  It exists
+    solely to exercise the evaluator before the complete 126-target run.
+    """
 
     schema = B2ForecastSchema.frozen()
     targets = strict_o2_targets(
         target_frames, split="validation", context_frames=model.context_frames
     )
-    if targets != tuple(range(498, 624)):
-        raise ValueError("scientific B2 generation requires all 126 validation targets")
+    required_targets = (
+        tuple(range(498, 502))
+        if bounded_smoke
+        else tuple(range(498, 624))
+    )
+    if targets != required_targets:
+        purpose = "bounded smoke" if bounded_smoke else "scientific"
+        raise ValueError(f"{purpose} B2 generation target interval differs")
     if dataset.target_frames != targets or dataset.context_frames != 2:
         raise ValueError("B2 context dataset differs from frozen targets/history")
     if dataset.target_truth_read is not False:
@@ -705,7 +717,12 @@ def generate_selected_b2_forecasts(
     output_path = Path(output).resolve(strict=True)
     return {
         "schema_version": 1,
-        "scope": "B2_LDM_H2_one_step_M32_forecast_generation_85604",
+        "scope": (
+            "bounded_non_scientific_B2_LDM_H2_M32_forecast_smoke_85604"
+            if bounded_smoke
+            else "B2_LDM_H2_one_step_M32_forecast_generation_85604"
+        ),
+        "bounded_non_scientific_smoke": bool(bounded_smoke),
         "development_run": "85604",
         "held_out_85606_read": False,
         "guard_frames_read": False,
