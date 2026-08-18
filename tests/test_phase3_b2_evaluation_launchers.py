@@ -9,12 +9,15 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 THRESHOLD = ROOT / "cluster/phase3_b2_transport_event_thresholds.sbatch"
+COMPARATOR = ROOT / "cluster/phase3_b2_deterministic_comparators.sbatch"
 FREEZE = ROOT / "cluster/phase3_b2_freeze_training_matrix.sbatch"
 SMOKE = ROOT / "cluster/phase3_b2_evaluator_smoke.sbatch"
 EVALUATION = ROOT / "cluster/phase3_b2_evaluation_full.sbatch"
 
 
-@pytest.mark.parametrize("launcher", (THRESHOLD, FREEZE, SMOKE, EVALUATION))
+@pytest.mark.parametrize(
+    "launcher", (THRESHOLD, COMPARATOR, FREEZE, SMOKE, EVALUATION)
+)
 def test_b2_evaluation_launcher_has_valid_bash_and_fail_closed_checkout(
     launcher: Path,
 ) -> None:
@@ -37,6 +40,17 @@ def test_threshold_launcher_is_training_only_cpu_and_runs_complete_suite() -> No
     assert "--output-directory \"${OUTDIR}/thresholds\"" in text
     command = text.split("COMMAND=(", 1)[1].split("\n)", 1)[0]
     assert "validation" not in command.lower()
+
+
+def test_deterministic_comparator_is_cpu_only_and_cannot_inspect_b2_results() -> None:
+    text = COMPARATOR.read_text()
+    assert "#SBATCH --partition=gen" in text
+    assert "#SBATCH --gres=gpu" not in text
+    assert "build_b2_deterministic_comparators.py" in text
+    assert "phase2_o2_evaluation_full/job_6896117/final_matrix.json" in text
+    assert 'result["B2_forecasts_or_scores_read"] is not False' in text
+    assert 'result["held_out_85606_read"] is not False' in text
+    assert 'result["scientific_acceptance_evaluated"] is not False' in text
 
 
 def test_full_evaluation_launcher_is_exact_three_seed_m32_gpu_matrix() -> None:
@@ -85,6 +99,7 @@ def test_launchers_lock_current_local_evaluation_implementations() -> None:
     evaluation = EVALUATION.read_text()
     expected = {
         "paper0/tools/build_b2_transport_event_thresholds.py": threshold,
+        "paper0/tools/build_b2_deterministic_comparators.py": COMPARATOR.read_text(),
         "paper0/tools/freeze_b2_training_matrix.py": FREEZE.read_text(),
         "paper0/tools/evaluate_b2_checkpoint.py": evaluation,
         "paper0/tools/run_b2_evaluation_wandb.py": evaluation,
@@ -95,6 +110,7 @@ def test_launchers_lock_current_local_evaluation_implementations() -> None:
         "src/tcv_diagnostics/b2_spectral_metrics.py": evaluation,
         "src/tcv_diagnostics/b2_transport_metrics.py": evaluation,
         "src/tcv_diagnostics/b2_probabilistic_metrics.py": evaluation,
+        "src/tcv_diagnostics/b2_acceptance.py": COMPARATOR.read_text(),
     }
     for relative, launcher_text in expected.items():
         digest = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
