@@ -1,11 +1,11 @@
 #!/bin/bash
-# Rocky 9 one-H100 implementation gate for both frozen C5P O2 history arms.
+# Rocky 9 one-GPU implementation gate for both frozen C5P O2 history arms.
 # This bounded run is non-scientific: <=16 train targets and exactly two epochs.
 #SBATCH --job-name=p2_o2_smoke
 #SBATCH --partition=gpupreempt
 #SBATCH --qos=gpupreempt
 #SBATCH --gres=gpu:1
-#SBATCH --constraint=h100
+#SBATCH --constraint=h100|h200
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
@@ -77,11 +77,11 @@ if [[ "${VERSION_ID%%.*}" != "9" ]]; then
 fi
 nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total --format=csv,noheader
 if [[ "$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)" -ne 1 ]]; then
-  echo "Exactly one allocated H100 is required" >&2
+  echo "Exactly one allocated H100 or H200 is required" >&2
   exit 2
 fi
-if nvidia-smi --query-gpu=name --format=csv,noheader | grep -vq "H100"; then
-  echo "A non-H100 accelerator was allocated" >&2
+if nvidia-smi --query-gpu=name --format=csv,noheader | grep -Evq "H100|H200"; then
+  echo "The allocated accelerator is neither H100 nor H200" >&2
   exit 2
 fi
 

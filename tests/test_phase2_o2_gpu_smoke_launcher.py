@@ -24,12 +24,13 @@ LOCKED = (
 )
 
 
-def test_smoke_is_rocky9_one_h100_bounded_and_non_overwriting():
+def test_smoke_is_rocky9_one_gpu_bounded_and_non_overwriting():
     text = LAUNCHER.read_text(encoding="utf-8")
     assert "#SBATCH --partition=gpupreempt" in text
     assert "#SBATCH --qos=gpupreempt" in text
     assert "#SBATCH --gres=gpu:1" in text
-    assert "#SBATCH --constraint=h100" in text
+    assert "#SBATCH --constraint=h100|h200" in text
+    assert 'grep -Evq "H100|H200"' in text
     assert '"${VERSION_ID%%.*}" != "9"' in text
     assert "--mode smoke" in text
     assert '--arm "${arm}"' in text
