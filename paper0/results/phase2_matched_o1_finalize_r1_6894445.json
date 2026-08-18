@@ -1,0 +1,172 @@
+{
+  "O2_launch_allowed": false,
+  "R1_accepted": false,
+  "R2_launch_allowed": true,
+  "R2_required": true,
+  "all_six_complete": true,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "manifest": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics-eval-8a6e20d/paper0/manifests/phase2_matched_o1_r1_transport_finalization.json",
+    "sha256": "0236a3f1953b4c6911929c030744abfcba658a1483c9c4b396f50b84dafcbcdc"
+  },
+  "paper0_commit": "3920982abc287595204584e0f58f8583f8119a47",
+  "run_count": 6,
+  "runs": [
+    {
+      "codec": "dcae_l20",
+      "conditions": {
+        "authoritative_native81_transport": false,
+        "boundary_bypass": true,
+        "common_transport_view": false,
+        "e6b_zero_seed_truth_replay": true,
+        "native_predicted_view": false,
+        "shape_finiteness_and_provenance": true
+      },
+      "family": "c5p",
+      "passes": false,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_finalize_r1/job_6894445/task_0_c5p_seed_1701/result.json",
+        "sha256": "3bc3b0b57aeff67dc355f53430346f52e82701b7a0b3879ec6754ac251e9f5fb"
+      },
+      "run_index": 0,
+      "seed": 1701,
+      "status": "fail",
+      "validation_gate_status": {
+        "authoritative_native81_transport": "fail",
+        "common_transport_view": "fail",
+        "native_predicted_view": "fail"
+      }
+    },
+    {
+      "codec": "dcae_l20",
+      "conditions": {
+        "authoritative_native81_transport": false,
+        "boundary_bypass": true,
+        "common_transport_view": false,
+        "e6b_zero_seed_truth_replay": true,
+        "native_predicted_view": false,
+        "shape_finiteness_and_provenance": true
+      },
+      "family": "e6b",
+      "passes": false,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_finalize_r1/job_6894445/task_1_e6b_seed_1701/result.json",
+        "sha256": "e096e1a0d80e7252c9796d22a9d59859604fb450175eddb93bfbc2af2d38cc31"
+      },
+      "run_index": 1,
+      "seed": 1701,
+      "status": "fail",
+      "validation_gate_status": {
+        "authoritative_native81_transport": "fail",
+        "common_transport_view": "fail",
+        "native_predicted_view": "fail"
+      }
+    },
+    {
+      "codec": "dcae_l20",
+      "conditions": {
+        "authoritative_native81_transport": false,
+        "boundary_bypass": true,
+        "common_transport_view": false,
+        "e6b_zero_seed_truth_replay": true,
+        "native_predicted_view": false,
+        "shape_finiteness_and_provenance": true
+      },
+      "family": "c5p",
+      "passes": false,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_finalize_r1/job_6894445/task_2_c5p_seed_1702/result.json",
+        "sha256": "57645106b962059c421280f2a6376994168c2988e2ec18b36e740891c56e4d8f"
+      },
+      "run_index": 2,
+      "seed": 1702,
+      "status": "fail",
+      "validation_gate_status": {
+        "authoritative_native81_transport": "fail",
+        "common_transport_view": "fail",
+        "native_predicted_view": "fail"
+      }
+    },
+    {
+      "codec": "dcae_l20",
+      "conditions": {
+        "authoritative_native81_transport": false,
+        "boundary_bypass": true,
+        "common_transport_view": false,
+        "e6b_zero_seed_truth_replay": true,
+        "native_predicted_view": false,
+        "shape_finiteness_and_provenance": true
+      },
+      "family": "e6b",
+      "passes": false,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_finalize_r1/job_6894445/task_3_e6b_seed_1702/result.json",
+        "sha256": "8f89bd414fd84d228b15e776781b203e9966d4cdf248f6d27d294c51ff0fb60d"
+      },
+      "run_index": 3,
+      "seed": 1702,
+      "status": "fail",
+      "validation_gate_status": {
+        "authoritative_native81_transport": "fail",
+        "common_transport_view": "fail",
+        "native_predicted_view": "fail"
+      }
+    },
+    {
+      "codec": "dcae_l20",
+      "conditions": {
+        "authoritative_native81_transport": false,
+        "boundary_bypass": true,
+        "common_transport_view": false,
+        "e6b_zero_seed_truth_replay": true,
+        "native_predicted_view": false,
+        "shape_finiteness_and_provenance": true
+      },
+      "family": "c5p",
+      "passes": false,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_finalize_r1/job_6894445/task_4_c5p_seed_1703/result.json",
+        "sha256": "b5837fbed027ebeb8622ccfd89d096f5e01b4c99e19f1785975978f46562ef7c"
+      },
+      "run_index": 4,
+      "seed": 1703,
+      "status": "fail",
+      "validation_gate_status": {
+        "authoritative_native81_transport": "fail",
+        "common_transport_view": "fail",
+        "native_predicted_view": "fail"
+      }
+    },
+    {
+      "codec": "dcae_l20",
+      "conditions": {
+        "authoritative_native81_transport": false,
+        "boundary_bypass": true,
+        "common_transport_view": false,
+        "e6b_zero_seed_truth_replay": true,
+        "native_predicted_view": false,
+        "shape_finiteness_and_provenance": true
+      },
+      "family": "e6b",
+      "passes": false,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_matched_o1_finalize_r1/job_6894445/task_5_e6b_seed_1703/result.json",
+        "sha256": "5740bad900baff17d2ae1a981f743ce930c3101b72ab8eabade7413ec8940136"
+      },
+      "run_index": 5,
+      "seed": 1703,
+      "status": "fail",
+      "validation_gate_status": {
+        "authoritative_native81_transport": "fail",
+        "common_transport_view": "fail",
+        "native_predicted_view": "fail"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "scope": "phase2_matched_o1_r1_complete_matrix",
+  "seed_averaging_used": false,
+  "slurm_job_id": "6894445",
+  "status": "fail"
+}
