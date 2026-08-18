@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "scope": "phase3_B2_truth_event_eligibility_amendment_85604",
+  "status": "frozen_before_amended_evaluator_implementation_or_execution",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "decision_timing": "after_original_B2_gate_result_before_amended_gate_implementation",
+  "outcome_informed_amendment": true,
+  "original_result": {
+    "job_id": "6897564",
+    "scope": "phase3_B2_LDM_H2_full_probabilistic_evaluation_matrix_85604",
+    "status": "completed_failed_frozen_one_step_gate",
+    "sha256": "cd5d3a22b1a5f665c493417c3ea47bc7fd21d731e116f35a6a84eae68b462fd6",
+    "retained_immutable": true,
+    "forecast_or_score_recomputation_allowed": false
+  },
+  "protocol": {
+    "path": "paper0/protocol/PHASE3_B2_EVENT_ELIGIBILITY_AMENDMENT.md",
+    "sha256": "ddfff77f48ae11117ccc8f0bd0f27043421ee700046e975c8263087e0142e2a9"
+  },
+  "event_eligibility": {
+    "source": "truth_validation_event_count_only",
+    "eligible_expression": "validation_event_count > 0",
+    "count_type": "exact_nonnegative_integer",
+    "forecast_dependent_eligibility_allowed": false,
+    "minimum_eligible_blocks_per_quantity": 5,
+    "eligible_block_requirements": {
+      "defined": true,
+      "magnitude_relative_error_max": 0.5,
+      "truth_magnitude_weighted_sign_disagreement_max": 0.25,
+      "every_eligible_block_must_pass": true
+    },
+    "zero_event_block_requirements": {
+      "defined": false,
+      "magnitude_relative_error": null,
+      "truth_magnitude_weighted_sign_disagreement": null,
+      "event_accuracy_status": "not_applicable"
+    }
+  },
+  "unchanged": [
+    "stored_forecasts",
+    "truth_separated_scores",
+    "training_only_event_thresholds",
+    "validation_frames",
+    "chronological_block_boundaries",
+    "field_metrics_and_thresholds",
+    "spectral_metrics_and_thresholds",
+    "cross_field_metrics_and_thresholds",
+    "ordinary_transport_metrics_and_thresholds",
+    "calibration_metrics_and_thresholds",
+    "five_of_six_complete_block_rule",
+    "three_seed_architecture_rule",
+    "catastrophic_bounds_except_explicit_zero_event_NA_values"
+  ],
+  "consistent_rerun": {
+    "seeds": [
+      1701,
+      1702,
+      1703
+    ],
+    "model_families_using_rule": "all_current_and_future_models_on_frozen_blocks",
+    "inference_allowed": false,
+    "training_allowed": false,
+    "truth_scoring_allowed": false,
+    "gate_only_reduction_allowed": true
+  },
+  "forbidden_scope": [
+    "85606_access",
+    "model_or_checkpoint_tuning",
+    "event_threshold_tuning",
+    "validation_block_tuning",
+    "forecast_regeneration",
+    "score_recomputation",
+    "O3_or_longer_rollout",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering_or_control"
+  ]
+}

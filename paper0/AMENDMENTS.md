@@ -351,3 +351,27 @@ schedule, training budget, W&B policy, checkpoint selection, evaluation
 metrics, acceptance thresholds, and claims boundaries are unchanged. All six
 runs remain on one accelerator type, and the exact device identities and
 compute usage are recorded for fairness.
+
+## A016 - Treat truth-empty event blocks as not applicable
+
+**Status:** frozen after original B2 matrix job `6897564` and before amended
+evaluator implementation or execution.
+
+The original B2 gate remains immutable and failed. Post-result inspection
+showed that validation block 3 contains zero truth events above the frozen
+training-only threshold for every transport quantity. The scorer correctly
+returned undefined event-conditioned metrics, but the gate required finite
+event errors in every block. Because forecasts cannot change a truth-only
+event count, that requirement is an undefined-estimand defect rather than a
+model-quality threshold.
+
+The versioned amendment treats event-conditioned metrics as explicitly not
+applicable only when the stored truth event count is exactly zero and the
+undefined/null record is internally consistent. It still requires every
+eligible block to pass the unchanged event thresholds, at least five eligible
+blocks per quantity, the existing five-of-six complete-block rule, and every
+non-event check. The original evaluator and matrix are retained. All three B2
+seeds and every future model must be reduced consistently under the new rule.
+No forecast, score, threshold, block, or other acceptance rule changes, and
+O3, assimilation, ranking, and 85606 access remain closed. Exact rules are in
+`protocol/PHASE3_B2_EVENT_ELIGIBILITY_AMENDMENT.md`.
