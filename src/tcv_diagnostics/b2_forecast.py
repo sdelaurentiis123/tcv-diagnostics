@@ -170,6 +170,7 @@ def load_selected_b2_model(
     seed: int,
     device: torch.device,
     training_commit: str = B2_TRAINING_COMMIT,
+    expected_selected_epoch: int | None = None,
 ) -> C5PLatentDiffusionModel:
     """Reload the exact selected full B2 checkpoint and frozen seed codec."""
 
@@ -197,6 +198,11 @@ def load_selected_b2_model(
         raise ValueError("B2 checkpoint does not preserve held-out status")
     if int(payload.get("epoch", -1)) not in range(config.epochs):
         raise ValueError("B2 selected epoch is outside the frozen training budget")
+    if (
+        expected_selected_epoch is not None
+        and int(payload["epoch"]) != int(expected_selected_epoch)
+    ):
+        raise ValueError("B2 selected checkpoint epoch differs from training result")
     if int(payload.get("global_step", -1)) != (
         int(payload["epoch"]) + 1
     ) * config.optimizer_steps_per_epoch:
