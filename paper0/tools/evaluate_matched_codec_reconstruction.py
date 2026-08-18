@@ -127,6 +127,15 @@ def configure_determinism(device: torch.device) -> dict[str, Any]:
     }
 
 
+def canonical_cuda_device(specification: str) -> torch.device:
+    """Return an index-bearing CUDA device for ``torch.cuda.set_device``."""
+
+    device = torch.device(specification)
+    if device.type != "cuda":
+        raise ValueError("matched codec reconstruction requires a CUDA device")
+    return torch.device("cuda", 0 if device.index is None else device.index)
+
+
 class CandidateWriter:
     """Write one immutable downstream candidate HDF5 artifact atomically."""
 
@@ -452,9 +461,11 @@ def main() -> int:
         seed=args.seed,
     )
     catalog = load_official_catalog(args.artifact_root)
-    device = torch.device(args.device)
-    if device.type != "cuda" or not torch.cuda.is_available():
+    device = canonical_cuda_device(args.device)
+    if not torch.cuda.is_available():
         raise RuntimeError("matched codec reconstruction requires a CUDA worker")
+    if device.index is None or device.index >= torch.cuda.device_count():
+        raise RuntimeError(f"requested CUDA device is unavailable: {device}")
     torch.cuda.set_device(device)
     determinism = configure_determinism(device)
     model = restore_selected_codec(

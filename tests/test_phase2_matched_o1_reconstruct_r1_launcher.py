@@ -56,6 +56,7 @@ def test_reconstruction_launcher_runs_exactly_six_frozen_candidates() -> None:
     assert text.count("--checkpoint-sha256") == 2
     assert text.count("--training-result-sha256") == 2
     assert "--chunk-frames 4" in text
+    assert "--device cuda:0" in text
     assert '"R1_accepted": False' in text
     assert '"complete_O1_decision_allowed": False' in text
 

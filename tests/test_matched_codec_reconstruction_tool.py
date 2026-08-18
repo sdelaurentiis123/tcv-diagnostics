@@ -42,6 +42,13 @@ class TestMatchedCodecReconstructionTool(unittest.TestCase):
             528,
         )
 
+    def test_cuda_device_is_always_index_bearing(self) -> None:
+        tool = load_tool()
+        self.assertEqual(str(tool.canonical_cuda_device("cuda")), "cuda:0")
+        self.assertEqual(str(tool.canonical_cuda_device("cuda:3")), "cuda:3")
+        with self.assertRaisesRegex(ValueError, "requires a CUDA device"):
+            tool.canonical_cuda_device("cpu")
+
     def test_candidate_writer_is_complete_and_refuses_overlap(self) -> None:
         tool = load_tool()
         with tempfile.TemporaryDirectory() as temporary:

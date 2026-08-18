@@ -134,7 +134,7 @@ check_sha256 "af3fc3be94101338a796e19a751014bbcb033f95a42598b947a97a6f66be9af2" 
 check_sha256 "57b40c3d1be4b065c71d1598876fe2edb69e76f25fe6ce4e87c6dea08d9a6690" "${PAPER0_ROOT}/src/tcv_diagnostics/codec_training.py"
 check_sha256 "e060674d9afa0d8fd4d709bc927ef2c144fb40d284f7e672fc37636f820d23bf" "${PAPER0_ROOT}/src/tcv_diagnostics/matched_codec_evaluation.py"
 check_sha256 "4d6847b1f7dcae3043df07d405d9dad07cc86c96b1f63c6fb8ccdbcf745a37ed" "${PAPER0_ROOT}/src/tcv_diagnostics/matched_codec_metrics.py"
-check_sha256 "5dfa9962e65b74694010ccb612496e267de03a2dca3185e8b27ea8ea8a61968a" "${ENTRYPOINT}"
+check_sha256 "a94dc2a64c565454776f8a38d1c3f7fad9ca54c4c4fc01c00640c3c2bc91cc53" "${ENTRYPOINT}"
 check_sha256 "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18" "${MODEL_DATA_SOURCE}/model_dataset_manifest.json"
 check_sha256 "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7" "${MODEL_DATA_SOURCE}/normalization.json"
 check_sha256 "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01" "${MODEL_DATA_SOURCE}/artifact_sha256.txt"
@@ -248,7 +248,7 @@ write_command() {
     --evaluation-commit "${PAPER0_COMMIT}" \
     --slurm-job-id "${SLURM_JOB_ID}:run${run_index}:gpu${gpu_index}" \
     --chunk-frames 4 \
-    --device cuda
+    --device cuda:0
   printf '\n'
 }
 
@@ -283,7 +283,7 @@ run_task() {
     --evaluation-commit "${PAPER0_COMMIT}" \
     --slurm-job-id "${SLURM_JOB_ID}:run${run_index}:gpu${gpu_index}" \
     --chunk-frames 4 \
-    --device cuda
+    --device cuda:0
   "${PYTHON}" -m json.tool "${output}/result.json" >/dev/null
   sha256sum \
     "${output}/result.json" \
