@@ -751,8 +751,12 @@ opening data or CUDA. Full latent moments use all training frames `[0,432)`
 and are marked authoritative; the historical 16-frame smoke moments remain
 non-scientific.
 
-`cluster/phase3_b2_ldm_full.sbatch` is a three-task Rocky 9 `gpuxl` array with
-one non-preemptible H100/H200 allocation per seed. Every task verifies the
+`cluster/phase3_b2_ldm_full.sbatch` is a three-task Rocky 9 `gpupreempt` array
+with one H100/H200 allocation per seed. The regular `gpuxl/gen` QoS rejected
+the one-GPU dry-run with `QOSMinGRES`, whereas the one-GPU preempt QoS accepted
+the exact array. Tasks are deliberately non-requeued: a preempted task fails
+visibly and a later submission must use a new immutable job/task directory.
+Every task verifies the
 clean commit, immutable 85604 data, codec, protocol, evidence, source, and
 Azula hashes; passes the complete test suite; stages and rehashes all eight
 85604 shards; starts a required online W&B run; and enforces exactly 200

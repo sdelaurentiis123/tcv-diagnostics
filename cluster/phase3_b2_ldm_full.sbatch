@@ -2,8 +2,8 @@
 # Three frozen B2-LDM-H2 seeds on independent Rocky 9 H100/H200 workers.
 # Training remains data-only; the separately committed evaluator decides B2.
 #SBATCH --job-name=p3_b2_full
-#SBATCH --partition=gpuxl
-#SBATCH --qos=gen
+#SBATCH --partition=gpupreempt
+#SBATCH --qos=gpupreempt
 #SBATCH --gres=gpu:1
 #SBATCH --constraint=h100|h200
 #SBATCH --array=0-2

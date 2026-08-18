@@ -10,11 +10,12 @@ LAUNCHER = ROOT / "cluster/phase3_b2_ldm_full.sbatch"
 
 def test_full_b2_launcher_is_three_seed_rocky9_hopper_array() -> None:
     source = LAUNCHER.read_text(encoding="utf-8")
-    assert "#SBATCH --partition=gpuxl" in source
-    assert "#SBATCH --qos=gen" in source
+    assert "#SBATCH --partition=gpupreempt" in source
+    assert "#SBATCH --qos=gpupreempt" in source
     assert "#SBATCH --gres=gpu:1" in source
     assert "#SBATCH --constraint=h100|h200" in source
     assert "#SBATCH --array=0-2" in source
+    assert "#SBATCH --no-requeue" in source
     assert "--mode full" in source
     assert "SEEDS=(1701 1702 1703)" in source
     assert "Rocky Linux 9" in source
