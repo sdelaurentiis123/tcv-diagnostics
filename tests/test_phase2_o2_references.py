@@ -6,6 +6,7 @@ from tcv_diagnostics.o2_references import (
     persistence,
     two_frame_linear_extrapolation,
 )
+from tcv_diagnostics.o2_reference_evaluation import reference_prediction
 
 
 def test_persistence_and_linear_extrapolation_known_answers():
@@ -66,3 +67,22 @@ def test_spectral_ar1_rejects_empty_or_inconsistent_training_pairs():
     target = np.zeros((2, 3, 2, 10), dtype=np.float32)
     with pytest.raises(ValueError, match="shapes differ"):
         fit_spectral_ar1([(source, target)])
+
+
+def test_reference_dispatch_preserves_applicability_and_requires_ar_fit():
+    first = np.full((2, 2, 1, 8), 2.0, dtype=np.float32)
+    latest = np.full_like(first, 5.0)
+    context = np.stack((first, latest), axis=0)
+    np.testing.assert_array_equal(
+        reference_prediction("persistence", context, spectral_ar1=None), latest
+    )
+    np.testing.assert_array_equal(
+        reference_prediction(
+            "linear_extrapolation", context, spectral_ar1=None
+        ),
+        8.0,
+    )
+    with pytest.raises(ValueError, match="training-only fit"):
+        reference_prediction("spectral_ar1", context[-1:], spectral_ar1=None)
+    with pytest.raises(ValueError, match="unsupported"):
+        reference_prediction("climatology", context, spectral_ar1=None)

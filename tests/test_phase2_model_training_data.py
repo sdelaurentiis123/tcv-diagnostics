@@ -21,6 +21,7 @@ from tcv_diagnostics.model_training_data import (
     epoch_order,
     toroidal_roll,
 )
+from tcv_diagnostics.o2_context_data import OneStepContextDataset
 from tcv_diagnostics.o2_training_data import (
     OneStepWindowDataset,
     strict_o2_targets,
@@ -317,6 +318,27 @@ class TestModelTrainingData(unittest.TestCase):
         np.testing.assert_array_equal(item["context_frame_indices"], [496, 497])
         self.assertEqual(int(item["target_frame_index"]), 498)
         self.assertEqual(dataset.consumed_frames, (496, 497, 498))
+        dataset.close()
+
+    def test_o2_forecast_context_never_reads_or_returns_target_truth(self) -> None:
+        dataset = OneStepContextDataset(
+            self.catalog,
+            target_frames=[498],
+            context_frames=2,
+            return_physical=True,
+        )
+        item = dataset[0]
+        np.testing.assert_array_equal(item["context_frame_indices"], [496, 497])
+        self.assertEqual(int(item["target_frame_index"]), 498)
+        self.assertEqual(dataset.consumed_frames, (496, 497))
+        self.assertFalse(dataset.target_truth_read)
+        self.assertFalse(item["target_truth_read"])
+        self.assertNotIn("target", item)
+        self.assertNotIn("physical_target", item)
+        self.assertEqual(tuple(item["context"].shape), (2, 5, *VOLUME_SHAPE))
+        self.assertEqual(
+            tuple(item["physical_context"].shape), (2, 5, *VOLUME_SHAPE)
+        )
         dataset.close()
 
     def test_o2_target_guards_reject_unmatched_or_guard_crossing_windows(self) -> None:
