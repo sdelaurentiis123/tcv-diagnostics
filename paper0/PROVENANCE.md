@@ -846,6 +846,28 @@ runs the complete test suite, requires online W&B, stages only 85604, and
 enforces the post-run identity, diversity, gradient, codec, reload, and scope
 gates.
 
-The complete local suite passes with `795 passed, 1 skipped`. This is
-implementation evidence only: no B3 training, scientific metric, 85606
-access, rollout, assimilation, or diagnostic result exists yet.
+The complete pre-execution local suite passed with `795 passed, 1 skipped`.
+Bounded Rocky 9 H100 job `6898604` then ran clean commit
+`fb89828f6837ce0568fe7fc565b931810da68262` on worker `workergpu217` and
+completed with exit `0:0` in 58 seconds. It first passed the complete Rocky 9
+suite (`795 passed, 1 skipped, 29 subtests passed`) and then performed exactly
+two optimizer steps on 16 training and four validation targets from 85604.
+The required W&B run completed online.
+
+All mechanical gates passed: the 151 inherited deterministic state tensors
+loaded exactly; the 70 new stochastic tensors were the only parent-missing
+keys; the noise-disabled child was bitwise identical to the parent before
+optimization; common and new parameter groups both received finite nonzero
+gradients; the codec remained bitwise unchanged; two fixed-noise members were
+finite and distinct; the canonical forecast shape was
+`[1,2,1,5,64,32,88]`; and a fresh checkpoint reload reproduced latent and
+decoded outputs bit for bit. The immutable full run-result SHA-256 is
+`fccb26d5ee22d7bf8e716a3ac483263d0bce6fde32d4bdaadf8a015a6700ffd1`;
+the byte-identical tracked compact record is
+`paper0/results/phase3_b3_fgn_gpu_smoke_6898604.json`, SHA-256
+`dbac54c033917abbfec7e380d96a0c9be93667ae58240b4403400b57c76e2808`.
+The exact interpretation is `paper0/PHASE3_B3_SMOKE_READOUT.md`.
+
+This accepts implementation mechanics only. The four-frame, two-epoch loss
+is explicitly non-scientific: no B3 scientific metric, 85606 access,
+autonomous rollout, assimilation, or diagnostic result exists yet.

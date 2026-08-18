@@ -1,0 +1,81 @@
+{
+  "artifact_index": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_gpu_smoke/job_6898604/b3_fgn_h1_seed_1701/artifact_sha256.txt",
+    "sha256": "8cd352368e40639d230b384d528a93c67d833098f9d9ff4ee1efa53cd3f20f62"
+  },
+  "checkpoint_reload_bitwise_exact": true,
+  "codec_bitwise_unchanged": true,
+  "development_run": "85604",
+  "full_B3_training_authorized": false,
+  "held_out_85606_read": false,
+  "member_probe": {
+    "canonical_forecast_shape": [
+      1,
+      2,
+      1,
+      5,
+      64,
+      32,
+      88
+    ],
+    "ensemble_size": 2,
+    "field_member_rms_difference": 0.046771977096796036,
+    "finite": true,
+    "latent_member_rms_difference": 0.16488301753997803,
+    "nonzero_field_diversity": true,
+    "nonzero_latent_diversity": true,
+    "reload_forecast_bitwise_exact": true,
+    "reload_latent_bitwise_exact": true,
+    "target_frame_index": 498
+  },
+  "paper0_commit": "fb89828f6837ce0568fe7fc565b931810da68262",
+  "preoptimization_parent_identity": {
+    "bitwise_exact": true,
+    "maximum_absolute_difference": 0.0,
+    "target_frame_index": 498
+  },
+  "run_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_gpu_smoke/job_6898604/b3_fgn_h1_seed_1701/result.json",
+    "sha256": "fccb26d5ee22d7bf8e716a3ac483263d0bce6fde32d4bdaadf8a015a6700ffd1"
+  },
+  "schema_version": 1,
+  "scientific_result": false,
+  "scope": "phase3_B3_FGN_H1_bounded_GPU_smoke",
+  "selected_checkpoint": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_gpu_smoke/job_6898604/b3_fgn_h1_seed_1701/selected.pt",
+    "sha256": "0390d6f7b96497688b34e0d0aedf5ffeccacae59eacacdcd09438eabf47345de"
+  },
+  "slurm_job_id": "6898604",
+  "status": "passed",
+  "wandb": {
+    "authenticated_username": "sdelaurentiis123",
+    "checkpoints_uploaded": false,
+    "epochs_logged": 2,
+    "local_artifacts_are_scientific_authority": true,
+    "mode": "online",
+    "remote_path": "sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/p0b3smoke-6898604-s1701",
+    "remote_presence_verified_after_finish": true,
+    "remote_state_after_finish": "finished",
+    "required": true,
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0b3smoke-6898604-s1701",
+    "schema_version": 1,
+    "spec": {
+      "entity": "sdelaurentiis123-columbia-university",
+      "group": "b3-fgn-h1-smoke",
+      "job_type": "phase3_b3_fgn_smoke",
+      "project": "tcv-diagnostics-paper0",
+      "run_id": "p0b3smoke-6898604-s1701",
+      "run_name": "b3-fgn-h1-smoke-s1701-j6898604",
+      "tags": [
+        "paper0",
+        "phase3",
+        "b3",
+        "fgn",
+        "smoke",
+        "85604-only",
+        "non-scientific"
+      ]
+    },
+    "wandb_version": "0.17.9"
+  }
+}
