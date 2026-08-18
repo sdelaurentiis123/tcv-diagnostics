@@ -829,6 +829,23 @@ member-permutation invariance, exact deterministic parent identity, strict
 load accounting, global rather than token-wise noise, official adapter
 initialization, finite noncollapsed members, gradient flow into both common
 and new parameters, frozen codec behavior, canonical axes, and exact full
-state reload. The complete local suite passes with `779 passed, 1 skipped`.
-This is implementation evidence only: no B3 training, scientific metric,
-85606 access, rollout, assimilation, or diagnostic result exists yet.
+state reload.
+
+`src/tcv_diagnostics/fgn_training.py` is a new fail-closed bounded-smoke
+trainer. It reuses the exact parent codec and latent-normalization bytes,
+separates common and new optimizer groups by state-dict provenance, generates
+and persists the frozen PCG64 validation-noise bank, optimizes decoded-field
+fair CRPS, verifies nonzero gradients in both groups, hashes the in-memory
+codec state before and after optimization, and provides no callable full-run
+trainer. `paper0/tools/train_b3_fgn.py` authorizes only the exact seed-1701
+smoke manifest. `src/tcv_diagnostics/fgn_wandb_tracking.py` mirrors separate
+accuracy, spread, and fair-CRPS terms without uploading checkpoints.
+`cluster/phase3_b3_fgn_gpu_smoke.sbatch` requests one Rocky 9 H100/H200,
+refuses reused output paths, verifies all frozen source and evidence hashes,
+runs the complete test suite, requires online W&B, stages only 85604, and
+enforces the post-run identity, diversity, gradient, codec, reload, and scope
+gates.
+
+The complete local suite passes with `795 passed, 1 skipped`. This is
+implementation evidence only: no B3 training, scientific metric, 85606
+access, rollout, assimilation, or diagnostic result exists yet.
