@@ -795,3 +795,40 @@ matrix has SHA-256
 `4f054365d32d3e1725091ba58c8fa014f104e204748217dda482045a6c0df600`.
 The architecture remains failed with zero passing seeds. The tracked compact
 record is `results/phase3_b2_event_eligibility_amendment_6898348.json`.
+
+### Prospective Phase 3 B3 functional-generative retrofit
+
+The B3 implementation contract was frozen before model code in
+`paper0/protocol/PHASE3_B3_FGN_PROTOCOL.md` and
+`paper0/manifests/phase3_b3_fgn_85604.json`. B3 is adapted from the official
+[cddcam/lola_crps](https://github.com/cddcam/lola_crps) implementation of
+Diaconu et al., *Probabilistic Retrofitting of Learned Simulators*, at upstream
+commit `7643376c2949717ee5c2c840584689f529ba77a5`. The retained upstream MIT
+license is `src/tcv_diagnostics/models/FGN_LICENSE.txt`, SHA-256
+`cb4951b3d04c3153a6192951a520d7042c927d1f0574978d503596d6c14e36c9`.
+
+The exact upstream source hashes are machine-locked in the B3 manifest. The
+ported concepts are limited to the two-layer global Gaussian-noise embedding,
+LayerNorm of that embedding, a separate additive four-vector AdaLN noise
+adapter in every ViT block, the small final-adapter initialization, staged
+common/new parameter groups, and finite-ensemble fair CRPS. No upstream data
+loader, dataset, autoencoder, checkpoint, training result, or evaluation
+result is used.
+
+`src/tcv_diagnostics/models/functional_noise.py` is new Paper 0 code. It adapts
+the mechanism to the existing 3D C5P latent-increment transition, preserves
+all deterministic O2 state-dict names, fails closed unless every deterministic
+parent key and shape matches, provides a noise-disabled inherited forward
+path for bitwise parent identity, decodes through the frozen C5P codec, and
+returns canonical `[batch,member,future_time,channel,x,y,z]` axes. Its fair
+CRPS implementation accumulates unordered member pairs without materializing
+an infeasible full pairwise 3D tensor.
+
+The initial known-answer tests verify the two-member fair-CRPS formula,
+member-permutation invariance, exact deterministic parent identity, strict
+load accounting, global rather than token-wise noise, official adapter
+initialization, finite noncollapsed members, gradient flow into both common
+and new parameters, frozen codec behavior, canonical axes, and exact full
+state reload. The complete local suite passes with `779 passed, 1 skipped`.
+This is implementation evidence only: no B3 training, scientific metric,
+85606 access, rollout, assimilation, or diagnostic result exists yet.
