@@ -1,0 +1,403 @@
+{
+  "schema_version": 1,
+  "scope": "phase2_C5P_O2_full_85604_scientific_evaluation_audit",
+  "status": "completed_failed_acceptance_gate",
+  "scientific_authority": true,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "guard_frames_read": false,
+  "paper0_commit": "5183023c4df3a38bd6821f7e7cf587507aacc241",
+  "slurm_job_id": "6896117",
+  "experiment": {
+    "purpose": "Teacher-forced one-saved-frame fault localization after a passing codec reconstruction gate.",
+    "state": {
+      "name": "C5P",
+      "fields": ["Ne", "Pe", "Pi", "phi", "Vi"]
+    },
+    "codec": {
+      "name": "C5P-dcae_l10",
+      "nominal_scalar_compression": "10:1",
+      "frozen_during_O2": true,
+      "complete_O1_seed_pass_count": 3,
+      "complete_O1_seed_count": 3
+    },
+    "transition": "deterministic_LOLA_style_masked_ViT_latent_increment",
+    "arms": {
+      "C5P-H1": "one exact C5P context frame predicts the next saved frame",
+      "C5P-H2": "two exact ordered C5P context frames predict the next saved frame"
+    },
+    "target_frames": [498, 624],
+    "target_count": 126,
+    "validation_blocks": 6,
+    "frames_per_block": 21,
+    "cadence_microseconds": 3.131905426352636,
+    "target_truth_read_during_forecast_generation": false,
+    "forecast_and_truth_scoring_separated": true,
+    "physics_derived_training_loss_used": false,
+    "toroidal_period_count": 5,
+    "stored_k_to_full_torus_n": "n=5k"
+  },
+  "compute": {
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 415,
+    "allocated_cpus": 32,
+    "requested_memory": "256G",
+    "allocated_accelerators": 4,
+    "accelerator": "NVIDIA H200",
+    "node": "workergpu301",
+    "batch_max_rss_kib": 16908104,
+    "operating_system_family": "Rocky Linux 9"
+  },
+  "verification": {
+    "complete_Rocky9_CPU_suite": {
+      "passed": true,
+      "pytest_passed": 615,
+      "pytest_skipped": 1,
+      "subtests_passed": 29
+    },
+    "all_reference_artifact_hashes_reverified": true,
+    "all_six_forecast_score_result_and_nested_index_hashes_reverified": true,
+    "all_top_level_artifact_hashes_reverified": true,
+    "all_downloaded_score_hashes_match_final_matrix": true,
+    "candidate_checkpoint_and_codec_match_training_freeze": true,
+    "wandb_online_and_finished": true,
+    "no_85606_access": true
+  },
+  "references": {
+    "best_applicable_for_both_arms": "spectral_ar1",
+    "spectral_ar1_aggregate_equal_channel_RMSE_standardized": 0.09565607660539187,
+    "spectral_ar1_aggregate_equal_channel_MAE_standardized": 0.056300767439895476,
+    "persistence_aggregate_equal_channel_RMSE_standardized": 0.17997375248308634,
+    "persistence_aggregate_equal_channel_MAE_standardized": 0.08901383533059636,
+    "linear_extrapolation_applicable_only_to": "C5P-H2"
+  },
+  "per_seed": [
+    {
+      "arm": "C5P-H1",
+      "seed": 1701,
+      "selected_epoch": 193,
+      "selected_checkpoint_sha256": "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e",
+      "codec_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d",
+      "forecast_sha256": "a76b389dfc090d1d3061ec4be3526c524645b4cd9cec2f309601af0dd405f1ed",
+      "score_sha256": "ebdc707e2be500af7de492038ae8bfb4d126b81b271b340345b85a7fba1d5593",
+      "result_sha256": "c30c9e655e8cda0569974b803ddc9253ab8db0420732e27be97c0f77991a5c02",
+      "aggregate_RMSE_standardized": 0.08013136008582059,
+      "aggregate_MAE_standardized": 0.04558533379645201,
+      "reference_skill_pass": true,
+      "all_field_gate_pass": true,
+      "spectral_gate_pass": false,
+      "cross_field_gate_pass": true,
+      "transport_gate_pass": false,
+      "O2_seed_pass": false
+    },
+    {
+      "arm": "C5P-H1",
+      "seed": 1702,
+      "selected_epoch": 198,
+      "selected_checkpoint_sha256": "d15c74717fad6a3ccf5b5af895e3eefb7271667f4bbde2164514a61a526bc0e8",
+      "codec_sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836",
+      "forecast_sha256": "8bdb4ce75b7f6c7a2f46a67ce06b5bacfa2bf1b942377328d874187a60cd39a6",
+      "score_sha256": "4a72687857a26e5313aea190476fc340aac08ad567f8cdb333142b89fd06ef4e",
+      "result_sha256": "c54a3463c1d4f1678a87d41e81a7a6b646b8ce01b9190393318ec70605f527cd",
+      "aggregate_RMSE_standardized": 0.0802464842932195,
+      "aggregate_MAE_standardized": 0.04565099733643383,
+      "reference_skill_pass": true,
+      "all_field_gate_pass": true,
+      "spectral_gate_pass": false,
+      "cross_field_gate_pass": true,
+      "transport_gate_pass": false,
+      "O2_seed_pass": false
+    },
+    {
+      "arm": "C5P-H1",
+      "seed": 1703,
+      "selected_epoch": 198,
+      "selected_checkpoint_sha256": "a718b2135c7019d05541bd5ffb029ce9408df8225603cffc957c42d2ce5abae3",
+      "codec_sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d",
+      "forecast_sha256": "4000a1734dc72225df97901524cc5b599130a4c27f7aa77a30481c1b6426e09e",
+      "score_sha256": "a75480246b0e36ae85130a73913f0222fc9bba6d5eb34260be7808419a4e56cc",
+      "result_sha256": "c8d3cc1463ccd3be1f252cb4a32f36350a4d63f1d0391ea9fc231f6c9b729de4",
+      "aggregate_RMSE_standardized": 0.07973348959165104,
+      "aggregate_MAE_standardized": 0.045113307724100826,
+      "reference_skill_pass": true,
+      "all_field_gate_pass": true,
+      "spectral_gate_pass": false,
+      "cross_field_gate_pass": true,
+      "transport_gate_pass": false,
+      "O2_seed_pass": false
+    },
+    {
+      "arm": "C5P-H2",
+      "seed": 1701,
+      "selected_epoch": 198,
+      "selected_checkpoint_sha256": "3b971b2081901469e1f98adbe27b5cdbf3281d08a99ee28e0d8d8b1577722a84",
+      "codec_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d",
+      "forecast_sha256": "67d4b26ed167b56faaac501ae56a1f2024fe248d67b6d9ef7f526d34becb17b0",
+      "score_sha256": "f07c1b8c69b9f8268fba07ed751c8cc62a63b1264a4319632002d868b988e160",
+      "result_sha256": "25091d7d2b05e2e8b57a6b13c0f8afb118913fa86fee34c310f85a02cc0454f6",
+      "aggregate_RMSE_standardized": 0.08031885457567199,
+      "aggregate_MAE_standardized": 0.04544874392937482,
+      "reference_skill_pass": true,
+      "all_field_gate_pass": true,
+      "spectral_gate_pass": false,
+      "cross_field_gate_pass": true,
+      "transport_gate_pass": false,
+      "O2_seed_pass": false
+    },
+    {
+      "arm": "C5P-H2",
+      "seed": 1702,
+      "selected_epoch": 199,
+      "selected_checkpoint_sha256": "5edc3e002730eb78232967255cfab66ee860b8b3858eed007f7061341b5c36eb",
+      "codec_sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836",
+      "forecast_sha256": "ddfd050f932b0849cbc9e21d2df7a36547c6a298358de30a99b924f952347e3a",
+      "score_sha256": "1c88fb0d996a2efbb8cbb7fcba33d1d310fd6467779b68b6caf3bed20c808dcb",
+      "result_sha256": "e0dc4f40085c76321b25097ae773e0c9b381d50644690cf3b485ae36e5a46cda",
+      "aggregate_RMSE_standardized": 0.08044152671694713,
+      "aggregate_MAE_standardized": 0.045709781331158744,
+      "reference_skill_pass": true,
+      "all_field_gate_pass": true,
+      "spectral_gate_pass": false,
+      "cross_field_gate_pass": true,
+      "transport_gate_pass": false,
+      "O2_seed_pass": false
+    },
+    {
+      "arm": "C5P-H2",
+      "seed": 1703,
+      "selected_epoch": 191,
+      "selected_checkpoint_sha256": "a70bd271117f1b0afb21258e4c5d7d4eb4919dc4a528509ccbf6ac2464622d85",
+      "codec_sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d",
+      "forecast_sha256": "9c8038eaf838c065a2a8948a1dec77d9563b032cebb17ad5350d7d9796c46e6f",
+      "score_sha256": "d14ac13e101a946d2ca97129de2ecd29ea40b7ba30012a972c99fdfb8ebe2aa6",
+      "result_sha256": "5e0bd1772f2ec927e52b6164598072c45fd1ae1fa353e9f54facb43a1fd8b707",
+      "aggregate_RMSE_standardized": 0.08109573586085002,
+      "aggregate_MAE_standardized": 0.04590431900203084,
+      "reference_skill_pass": true,
+      "all_field_gate_pass": true,
+      "spectral_gate_pass": false,
+      "cross_field_gate_pass": true,
+      "transport_gate_pass": false,
+      "O2_seed_pass": false
+    }
+  ],
+  "arm_summary": {
+    "C5P-H1": {
+      "passing_seeds": 0,
+      "seed_count": 3,
+      "aggregate_RMSE_standardized_mean": 0.08003711132356371,
+      "aggregate_RMSE_standardized_range": [0.07973348959165104, 0.0802464842932195],
+      "aggregate_MAE_standardized_mean": 0.045449879618995555,
+      "aggregate_MAE_standardized_range": [0.045113307724100826, 0.04565099733643383],
+      "RMSE_improvement_vs_spectral_ar1_fraction": 0.1632825204222076,
+      "MAE_improvement_vs_spectral_ar1_fraction": 0.1927307266723124
+    },
+    "C5P-H2": {
+      "passing_seeds": 0,
+      "seed_count": 3,
+      "aggregate_RMSE_standardized_mean": 0.08061870571782304,
+      "aggregate_RMSE_standardized_range": [0.08031885457567199, 0.08109573586085002],
+      "aggregate_MAE_standardized_mean": 0.04568761475418814,
+      "aggregate_MAE_standardized_range": [0.04544874392937482, 0.04590431900203084],
+      "RMSE_improvement_vs_spectral_ar1_fraction": 0.15720246346295597,
+      "MAE_improvement_vs_spectral_ar1_fraction": 0.1885081352938489
+    },
+    "history_comparison": {
+      "H2_minus_H1_RMSE_fraction": 0.00726655903294815,
+      "H2_minus_H1_MAE_fraction": 0.005230709898145003,
+      "interpretation": "The second exact context frame supplied no field-error benefit under this deterministic transition."
+    }
+  },
+  "cross_seed_physics_summary": {
+    "field_error": {
+      "seeds_beating_best_applicable_reference_on_RMSE_and_MAE": 6,
+      "seeds_with_all_five_fields_beating_persistence_overall_and_in_all_six_blocks": 6
+    },
+    "cross_field": {
+      "definition": "Band-aggregated Ne-phi, Pe-phi, and Pi-phi cross-phase and coherence-change checks.",
+      "applicable_pair_band_checks_per_seed": 9,
+      "seeds_passing_every_cross_field_check_overall_and_in_all_six_blocks": 6
+    },
+    "spectral": {
+      "thresholds": {
+        "power_ratio": [0.75, 1.3],
+        "truth_forecast_realization_coherence_min": 0.8,
+        "required_passing_blocks": 5
+      },
+      "seeds_passing_complete_spectral_gate": 0,
+      "band_mapping": {
+        "k1_3": "full-torus n=5..15",
+        "k4_5": "full-torus n=20..25",
+        "k6_7": "full-torus n=30..35"
+      },
+      "robust_examples_across_all_six_seeds": {
+        "Ne_k6_7": {
+          "power_ratio_range": [0.6547139590174111, 0.7001230044841792],
+          "realization_coherence_range": [0.4008765806057307, 0.44086879464587414],
+          "passing_blocks_range": [0, 0]
+        },
+        "Pe_k6_7": {
+          "power_ratio_range": [0.6234326954078921, 0.6621745333200718],
+          "realization_coherence_range": [0.4387764345845598, 0.4820077767073141],
+          "passing_blocks_range": [0, 0]
+        },
+        "Pi_k6_7": {
+          "power_ratio_range": [0.6212237679864863, 0.6756821420076952],
+          "realization_coherence_range": [0.4336854898494501, 0.4680984547221368],
+          "passing_blocks_range": [0, 0]
+        },
+        "Vi_k4_5": {
+          "power_ratio_range": [0.8716967517202967, 0.915827708779829],
+          "realization_coherence_range": [0.06538587560635817, 0.09216009219050206],
+          "passing_blocks_range": [0, 0]
+        },
+        "Vi_k6_7": {
+          "power_ratio_range": [0.8929043520716278, 0.9155617425538625],
+          "realization_coherence_range": [0.0043903811733616415, 0.005830898568744633],
+          "passing_blocks_range": [0, 0]
+        },
+        "phi_k6_7": {
+          "power_ratio_range": [0.7054348389529619, 0.7500044188145077],
+          "realization_coherence_range": [0.2722481628420544, 0.3010446531402251],
+          "passing_blocks_range": [0, 0]
+        },
+        "Pe_k4_5": {
+          "power_ratio_range": [0.9094867591504737, 0.9399178631197671],
+          "realization_coherence_range": [0.894445494436131, 0.9078471905184541],
+          "seeds_passing_complete_band_gate": 6
+        },
+        "Pi_k4_5": {
+          "power_ratio_range": [0.9151276566636242, 0.9512607280445643],
+          "realization_coherence_range": [0.8780643826905478, 0.8932879549386299],
+          "seeds_passing_complete_band_gate": 6
+        }
+      }
+    },
+    "transport": {
+      "thresholds": {
+        "strict_faces_relative_l2_max": 0.4,
+        "strict_faces_correlation_min": 0.7,
+        "strict_faces_weighted_sign_disagreement_max": 0.2,
+        "separatrix_relative_l2_max": 0.3,
+        "separatrix_absolute_normalized_bias_max": 0.15,
+        "separatrix_correlation_min": 0.8,
+        "separatrix_weighted_sign_disagreement_max": 0.15,
+        "required_passing_blocks": 5
+      },
+      "seeds_passing_complete_transport_gate": 0,
+      "strict_face_relative_l2_ranges": {
+        "particle": [0.738468786234029, 0.75487572728267],
+        "electron_internal_energy": [0.7467372610558982, 0.7729545393059268],
+        "ion_internal_energy": [0.7400734735244384, 0.7605575332033453],
+        "total_internal_energy": [0.7430691928340926, 0.7661731426596325]
+      },
+      "strict_face_complete_pass_count_across_24_seed_quantity_checks": 0,
+      "separatrix_overall_ranges": {
+        "particle": {
+          "relative_l2": [0.256586899919974, 0.299969115442476],
+          "normalized_bias": [-0.22914632675896984, -0.163597318587258],
+          "correlation": [0.7698990114584504, 0.8098973894407263],
+          "complete_seed_pass_count": 0
+        },
+        "electron_internal_energy": {
+          "relative_l2": [0.18053221377690878, 0.21635545409077325],
+          "normalized_bias": [-0.17502760140346943, -0.12281438545859259],
+          "correlation": [0.9112070067346134, 0.9268300862006829],
+          "complete_seed_pass_count": 1
+        },
+        "ion_internal_energy": {
+          "relative_l2": [0.2146272349902027, 0.23604498321263231],
+          "normalized_bias": [-0.16920871136832927, -0.11589378378219278],
+          "correlation": [0.8372698796226644, 0.8703991376455491],
+          "complete_seed_pass_count": 0
+        },
+        "total_internal_energy": {
+          "relative_l2": [0.1927652765238018, 0.22260409778360088],
+          "normalized_bias": [-0.17259752096027, -0.11982174185022175],
+          "correlation": [0.8880200349768631, 0.9065822232835016],
+          "complete_seed_pass_count": 0
+        }
+      }
+    }
+  },
+  "scientific_interpretation": {
+    "localized_failure": "The accepted dcae_l10 codec can carry the evaluated information, but the deterministic one-step transition does not reproduce the next physical realization or local nonlinear transport reliably.",
+    "supported_positive_result": "All six transitions improve ordinary one-step field errors and preserve the frozen band-aggregated cross-field checks.",
+    "supported_negative_result": "Low marginal field error and aggregate cross-field agreement do not imply realization-level spectral fidelity or transport fidelity.",
+    "history_result": "Adding one exact earlier frame does not repair the failure.",
+    "not_established": [
+      "autonomous rollout skill",
+      "probabilistic calibration",
+      "diagnostic assimilation value",
+      "held-out 85606 generalization"
+    ]
+  },
+  "external_artifacts": {
+    "root": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117",
+    "final_matrix": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/final_matrix.json",
+      "sha256": "a60299ec59400910198b6ffd64aa99412c7658b9b773e6a7908cdc03a0b73821"
+    },
+    "execution_summary": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/final_execution_summary.json",
+      "sha256": "3de492f625539dab3e2271a02030b95d91d3fc6f6fe9dbfd94dd4758c38fd5a8"
+    },
+    "artifact_index": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/artifact_sha256.txt",
+      "sha256": "3513e44439182086b0df6c8dc2fe8e070ca5ce0e44d5948fe498bff3913cddd5"
+    },
+    "references_result": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/references/result.json",
+      "sha256": "d3f43170456416751ea1b500c11bf5cd194ce271baaff24ec54c6be3ace40159"
+    },
+    "references_artifact_index": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/references/artifact_sha256.txt",
+      "sha256": "005ea73a05e2586fb73ddacb5ef904880df3bd1b5ee193844af11bc70789f095"
+    },
+    "slurm_job": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/slurm_job.txt",
+      "sha256": "fe36eaa161a21da6d9599d4cdcd38df852f7e69fd4d3e7c815d2afa01d854eeb"
+    },
+    "environment": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/environment.txt",
+      "sha256": "a5ebbbf022229bbbb85ff60abc216e1cab8e82e68d104983dc5920c2b8260aaf"
+    },
+    "test_output": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/test_output.txt",
+      "sha256": "e950bb05652e999723e4c60924a34763a771e6c962154fd9fc0501a120f31b70"
+    },
+    "commands": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/commands.txt",
+      "sha256": "cf8814358d4a9cf0cab0ddb8b1b745f555c069be8927c2e47f824ec9888abf3c"
+    },
+    "wandb_record": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/wandb.json",
+      "sha256": "66a376b6a5bc083998509ed85f61b4ad6a9ce9c924df856a6615c416a0de64cb"
+    },
+    "job_log": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/job.log",
+      "sha256": "eb459d1371b07201d1df146ca98ca5b53616ec8f1bd487275408d34806f638fc"
+    }
+  },
+  "wandb": {
+    "mode": "online",
+    "remote_state_after_finish": "finished",
+    "entity": "sdelaurentiis123-columbia-university",
+    "project": "tcv-diagnostics-paper0",
+    "group": "o2-scientific-evaluation-full",
+    "run_id": "p0-o2-eval-full-6896117",
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0-o2-eval-full-6896117"
+  },
+  "decision": {
+    "O2_scientific_evaluation_completed": true,
+    "accepted_arms": [],
+    "C5P_H1_passing_seeds": 0,
+    "C5P_H2_passing_seeds": 0,
+    "disposition": "stop_and_report_deterministic_one_step_failure",
+    "new_O3_protocol_may_be_frozen": false,
+    "O3_launch_allowed": false,
+    "stochastic_model_authorized_by_this_result": false,
+    "held_out_85606_access_allowed": false
+  }
+}
