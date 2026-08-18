@@ -10,6 +10,11 @@ from tcv_diagnostics.b2_acceptance_gate import (
     evaluate_b2_architecture_acceptance,
     evaluate_b2_seed_acceptance,
 )
+from tcv_diagnostics.b2_acceptance_gate_event_eligibility import (
+    EVENT_BLOCK_POLICY,
+    evaluate_b2_architecture_acceptance_event_eligible,
+    evaluate_b2_seed_acceptance_event_eligible,
+)
 from tcv_diagnostics.b2_field_metrics import (
     B2_FIELDS,
     B2_INTERVALS,
@@ -17,12 +22,19 @@ from tcv_diagnostics.b2_field_metrics import (
 )
 from tcv_diagnostics.b2_spectral_metrics import B2_CROSS_PAIRS, B2_MODE_BANDS
 from tcv_diagnostics.codec_transport import TRANSPORT_QUANTITIES
+from tcv_diagnostics.codec_training import sha256_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = json.loads(
     (ROOT / "paper0/manifests/phase3_b2_full_evaluation_85604.json").read_text()
 )
+
+
+def test_A016_does_not_modify_original_frozen_gate_source() -> None:
+    assert sha256_path(ROOT / "src/tcv_diagnostics/b2_acceptance_gate.py") == (
+        "6bb5d825b30c9c8292cda020d3bec824d9b04198617dc89afafa264daab44ea5"
+    )
 
 
 def _intervals() -> dict[str, dict[str, float]]:
@@ -196,6 +208,7 @@ def _transport_scope(*, detailed: bool) -> dict[str, object]:
             },
             "upper_decile_event_conditioned": {
                 "defined": True,
+                "validation_event_count": 12 if detailed else 2,
                 "magnitude_relative_error": 0.1,
                 "truth_magnitude_weighted_sign_disagreement": 0.01,
             },
@@ -287,6 +300,39 @@ def _seed_record(seed: int) -> dict[str, object]:
     )
 
 
+def _amended_seed_record(seed: int, score: dict[str, object]) -> dict[str, object]:
+    return evaluate_b2_seed_acceptance_event_eligible(
+        result=_result(seed),
+        score=score,
+        training_run={
+            "seed": seed,
+            "training_complete": True,
+            "scientific_acceptance_evaluated": False,
+        },
+        comparator_run={
+            "seed": seed,
+            "field": _field_comparator(),
+            "transport": _transport_comparator(),
+        },
+        best_uncompressed={"field": _field_comparator()},
+        manifest=MANIFEST,
+    )
+
+
+def _set_zero_event_block(score: dict[str, object], index: int) -> None:
+    block = score["memberwise_transport"]["chronological_blocks"][index]
+    for quantity in TRANSPORT_QUANTITIES:
+        event = block["quantities"][quantity]["upper_decile_event_conditioned"]
+        event.update(
+            {
+                "defined": False,
+                "validation_event_count": 0,
+                "magnitude_relative_error": None,
+                "truth_magnitude_weighted_sign_disagreement": None,
+            }
+        )
+
+
 def test_complete_seed_gate_passes_known_answer_record() -> None:
     record = _seed_record(1701)
     assert record["integrity"]["passes"] is True
@@ -375,3 +421,131 @@ def test_architecture_gate_rejects_catastrophic_remaining_seed() -> None:
     result = evaluate_b2_architecture_acceptance(records)
     assert result["nonpassing_seed_catastrophic_bounds_pass"] is False
     assert result["architecture_passes_one_step_B2_gate"] is False
+
+
+def test_A016_accepts_one_consistent_zero_event_block_as_not_applicable() -> None:
+    score = _score(1701)
+    _set_zero_event_block(score, 3)
+    amended = _amended_seed_record(1701, score)
+    transport = amended["families"]["transport"]
+    assert transport["passes"] is True
+    assert transport["event_block_policy"] == EVENT_BLOCK_POLICY
+    for quantity in TRANSPORT_QUANTITIES:
+        eligibility = transport["event_eligibility_by_quantity"][quantity]
+        assert eligibility["eligible_block_indices"] == [0, 1, 2, 4, 5]
+        assert eligibility["all_eligible_event_metrics_pass"] is True
+    block = transport["chronological_blocks"][3]
+    assert block["passes"] is True
+    assert sum(item["kind"] == "not_applicable" for item in block["checks"]) == 4
+    assert amended["catastrophic_bounds"][
+        "all_required_numeric_metrics_finite"
+    ] is True
+    assert amended["passes_complete_per_seed_gate"] is True
+
+    original = evaluate_b2_seed_acceptance(
+        result=_result(1701),
+        score=score,
+        training_run={
+            "seed": 1701,
+            "training_complete": True,
+            "scientific_acceptance_evaluated": False,
+        },
+        comparator_run={
+            "seed": 1701,
+            "field": _field_comparator(),
+            "transport": _transport_comparator(),
+        },
+        best_uncompressed={"field": _field_comparator()},
+        manifest=MANIFEST,
+    )
+    assert original["families"]["transport"]["chronological_blocks"][3][
+        "passes"
+    ] is False
+    assert original["catastrophic_bounds"][
+        "all_required_numeric_metrics_finite"
+    ] is False
+
+
+def test_A016_rejects_fewer_than_five_event_eligible_blocks() -> None:
+    score = _score(1701)
+    _set_zero_event_block(score, 2)
+    _set_zero_event_block(score, 3)
+    amended = _amended_seed_record(1701, score)
+    transport = amended["families"]["transport"]
+    assert transport["passes"] is False
+    assert all(
+        item["eligible_block_count"] == 4
+        for item in transport["event_eligibility_by_quantity"].values()
+    )
+
+
+def test_A016_rejects_positive_count_with_undefined_event_metrics() -> None:
+    score = _score(1701)
+    event = score["memberwise_transport"]["chronological_blocks"][0][
+        "quantities"
+    ][TRANSPORT_QUANTITIES[0]]["upper_decile_event_conditioned"]
+    event.update(
+        {
+            "defined": False,
+            "validation_event_count": 2,
+            "magnitude_relative_error": None,
+            "truth_magnitude_weighted_sign_disagreement": None,
+        }
+    )
+    amended = _amended_seed_record(1701, score)
+    assert amended["families"]["transport"]["passes"] is False
+    assert amended["catastrophic_bounds"][
+        "all_required_numeric_metrics_finite"
+    ] is False
+
+
+def test_A016_rejects_nonnull_metric_in_zero_event_record() -> None:
+    score = _score(1701)
+    _set_zero_event_block(score, 3)
+    event = score["memberwise_transport"]["chronological_blocks"][3][
+        "quantities"
+    ][TRANSPORT_QUANTITIES[0]]["upper_decile_event_conditioned"]
+    event["magnitude_relative_error"] = 0.0
+    amended = _amended_seed_record(1701, score)
+    assert amended["families"]["transport"]["passes"] is False
+    assert amended["catastrophic_bounds"][
+        "event_block_record_integrity_passes"
+    ] is False
+    assert amended["catastrophic_bounds"]["passes"] is False
+
+
+def test_A016_does_not_exempt_non_event_nonfinite_metric() -> None:
+    score = _score(1701)
+    _set_zero_event_block(score, 3)
+    quantity = TRANSPORT_QUANTITIES[0]
+    score["memberwise_transport"]["chronological_blocks"][3]["quantities"][
+        quantity
+    ]["reductions"]["separatrix_wedge"]["ensemble_expected_paired_metrics"][
+        "relative_l2"
+    ] = None
+    amended = _amended_seed_record(1701, score)
+    assert amended["families"]["transport"]["chronological_blocks"][3][
+        "passes"
+    ] is False
+    assert amended["catastrophic_bounds"][
+        "all_required_numeric_metrics_finite"
+    ] is False
+
+
+def test_A016_architecture_wrapper_requires_only_amended_seed_records() -> None:
+    scores = [_score(seed) for seed in (1701, 1702, 1703)]
+    for score in scores:
+        _set_zero_event_block(score, 3)
+    records = [
+        _amended_seed_record(seed, score)
+        for seed, score in zip((1701, 1702, 1703), scores)
+    ]
+    result = evaluate_b2_architecture_acceptance_event_eligible(records)
+    assert result["schema_version"] == 2
+    assert result["event_block_policy"] == EVENT_BLOCK_POLICY
+    assert result["original_frozen_gate_preserved"] is True
+    assert result["architecture_passes_one_step_B2_gate"] is True
+    with pytest.raises(ValueError, match="non-amended"):
+        evaluate_b2_architecture_acceptance_event_eligible(
+            [_seed_record(seed) for seed in (1701, 1702, 1703)]
+        )
