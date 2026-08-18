@@ -343,17 +343,17 @@ def validate_b2_spectral_materiality(record: Mapping[str, Any]) -> None:
         or record.get("physics_derived_training_loss_used") is not False
     ):
         raise ValueError("B2 spectral materiality artifact contract differs")
-    expected_bands = tuple(label for label, _, _ in B2_MODE_BANDS)
+    expected_bands = {label for label, _, _ in B2_MODE_BANDS}
     fields = record.get("fields", {})
     crosses = record.get("cross_fields", {})
-    if tuple(fields) != B2_FIELDS:
-        raise ValueError("B2 spectral materiality field order differs")
-    if tuple(crosses) != tuple(f"{a}-{b}" for a, b in B2_CROSS_PAIRS):
-        raise ValueError("B2 spectral materiality cross-field order differs")
+    if set(fields) != set(B2_FIELDS):
+        raise ValueError("B2 spectral materiality field keys differ")
+    if set(crosses) != {f"{a}-{b}" for a, b in B2_CROSS_PAIRS}:
+        raise ValueError("B2 spectral materiality cross-field keys differ")
     for group in (fields, crosses):
         for item in group.values():
-            if tuple(item.get("bands", {})) != expected_bands:
-                raise ValueError("B2 spectral materiality band order differs")
+            if set(item.get("bands", {})) != expected_bands:
+                raise ValueError("B2 spectral materiality band keys differ")
             for band in item["bands"].values():
                 keys = [
                     name for name in band if name.startswith("fraction_of_training_")
@@ -385,9 +385,9 @@ def validate_b2_transport_event_thresholds(
     ):
         raise ValueError("B2 transport event-threshold artifact contract differs")
     thresholds = record.get("thresholds", {})
-    if tuple(thresholds) != TRANSPORT_QUANTITIES:
-        raise ValueError("B2 event-threshold quantity order differs")
-    result = {name: float(value) for name, value in thresholds.items()}
+    if set(thresholds) != set(TRANSPORT_QUANTITIES):
+        raise ValueError("B2 event-threshold quantity keys differ")
+    result = {name: float(thresholds[name]) for name in TRANSPORT_QUANTITIES}
     if any(not math.isfinite(value) or value < 0.0 for value in result.values()):
         raise ValueError("B2 event-threshold value differs")
     return result

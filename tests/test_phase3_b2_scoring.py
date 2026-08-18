@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from types import SimpleNamespace
 
 import numpy as np
@@ -138,6 +139,7 @@ def test_b2_materiality_inherits_the_frozen_o2_training_decisions() -> None:
         "fraction_of_training_nonaxisymmetric_power"
     ] == pytest.approx(0.02)
     assert record["cross_fields"]["Ne-phi"]["bands"]["k6_7"]["full_torus_n"] == [30, 35]
+    validate_b2_spectral_materiality(json.loads(json.dumps(record, sort_keys=True)))
 
 
 def test_transport_event_threshold_contract_rejects_validation_or_heldout_reads():
@@ -167,7 +169,7 @@ def test_transport_event_threshold_contract_rejects_validation_or_heldout_reads(
         validate_b2_transport_event_thresholds(contaminated)
 
 
-def test_transport_event_threshold_contract_rejects_wrong_quantity_order():
+def test_transport_event_threshold_contract_accepts_sorted_json_key_order():
     record = {
         "scope": "B2_training_only_transport_event_thresholds",
         "development_run": "85604",
@@ -177,10 +179,31 @@ def test_transport_event_threshold_contract_rejects_wrong_quantity_order():
         "quantile_probability": 0.90,
         "quantile_method": "numpy_linear",
         "absolute_value_before_quantile": True,
-        "thresholds": {quantity: 1.0 for quantity in reversed(TRANSPORT_QUANTITIES)},
+        "thresholds": {quantity: 1.0 for quantity in TRANSPORT_QUANTITIES},
         "physics_derived_training_loss_used": False,
     }
-    with pytest.raises(ValueError, match="order"):
+    persisted = json.loads(json.dumps(record, sort_keys=True))
+    assert tuple(persisted["thresholds"]) != TRANSPORT_QUANTITIES
+    assert (
+        tuple(validate_b2_transport_event_thresholds(persisted)) == TRANSPORT_QUANTITIES
+    )
+
+
+def test_transport_event_threshold_contract_rejects_wrong_quantity_keys():
+    record = {
+        "scope": "B2_training_only_transport_event_thresholds",
+        "development_run": "85604",
+        "training_frames": [0, 432],
+        "validation_frames_read": False,
+        "held_out_85606_read": False,
+        "quantile_probability": 0.90,
+        "quantile_method": "numpy_linear",
+        "absolute_value_before_quantile": True,
+        "thresholds": {quantity: 1.0 for quantity in TRANSPORT_QUANTITIES[:-1]},
+        "physics_derived_training_loss_used": False,
+    }
+    record["thresholds"]["not_a_transport_quantity"] = 1.0
+    with pytest.raises(ValueError, match="keys"):
         validate_b2_transport_event_thresholds(record)
 
 
