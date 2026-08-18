@@ -126,6 +126,47 @@ def _validate_audit(audit: dict[str, object]) -> float:
     return value
 
 
+def _build_field_comparator(
+    *,
+    catalog: object,
+    eligible_3d: np.ndarray,
+    forecast_path: Path,
+    forecast_sha256: str,
+) -> dict[str, object]:
+    accumulator = DeterministicFieldComparatorAccumulator(
+        target_frames=B2_VALIDATION_TARGETS,
+        eligible_mask=eligible_3d,
+        validation_blocks=B2_VALIDATION_BLOCKS,
+    )
+    truth = OneStepWindowDataset(
+        catalog,
+        split="validation",
+        target_frames=B2_VALIDATION_TARGETS,
+        context_frames=2,
+        augment=False,
+        seed=1701,
+        return_physical=False,
+    )
+    try:
+        with O2ForecastArtifact(
+            forecast_path,
+            expected_sha256=forecast_sha256,
+            target_frames=B2_VALIDATION_TARGETS,
+        ) as artifact:
+            for position, target in enumerate(B2_VALIDATION_TARGETS):
+                item = truth[position]
+                if int(item["target_frame_index"]) != target:
+                    raise RuntimeError("deterministic comparator truth order differs")
+                accumulator.update(
+                    target_frame=target,
+                    standardized_forecast=artifact.read(position, position + 1)[0],
+                    standardized_truth=item["target"],
+                )
+    finally:
+        truth.close()
+    return accumulator.finalize()
+
+
 def main() -> None:
     args = parse_args()
     for path in (
@@ -153,7 +194,7 @@ def main() -> None:
 
     matrix = load_strict_json(matrix_path)
     runs = _validate_o2_matrix(matrix)
-    best_uncompressed_mae = _validate_audit(load_strict_json(audit_path))
+    historical_best_uncompressed_mae = _validate_audit(load_strict_json(audit_path))
     catalog = load_official_catalog(args.artifact_root)
     geometry = load_transport_geometry(
         geometry_path=geometry_path,
@@ -187,47 +228,70 @@ def main() -> None:
             != "C5P-H2"
         ):
             raise ValueError("deterministic score/forecast provenance differs")
-        accumulator = DeterministicFieldComparatorAccumulator(
-            target_frames=B2_VALIDATION_TARGETS,
-            eligible_mask=eligible_3d,
-            validation_blocks=B2_VALIDATION_BLOCKS,
-        )
-        truth = OneStepWindowDataset(
-            catalog,
-            split="validation",
-            target_frames=B2_VALIDATION_TARGETS,
-            context_frames=2,
-            augment=False,
-            seed=1701,
-            return_physical=False,
-        )
-        try:
-            with O2ForecastArtifact(
-                forecast_path,
-                expected_sha256=str(forecast_record["sha256"]),
-                target_frames=B2_VALIDATION_TARGETS,
-            ) as artifact:
-                for position, target in enumerate(B2_VALIDATION_TARGETS):
-                    item = truth[position]
-                    if int(item["target_frame_index"]) != target:
-                        raise RuntimeError("deterministic comparator truth order differs")
-                    accumulator.update(
-                        target_frame=target,
-                        standardized_forecast=artifact.read(position, position + 1)[0],
-                        standardized_truth=item["target"],
-                    )
-        finally:
-            truth.close()
         frozen_runs.append(
             {
                 "seed": seed,
                 "selected_checkpoint": dict(run["selected_checkpoint"]),
                 "forecast": dict(forecast_record),
                 "score": dict(score_record),
-                "field": accumulator.finalize(),
+                "field": _build_field_comparator(
+                    catalog=catalog,
+                    eligible_3d=eligible_3d,
+                    forecast_path=forecast_path,
+                    forecast_sha256=str(forecast_record["sha256"]),
+                ),
                 "transport": deterministic_transport_comparator(score),
             }
         )
+
+    references_record = matrix.get("references_result", {})
+    references_path = verify_input(
+        Path(references_record["path"]), str(references_record["sha256"])
+    )
+    references = load_strict_json(references_path)
+    if (
+        references.get("scope") != "O2_frozen_uncompressed_references"
+        or references.get("status") != "completed"
+        or references.get("development_run") != "85604"
+        or references.get("target_frames") != [498, 624]
+        or references.get("held_out_85606_read") is not False
+        or references.get("validation_tuning_used") is not False
+        or references.get("training_performed") is not False
+    ):
+        raise ValueError("frozen uncompressed-reference contract differs")
+    spectral_reference = references["references"]["spectral_ar1"]
+    spectral_score_record = spectral_reference["score"]
+    spectral_forecast_record = spectral_reference["forecast"]
+    spectral_score_path = verify_input(
+        Path(spectral_score_record["path"]), str(spectral_score_record["sha256"])
+    )
+    spectral_forecast_path = verify_input(
+        Path(spectral_forecast_record["path"]),
+        str(spectral_forecast_record["sha256"]),
+    )
+    spectral_score = load_strict_json(spectral_score_path)
+    if (
+        spectral_score.get("forecast_artifact", {}).get("path")
+        != str(spectral_forecast_path)
+        or spectral_score.get("forecast_artifact", {}).get("sha256")
+        != str(spectral_forecast_record["sha256"])
+        or spectral_score.get("held_out_85606_read") is not False
+    ):
+        raise ValueError("spectral-AR1 score/forecast provenance differs")
+    best_uncompressed = {
+        "name": "training_only_toroidal_spectral_AR1",
+        "forecast": dict(spectral_forecast_record),
+        "score": dict(spectral_score_record),
+        "field": _build_field_comparator(
+            catalog=catalog,
+            eligible_3d=eligible_3d,
+            forecast_path=spectral_forecast_path,
+            forecast_sha256=str(spectral_forecast_record["sha256"]),
+        ),
+        "historical_raw_gauge_aggregate_equal_channel_mae_standardized": (
+            historical_best_uncompressed_mae
+        ),
+    }
 
     result = {
         "schema_version": 1,
@@ -242,9 +306,7 @@ def main() -> None:
         "physics_derived_training_loss_used": False,
         "paper0_commit": args.paper0_commit,
         "slurm_job_id": args.slurm_job_id,
-        "best_uncompressed_aggregate_equal_channel_mae_standardized": (
-            best_uncompressed_mae
-        ),
+        "best_uncompressed": best_uncompressed,
         "o2_final_matrix": {
             "path": str(matrix_path),
             "sha256": args.o2_final_matrix_sha256,
@@ -252,6 +314,10 @@ def main() -> None:
         "o2_audit_result": {
             "path": str(audit_path),
             "sha256": args.o2_audit_result_sha256,
+        },
+        "o2_references_result": {
+            "path": str(references_path),
+            "sha256": str(references_record["sha256"]),
         },
         "model_dataset": {
             "root": str(args.artifact_root.resolve(strict=True)),

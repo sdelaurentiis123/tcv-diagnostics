@@ -66,7 +66,7 @@ if [[ ! -x "${PYTHON}" ]]; then
   exit 2
 fi
 
-check_sha256 "de53a41e557c281109f3e7d1caf4e5ef7dcaf691e80e57120896664ccbfe9f2d" "${ENTRYPOINT}"
+check_sha256 "ad046ba02607027becaeaa7f30dca64702c115288ed004f4bc6ec2747d66f53c" "${ENTRYPOINT}"
 check_sha256 "6a147401cb691746b1bf56ce147a2f72a02b60581a7d4a0fd34a54897fa3bf74" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_acceptance.py"
 check_sha256 "a60299ec59400910198b6ffd64aa99412c7658b9b773e6a7908cdc03a0b73821" "${O2_FINAL_MATRIX}"
 check_sha256 "251820a6f81d97ffdb046eba7a23cd12505c1179e600e7942231de2fd1feeacb" "${O2_AUDIT}"
@@ -138,6 +138,8 @@ if result["B2_forecasts_or_scores_read"] is not False:
     raise RuntimeError("B2 deterministic comparator inspected B2 results")
 if result["scientific_acceptance_evaluated"] is not False:
     raise RuntimeError("B2 deterministic comparator evaluated acceptance")
+if result["best_uncompressed"]["name"] != "training_only_toroidal_spectral_AR1":
+    raise RuntimeError("B2 best uncompressed comparator differs")
 for run in result["runs"]:
     if run["field"]["potential_policy"] != "subtract_full_spatial_mean_separately_per_forecast_and_truth_target":
         raise RuntimeError("B2 deterministic phi comparator policy differs")
