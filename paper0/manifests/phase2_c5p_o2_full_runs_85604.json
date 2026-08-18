@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_passing_Rocky9_GPU_smoke_before_full_O2_training",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "scope": "six_full_C5P_teacher_forced_one_step_training_runs_only",
+  "evidence_locks": {
+    "continuation_manifest": {
+      "path": "paper0/manifests/phase2_c5p_o2_continuation_85604.json",
+      "sha256": "7ad5cd207b2b2c69fb82a2b22f65d55e81fad941a508f977966485611ba078d6"
+    },
+    "continuation_protocol": {
+      "path": "paper0/protocol/PHASE2_C5P_O2_CONTINUATION_PROTOCOL.md",
+      "sha256": "e969311c0b8012242d44815201f135bd012aa6a9b9c6dc7ca4c6c9043df753eb"
+    },
+    "gpu_smoke": {
+      "path": "paper0/results/phase2_o2_gpu_smoke_6894971.json",
+      "sha256": "a812a5642c5d3d9dedc25711af6d92994bcebf5432d9dd7a99911fc1f5e53451",
+      "slurm_job_id": "6894971",
+      "status": "passed",
+      "scientific_result": false
+    },
+    "model_dataset": {
+      "job_id": "6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    }
+  },
+  "frozen_question": {
+    "C5P-H1": "next saved frame from one current five-field frame",
+    "C5P-H2": "next saved frame from the two most recent five-field frames"
+  },
+  "data": {
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "training_targets": [2, 432],
+    "guard_frames": [432, 496],
+    "validation_targets": [498, 624],
+    "latent_normalization_fit_frames": [0, 432],
+    "cadence_microseconds": 3.131905426352636,
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "absolute_time_input_allowed": false,
+    "future_truth_input_allowed": false
+  },
+  "model": {
+    "representation": "C5P-dcae_l10",
+    "codec_trainable": false,
+    "family": "deterministic_masked_latent_ViT_residual",
+    "parameter_count": 51612800,
+    "hidden_channels": 512,
+    "transformer_blocks": 16,
+    "attention_heads": 4,
+    "ffn_factor": 4,
+    "latent_channels": 32,
+    "predictor_patch": [2, 2, 1],
+    "tokens_per_frame": 704,
+    "noise_features": 0,
+    "prediction": "standardized_latent_increment",
+    "training_loss": "equal_channel_standardized_field_MAE_after_frozen_decode",
+    "physics_derived_loss_allowed": false
+  },
+  "training": {
+    "epochs": 200,
+    "targets_per_epoch": 430,
+    "validation_targets_per_epoch": 126,
+    "optimizer_steps_per_epoch": 27,
+    "total_optimizer_steps": 5400,
+    "microbatch": 1,
+    "gradient_accumulation": 16,
+    "final_partial_accumulation_count": 14,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "minimum_learning_rate": 0.000002,
+    "warmup_epochs": 10,
+    "scheduler": "linear_warmup_cosine",
+    "early_stopping": false,
+    "checkpoint_selection": "earliest_numerically_lowest_full_validation_equal_channel_data_loss_after_full_budget",
+    "wandb_online_required": true
+  },
+  "tasks": [
+    {
+      "run_index": 0,
+      "arm": "C5P-H1",
+      "context_frames": 1,
+      "seed": 1701,
+      "codec_checkpoint": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+      "codec_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
+    },
+    {
+      "run_index": 1,
+      "arm": "C5P-H1",
+      "context_frames": 1,
+      "seed": 1702,
+      "codec_checkpoint": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_2_c5p_seed_1702/selected.pt",
+      "codec_sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836"
+    },
+    {
+      "run_index": 2,
+      "arm": "C5P-H1",
+      "context_frames": 1,
+      "seed": 1703,
+      "codec_checkpoint": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_4_c5p_seed_1703/selected.pt",
+      "codec_sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d"
+    },
+    {
+      "run_index": 3,
+      "arm": "C5P-H2",
+      "context_frames": 2,
+      "seed": 1701,
+      "codec_checkpoint": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+      "codec_sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
+    },
+    {
+      "run_index": 4,
+      "arm": "C5P-H2",
+      "context_frames": 2,
+      "seed": 1702,
+      "codec_checkpoint": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_2_c5p_seed_1702/selected.pt",
+      "codec_sha256": "c4f180171510489bf022ea003201494ecee991cc3b2f200e97854ec4ffd86836"
+    },
+    {
+      "run_index": 5,
+      "arm": "C5P-H2",
+      "context_frames": 2,
+      "seed": 1703,
+      "codec_checkpoint": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_4_c5p_seed_1703/selected.pt",
+      "codec_sha256": "3d029572a24f69058889de43c42cefa29633e7167db441db4f41fa1e0c1b3f5d"
+    }
+  ],
+  "execution": {
+    "logical_order": [0, 1, 2, 3, 4, 5],
+    "gpu_wave_0": [0, 3, 1, 4],
+    "gpu_wave_1": [2, 5],
+    "accelerators": "four Rocky 9 H100 GPUs on one nonpreemptible gpuxl node",
+    "walltime": "12:00:00"
+  },
+  "post_training": {
+    "training_summary_is_scientific_acceptance": false,
+    "O2_gate_evaluated_by_training_job": false,
+    "O3_launch_allowed": false,
+    "next_required_action": "freeze the six selected checkpoints and run a separately committed O2 evaluation"
+  }
+}
