@@ -15,6 +15,7 @@ from tcv_diagnostics.models.latent_diffusion import (
     LatentDiffusionViTConfig,
     LogLogitSchedule,
     MaskedEDMDenoiser,
+    NoiseConditionedBackbone,
     masked_denoising_loss,
 )
 
@@ -201,6 +202,9 @@ def test_c5p_wrapper_training_and_canonical_ensemble_axes(
     )
     model.eval()
     torch.manual_seed(91)
+    latent = model._sample_standardized_target(context, ensemble_size=3)
+    assert latent.shape == (2, 3, 2, 2, 2, 2)
+    torch.manual_seed(91)
     forecast = model.predict(context, horizon=1, ensemble_size=3)
     assert forecast.shape == (2, 3, 1, 2, 2, 2, 2)
     assert torch.isfinite(forecast).all()
@@ -238,3 +242,45 @@ def test_azula_builder_fails_closed_when_dependency_is_unavailable() -> None:
         )
         with pytest.raises(RuntimeError, match="Azula 0.3.1"):
             diffusion_module.build_azula_ab_sampler(conditioned)
+
+
+def test_tiny_modulated_denoiser_overfits_one_fixed_masked_example() -> None:
+    """The actual modulated path must optimize, not merely return valid shapes."""
+
+    torch.manual_seed(1701)
+    denoiser = MaskedEDMDenoiser(NoiseConditionedBackbone(_small_config()))
+    clean = torch.randn(2, 2, 3, 2, 2, 1)
+    mask = torch.zeros(2, 1, 3, 2, 2, 1, dtype=torch.bool)
+    mask[:, :, :2] = True
+    noise_time = torch.tensor([0.35, 0.65])
+    noise = torch.randn_like(clean)
+    optimizer = torch.optim.Adam(denoiser.parameters(), lr=2.0e-2)
+
+    with torch.no_grad():
+        initial = masked_denoising_loss(
+            denoiser,
+            clean,
+            mask,
+            noise_time=noise_time,
+            noise=noise,
+        ).complete.item()
+    for _ in range(120):
+        optimizer.zero_grad(set_to_none=True)
+        loss = masked_denoising_loss(
+            denoiser,
+            clean,
+            mask,
+            noise_time=noise_time,
+            noise=noise,
+        ).complete
+        loss.backward()
+        optimizer.step()
+    with torch.no_grad():
+        final = masked_denoising_loss(
+            denoiser,
+            clean,
+            mask,
+            noise_time=noise_time,
+            noise=noise,
+        ).complete.item()
+    assert final < 0.35 * initial

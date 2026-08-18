@@ -442,11 +442,15 @@ class C5PLatentDiffusionModel(nn.Module):
             noise=noise,
         )
 
-    def predict(self, context: Tensor, horizon: int, ensemble_size: int) -> Tensor:
-        """Return one-step fields as [batch,member,time,channel,x,y,z]."""
+    @torch.no_grad()
+    def _sample_standardized_target(
+        self,
+        context: Tensor,
+        *,
+        ensemble_size: int,
+    ) -> Tensor:
+        """Sample standardized target latents for implementation-gate checks."""
 
-        if int(horizon) != 1:
-            raise ValueError("B2 is authorized only for a one-step horizon")
         members = int(ensemble_size)
         if members <= 0:
             raise ValueError("ensemble size must be positive")
@@ -488,7 +492,26 @@ class C5PLatentDiffusionModel(nn.Module):
             device=observed.device,
         )
         sampled = sampler(initial)
-        target_latent = sampled[:, :, -1]
-        decoded = self._decode_target(target_latent)
+        target_latent = sampled[:, :, -1].reshape(
+            batch,
+            members,
+            *sampled.shape[1:2],
+            *sampled.shape[3:],
+        )
+        return target_latent
+
+    @torch.no_grad()
+    def predict(self, context: Tensor, horizon: int, ensemble_size: int) -> Tensor:
+        """Return one-step fields as [batch,member,time,channel,x,y,z]."""
+
+        if int(horizon) != 1:
+            raise ValueError("B2 is authorized only for a one-step horizon")
+        target_latent = self._sample_standardized_target(
+            context,
+            ensemble_size=ensemble_size,
+        )
+        batch, members = target_latent.shape[:2]
+        flattened = target_latent.reshape(batch * members, *target_latent.shape[2:])
+        decoded = self._decode_target(flattened)
         decoded = decoded.reshape(batch, members, *decoded.shape[1:])
         return decoded[:, :, None]

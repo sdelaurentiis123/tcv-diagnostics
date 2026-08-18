@@ -19,16 +19,54 @@ For Paper 0, the predecessor is an auditable, read-only source of candidate load
 |---|---|---|---|---|
 | `src/tcv_diagnostics/models/layers.py` | PolymathicAI/LOLA `lola/nn/layers.py`; predecessor evidence `external/lola/lola/nn/layers.py` | upstream `21a4354b327e6e5ee06da5075ba3bd1dd88c61f1`; predecessor file SHA-256 `ad6aab36d52ea7aba2a0c45006a33413304c0d9ceb9abffd52a497a24adf616f` | Minimum PyTorch-only port of channel normalization and patch ordering; removes `einops`; adds stricter argument checks; ports the predecessor's explicit per-axis padding so `x/y=zeros` and `z=circular`; retained under the upstream MIT license | Paper 0 commit `c0cd66b`; new file SHA-256 `87265976a250ef1de81f19a59607b1c1493906ca2b72bc561816bf956302d12b`; known-answer patch ordering, inverse, wall, and periodic-wrap tests |
 | `src/tcv_diagnostics/models/dcae.py` | PolymathicAI/LOLA `lola/nn/dcae.py` and `lola/autoencoder.py`; predecessor evidence `external/lola/lola/nn/dcae.py` | upstream `21a4354b327e6e5ee06da5075ba3bd1dd88c61f1`; predecessor file SHA-256 `281f8541aa09822147f8769e9a11fb63497aa54783dd9a806b173e76c5fbaede` | Minimum DCAE encoder/decoder and `softclip2` port; removes configuration-framework dependencies and optional attention; ports per-transition anisotropic strides; adds frozen named codec configs, latent-shape validation, and equal-channel standardized MAE | Paper 0 commit `c0cd66b`; new file SHA-256 `0f2e9a7445ae47915f334f01993fbf49adc4ac462bf69ef988a736e22bb9c554`; shape, backward, saturation, manifest-lock, and exact checkpoint-reload tests |
+| `src/tcv_diagnostics/models/modulated_vit.py` | PolymathicAI/LOLA `lola/nn/vit.py` | upstream `21a4354b327e6e5ee06da5075ba3bd1dd88c61f1`; upstream file SHA-256 `33a0ebbbb6da8254f7129f564b783d5b98de12a812e403d1c790356ca184d6a2` | Minimum PyTorch-only port of the noise-modulated path; reuses Paper 0's already attributed attention, sine encoding, coordinate, patch, and unpatch primitives; removes `einops`, xFormers, windowed attention, and unneeded options; retains global AdaLN-zero modulation with strict shape checks; kept separate from the completed deterministic `vit.py` | Paper 0 commit `899b89d0d561dbf6d5c50064805fdbbffc0fc988`; new file SHA-256 `9bfa4c86287f533e6baa488be3f0ac6727a318a2e5a83f5c0b1be11f9dfe3bbe`; shape, gradient, modulation, exact reload, and frozen-O2-file-hash tests |
+| `src/tcv_diagnostics/models/latent_diffusion.py` | PolymathicAI/LOLA `lola/diffusion.py` and the denoising call contract used by `lola/emulation.py` | upstream `21a4354b327e6e5ee06da5075ba3bd1dd88c61f1`; upstream diffusion file SHA-256 `7c64b9af9851139794602e3118183ba614fba3891b6de1ca77281f39a9d7c443` | Minimum conditional C5P-H2 adaptation of the log-logit schedule, EDM preconditioning, masked context treatment, and weighted denoising loss; uses one nonredundant mask channel; adds explicit context/target loss accounting, strict one-step canonical axes, codec freezing, training-only latent normalization, future-truth exclusion, sampler-probe latent access, and a fail-closed Azula version check; no physics loss | Initially ported in Paper 0 commit `899b89d0d561dbf6d5c50064805fdbbffc0fc988`; current file SHA-256 `447427a5dd3273689b52d012ebe73fbeeaac15d143a4fda00a06ee065b1e1d4f`; schedule, EDM, mask, loss-accounting, context-clamp, codec-freeze, ensemble-axis, diversity, optimization, and dependency-failure tests |
 
 The copied upstream MIT text is
 `src/tcv_diagnostics/models/LOLA_LICENSE.txt`, SHA-256
 `6a483108d787c61c7e2306216ecaa2e15f80a0a2e7fb44cb70d200bbbab63605`.
-No predecessor training script, optimizer, loss implementation, checkpoint,
-or configuration framework was ported.
+No predecessor training script, optimizer, checkpoint, or configuration
+framework was ported. The Phase 3 diffusion mechanics listed above were ported
+from the clean upstream LOLA commit rather than from the modified predecessor
+checkout.
 
 ## External method ledger
 
 External implementations or method-specific code must record repository URL, revision, license, local modifications, and validation tests here before use.
+
+The prospective B2 model uses the public `azula.sample.ABSampler` API from
+Azula `0.3.1` (MIT), pinned exactly in the `models` dependency group. No Azula
+source is copied into Paper 0. On the existing Rusty model environment, the
+installed source hashes are `2a03dc54a763bce8df6d870744bdbcae28f5d5aaf3a01cd4f5eac6eeedaea127`
+for `sample.py`, `9979f1d0557a72ab3b33823d5c3ce7d6716e8c3a8a1200c65365416eda020bab`
+for `denoise.py`, and
+`2538db4eb869fe225a93868ca38b90c66aaf3a929bc5110340671581a731f5e5`
+for `noise.py`. Every B2 launcher must verify the installed version and source
+hashes before model construction. The local dependency-absent test verifies
+that forecast sampling fails closed rather than substituting another sampler;
+the Rocky 9 smoke must additionally exercise the real 16-step, order-three
+sampler contract before full training is authorized.
+
+### Phase 3 B2 execution code
+
+`src/tcv_diagnostics/b2_training.py` is a new Paper 0 implementation of the
+already frozen bounded-smoke optimizer, fixed validation-noise bank,
+checkpoint selection, sampler probe, and reload gate. It was not copied from
+the predecessor or upstream LOLA training code. Its SHA-256 is
+`e6e1743332be263c0d1984b32864a8d328198de9f766c9dbc75cf12949cbfb1a`.
+It reuses only the already verified Paper 0 C5P data adapter, codec loader, and
+latent-normalization primitives. The module rejects full training before data
+or CUDA access and contains no physics-derived loss.
+
+`src/tcv_diagnostics/b2_wandb_tracking.py` and
+`paper0/tools/train_b2_ldm.py` are new fail-closed monitoring and authorization
+code with SHA-256 values
+`c3f87a79ee71dd90f9c3b852c479aed611ee06f9ddf2b1bdb47fcca2477eaaba`
+and `5b905350aeab1972c48810036b4cb7d114063b7eed5ddc2aa7e560aa9bd0b175`,
+respectively. W&B is a required online monitoring mirror for this run; the
+local hash-indexed files remain authoritative and no checkpoint is uploaded.
+The entrypoint independently checks the frozen manifest, protocol hash,
+codec, OS, accelerator, and installed Azula sources before training.
 
 `src/tcv_diagnostics/resampling.py` calls the public
 `scipy.signal.resample` API (SciPy, BSD-3-Clause) with the exact unwindowed
