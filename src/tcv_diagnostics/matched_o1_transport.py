@@ -358,14 +358,19 @@ class NativeTruthCatalog:
         }
 
 
-def _h5_array(handle: h5py.File, name: str) -> np.ndarray:
+def _h5_array(
+    handle: h5py.File,
+    name: str,
+    *,
+    allow_nonfinite: bool = False,
+) -> np.ndarray:
     dataset = handle[name]
     values = np.asarray(dataset[...], dtype=np.float64)
     for attribute in ("_FillValue", "missing_value"):
         if attribute in dataset.attrs:
             fill = float(np.asarray(dataset.attrs[attribute]).reshape(-1)[0])
             values = np.where(values == fill, np.nan, values)
-    if not np.all(np.isfinite(values)):
+    if not allow_nonfinite and not np.all(np.isfinite(values)):
         raise ValueError(f"geometry array {name} contains non-finite values")
     return values
 
@@ -409,7 +414,15 @@ def load_transport_geometry(
                 "penalty_mask": "penalty_mask",
             }.items()
         }
-        shift_angle = _h5_array(handle, "ShiftAngle")[model_slice]
+        # Hypnotoad defines ShiftAngle only on the twisted core branch.  The
+        # SOL entries are stored as NaN and are topology-unused; the frozen
+        # transport constructor below requires every used core value to be
+        # finite and the derivative replaces only unused outer values by zero.
+        shift_angle = _h5_array(
+            handle,
+            "ShiftAngle",
+            allow_nonfinite=True,
+        )[model_slice]
         separatrix_radius = _h5_array(handle, "Rxy_xlow")[
             int(topology_record["ixseps1"])
         ]

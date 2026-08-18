@@ -87,6 +87,37 @@ class CodecTransportStateTests(unittest.TestCase):
         self.assertTrue(np.all(~geometry.operator_valid_mask[:, (0, 7)]))
         self.assertEqual(int(np.sum(geometry.strict_face_mask)), 18)
 
+    def test_geometry_allows_nonfinite_shift_only_outside_twisted_core(self) -> None:
+        n_x, n_y = 6, 8
+        ones = np.ones((n_x, n_y), dtype=np.float64)
+        zeros = np.zeros((n_x, n_y), dtype=np.float64)
+        radius = np.asarray([0.1, 0.3, 0.8, 1.2, 1.0, 0.6, 0.2, 0.1])
+        common = {
+            "jacobian": ones,
+            "g11": ones,
+            "g23": zeros,
+            "bxy": ones,
+            "z_shift": zeros,
+            "dy": ones,
+            "penalty_mask": zeros,
+            "separatrix_face_major_radius": radius,
+            "dz": toroidal_wedge_spacing(9, zperiod=5),
+            "topology": self.topology(),
+        }
+        accepted = build_codec_transport_geometry(
+            **common,
+            shift_angle=np.asarray([0.1, 0.2, np.nan, np.nan, np.nan, np.nan]),
+        )
+        self.assertTrue(np.all(np.isfinite(accepted.shift_angle[:2])))
+        self.assertTrue(np.all(np.isnan(accepted.shift_angle[2:])))
+        with self.assertRaisesRegex(ValueError, "used inner-branch"):
+            build_codec_transport_geometry(
+                **common,
+                shift_angle=np.asarray(
+                    [0.1, np.nan, np.nan, np.nan, np.nan, np.nan]
+                ),
+            )
+
     def test_transport_is_reduced_after_each_state_path(self) -> None:
         n_time, n_x, n_y, n_z = 2, 6, 8, 9
         angle = 2.0 * np.pi * np.arange(n_z) / n_z

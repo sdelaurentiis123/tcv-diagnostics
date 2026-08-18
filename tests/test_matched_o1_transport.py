@@ -18,6 +18,7 @@ from tcv_diagnostics.matched_o1_transport import (
     MatchedCandidateArtifact,
     MatchedPhiArtifact,
     NativeTruthCatalog,
+    _h5_array,
 )
 
 
@@ -218,3 +219,21 @@ def test_matched_phi_artifact_is_tied_to_candidate_hash() -> None:
             assert "attributes are missing" in str(error)
         else:
             raise AssertionError("phi artifact accepted a missing blind-lock attribute")
+
+
+def test_geometry_h5_reader_requires_explicit_nonfinite_opt_in() -> None:
+    with tempfile.TemporaryDirectory() as temporary:
+        path = Path(temporary) / "geometry.h5"
+        with h5py.File(path, "x") as handle:
+            handle.create_dataset("ordinary", data=np.asarray([1.0, np.nan]))
+            handle.create_dataset("ShiftAngle", data=np.asarray([0.2, np.nan]))
+        with h5py.File(path, "r") as handle:
+            try:
+                _h5_array(handle, "ordinary")
+            except ValueError as error:
+                assert "non-finite" in str(error)
+            else:
+                raise AssertionError("ordinary non-finite geometry was accepted")
+            shift = _h5_array(handle, "ShiftAngle", allow_nonfinite=True)
+            assert shift[0] == 0.2
+            assert np.isnan(shift[1])
