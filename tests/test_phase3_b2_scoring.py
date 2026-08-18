@@ -9,6 +9,7 @@ import tcv_diagnostics.b2_scoring as scoring
 from tcv_diagnostics.b2_scoring import (
     compute_b2_spectral_materiality,
     compute_b2_transport_event_thresholds,
+    inherited_b2_spectral_materiality,
     score_b2_forecast_smoke,
     validate_b2_spectral_materiality,
     validate_b2_transport_event_thresholds,
@@ -106,6 +107,39 @@ def test_training_spectral_materiality_uses_n_equals_5k_and_training_only() -> N
         validate_b2_spectral_materiality(contaminated)
 
 
+def test_b2_materiality_inherits_the_frozen_o2_training_decisions() -> None:
+    bands = {
+        label: {"truth_fraction": 0.02, "material": True}
+        for label in ("k1_3", "k4_5", "k6_7")
+    }
+    o2 = {
+        "scope": "O2_training_truth_materiality",
+        "development_run": "85604",
+        "training_frames": [0, 432],
+        "held_out_85606_read": False,
+        "validation_truth_used_to_select_bands": False,
+        "materiality": {
+            "source_split": "85604_training_[0,432)",
+            "minimum_fraction": 0.01,
+            "view": {
+                "fields": list(B2_FIELDS),
+                "cross_pairs": [["Ne", "phi"], ["Pe", "phi"], ["Pi", "phi"]],
+            },
+            "fields": {field: dict(bands) for field in B2_FIELDS},
+            "cross_pairs": {
+                pair: dict(bands) for pair in ("Ne-phi", "Pe-phi", "Pi-phi")
+            },
+        },
+    }
+    record = inherited_b2_spectral_materiality(o2)
+    validate_b2_spectral_materiality(record)
+    assert record["inherited_without_refitting"] is True
+    assert record["fields"]["Ne"]["bands"]["k4_5"][
+        "fraction_of_training_nonaxisymmetric_power"
+    ] == pytest.approx(0.02)
+    assert record["cross_fields"]["Ne-phi"]["bands"]["k6_7"]["full_torus_n"] == [30, 35]
+
+
 def test_transport_event_threshold_contract_rejects_validation_or_heldout_reads():
     record = {
         "scope": "B2_training_only_transport_event_thresholds",
@@ -143,9 +177,7 @@ def test_transport_event_threshold_contract_rejects_wrong_quantity_order():
         "quantile_probability": 0.90,
         "quantile_method": "numpy_linear",
         "absolute_value_before_quantile": True,
-        "thresholds": {
-            quantity: 1.0 for quantity in reversed(TRANSPORT_QUANTITIES)
-        },
+        "thresholds": {quantity: 1.0 for quantity in reversed(TRANSPORT_QUANTITIES)},
         "physics_derived_training_loss_used": False,
     }
     with pytest.raises(ValueError, match="order"):

@@ -165,9 +165,7 @@ def compute_b2_spectral_materiality(
                 raise ValueError("B2 materiality grid cannot resolve k=7")
             modes = n_z // 2 + 1
             field_auto = np.zeros((len(B2_FIELDS), modes), dtype=np.float64)
-            pair_cross = np.zeros(
-                (len(B2_CROSS_PAIRS), modes), dtype=np.complex128
-            )
+            pair_cross = np.zeros((len(B2_CROSS_PAIRS), modes), dtype=np.complex128)
         elif physical.shape[-1] != n_z:
             raise ValueError("B2 materiality toroidal size changed")
         coefficients = np.fft.rfft(physical, axis=-1)[:, eligible, :]
@@ -196,10 +194,7 @@ def compute_b2_spectral_materiality(
         bands = {}
         for label, low, high in B2_MODE_BANDS:
             numerator = float(
-                np.sum(
-                    field_auto[channel, low : high + 1]
-                    * weights[low : high + 1]
-                )
+                np.sum(field_auto[channel, low : high + 1] * weights[low : high + 1])
             )
             fraction = numerator / denominator
             bands[label] = {
@@ -251,6 +246,90 @@ def compute_b2_spectral_materiality(
     }
 
 
+def inherited_b2_spectral_materiality(
+    o2_record: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Convert the already frozen O2 training materiality into B2 schema."""
+
+    if (
+        o2_record.get("scope") != "O2_training_truth_materiality"
+        or o2_record.get("development_run") != "85604"
+        or o2_record.get("training_frames") != [0, 432]
+        or o2_record.get("held_out_85606_read") is not False
+        or o2_record.get("validation_truth_used_to_select_bands") is not False
+    ):
+        raise ValueError("inherited O2 materiality contract differs")
+    source = o2_record.get("materiality", {})
+    if (
+        source.get("source_split") != "85604_training_[0,432)"
+        or source.get("minimum_fraction") != 0.01
+        or source.get("view", {}).get("fields") != list(B2_FIELDS)
+        or source.get("view", {}).get("cross_pairs")
+        != [list(pair) for pair in B2_CROSS_PAIRS]
+    ):
+        raise ValueError("inherited O2 materiality definition differs")
+    expected_bands = tuple(label for label, _, _ in B2_MODE_BANDS)
+
+    def converted_bands(values: Mapping[str, Any], *, cross: bool) -> dict[str, Any]:
+        if tuple(values) != expected_bands:
+            raise ValueError("inherited O2 materiality bands differ")
+        converted = {}
+        for label, low, high in B2_MODE_BANDS:
+            item = values[label]
+            fraction = float(item.get("truth_fraction"))
+            if not math.isfinite(fraction) or not 0.0 <= fraction <= 1.0:
+                raise ValueError("inherited O2 materiality fraction differs")
+            if bool(item.get("material")) != (fraction >= 0.01):
+                raise ValueError("inherited O2 materiality decision differs")
+            fraction_name = (
+                "fraction_of_training_nonaxisymmetric_cross_amplitude"
+                if cross
+                else "fraction_of_training_nonaxisymmetric_power"
+            )
+            converted[label] = {
+                "stored_k": [low, high],
+                "full_torus_n": [5 * low, 5 * high],
+                fraction_name: fraction,
+                "material": bool(item["material"]),
+            }
+        return converted
+
+    fields_source = source.get("fields", {})
+    crosses_source = source.get("cross_pairs", {})
+    if set(fields_source) != set(B2_FIELDS):
+        raise ValueError("inherited O2 materiality fields differ")
+    expected_crosses = tuple(f"{a}-{b}" for a, b in B2_CROSS_PAIRS)
+    if set(crosses_source) != set(expected_crosses):
+        raise ValueError("inherited O2 materiality cross fields differ")
+    return {
+        "schema_version": 1,
+        "scope": "B2_training_only_spectral_materiality",
+        "development_run": "85604",
+        "training_frames": [0, 432],
+        "validation_frames_read": False,
+        "held_out_85606_read": False,
+        "zperiod": 5,
+        "mode_mapping": "n=5k",
+        "materiality_fraction_minimum": 0.01,
+        "field_denominator": (
+            "inherited_O2_full_model_crop_nonaxisymmetric_toroidal_power_k_ge_1"
+        ),
+        "cross_denominator": (
+            "inherited_O2_sum_mode_absolute_aggregate_training_cross_spectrum_k_ge_1"
+        ),
+        "inherited_without_refitting": True,
+        "fields": {
+            field: {"bands": converted_bands(fields_source[field], cross=False)}
+            for field in B2_FIELDS
+        },
+        "cross_fields": {
+            pair: {"bands": converted_bands(crosses_source[pair], cross=True)}
+            for pair in expected_crosses
+        },
+        "physics_derived_training_loss_used": False,
+    }
+
+
 def validate_b2_spectral_materiality(record: Mapping[str, Any]) -> None:
     if (
         record.get("scope") != "B2_training_only_spectral_materiality"
@@ -277,9 +356,7 @@ def validate_b2_spectral_materiality(record: Mapping[str, Any]) -> None:
                 raise ValueError("B2 spectral materiality band order differs")
             for band in item["bands"].values():
                 keys = [
-                    name
-                    for name in band
-                    if name.startswith("fraction_of_training_")
+                    name for name in band if name.startswith("fraction_of_training_")
                 ]
                 if len(keys) != 1:
                     raise ValueError("B2 spectral materiality fraction differs")
@@ -431,9 +508,7 @@ def _score_b2_forecast(
         masks.strict_wall_interior & masks.operator_interior,
         dtype=bool,
     )
-    validation_blocks = (
-        (targets,) if bounded_smoke else B2_VALIDATION_BLOCKS
-    )
+    validation_blocks = (targets,) if bounded_smoke else B2_VALIDATION_BLOCKS
     field = B2FieldScoreAccumulator(
         model_seed=model_seed,
         target_frames=targets,
@@ -553,9 +628,7 @@ def _score_b2_forecast(
             "field_and_marginal_calibration": field.finalize(),
             "spectral_and_cross_field": {
                 "overall": spectral.finalize(),
-                "chronological_blocks": [
-                    block.finalize() for block in spectral_blocks
-                ],
+                "chronological_blocks": [block.finalize() for block in spectral_blocks],
             },
             "memberwise_transport": {
                 "overall": transport.finalize(),

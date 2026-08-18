@@ -13,10 +13,11 @@ COMPARATOR = ROOT / "cluster/phase3_b2_deterministic_comparators.sbatch"
 FREEZE = ROOT / "cluster/phase3_b2_freeze_training_matrix.sbatch"
 SMOKE = ROOT / "cluster/phase3_b2_evaluator_smoke.sbatch"
 EVALUATION = ROOT / "cluster/phase3_b2_evaluation_full.sbatch"
+FINALIZER = ROOT / "cluster/phase3_b2_finalize_evaluation.sbatch"
 
 
 @pytest.mark.parametrize(
-    "launcher", (THRESHOLD, COMPARATOR, FREEZE, SMOKE, EVALUATION)
+    "launcher", (THRESHOLD, COMPARATOR, FREEZE, SMOKE, EVALUATION, FINALIZER)
 )
 def test_b2_evaluation_launcher_has_valid_bash_and_fail_closed_checkout(
     launcher: Path,
@@ -94,6 +95,18 @@ def test_training_freeze_and_four_target_smoke_precede_full_evaluation() -> None
     assert 'result["O3_launch_allowed"] is not False' in smoke
 
 
+def test_finalizer_is_cpu_only_and_keeps_downstream_scope_closed() -> None:
+    text = FINALIZER.read_text()
+    assert "#SBATCH --partition=gen" in text
+    assert "#SBATCH --gres=gpu" not in text
+    assert "B2_EVALUATION_JOB_ID" in text
+    assert "B2_COMPARATOR_JOB_ID" in text
+    assert "finalize_b2_evaluation.py" in text
+    assert 'result["O3_launch_allowed"] is not False' in text
+    assert 'result["assimilation_allowed"] is not False' in text
+    assert 'result["diagnostic_ranking_allowed"] is not False' in text
+
+
 def test_launchers_lock_current_local_evaluation_implementations() -> None:
     threshold = THRESHOLD.read_text()
     evaluation = EVALUATION.read_text()
@@ -111,6 +124,8 @@ def test_launchers_lock_current_local_evaluation_implementations() -> None:
         "src/tcv_diagnostics/b2_transport_metrics.py": evaluation,
         "src/tcv_diagnostics/b2_probabilistic_metrics.py": evaluation,
         "src/tcv_diagnostics/b2_acceptance.py": COMPARATOR.read_text(),
+        "paper0/tools/finalize_b2_evaluation.py": FINALIZER.read_text(),
+        "src/tcv_diagnostics/b2_acceptance_gate.py": FINALIZER.read_text(),
     }
     for relative, launcher_text in expected.items():
         digest = hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()

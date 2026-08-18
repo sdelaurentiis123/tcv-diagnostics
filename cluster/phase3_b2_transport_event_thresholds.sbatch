@@ -18,7 +18,7 @@ set -euo pipefail
 
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
-readonly MODEL_DATA_SOURCE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525"
+readonly TRAINING_MATERIALITY="/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/references/training_materiality.json"
 readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_transport_event_thresholds"
 readonly OUTDIR="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly ENTRYPOINT="${PAPER0_ROOT}/paper0/tools/build_b2_transport_event_thresholds.py"
@@ -66,19 +66,17 @@ if [[ ! -x "${PYTHON}" ]]; then
   exit 2
 fi
 
-check_sha256 "70f72a06fd406080f1fc28ae0296b9e903d2c685df953aef17bf78362471a7c0" "${ENTRYPOINT}"
+check_sha256 "2c6fc52d58c38e2be84ab1c69ba10314db94e579532fb878ecf97dd953464da1" "${ENTRYPOINT}"
 check_sha256 "cc6b00b72605c6457ae3a3b24db7e90dac16989c852df92036a57272f62eddae" "${NATIVE_TRUTH_RESULT}"
 check_sha256 "76426ca83f711aaf9dec79c6df4c4503c2c8eece847b78027633e93e4b2cd460" "${GEOMETRY_MANIFEST}"
 check_sha256 "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8" "${GEOMETRY}"
-check_sha256 "67330904106404d384a24dd3e15934303b2cd147813cd3d02faa9bb302bc0e7a" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_scoring.py"
+check_sha256 "002a0027e0d18c4bf99584bfda7f4e399960b02ae6947240f5a6c7513cb2ff90" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_scoring.py"
 check_sha256 "b78ea33f641fe6409ca5a55503f3729013f2da3cc78f93671f63c6fadafcb02e" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_transport_metrics.py"
 check_sha256 "1eba2a8e0c54928264c2c84d5fda08ef6080cf4d73017d40193e3c23e2d2854a" "${PAPER0_ROOT}/src/tcv_diagnostics/matched_o1_transport.py"
 check_sha256 "201a9628564b1ad5e476cbee52edf5eac458c61dadc1c7057a5b6e205de46d45" "${PAPER0_ROOT}/src/tcv_diagnostics/codec_transport.py"
 check_sha256 "4f5eda7001bf9b42cefb224842a1dee4a955028a1aa063a57db6c447879f424c" "${PAPER0_ROOT}/src/tcv_diagnostics/geometry.py"
 check_sha256 "12612b2cd65ac807ef4e55996712f6dde49dfca1b956f449ed189386eb5ea04e" "${PAPER0_ROOT}/src/tcv_diagnostics/resampling.py"
-check_sha256 "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18" "${MODEL_DATA_SOURCE}/model_dataset_manifest.json"
-check_sha256 "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7" "${MODEL_DATA_SOURCE}/normalization.json"
-check_sha256 "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01" "${MODEL_DATA_SOURCE}/artifact_sha256.txt"
+check_sha256 "f76d27df3fdebcd75114401d3747dc6380584ad870cd5caaffa5ca4ce40c662f" "${TRAINING_MATERIALITY}"
 
 scontrol show job -dd "${SLURM_JOB_ID}" > "${OUTDIR}/slurm_job.txt"
 export PYTHONNOUSERSITE=1
@@ -110,7 +108,8 @@ COMMAND=(
   --geometry-manifest-sha256 "76426ca83f711aaf9dec79c6df4c4503c2c8eece847b78027633e93e4b2cd460"
   --geometry "${GEOMETRY}"
   --geometry-sha256 "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
-  --artifact-root "${MODEL_DATA_SOURCE}"
+  --training-materiality "${TRAINING_MATERIALITY}"
+  --training-materiality-sha256 "f76d27df3fdebcd75114401d3747dc6380584ad870cd5caaffa5ca4ce40c662f"
   --output-directory "${OUTDIR}/thresholds"
   --paper0-commit "${PAPER0_COMMIT}"
   --slurm-job-id "${SLURM_JOB_ID}"
