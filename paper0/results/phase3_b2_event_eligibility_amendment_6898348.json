@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "scope": "compact_phase3_B2_LDM_H2_A016_result_85604",
+  "status": "completed_failed_amended_one_step_gate",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "slurm_job_id": "6898348",
+  "gate_execution_commit": "c9b136d832b387f4f5596885d2338c75491ab3af",
+  "rocky_linux_version": "9.8",
+  "python_version": "3.11.11",
+  "elapsed_seconds": 26,
+  "exit_code": "0:0",
+  "focused_tests": {
+    "passed": 19,
+    "failed": 0
+  },
+  "full_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_event_eligibility_amendment/job_6898348/matrix/final_matrix.json",
+    "sha256": "4f054365d32d3e1725091ba58c8fa014f104e204748217dda482045a6c0df600"
+  },
+  "artifact_index": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b2_event_eligibility_amendment/job_6898348/artifact_sha256.txt",
+    "entries": {
+      "command.sh": "aafbf98945cf9a2cfb9b16414830fdf388cc2fdcfc8c7b1ed4dfe2f93a75e514",
+      "environment.txt": "daac3f26d2b70cf757f53cfbf76713ecb9c5693b79906f5527ced221bab29f0e",
+      "slurm_job.txt": "484d4fab45b89f686ff6afc279b5c5c6794f78473f4e3c1a8ca29c47c1244b44",
+      "stdout.jsonl": "bf6cb8dc9585c4b2a749ebab767df19e69c5f14c3d7e31760a291bc57086e97c",
+      "test_output.txt": "0654acdbb33349bbdac4bc02e3e4e77cb503da597b733e5459e52c1df0e46871",
+      "matrix/final_matrix.json": "4f054365d32d3e1725091ba58c8fa014f104e204748217dda482045a6c0df600",
+      "matrix/artifact_sha256.txt": "1ee292fc7fbd2a467a014a59a82b1bbf5769242f622383d21b02f18edd5ddbcc"
+    }
+  },
+  "original_frozen_result": {
+    "job_id": "6897564",
+    "status": "completed_failed_frozen_one_step_gate",
+    "sha256": "cd5d3a22b1a5f665c493417c3ea47bc7fd21d731e116f35a6a84eae68b462fd6",
+    "retained_immutable": true
+  },
+  "amendment": {
+    "id": "A016",
+    "event_block_policy": "truth_event_count_eligible_v1",
+    "zero_event_block_zero_based_index": 2,
+    "zero_event_block_target_frames": [
+      540,
+      561
+    ],
+    "eligible_block_indices_for_every_transport_quantity": [
+      0,
+      1,
+      3,
+      4,
+      5
+    ],
+    "all_eligible_event_metrics_pass_every_seed": true,
+    "not_applicable_event_records_per_seed": 4,
+    "raw_forecasts_changed": false,
+    "raw_scores_changed": false,
+    "metrics_recomputed": false,
+    "training_performed": false,
+    "inference_performed": false,
+    "truth_scoring_performed": false
+  },
+  "decision": {
+    "original_architecture_passed": false,
+    "amended_architecture_passed": false,
+    "architecture_decision_changed": false,
+    "complete_seed_gate_pass_count": 0,
+    "complete_seed_gate_passes_required": 2,
+    "median_numerical_failed_check_count": 106,
+    "median_numerical_check_count": 249,
+    "median_numerical_checks_changed_by_A016": 0,
+    "field_passing_seed_count": 0,
+    "spectral_passing_seed_count": 0,
+    "transport_passing_seed_count": 0,
+    "short_O3_protocol_may_be_frozen": false,
+    "O3_launch_allowed": false,
+    "assimilation_allowed": false,
+    "diagnostic_ranking_allowed": false,
+    "held_out_85606_access_allowed": false
+  },
+  "per_seed_gate_effect": {
+    "1701": {
+      "complete_gate_passed": false,
+      "field_failed_checks": 5,
+      "spectral_failed_checks": 85,
+      "transport_failed_checks": 18,
+      "all_required_numeric_metrics_finite_before_A016": false,
+      "all_required_numeric_metrics_finite_after_A016": true,
+      "catastrophic_bounds_pass_after_A016": true
+    },
+    "1702": {
+      "complete_gate_passed": false,
+      "field_failed_checks": 7,
+      "spectral_failed_checks": 85,
+      "transport_failed_checks": 11,
+      "all_required_numeric_metrics_finite_before_A016": false,
+      "all_required_numeric_metrics_finite_after_A016": true,
+      "catastrophic_bounds_pass_after_A016": true
+    },
+    "1703": {
+      "complete_gate_passed": false,
+      "field_failed_checks": 8,
+      "spectral_failed_checks": 84,
+      "transport_failed_checks": 15,
+      "all_required_numeric_metrics_finite_before_A016": false,
+      "all_required_numeric_metrics_finite_after_A016": true,
+      "catastrophic_bounds_pass_after_A016": true
+    }
+  },
+  "median_scientific_summary": {
+    "field": {
+      "ensemble_mean_RMSE_relative_to_paired_deterministic_H2": 0.8985296134678866,
+      "ensemble_mean_MAE_relative_to_paired_deterministic_H2": 0.9404660773750158,
+      "fair_CRPS_relative_to_paired_deterministic_H2_MAE": 0.6835675372010667,
+      "fair_CRPS_relative_to_best_uncompressed_MAE": 0.5686814250037909,
+      "primary_spread_skill_count_in_0p80_to_1p25": 0,
+      "spread_skill_by_field": {
+        "Ne": 0.617156449228029,
+        "Pe": 0.6918936247910866,
+        "Pi": 0.7315536832355596,
+        "phi": 0.6710432500884791,
+        "Vi": 0.7315232828514986
+      }
+    },
+    "spectral": {
+      "material_field_power_checks_passing": 11,
+      "material_field_power_checks_total": 15,
+      "material_realization_coherence_checks_passing": 4,
+      "material_realization_coherence_checks_total": 15,
+      "cross_phase_checks_passing": 9,
+      "cross_phase_checks_total": 9,
+      "cross_coherence_change_checks_passing": 7,
+      "cross_coherence_change_checks_total": 9,
+      "high_band_k6_7_full_torus_n30_35": {
+        "Ne": {
+          "power_ratio": 0.6728249427731695,
+          "realization_coherence": 0.4420923946834084
+        },
+        "Pe": {
+          "power_ratio": 0.5541228567923023,
+          "realization_coherence": 0.5028132006364423
+        },
+        "Pi": {
+          "power_ratio": 0.5562349933886199,
+          "realization_coherence": 0.4726686581648438
+        },
+        "phi": {
+          "power_ratio": 0.7579718965525204,
+          "realization_coherence": 0.3380894952180635
+        },
+        "Vi": {
+          "power_ratio": 1.193280336865283,
+          "realization_coherence": 0.03985769179428448
+        }
+      }
+    },
+    "transport": {
+      "strict_face": {
+        "particle_relative_l2": 0.6159875032772946,
+        "electron_internal_energy_relative_l2": 0.6104904561793039,
+        "ion_internal_energy_relative_l2": 0.6129409896713718,
+        "total_internal_energy_relative_l2": 0.6114029426467034,
+        "all_correlations_pass_0p70": true,
+        "all_weighted_sign_disagreements_pass_0p20": true
+      },
+      "separatrix": {
+        "particle_relative_l2": 0.2992071111069451,
+        "electron_internal_energy_relative_l2": 0.23899699097851113,
+        "ion_internal_energy_relative_l2": 0.2738804634698824,
+        "total_internal_energy_relative_l2": 0.25323351816688955,
+        "all_relative_l2_pass_0p30": true,
+        "all_absolute_normalized_bias_fail_0p15": true,
+        "particle_correlation": 0.7761034895125899,
+        "heat_correlations_pass_0p80": true,
+        "all_sign_disagreements": 0.0,
+        "fair_CRPS_better_than_paired_H2_count": 1,
+        "probabilistically_calibrated_count": 0
+      }
+    },
+    "M16_vs_M32_primary_stability_checks_all_pass": true
+  },
+  "interpretation": {
+    "positive": "B2 improves one-step point error and marginal fair CRPS, preserves all median cross-phase checks, retains useful integrated transport timing and sign, and remains Monte-Carlo stable.",
+    "failure": "B2 is systematically underdispersed, loses realization-level spectral coherence, underestimates local strict-face transport, biases separatrix transport low, and does not calibrate transport.",
+    "next_branch": "A separately frozen FGN-style functional-noise retrofit or joint stochastic residual; no O3 or assimilation use of B2 covariance."
+  }
+}

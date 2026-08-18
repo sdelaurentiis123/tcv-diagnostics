@@ -715,3 +715,28 @@ The machine-readable evidence inventory is `paper0/manifests/legacy_phase0_inven
 **Phase 0 is complete with documented discrepancies.** The predecessor forecast and ETKF paths execute on Rocky 9; the fresh result and its numerical drift are preserved; deterministic and stochastic checkpoint families are located and hashed; data, preprocessing, time, toroidal-mode, geometry, and observation-operator hazards are explicit; and 85606 remained untouched.
 
 No historical score is accepted for Paper 0 model selection. Phase 1 begins from the raw 85604 timeline and creates a guarded chronological protocol with training-only normalization and deterministic validation behavior.
+
+## Phase 3 B2 completed probabilistic result
+
+Three-seed B2 training, truth-separated 32-member evaluation, and the original
+prospectively frozen gate completed on 85604. Original matrix job `6897564`
+ran commit `361f0f27a9ece3b56f529a72c2fcfa19aa0be719` and produced SHA-256
+`cd5d3a22b1a5f665c493417c3ea47bc7fd21d731e116f35a6a84eae68b462fd6`.
+All three seeds fail every complete field, spectral, and transport family; the
+architecture has zero passing seeds and fails 106 of 249 median numerical
+checks. The ensemble improves point error and marginal fair CRPS but is
+underdispersed, loses realization-level spectral coherence, and does not
+calibrate transport. O3, assimilation, diagnostic ranking, and 85606 remain
+closed.
+
+The original gate also treated null event-conditioned values in a truth-empty
+chronological block as non-finite model outputs. A016 was committed before its
+separate evaluator was implemented. CPU-only Rocky 9 job `6898348` then
+reduced the same stored records without training, inference, rescoring, or
+85606 access. The amended matrix SHA-256 is
+`4f054365d32d3e1725091ba58c8fa014f104e204748217dda482045a6c0df600`.
+It makes the catastrophic finite-metric bound pass at all three seeds, but
+changes zero median numerical checks, zero family decisions, and no
+architecture decision. The definitive interpretation is
+`PHASE3_B2_READOUT.md`; compact evidence is
+`results/phase3_b2_event_eligibility_amendment_6898348.json`.

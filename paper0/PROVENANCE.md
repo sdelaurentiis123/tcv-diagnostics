@@ -768,3 +768,30 @@ the frozen complete-trajectory denoising loss. It neither computes nor
 selects on CRPS, field error, spectra, cross-phase, coherence, transport, or
 diagnostic performance. It does not authorize O3, assimilation, diagnostic
 ranking, control, or any access to 85606.
+
+### Phase 3 B2 completed gate and A016 gate-only correction
+
+Original finalizer job `6897564` ran exact commit
+`361f0f27a9ece3b56f529a72c2fcfa19aa0be719` on all three immutable B2
+evaluation records. Its matrix has SHA-256
+`cd5d3a22b1a5f665c493417c3ea47bc7fd21d731e116f35a6a84eae68b462fd6`
+and remains unchanged.
+
+A016 is frozen in
+`protocol/PHASE3_B2_EVENT_ELIGIBILITY_AMENDMENT.md` and
+`manifests/phase3_b2_event_eligibility_amendment_85604.json`. The original
+gate source remains byte-identical with SHA-256
+`6bb5d825b30c9c8292cda020d3bec824d9b04198617dc89afafa264daab44ea5`.
+The separate implementation is
+`src/tcv_diagnostics/b2_acceptance_gate_event_eligibility.py`; it reuses the
+original non-event checks and changes only truth-empty chronological event
+records to explicit N/A after enforcing count and null-record integrity.
+
+CPU-only Rocky 9 job `6898348` ran clean commit
+`c9b136d832b387f4f5596885d2338c75491ab3af`, passed 19 focused tests,
+and completed `0:0` in 26 seconds. It performed no training, inference, truth
+scoring, forecast mutation, score mutation, or 85606 access. Its amended
+matrix has SHA-256
+`4f054365d32d3e1725091ba58c8fa014f104e204748217dda482045a6c0df600`.
+The architecture remains failed with zero passing seeds. The tracked compact
+record is `results/phase3_b2_event_eligibility_amendment_6898348.json`.
