@@ -14,7 +14,11 @@ from .b2_field_scoring import (
     B2FieldScoreAccumulator,
 )
 from .b2_forecast import B2ForecastArtifact
-from .b2_spectral_metrics import B2SpectralAccumulator
+from .b2_spectral_metrics import (
+    B2_CROSS_PAIRS,
+    B2_MODE_BANDS,
+    B2SpectralAccumulator,
+)
 from .b2_transport_metrics import (
     B2TransportAccumulator,
     memberwise_transport_outputs,
@@ -26,7 +30,11 @@ from .codec_transport import (
     evaluate_transport_state,
 )
 from .matched_o1_transport import NativeTruthCatalog
-from .model_training_data import FAMILY_FIELDS, ModelDatasetCatalog
+from .model_training_data import (
+    FAMILY_FIELDS,
+    CodecFrameDataset,
+    ModelDatasetCatalog,
+)
 from .o2_training_data import OneStepWindowDataset, strict_o2_targets
 
 
@@ -108,6 +116,178 @@ def compute_b2_transport_event_thresholds(
         "training_truth_summaries": summaries,
         "physics_derived_training_loss_used": False,
     }
+
+
+def _one_sided_spectral_weights(size: int) -> np.ndarray:
+    weights = np.ones(int(size) // 2 + 1, dtype=np.float64)
+    if int(size) % 2 == 0:
+        weights[1:-1] = 2.0
+    else:
+        weights[1:] = 2.0
+    return weights
+
+
+def compute_b2_spectral_materiality(
+    *,
+    dataset: CodecFrameDataset,
+    eligible_xy_mask: np.ndarray,
+    training_frame_count: int = 432,
+) -> dict[str, Any]:
+    """Freeze field-power/cross-amplitude material bands on training truth."""
+
+    frame_count = int(training_frame_count)
+    if frame_count <= 0 or tuple(dataset.frames) != tuple(range(frame_count)):
+        raise ValueError("B2 spectral materiality requires exact training frames")
+    if tuple(dataset.fields) != B2_FIELDS or dataset.return_physical is not True:
+        raise ValueError("B2 spectral materiality dataset state differs")
+    eligible = np.asarray(eligible_xy_mask, dtype=bool)
+    if eligible.ndim != 2 or not np.any(eligible):
+        raise ValueError("B2 spectral materiality eligible mask differs")
+    field_auto: np.ndarray | None = None
+    pair_cross: np.ndarray | None = None
+    n_z: int | None = None
+    pairs = tuple(
+        (B2_FIELDS.index(first), B2_FIELDS.index(second))
+        for first, second in B2_CROSS_PAIRS
+    )
+    for index in range(frame_count):
+        item = dataset[index]
+        if int(item["frame_index"]) != index:
+            raise RuntimeError("B2 materiality frame order differs")
+        physical = np.asarray(item["physical_volume"], dtype=np.float64)
+        if physical.ndim != 4 or physical.shape[0] != len(B2_FIELDS):
+            raise ValueError("B2 materiality physical volume shape differs")
+        if physical.shape[1:3] != eligible.shape:
+            raise ValueError("B2 materiality field/mask geometry differs")
+        if n_z is None:
+            n_z = int(physical.shape[-1])
+            if n_z // 2 < 7:
+                raise ValueError("B2 materiality grid cannot resolve k=7")
+            modes = n_z // 2 + 1
+            field_auto = np.zeros((len(B2_FIELDS), modes), dtype=np.float64)
+            pair_cross = np.zeros(
+                (len(B2_CROSS_PAIRS), modes), dtype=np.complex128
+            )
+        elif physical.shape[-1] != n_z:
+            raise ValueError("B2 materiality toroidal size changed")
+        coefficients = np.fft.rfft(physical, axis=-1)[:, eligible, :]
+        if field_auto is None or pair_cross is None:
+            raise AssertionError("B2 materiality accumulators are absent")
+        field_auto += np.sum(
+            np.abs(coefficients) ** 2,
+            axis=1,
+            dtype=np.float64,
+        )
+        for pair_index, (first, second) in enumerate(pairs):
+            pair_cross[pair_index] += np.sum(
+                coefficients[first] * np.conjugate(coefficients[second]),
+                axis=0,
+                dtype=np.complex128,
+            )
+    if n_z is None or field_auto is None or pair_cross is None:
+        raise RuntimeError("B2 spectral materiality consumed no frames")
+    weights = _one_sided_spectral_weights(n_z)
+    threshold = 0.01
+    fields: dict[str, Any] = {}
+    for channel, field in enumerate(B2_FIELDS):
+        denominator = float(np.sum(field_auto[channel, 1:] * weights[1:]))
+        if denominator <= 0.0:
+            raise ValueError(f"B2 training non-axisymmetric power is zero for {field}")
+        bands = {}
+        for label, low, high in B2_MODE_BANDS:
+            numerator = float(
+                np.sum(
+                    field_auto[channel, low : high + 1]
+                    * weights[low : high + 1]
+                )
+            )
+            fraction = numerator / denominator
+            bands[label] = {
+                "stored_k": [low, high],
+                "full_torus_n": [5 * low, 5 * high],
+                "fraction_of_training_nonaxisymmetric_power": fraction,
+                "material": fraction >= threshold,
+            }
+        fields[field] = {
+            "training_nonaxisymmetric_power": denominator,
+            "bands": bands,
+        }
+    cross_fields: dict[str, Any] = {}
+    for pair_index, pair in enumerate(B2_CROSS_PAIRS):
+        amplitude = np.abs(pair_cross[pair_index]) * weights
+        denominator = float(np.sum(amplitude[1:]))
+        if denominator <= 0.0:
+            raise ValueError(f"B2 training cross amplitude is zero for {pair}")
+        bands = {}
+        for label, low, high in B2_MODE_BANDS:
+            fraction = float(np.sum(amplitude[low : high + 1])) / denominator
+            bands[label] = {
+                "stored_k": [low, high],
+                "full_torus_n": [5 * low, 5 * high],
+                "fraction_of_training_nonaxisymmetric_cross_amplitude": fraction,
+                "material": fraction >= threshold,
+            }
+        cross_fields[f"{pair[0]}-{pair[1]}"] = {
+            "training_nonaxisymmetric_cross_amplitude": denominator,
+            "bands": bands,
+        }
+    return {
+        "schema_version": 1,
+        "scope": "B2_training_only_spectral_materiality",
+        "development_run": "85604",
+        "training_frames": [0, frame_count],
+        "validation_frames_read": False,
+        "held_out_85606_read": False,
+        "zperiod": 5,
+        "mode_mapping": "n=5k",
+        "materiality_fraction_minimum": threshold,
+        "field_denominator": "all_training_nonaxisymmetric_toroidal_power_k_ge_1",
+        "cross_denominator": (
+            "sum_mode_absolute_aggregate_training_cross_spectrum_k_ge_1"
+        ),
+        "fields": fields,
+        "cross_fields": cross_fields,
+        "physics_derived_training_loss_used": False,
+    }
+
+
+def validate_b2_spectral_materiality(record: Mapping[str, Any]) -> None:
+    if (
+        record.get("scope") != "B2_training_only_spectral_materiality"
+        or record.get("development_run") != "85604"
+        or record.get("training_frames") != [0, 432]
+        or record.get("validation_frames_read") is not False
+        or record.get("held_out_85606_read") is not False
+        or record.get("zperiod") != 5
+        or record.get("mode_mapping") != "n=5k"
+        or record.get("materiality_fraction_minimum") != 0.01
+        or record.get("physics_derived_training_loss_used") is not False
+    ):
+        raise ValueError("B2 spectral materiality artifact contract differs")
+    expected_bands = tuple(label for label, _, _ in B2_MODE_BANDS)
+    fields = record.get("fields", {})
+    crosses = record.get("cross_fields", {})
+    if tuple(fields) != B2_FIELDS:
+        raise ValueError("B2 spectral materiality field order differs")
+    if tuple(crosses) != tuple(f"{a}-{b}" for a, b in B2_CROSS_PAIRS):
+        raise ValueError("B2 spectral materiality cross-field order differs")
+    for group in (fields, crosses):
+        for item in group.values():
+            if tuple(item.get("bands", {})) != expected_bands:
+                raise ValueError("B2 spectral materiality band order differs")
+            for band in item["bands"].values():
+                keys = [
+                    name
+                    for name in band
+                    if name.startswith("fraction_of_training_")
+                ]
+                if len(keys) != 1:
+                    raise ValueError("B2 spectral materiality fraction differs")
+                fraction = float(band[keys[0]])
+                if not math.isfinite(fraction) or not 0.0 <= fraction <= 1.0:
+                    raise ValueError("B2 spectral materiality value differs")
+                if bool(band.get("material")) != (fraction >= 0.01):
+                    raise ValueError("B2 spectral materiality decision differs")
 
 
 def validate_b2_transport_event_thresholds(
@@ -242,6 +422,9 @@ def _score_b2_forecast(
     if forecast_artifact.metadata.get("target_truth_read") is not False:
         raise ValueError("B2 forecast metadata does not preserve truth separation")
     thresholds = validate_b2_transport_event_thresholds(event_threshold_record)
+    validate_b2_spectral_materiality(
+        event_threshold_record.get("spectral_materiality", {})
+    )
     masks = geometry.region_masks
     region_masks = b2_region_masks(masks, n_z=88)
     eligible_xy = np.asarray(

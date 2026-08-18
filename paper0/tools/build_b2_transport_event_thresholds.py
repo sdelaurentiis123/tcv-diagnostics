@@ -16,6 +16,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from tcv_diagnostics.b2_scoring import (  # noqa: E402
+    compute_b2_spectral_materiality,
     compute_b2_transport_event_thresholds,
 )
 from tcv_diagnostics.codec_training import sha256_path  # noqa: E402
@@ -28,6 +29,10 @@ from tcv_diagnostics.model_data import (  # noqa: E402
     load_strict_json,
     write_strict_json_atomic,
 )
+from tcv_diagnostics.model_training_data import (  # noqa: E402
+    CodecFrameDataset,
+    load_official_catalog,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -38,6 +43,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--geometry-manifest-sha256", required=True)
     parser.add_argument("--geometry", type=Path, required=True)
     parser.add_argument("--geometry-sha256", required=True)
+    parser.add_argument("--artifact-root", type=Path, required=True)
     parser.add_argument("--output-directory", type=Path, required=True)
     parser.add_argument("--paper0-commit", required=True)
     parser.add_argument("--slurm-job-id", required=True)
@@ -85,6 +91,7 @@ def main() -> None:
         args.native_truth_result,
         args.geometry_manifest,
         args.geometry,
+        args.artifact_root,
         args.output_directory,
     ):
         assert_development_path(path)
@@ -109,6 +116,26 @@ def main() -> None:
         native_truth=native_truth,
         geometry=geometry,
     )
+    catalog = load_official_catalog(args.artifact_root)
+    dataset = CodecFrameDataset(
+        catalog,
+        family="c5p",
+        split="train",
+        frames=range(432),
+        augment=False,
+        seed=1701,
+        return_physical=True,
+    )
+    try:
+        thresholds["spectral_materiality"] = compute_b2_spectral_materiality(
+            dataset=dataset,
+            eligible_xy_mask=(
+                geometry.region_masks.strict_wall_interior
+                & geometry.region_masks.operator_interior
+            ),
+        )
+    finally:
+        dataset.close()
     thresholds.update(
         {
             "paper0_commit": args.paper0_commit,
@@ -124,6 +151,15 @@ def main() -> None:
             "geometry": {
                 "path": str(geometry_path),
                 "sha256": args.geometry_sha256,
+            },
+            "model_dataset": {
+                "root": str(args.artifact_root.resolve(strict=True)),
+                "manifest_sha256": sha256_path(
+                    args.artifact_root / "model_dataset_manifest.json"
+                ),
+                "normalization_sha256": sha256_path(
+                    args.artifact_root / "normalization.json"
+                ),
             },
         }
     )

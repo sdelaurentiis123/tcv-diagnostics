@@ -7,10 +7,13 @@ import pytest
 
 import tcv_diagnostics.b2_scoring as scoring
 from tcv_diagnostics.b2_scoring import (
+    compute_b2_spectral_materiality,
     compute_b2_transport_event_thresholds,
     score_b2_forecast_smoke,
+    validate_b2_spectral_materiality,
     validate_b2_transport_event_thresholds,
 )
+from tcv_diagnostics.b2_field_metrics import B2_FIELDS
 from tcv_diagnostics.codec_transport import TRANSPORT_QUANTITIES
 
 
@@ -25,6 +28,24 @@ class _FakeNativeTruth:
             "Pi": np.broadcast_to(frames + 3.0, shape).copy(),
             "phi": np.broadcast_to(frames + 4.0, shape).copy(),
         }
+
+
+class _FakeTrainingFields:
+    frames = tuple(range(432))
+    fields = B2_FIELDS
+    return_physical = True
+
+    def __getitem__(self, index):
+        z = 2.0 * np.pi * np.arange(16, dtype=np.float64) / 16
+        mode = np.cos(2.0 * z + 0.01 * index)
+        physical = np.stack(
+            [
+                np.broadcast_to((channel + 1.0) * mode, (2, 2, 16))
+                for channel in range(5)
+            ],
+            axis=0,
+        )
+        return {"frame_index": index, "physical_volume": physical}
 
 
 def test_training_transport_event_thresholds_use_only_frames_zero_to_431(monkeypatch):
@@ -57,6 +78,32 @@ def test_training_transport_event_thresholds_use_only_frames_zero_to_431(monkeyp
         4.0 * expected
     )
     assert validate_b2_transport_event_thresholds(record) == record["thresholds"]
+
+
+def test_training_spectral_materiality_uses_n_equals_5k_and_training_only() -> None:
+    record = compute_b2_spectral_materiality(
+        dataset=_FakeTrainingFields(),  # type: ignore[arg-type]
+        eligible_xy_mask=np.ones((2, 2), dtype=bool),
+    )
+    validate_b2_spectral_materiality(record)
+    assert record["training_frames"] == [0, 432]
+    assert record["validation_frames_read"] is False
+    for field in B2_FIELDS:
+        bands = record["fields"][field]["bands"]
+        assert bands["k1_3"]["full_torus_n"] == [5, 15]
+        assert bands["k1_3"]["material"] is True
+        assert bands["k1_3"][
+            "fraction_of_training_nonaxisymmetric_power"
+        ] == pytest.approx(1.0)
+        assert bands["k4_5"]["material"] is False
+        assert bands["k6_7"]["material"] is False
+    for pair in ("Ne-phi", "Pe-phi", "Pi-phi"):
+        assert record["cross_fields"][pair]["bands"]["k1_3"]["material"]
+
+    contaminated = dict(record)
+    contaminated["validation_frames_read"] = True
+    with pytest.raises(ValueError, match="contract"):
+        validate_b2_spectral_materiality(contaminated)
 
 
 def test_transport_event_threshold_contract_rejects_validation_or_heldout_reads():
