@@ -26,7 +26,9 @@ LOCKED = (
 
 def test_smoke_is_rocky9_one_h100_bounded_and_non_overwriting():
     text = LAUNCHER.read_text(encoding="utf-8")
-    assert "#SBATCH --gres=gpu:h100:1" in text
+    assert "#SBATCH --partition=gpupreempt" in text
+    assert "#SBATCH --qos=gpupreempt" in text
+    assert "#SBATCH --gres=gpu:1" in text
     assert "#SBATCH --constraint=h100" in text
     assert '"${VERSION_ID%%.*}" != "9"' in text
     assert "--mode smoke" in text

@@ -2,9 +2,9 @@
 # Rocky 9 one-H100 implementation gate for both frozen C5P O2 history arms.
 # This bounded run is non-scientific: <=16 train targets and exactly two epochs.
 #SBATCH --job-name=p2_o2_smoke
-#SBATCH --partition=gpuxl
-#SBATCH --qos=gen
-#SBATCH --gres=gpu:h100:1
+#SBATCH --partition=gpupreempt
+#SBATCH --qos=gpupreempt
+#SBATCH --gres=gpu:1
 #SBATCH --constraint=h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
