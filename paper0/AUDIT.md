@@ -1136,3 +1136,34 @@ cross-field rank, artifact order/hash locks, plot generation, and exact B4 and
 Phase 1 evidence schemas. The initial full local implementation suite passed
 with `1007 passed, 1 skipped`. No cluster audit had been submitted at this
 checkpoint.
+
+## Phase 3 B5 residual audit completion
+
+Rocky 9 H100 job `6901393` completed the frozen 85604 training-residual audit
+at exact commit `88fdcc8fa9ce7e2ba24958cd873cb7c4c5a771ff`. Slurm reports
+`COMPLETED`, exit `0:0`, and elapsed time `00:17:29`. The complete in-job suite
+passed (`1011 passed, 1 skipped, 29 subtests passed`), all eight model-data
+shards revalidated, the W&B run finished online, and every archived artifact
+hash passed. Guard, validation, and 85606 data remained unread.
+
+The context-only H1 forecast was closed and hashed before target truth opened.
+Its canonical `[430,5,64,32,88]` HDF5 has SHA-256
+`d1342e53ac5f9077665f7a707ca035b9069a616d7db10371e1f6c1ae504d9c18`;
+the full residual audit has SHA-256
+`d8f05af4d1619fbe7ad8774360c29aa38cd69494d80624d55e30fdb57361cf67`.
+
+The in-sample one-step residual is small in global standardized RMS
+(`0.046--0.103`) but strongly heteroscedastic, cross-field coupled, and
+concentrated in non-axisymmetric toroidal content. `Pe` and `Pi` residuals
+correlate at `0.804`; global entropy effective rank is `4.047`; pointwise
+95th-to-5th-percentile scale ratios reach `33.40`; and `Vi` residual-to-truth
+power is `1.307` for `k=4..5` and `1.825` for `k=6..7`. The detailed residual
+pattern decorrelates in one frame, while residual RMS retains multi-frame
+dependence.
+
+These observations support a joint, context-conditioned, full-toroidal,
+field-coordinate B5 residual generator with a fresh per-step innovation. They
+do not identify irreducible aleatoric uncertainty and do not establish
+validation skill. Full B5 training, O3, assimilation, diagnostic ranking, and
+85606 remain closed. The complete numerical interpretation is in
+`PHASE3_B5_RESIDUAL_AUDIT_READOUT.md`.
