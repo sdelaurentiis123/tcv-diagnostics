@@ -67,6 +67,42 @@ def adapt_b4_numerical_gates(
         raise ValueError("B4 chronological gate differs")
     det = gates["H_det"]
     prob = gates["H_prob"]
+    if set(det) != {
+        "aggregate_mean_MAE_relative_to_parent_H1_max",
+        "aggregate_mean_RMSE_relative_to_parent_H1_max",
+        "event_magnitude_relative_error_max",
+        "event_weighted_sign_disagreement_max",
+        "material_cross_coherence_absolute_change_max",
+        "material_cross_phase_error_degrees_max",
+        "material_power_ratio_range",
+        "material_realization_coherence_min",
+        "separatrix",
+        "stagewise_repair_required",
+        "strict_faces",
+    }:
+        raise ValueError("B4 H-det threshold schema differs")
+    if set(prob) != {
+        "aggregate_fair_CRPS_strictly_below_best_uncompressed_MAE",
+        "aggregate_fair_CRPS_strictly_below_parent_H1_MAE",
+        "fields_required_fair_CRPS_better_than_parent_H1",
+        "fifth_field_fair_CRPS_relative_max",
+        "fourth_separatrix_fair_CRPS_relative_max",
+        "material_power_and_cross_projection_I31_range",
+        "material_power_and_cross_projection_spread_skill_range",
+        "monte_carlo_M16_vs_M32_relative_difference_max",
+        "monte_carlo_absolute_floor",
+        "primary_field_coverage_tolerance",
+        "primary_field_spread_skill_range",
+        "primary_fields_required_calibrated",
+        "primary_region_I31_range",
+        "remaining_field_spread_skill_range",
+        "separatrix_I27_coverage_tolerance",
+        "separatrix_I31_coverage_tolerance",
+        "separatrix_calibrated_required",
+        "separatrix_fair_CRPS_better_than_parent_H1_required",
+        "separatrix_spread_skill_range",
+    }:
+        raise ValueError("B4 H-prob threshold schema differs")
     strict_faces = det.get("strict_faces", {})
     separatrix = det.get("separatrix", {})
     if set(strict_faces) != {
@@ -157,6 +193,9 @@ def adapt_b4_numerical_gates(
                 "fair_crps_better_than_paired_deterministic_required": prob[
                     "separatrix_fair_CRPS_better_than_parent_H1_required"
                 ],
+                "probabilistically_calibrated_required": prob[
+                    "separatrix_calibrated_required"
+                ],
             },
             "separatrix_calibration": {
                 "spread_skill_range": prob["separatrix_spread_skill_range"],
@@ -165,9 +204,6 @@ def adapt_b4_numerical_gates(
                 ],
                 "I31_coverage_tolerance": prob[
                     "separatrix_I31_coverage_tolerance"
-                ],
-                "probabilistically_calibrated_required": prob[
-                    "separatrix_calibrated_required"
                 ],
             },
             "event_conditioned_magnitude_relative_error_max": det[

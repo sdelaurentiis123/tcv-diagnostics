@@ -86,10 +86,46 @@ def test_B4_gate_adapter_preserves_frozen_thresholds() -> None:
         "weighted_sign_disagreement_max",
         "fourth_fair_crps_relative_max",
         "fair_crps_better_than_paired_deterministic_required",
+        "probabilistically_calibrated_required",
     }
     assert adapted["transport"]["separatrix"]["relative_l2_max"] == MANIFEST[
         "gates"
     ]["H_det"]["separatrix"]["relative_L2_max"]
+    assert adapted["transport"]["separatrix"][
+        "probabilistically_calibrated_required"
+    ] == MANIFEST["gates"]["H_prob"]["separatrix_calibrated_required"]
+    assert set(adapted) == {"field", "spectral", "transport"}
+    assert set(adapted["field"]) == {
+        "aggregate_mean_rmse_relative_to_paired_deterministic_max",
+        "aggregate_mean_mae_relative_to_paired_deterministic_max",
+        "fields_required_fair_crps_better_than_paired_deterministic",
+        "fifth_field_fair_crps_relative_max",
+        "primary_spread_skill_range",
+        "remaining_spread_skill_range",
+        "primary_fields_required_calibrated",
+        "coverage_tolerance_primary_fields",
+        "region_I31_coverage_range",
+    }
+    assert set(adapted["spectral"]) == {
+        "member_expected_power_ratio_range",
+        "ensemble_mean_realization_coherence_min",
+        "cross_phase_error_degrees_max",
+        "cross_coherence_absolute_change_max",
+        "material_calibration_spread_skill_range",
+        "material_calibration_I31_range",
+    }
+    assert set(adapted["transport"]) == {
+        "strict_faces",
+        "separatrix",
+        "separatrix_calibration",
+        "event_conditioned_magnitude_relative_error_max",
+        "event_conditioned_weighted_sign_disagreement_max",
+    }
+    assert set(adapted["transport"]["separatrix_calibration"]) == {
+        "spread_skill_range",
+        "I27_coverage_tolerance",
+        "I31_coverage_tolerance",
+    }
 
 
 def test_B4_gate_adapter_rejects_transport_threshold_schema_drift() -> None:
@@ -103,6 +139,17 @@ def test_B4_gate_adapter_rejects_transport_threshold_schema_drift() -> None:
         assert str(error) == "B4 strict-face threshold schema differs"
     else:
         raise AssertionError("B4 adapter accepted an unfrozen threshold schema")
+
+
+def test_B4_gate_adapter_rejects_top_level_hypothesis_schema_drift() -> None:
+    changed = deepcopy(MANIFEST["gates"])
+    changed["H_prob"]["unfrozen_threshold"] = 1.0
+    try:
+        gate.adapt_b4_numerical_gates(changed)
+    except ValueError as error:
+        assert str(error) == "B4 H-prob threshold schema differs"
+    else:
+        raise AssertionError("B4 adapter accepted an unfrozen H-prob schema")
 
 
 def test_B4_projection_separates_deterministic_and_probabilistic_checks(

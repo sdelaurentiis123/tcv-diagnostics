@@ -1057,3 +1057,29 @@ The original failure remains in
 `results/phase3_b4_pde_refiner_gate_adapter_failure_6901015.json`.
 Until that reduction completes, replication, O3, assimilation, diagnostic
 ranking, and 85606 remain closed.
+
+## Phase 3 B4 first CPU-only gate retry
+
+Rocky 9 general-partition job `6901282` reduced no science because it stopped
+on a second adapter-schema error. Before that point it verified every
+job-`6901015` evaluation hash, every B4 training hash, the matched-comparator
+hash, the exact commit `aa33a402b27c0468122dca9400eceeed6a0dd34d`, and
+the complete suite (`986 passed, 1 skipped, 29 subtests passed`). It performed
+no training, inference, truth scoring, forecast mutation, 85606 access, O3,
+assimilation, or diagnostic ranking.
+
+The unchanged B2 transport reducer consumes the required calibrated-quantity
+count from `transport.separatrix.probabilistically_calibrated_required`. The
+B4 adapter instead placed the frozen count under `separatrix_calibration`,
+which is reserved by that reducer for spread-skill and coverage tolerances.
+It therefore raised `KeyError: 'probabilistically_calibrated_required'`
+before H-det or H-prob was formed. The log SHA-256 is
+`36bd9f0b6567256aa87c0166f9b5d66ef8aa4b7a28490e7e9dbbcbce3b4d2088`.
+
+A018 corrects only this nesting and adds complete source- and destination-
+schema assertions. The repaired numerical reducer was then exercised locally
+on the exact immutable score and comparator records. It completed every
+family without a schema exception: H-det field passed while H-det spectral
+and transport failed; all three H-prob families failed. That dry run is a
+pre-submission regression, not the formal gate. A clean CPU-only Rocky 9 job
+must still produce and archive the authoritative decision.

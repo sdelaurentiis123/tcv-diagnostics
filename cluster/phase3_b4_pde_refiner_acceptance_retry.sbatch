@@ -1,8 +1,8 @@
 #!/bin/bash
 # CPU-only retry of the pure B4 H-det/H-prob reduction over immutable job 6901015.
 # Performs no training, inference, truth scoring, forecast mutation, or 85606 access.
-# This exists because job 6901015 completed evaluation and then encountered the
-# documented relative_L2_max -> relative_l2_max adapter-name defect.
+# This exists because job 6901015 completed evaluation and gate attempts
+# 6901015 and 6901282 encountered the documented adapter-schema defects.
 #SBATCH --job-name=p3_b4_gate
 #SBATCH --partition=gen
 #SBATCH --qos=gen
@@ -78,7 +78,7 @@ check_sha256 "0988f71aa0749044e51ded92b9ea594563232df746415dccbbc6031443ca7e92" 
 check_sha256 "b678542a19d33abc8a212888f3834f687b784bdfb60eb491bd1dd7ebd7572b21" "${EVALUATION_WANDB}"
 check_sha256 "e69af9c0e06fa1b0b33333966866098ce9ef20d6f415407ac911504f07ac9229" "${EVALUATION_MANIFEST}"
 check_sha256 "777ecf7f5d601d68cf1dbfc4b02e1ede384ab682bda3758ea7306177aa98c439" "${ENTRYPOINT}"
-check_sha256 "8725d48b712ac1b3c8e2928de05ddf545ed329035f41897b3d727ca28192e94f" "${PAPER0_ROOT}/src/tcv_diagnostics/pde_refiner_acceptance_gate.py"
+check_sha256 "aebe542547c1b85ef0f700b30e4e61e077a51aa7484d623b42999a311bcb9792" "${PAPER0_ROOT}/src/tcv_diagnostics/pde_refiner_acceptance_gate.py"
 check_sha256 "6bb5d825b30c9c8292cda020d3bec824d9b04198617dc89afafa264daab44ea5" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_acceptance_gate.py"
 check_sha256 "899bf42d7d709badd2631e5b94db11e6c6603635d2ce5f0cf341e747216f86d3" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_acceptance_gate_event_eligibility.py"
 

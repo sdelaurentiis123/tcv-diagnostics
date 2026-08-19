@@ -398,3 +398,32 @@ It may not regenerate or mutate forecasts, rescore truth, change a threshold,
 train a model, run O3, open 85606, assimilate diagnostics, or rank sensors.
 The failed attempt remains tracked in
 `results/phase3_b4_pde_refiner_gate_adapter_failure_6901015.json`.
+
+## A018 - Place the B4 separatrix calibration count in the reducer schema
+
+**Status:** frozen after CPU-only gate attempt `6901282` and before a second
+CPU-only retry.
+
+Job `6901282` verified every immutable job-`6901015` evaluation artifact,
+every training and comparator artifact, the exact source hashes, and the
+complete Rocky 9 test suite (`986 passed, 1 skipped, 29 subtests passed`). It
+then reached the unchanged B2 transport reducer and raised
+`KeyError: 'probabilistically_calibrated_required'`. The B4 adapter had put
+the unchanged frozen value `3` in `separatrix_calibration`; the reused reducer
+reads that count from `separatrix` and reads only spread and coverage
+tolerances from `separatrix_calibration`.
+
+The repair moves no numerical value and changes no scientific rule. It maps
+`separatrix_calibrated_required` to
+`separatrix.probabilistically_calibrated_required`, validates the complete
+frozen H-det and H-prob source schemas, and validates every reducer-facing
+field, spectral, and transport dictionary. Before resubmission, the repaired
+reducer must execute end to end on the exact score SHA-256
+`055d81979f46a96bc0c983e0ef2f387f3032a2505117849089047e4f00b67dd3`
+and exact comparator SHA-256
+`2b04c10971e6d38ee439e33aa0b5331305acf16b38a96e7952fb26046049b5d2`.
+One further CPU-only Rocky 9 retry may issue the frozen H-det/H-prob decision.
+It may not regenerate or mutate forecasts, rescore truth, alter thresholds,
+train, launch O3, open 85606, assimilate, or rank diagnostics. The failed
+attempt is retained in
+`results/phase3_b4_pde_refiner_gate_adapter_failure_6901282.json`.

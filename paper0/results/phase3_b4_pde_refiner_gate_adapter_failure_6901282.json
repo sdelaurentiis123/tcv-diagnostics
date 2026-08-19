@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "scope": "phase3_B4_PDE_Refiner_H1_gate_adapter_failure_85604",
+  "status": "immutable_inputs_verified_reducer_schema_failed_before_decision",
+  "scientific_authority": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "slurm": {
+    "job_id": "6901282",
+    "state": "FAILED",
+    "elapsed": "00:04:51",
+    "exit_code": "1:0",
+    "node": "worker6206"
+  },
+  "execution": {
+    "paper0_commit": "aa33a402b27c0468122dca9400eceeed6a0dd34d",
+    "partition": "gen",
+    "gpu_requested": false,
+    "complete_test_suite": "986 passed, 1 skipped, 29 subtests passed",
+    "test_output_sha256": "efc0646355b25bbb9c54c6714b986e62cf8958ba7625822c5a9b34f9f72b295a",
+    "command_sha256": "ede70b6a3c7c9b6401967ee452e8ea09f3ab6fde772af8daae010e826cb7dd7d",
+    "job_log_sha256": "36bd9f0b6567256aa87c0166f9b5d66ef8aa4b7a28490e7e9dbbcbce3b4d2088"
+  },
+  "immutable_inputs": {
+    "evaluation_job_id": "6901015",
+    "evaluation_result_sha256": "0988f71aa0749044e51ded92b9ea594563232df746415dccbbc6031443ca7e92",
+    "final_score_sha256": "055d81979f46a96bc0c983e0ef2f387f3032a2505117849089047e4f00b67dd3",
+    "stage_score_sha256": "33cb4ba9256c214bf0e625511464b51076f96eb1b979c0be32ec0f3b3180e9c2",
+    "comparator_result_sha256": "2b04c10971e6d38ee439e33aa0b5331305acf16b38a96e7952fb26046049b5d2",
+    "all_artifact_indexes_verified": true
+  },
+  "failure": {
+    "phase": "pure_H_det_H_prob_reduction",
+    "exception": "KeyError",
+    "missing_key": "probabilistically_calibrated_required",
+    "cause": "The B4 adapter placed the frozen calibrated-quantity count in separatrix_calibration, while the unchanged B2 reducer consumes it from separatrix."
+  },
+  "effects": {
+    "raw_forecasts_changed": false,
+    "raw_scores_changed": false,
+    "metrics_recomputed": false,
+    "threshold_values_changed": false,
+    "training_performed": false,
+    "inference_performed": false,
+    "truth_scoring_performed": false
+  },
+  "pre_submission_regression": {
+    "exact_score_and_comparator_reduced_after_repair": true,
+    "schema_exception": false,
+    "formal_scientific_decision": false
+  },
+  "authorized_repair": "Map the unchanged separatrix_calibrated_required count to separatrix.probabilistically_calibrated_required, validate all source and reducer-facing schemas, and rerun only the pure gate over immutable job-6901015 records.",
+  "H_det_decided": false,
+  "H_prob_decided": false,
+  "O3_launch_allowed": false,
+  "assimilation_allowed": false,
+  "diagnostic_ranking_allowed": false,
+  "held_out_85606_access_allowed": false
+}
