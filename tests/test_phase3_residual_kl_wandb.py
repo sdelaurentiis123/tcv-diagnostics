@@ -117,9 +117,9 @@ def _records() -> tuple[dict, dict, dict]:
     }
     field_records = {
         field: {
-            "ensemble_mean_rmse": 1.0,
+            "ensemble_mean": {"rmse": 1.0},
             "fair_crps": 0.5,
-            "corrected_spread_skill_ratio": 1.0,
+            "corrected_spread_skill": {"ratio": 1.0},
         }
         for field in B5_FIELDS
     }
@@ -208,6 +208,8 @@ def test_completed_scope_and_compact_metric_projection() -> None:
     metrics = compact_metrics(result, scientific)
     assert metrics["oracle/tier_A_minimum_passing_rank"] == 32
     assert metrics["tier_A/rank_32/gate_passed"] is True
+    assert metrics["static_field/Ne/RMSE"] == 1.0
+    assert metrics["static_field/Ne/corrected_spread_skill"] == 1.0
     assert metrics["static_transport/particle/integrated_spread_skill"] == 0.9
     scientific["scientific_boundaries"]["model_training_performed"] = True
     with pytest.raises(RuntimeError, match="forbidden scope"):

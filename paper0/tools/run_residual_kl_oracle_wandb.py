@@ -275,9 +275,13 @@ def compact_metrics(
         record = static["field_and_marginal_calibration"]["regions"][
             "eligible_union"
         ]["fields"][field]
-        metrics[f"static_field/{field}/RMSE"] = float(record["ensemble_mean_rmse"])
+        metrics[f"static_field/{field}/RMSE"] = float(
+            record["ensemble_mean"]["rmse"]
+        )
         metrics[f"static_field/{field}/fair_CRPS"] = float(record["fair_crps"])
-        metrics[f"static_field/{field}/corrected_spread_skill"] = float(record["corrected_spread_skill_ratio"])
+        metrics[f"static_field/{field}/corrected_spread_skill"] = float(
+            record["corrected_spread_skill"]["ratio"]
+        )
     for quantity in TRANSPORT_QUANTITIES:
         covariance = static["transport_covariance"]["quantities"][quantity][
             "covariance_decomposition"
