@@ -84,7 +84,7 @@ fi
 
 check_sha256 "ca60f75de26e6f6af087d1bb5a0af6ead516c6be9445ea226e6281d18c92a7a0" "${LOCALIZATION_MANIFEST}"
 check_sha256 "fa319b8608e3dfc5248f3cfb05e070531409f05be76ca0347c6136a7765f7e8d" "${LOCALIZATION_PROTOCOL}"
-check_sha256 "cbb33665577d202dc9cef02fe92193d39c1369e9d7b31dec57a460ed383f58a4" "${EVALUATOR}"
+check_sha256 "04e2bdd8b4140d72d24315fd6c2165efe423e75ae50e63458d0094d2eb703ac5" "${EVALUATOR}"
 check_sha256 "f63c00545bdb7bd7cdb413aa27be2497c58c987ee1e4d79ed2590408ac69963a" "${WANDB_WRAPPER}"
 check_sha256 "f521de9a886f360b9b494c4506895dd32134fc82faf0c753ecbd9dabc730eba1" "${PAPER0_ROOT}/src/tcv_diagnostics/b5_covariance_localization.py"
 check_sha256 "c2d0f5e764b783f7a6a240fbd3f11f6c0a4fd52a173d9f1dd1eb97ccff62a0db" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_field_metrics.py"
@@ -141,7 +141,7 @@ readonly RUN_ID="p0b5covloc-${SLURM_JOB_ID}-s1701"
 COMMAND=(
   "${PYTHON}" -u "${WANDB_WRAPPER}"
   --evaluator "${EVALUATOR}"
-  --evaluator-sha256 "cbb33665577d202dc9cef02fe92193d39c1369e9d7b31dec57a460ed383f58a4"
+  --evaluator-sha256 "04e2bdd8b4140d72d24315fd6c2165efe423e75ae50e63458d0094d2eb703ac5"
   --output-directory "${RUN_OUTPUT}"
   --paper0-commit "${PAPER0_COMMIT}"
   --slurm-job-id "${SLURM_JOB_ID}"
