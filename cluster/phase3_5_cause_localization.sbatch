@@ -104,6 +104,7 @@ echo "Running Phase 3.5 scope and known-answer tests before scientific arrays"
 cd "${PAPER0_ROOT}"
 "${PYTHON}" -m pytest -p no:cacheprovider -q \
   tests/test_phase3_5_protocol.py \
+  tests/test_o2_codec_mount_alias.py \
   tests/test_phase3_5_analysis.py \
   | tee "${JOB_ROOT}/test_output.txt"
 
