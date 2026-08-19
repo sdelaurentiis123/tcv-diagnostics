@@ -760,3 +760,19 @@ B3 remains scientifically undecided. The frozen independent M32 forecast,
 field/spectral/cross-field/transport scorer, matched H1 comparator, and
 one-seed acceptance gate must complete before any replication, O3,
 assimilation, diagnostic-ranking, or held-out-run decision is permitted.
+
+The first bounded evaluator preflight, job `6899064` at commit `d029055a`,
+passed the complete Rocky 9 suite (`856 passed, 1 skipped`) and all immutable
+input hashes, then failed before forecast generation in
+`audit_full_training_result`. The evaluator's synthetic contract compared the
+trainer's expanded runtime-provenance configuration to a bare
+`FGNRunConfig`, and also called the frozen validation count `examples` rather
+than the trainer's actual `target_count`. No forecast or score was created,
+and no validation target fields or 85606 data was loaded. The repair validates
+the exact expanded
+model/noise/parent/codec/normalization/parameter-group/selection-noise schema,
+uses the real two-member validation record, and is regression-tested directly
+against the immutable job `6898702` result and 100-epoch history. Compact
+failure evidence is
+`results/phase3_b3_fgn_evaluator_smoke_failure_6899064.json`; a fresh smoke is
+required and the failed output is never reused.

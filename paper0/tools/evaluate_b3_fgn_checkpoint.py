@@ -48,6 +48,10 @@ from tcv_diagnostics.model_data import (  # noqa: E402
     write_strict_json_atomic,
 )
 from tcv_diagnostics.model_training_data import load_official_catalog  # noqa: E402
+from tcv_diagnostics.models.functional_noise import (  # noqa: E402
+    FunctionalNoiseConfig,
+)
+from tcv_diagnostics.models.o2 import O2ViTConfig  # noqa: E402
 from tcv_diagnostics.o2_context_data import OneStepContextDataset  # noqa: E402
 
 
@@ -250,16 +254,72 @@ def audit_full_training_result(
     for name, value in expected.items():
         if record.get(name) != value:
             raise ValueError(f"B3 training result field {name!r} differs")
-    if json.loads(json.dumps(record.get("config", {}))) != json.loads(
-        json.dumps(config.to_record())
+    observed_config = json.loads(json.dumps(record.get("config", {})))
+    frozen_config = json.loads(json.dumps(config.to_record()))
+    runtime_config_keys = {
+        "codec_checkpoint",
+        "deterministic_parent",
+        "functional_noise",
+        "latent_normalization",
+        "model",
+        "parameter_groups",
+        "validation_noise_bank",
+    }
+    if set(observed_config) != set(frozen_config) | runtime_config_keys:
+        raise ValueError("B3 training expanded configuration keys differ")
+    for name, value in frozen_config.items():
+        if observed_config.get(name) != value:
+            raise ValueError(f"B3 training frozen configuration field {name!r} differs")
+    if observed_config["model"] != O2ViTConfig().to_record():
+        raise ValueError("B3 training model configuration differs")
+    if observed_config["functional_noise"] != FunctionalNoiseConfig().to_record():
+        raise ValueError("B3 training functional-noise configuration differs")
+    if observed_config["parameter_groups"] != record.get("parameter_groups"):
+        raise ValueError("B3 training parameter-group configuration differs")
+    if int(observed_config["parameter_groups"].get("total_parameter_count", -1)) != int(
+        record.get("parameter_count", -2)
     ):
-        raise ValueError("B3 training frozen configuration differs")
+        raise ValueError("B3 training parameter count differs")
+    config_parent = observed_config["deterministic_parent"]
+    if (
+        Path(str(config_parent.get("path", ""))) != artifacts.checkpoint_path
+        or config_parent.get("sha256") != artifacts.checkpoint_sha256
+        or config_parent.get("load_audit")
+        != record.get("deterministic_parent_load_audit")
+        or config_parent.get("preoptimization_identity")
+        != record.get("preoptimization_parent_identity")
+    ):
+        raise ValueError("B3 training expanded parent configuration differs")
+    if observed_config["codec_checkpoint"] != {
+        "path": str(artifacts.codec_path),
+        "sha256": artifacts.codec_sha256,
+        "trainable": False,
+    }:
+        raise ValueError("B3 training expanded codec configuration differs")
+    if observed_config["latent_normalization"] != {
+        "path": str(artifacts.latent_normalization_path),
+        "sha256": artifacts.latent_normalization_sha256,
+        "refit": False,
+    }:
+        raise ValueError("B3 training expanded normalization configuration differs")
+    config_bank = observed_config["validation_noise_bank"]
+    result_bank = record.get("validation_noise_bank", {})
+    if (
+        config_bank.get("seed") != 31003
+        or config_bank.get("shape") != [126, 2, 32]
+        or config_bank.get("dtype") != "float32"
+        or config_bank.get("sha256") != result_bank.get("sha256")
+    ):
+        raise ValueError("B3 training expanded selection-noise configuration differs")
     selected_epoch = int(record.get("selected_epoch", -1))
     if selected_epoch not in range(100):
         raise ValueError("B3 selected epoch differs")
     for section in ("selected_validation", "final_validation"):
         values = record.get(section, {})
-        if int(values.get("examples", -1)) != 126:
+        if (
+            int(values.get("target_count", -1)) != 126
+            or int(values.get("ensemble_members", -1)) != 2
+        ):
             raise ValueError(f"B3 {section} example count differs")
         _finite(values.get("equal_channel_fair_crps"), f"{section}.fair_crps")
         for metric in (
@@ -298,6 +358,13 @@ def audit_full_training_result(
     bank = record.get("validation_noise_bank", {})
     if bank.get("seed") != 31003 or bank.get("shape") != [126, 2, 32]:
         raise ValueError("B3 checkpoint-selection noise provenance differs")
+    latent_normalization = record.get("latent_normalization", {})
+    if (
+        latent_normalization.get("sha256")
+        != artifacts.latent_normalization_sha256
+        or latent_normalization.get("refit") is not False
+    ):
+        raise ValueError("B3 latent-normalization training provenance differs")
     for name in (
         "selected_checkpoint",
         "final_training_state",
@@ -319,7 +386,8 @@ def audit_full_training_result(
 
 def _validation_from_history(record: Mapping[str, Any]) -> dict[str, Any]:
     return {
-        "examples": 126,
+        "target_count": 126,
+        "ensemble_members": 2,
         "equal_channel_fair_crps": record["validation_equal_channel_fair_crps"],
         "fair_crps_by_channel": record["validation_fair_crps_by_channel"],
         "accuracy_by_channel": record["validation_accuracy_by_channel"],

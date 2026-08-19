@@ -18,6 +18,8 @@ from paper0.tools.evaluate_b3_fgn_checkpoint import (
 )
 from tcv_diagnostics.codec_training import sha256_path
 from tcv_diagnostics.fgn_training import FGNRunConfig, ParentArtifacts
+from tcv_diagnostics.models.functional_noise import FunctionalNoiseConfig
+from tcv_diagnostics.models.o2 import O2ViTConfig
 
 
 TRAINING_COMMIT = "a2a17cf3fc30fd504bc3eee3274e78623bf15e2b"
@@ -26,7 +28,8 @@ FIELDS = ("Ne", "Pe", "Pi", "phi", "Vi")
 
 def _validation(value: float) -> dict:
     return {
-        "examples": 126,
+        "target_count": 126,
+        "ensemble_members": 2,
         "equal_channel_fair_crps": value,
         "fair_crps_by_channel": {field: value + 0.01 for field in FIELDS},
         "accuracy_by_channel": {field: value + 0.02 for field in FIELDS},
@@ -47,6 +50,53 @@ def _artifacts() -> ParentArtifacts:
 
 def _training_record() -> dict:
     artifacts = _artifacts()
+    parameter_groups = {
+        "common_parameter_tensor_count": 2,
+        "new_parameter_tensor_count": 2,
+        "common_parameter_count": 40_000_000,
+        "new_parameter_count": 11_700_000,
+        "total_parameter_count": 51_700_000,
+        "common_parameter_names": ["common.weight", "common.bias"],
+        "new_parameter_names": ["new.weight", "new.bias"],
+    }
+    preoptimization_identity = {"bitwise_exact": True}
+    load_audit = {"passed": True}
+    selection_noise = {
+        "path": "/tmp/selection.npy",
+        "sha256": "7" * 64,
+        "seed": 31003,
+        "shape": [126, 2, 32],
+    }
+    config = FGNRunConfig.frozen(mode="full", seed=1701).to_record()
+    config.update(
+        {
+            "model": O2ViTConfig().to_record(),
+            "functional_noise": FunctionalNoiseConfig().to_record(),
+            "parameter_groups": parameter_groups,
+            "deterministic_parent": {
+                "path": str(artifacts.checkpoint_path),
+                "sha256": artifacts.checkpoint_sha256,
+                "load_audit": load_audit,
+                "preoptimization_identity": preoptimization_identity,
+            },
+            "codec_checkpoint": {
+                "path": str(artifacts.codec_path),
+                "sha256": artifacts.codec_sha256,
+                "trainable": False,
+            },
+            "latent_normalization": {
+                "path": str(artifacts.latent_normalization_path),
+                "sha256": artifacts.latent_normalization_sha256,
+                "refit": False,
+            },
+            "validation_noise_bank": {
+                "seed": 31003,
+                "shape": [126, 2, 32],
+                "dtype": "float32",
+                "sha256": "7" * 64,
+            },
+        }
+    )
     return {
         "scope": "B3_FGN_H1_seed1701_full_training_85604",
         "paper0_commit": TRAINING_COMMIT,
@@ -70,12 +120,13 @@ def _training_record() -> dict:
         "O3_launch_allowed": False,
         "assimilation_allowed": False,
         "diagnostic_ranking_allowed": False,
-        "config": FGNRunConfig.frozen(mode="full", seed=1701).to_record(),
+        "config": config,
+        "parameter_groups": parameter_groups,
         "selected_epoch": 37,
         "selected_validation": _validation(0.1),
         "final_validation": _validation(0.2),
-        "preoptimization_parent_identity": {"bitwise_exact": True},
-        "deterministic_parent_load_audit": {"passed": True},
+        "preoptimization_parent_identity": preoptimization_identity,
+        "deterministic_parent_load_audit": load_audit,
         "member_probe": {
             "target_frame_index": 498,
             "ensemble_size": 2,
@@ -98,11 +149,11 @@ def _training_record() -> dict:
         "selected_checkpoint": {"path": "/tmp/selected.pt", "sha256": "4" * 64},
         "final_training_state": {"path": "/tmp/final.pt", "sha256": "5" * 64},
         "history": {"path": "/tmp/history.jsonl", "sha256": "6" * 64},
-        "validation_noise_bank": {
-            "path": "/tmp/selection.npy",
-            "sha256": "7" * 64,
-            "seed": 31003,
-            "shape": [126, 2, 32],
+        "validation_noise_bank": selection_noise,
+        "latent_normalization": {
+            "path": "/tmp/copied-latent-normalization.json",
+            "sha256": artifacts.latent_normalization_sha256,
+            "refit": False,
         },
         "parameter_count": 51_700_000,
     }
@@ -159,6 +210,24 @@ def test_training_audit_accepts_only_exact_completed_seed1701_contract() -> None
     forged = copy.deepcopy(record)
     forged["completed_optimizer_steps"] = 2699
     with pytest.raises(ValueError, match="completed_optimizer_steps"):
+        audit_full_training_result(
+            forged,
+            training_commit=TRAINING_COMMIT,
+            artifacts=_artifacts(),
+        )
+
+    forged = copy.deepcopy(record)
+    forged["config"]["model"]["latent_channels"] = 64
+    with pytest.raises(ValueError, match="model configuration"):
+        audit_full_training_result(
+            forged,
+            training_commit=TRAINING_COMMIT,
+            artifacts=_artifacts(),
+        )
+
+    forged = copy.deepcopy(record)
+    del forged["config"]["deterministic_parent"]
+    with pytest.raises(ValueError, match="expanded configuration keys"):
         audit_full_training_result(
             forged,
             training_commit=TRAINING_COMMIT,

@@ -1,0 +1,62 @@
+{
+  "artifacts": {
+    "command": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluator_smoke/job_6899064/command.sh",
+      "sha256": "6b35c82f8a17dbce39a52d661b696351618c0e861da2e7a2c823521c49fb0702"
+    },
+    "environment": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluator_smoke/job_6899064/environment.txt",
+      "sha256": "30016184e5946ab1f34ea56776c8411d9872716345619b799900082614bf26a6"
+    },
+    "job_log": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluator_smoke/job_6899064/job.log",
+      "sha256": "6a7f86d88d22cf345883e5aa004c9da14787dabc716e68cf984588709c7aa494"
+    },
+    "slurm_job": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluator_smoke/job_6899064/slurm_job.txt",
+      "sha256": "eb81d71ed70a69cb906cb2f929ecc59cc698eb8f1b1ec8e936c22727feb2f464"
+    },
+    "stdout": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluator_smoke/job_6899064/stdout.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "test_output": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluator_smoke/job_6899064/test_output.txt",
+      "sha256": "715e4224f87a04490a2357038700aa13870680f1dca16a43e4f28c40a9d994a1"
+    }
+  },
+  "development_run": "85604",
+  "failure": {
+    "exception": "ValueError",
+    "message": "B3 training frozen configuration differs",
+    "stage": "audit_full_training_result",
+    "type": "evaluator_training_result_schema_mismatch"
+  },
+  "forecast_generated": false,
+  "held_out_85606_read": false,
+  "paper0_commit": "d029055a655721aba6473cd608334734b9fb3bfc",
+  "schema_version": 1,
+  "scientific_result": false,
+  "score_generated": false,
+  "scope": "phase3_B3_FGN_H1_bounded_evaluator_smoke_preflight_failure",
+  "slurm": {
+    "elapsed": "00:00:42",
+    "end": "2026-08-18T20:23:39",
+    "exit_code": "1:0",
+    "job_id": "6899064",
+    "start": "2026-08-18T20:22:57",
+    "state": "FAILED"
+  },
+  "status": "failed_before_forecast_generation_or_truth_scoring",
+  "tests": {
+    "passed": 856,
+    "skipped": 1,
+    "subtests_passed": 29
+  },
+  "training_job_id": "6898702",
+  "validation_truth_fields_loaded": false,
+  "wandb": {
+    "run_id": "p0b3evalsmoke-6899064-s1701",
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0b3evalsmoke-6899064-s1701"
+  }
+}
