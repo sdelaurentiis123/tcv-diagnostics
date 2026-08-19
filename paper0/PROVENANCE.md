@@ -964,3 +964,42 @@ The authoritative decision remains a failed one-seed development gate with
 disposition `B5_one_step_gate_failed_localize_without_retuning`. It does not
 authorize O3, additional seeds, assimilation, diagnostic ranking, steering,
 or access to 85606.
+
+### Completed B5 covariance-localization analysis
+
+Read-only Rocky 9 job `6901914` completed at clean commit
+`1bb48ac93b5c6cb7ecb1ed357bf11bee8fdaa198`. It reused the immutable B5 M32
+forecast, H1 validation and training forecasts, 85604 truth, training-only
+residual references, and authoritative geometry. It loaded no checkpoint and
+performed no model training, model inference, forecast mutation, post-hoc
+calibration, O3 rollout, assimilation, diagnostic ranking, or 85606 read.
+
+The byte-locked scientific result is
+`paper0/results/phase3_b5_covariance_localization_6901914.json`, SHA-256
+`331e7f3ff5d221d0d3720d9112ce90436d8330647501a2268f974867bbc140d2`.
+The tracked execution wrapper is
+`paper0/results/phase3_b5_covariance_localization_execution_6901914.json`,
+SHA-256
+`e11127522821e6837125bae195de424810b0e0e2aee1b2b575ed3fe9ee6e7a41`.
+The untracked 1,583-array raw accumulator remains in the immutable Ceph job
+directory with SHA-256
+`731e86b16b88124998cef8e6776ac9efd3d3f191d224d129312979c0e1c94f17`.
+
+All frozen scientific integrity anchors passed. The result supports L2
+covariance-organization limitation for all four transport quantities, L3
+systematic mismatch for 11 spatial or regional dependence identities, and L5
+remaining nonidentifiability from one realized trajectory. It rejects L1
+predominantly scalar-amplitude limitation and L4 explicit one-frame residual
+history. The complete interpretation is
+`paper0/PHASE3_B5_COVARIANCE_LOCALIZATION_READOUT.md`.
+
+The six labeled figure pairs in
+`paper0/figures/phase3_b5_covariance_localization/` are generated only from
+the byte-locked compact JSON by
+`paper0/tools/plot_b5_covariance_localization.py`; no forecast or raw field is
+required. Regression locks verify both result hashes, scope exclusions,
+predeclared labels, transport covariance values, and figure labels.
+
+This completion does not release any downstream stage. Training, additional
+seeds, O3, assimilation, diagnostic ranking, steering, and 85606 access
+remain unauthorized pending a separately committed prospective protocol.

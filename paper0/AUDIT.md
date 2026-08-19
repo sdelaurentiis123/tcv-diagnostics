@@ -1268,3 +1268,47 @@ The complete interpretation is `PHASE3_B5_READOUT.md`; the tracked compact
 record is
 `results/phase3_b5_residual_edm_one_seed_localization_6901661.json`, SHA-256
 `ae10349b98394914f6a87dc99bebdc965056a941356f32b0392e261169cbf1f6`.
+
+## Phase 3 B5 covariance-localization completion
+
+The prospectively frozen read-only covariance and conditionality analysis
+completed on Rocky 9 as Slurm job `6901914` at exact commit
+`1bb48ac93b5c6cb7ecb1ed357bf11bee8fdaa198`. Slurm reports `COMPLETED`, exit
+`0:0`, elapsed time `00:23:19`, and maximum RSS `14197836K`. The complete
+in-job suite passed with `1164 passed, 1 skipped`; W&B finished online. The
+job loaded no checkpoint, performed no inference or training, changed no
+forecast, and did not run O3, assimilation, diagnostic ranking, or 85606.
+
+All immutable forecast, dataset, normalization, source, target-order, legacy
+cross-field, and axisymmetric-bias anchors passed. B5 marginal RMSE and
+corrected spread--skill recomputed as `0.074907025939` and `0.801695328226`.
+Anomaly member-mean closure was `2.3842e-7` against a `2e-6` tolerance, and
+the exact-separatrix transport sum closed to `7.7716e-16` against `2e-12`.
+Every nonlinear transport calculation was performed member-wise before
+ensemble reduction.
+
+The predeclared labels are L1 false, L2 true for all four transport
+quantities, L3 true for 11 systematic dependence identities, L4 false, and L5
+true. Local exact-separatrix spread--skill is `0.996--1.002`; integrated
+spread--skill is `0.413--0.485`; ensemble-to-error coherence ratios are
+`0.170--0.235`. Scalar factors that would calibrate integrated spread would
+make local spread--skill `2.06--2.43`. B5 is therefore covariance-organization
+limited rather than predominantly scalar-amplitude limited.
+
+The frozen AR(1) teacher-forced residual probe improves H1 equal-field RMSE
+by `1.72%` across all six blocks, below the predeclared `2%` aggregate
+threshold, does not beat the B5 field mean, and worsens integrated transport.
+One-frame residual history is not supported as the next priority.
+
+The byte-locked scientific result is
+`results/phase3_b5_covariance_localization_6901914.json`, SHA-256
+`331e7f3ff5d221d0d3720d9112ce90436d8330647501a2268f974867bbc140d2`.
+The execution wrapper has SHA-256
+`e11127522821e6837125bae195de424810b0e0e2aee1b2b575ed3fe9ee6e7a41`.
+The full interpretation and reproduction command are in
+`PHASE3_B5_COVARIANCE_LOCALIZATION_READOUT.md`; six verified figure pairs are
+tracked in `figures/phase3_b5_covariance_localization/`.
+
+Training, O3, additional seeds, assimilation, diagnostic ranking, steering,
+and 85606 remain closed. The result permits only a prospective decision memo
+and separately frozen protocol for one next 85604 development intervention.
