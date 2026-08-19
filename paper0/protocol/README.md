@@ -67,3 +67,9 @@ Development-only protocol locks that do not authorize held-out access include:
   cross-field, transport, Monte Carlo, and chronological gate. Its completed
   failure leaves O3, more seeds, assimilation, diagnostic ranking, and 85606
   closed.
+- `PHASE3_B5_COVARIANCE_LOCALIZATION_PROTOCOL.md`: the post-gate,
+  preimplementation read-only comparison of B5 anomalies, H1 residuals, B5
+  innovations, exact-separatrix transport covariance, dependence-sensitive
+  scores, and one training-frozen residual-history diagnostic. It authorizes
+  no training, inference, forecast modification, downstream assimilation, or
+  85606 access.

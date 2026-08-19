@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_after_B5_seed1701_gate_failure_before_covariance_localization_implementation_or_execution",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "authorized_scope": [
+    "one_read_only_B5_M32_covariance_localization",
+    "one_training_frozen_AR1_residual_history_diagnostic",
+    "one_Rocky9_CPU_execution_on_Rusty",
+    "online_WandB_monitoring"
+  ],
+  "forbidden_scope": [
+    "checkpoint_loading",
+    "model_inference",
+    "forecast_mutation",
+    "posthoc_inflation_or_calibration",
+    "architecture_or_sampler_retuning",
+    "model_training",
+    "additional_model_seeds",
+    "O3_fixed_block_forecast",
+    "O4_autonomous_rollout",
+    "O5_oracle_reset",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering",
+    "85606_access"
+  ],
+  "protocol": {
+    "path": "paper0/protocol/PHASE3_B5_COVARIANCE_LOCALIZATION_PROTOCOL.md",
+    "status": "frozen_before_implementation_or_execution"
+  },
+  "evidence_locks": {
+    "B5_forecast": {
+      "job_id": "6901587",
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_residual_edm_evaluation_full/job_6901587/b5_joint_field_residual_edm_seed_1701/forecast_M32.h5",
+      "sha256": "1a5f3ea7e0d1722363205be569d2db60905cdda798b4597a6c47e74d99fab68b",
+      "bytes": 14535535504,
+      "shape": [126, 32, 1, 5, 64, 32, 88],
+      "mutated_or_regenerated": false
+    },
+    "H1_validation_forecast": {
+      "job_id": "6896117",
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/task_0_c5p_h1_seed_1701/forecast.h5",
+      "sha256": "a76b389dfc090d1d3061ec4be3526c524645b4cd9cec2f309601af0dd405f1ed",
+      "bytes": 454227352,
+      "shape": [126, 5, 64, 32, 88],
+      "mutated_or_regenerated": false
+    },
+    "B5_score": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_residual_edm_evaluation_full/job_6901587/b5_joint_field_residual_edm_seed_1701/score.json",
+      "sha256": "c81c0e06313c652816be77025c2b42bbfce10728df7ac14787e00edf7d978ba6"
+    },
+    "B5_final_gate": {
+      "job_id": "6901661",
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_residual_edm_acceptance/job_6901661/gate/final_gate.json",
+      "sha256": "a1d9cf00de0a2b0b3cc0c13d31c727420214040dcbf575afa67c6ae64015974b",
+      "disposition": "B5_one_step_gate_failed_localize_without_retuning"
+    },
+    "training_residual_audit": {
+      "job_id": "6901393",
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/residual_audit.json",
+      "sha256": "d8f05af4d1619fbe7ad8774360c29aa38cd69494d80624d55e30fdb57361cf67",
+      "target_frames": [2, 432],
+      "validation_read": false
+    },
+    "training_residual_sufficient_statistics": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/raw_accumulators.npz",
+      "sha256": "50c54a8e9dd0f0983cb8360f598bdf00eae22854de2ab471cd7385e767f3058b"
+    },
+    "model_dataset": {
+      "job_id": "6893525",
+      "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    },
+    "native_truth_result": {
+      "path": "paper0/results/phase2_potential_vorticity_all_frame_6893033.json",
+      "sha256": "cc6b00b72605c6457ae3a3b24db7e90dac16989c852df92036a57272f62eddae"
+    },
+    "geometry_manifest": {
+      "path": "paper0/manifests/phase2_85604_geometry_units.json",
+      "sha256": "76426ca83f711aaf9dec79c6df4c4503c2c8eece847b78027633e93e4b2cd460"
+    },
+    "geometry": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+      "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+    }
+  },
+  "data": {
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "validation_targets": [498, 624],
+    "validation_target_count": 126,
+    "chronological_blocks": [[498, 519], [519, 540], [540, 561], [561, 582], [582, 603], [603, 624]],
+    "history_probe_targets": [499, 624],
+    "cadence_microseconds": 3.131905426352636,
+    "volume_shape": [5, 64, 32, 88],
+    "native_toroidal_cells": 81,
+    "ensemble_size": 32,
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "absolute_time_input_used": false,
+    "guard_frames_read_allowed": false,
+    "temporal_windows_are_independent_shots": false
+  },
+  "objects": {
+    "H1_residual": "truth_minus_H1_mean",
+    "B5_generated_residual": "B5_member_minus_H1_mean",
+    "B5_anomaly": "B5_member_minus_B5_ensemble_mean",
+    "B5_innovation": "truth_minus_B5_ensemble_mean",
+    "phi_gauge_policy": "subtract_full_spatial_mean_separately_per_sample_for_field_covariance_only",
+    "axisymmetric_bias_policy": "subtract_mean_over_target_and_z_for_realized_residual_and_innovation_covariance",
+    "conditional_covariance_identified": false
+  },
+  "spatial_covariance": {
+    "axes": ["x", "y", "stored_toroidal_z"],
+    "maximum_lag": "half_axis_extent",
+    "x_y_estimator": "pooled_valid_overlap_normalized_correlation",
+    "z_estimator": "pooled_circular_normalized_correlation",
+    "stable_near_zero_absolute_threshold": 0.1,
+    "stable_near_zero_consecutive_lags": 3,
+    "curve_distance": "RMS_over_nonzero_lags"
+  },
+  "cross_field_covariance": {
+    "regions": ["global", "eligible_union", "confined_edge", "private_flux", "scrape_off_layer", "separatrix_cell_band", "outboard_midplane", "x_point_topology_stencil", "inner_divertor_leg", "outer_divertor_leg"],
+    "matrix_dimension": 5,
+    "distance": "off_diagonal_RMS",
+    "effective_ranks": ["entropy", "participation_ratio"]
+  },
+  "toroidal_bands": {
+    "k": [[0, 0], [1, 3], [4, 5], [6, 7], [8, 44]],
+    "n": [[0, 0], [5, 15], [20, 25], [30, 35], [40, 220]],
+    "parseval_positive_frequency_weighting": true
+  },
+  "variogram_score": {
+    "order_p": 1.0,
+    "field_pairs": "all_ten_same_cell_field_pairs_equal_weight",
+    "transport_toroidal_lags": [1, 2, 4, 8, 16, 32, 40],
+    "transport_pair_weighting": "equal_within_each_lag",
+    "used_as_training_loss": false,
+    "pass_threshold": null
+  },
+  "transport_covariance": {
+    "quantities": ["particle", "electron_internal_energy", "ion_internal_energy", "total_internal_energy"],
+    "surface": "exact_confined_separatrix",
+    "operator": "authoritative_native81_shifted_y_radial_ExB_memberwise",
+    "finite_member_variance_factor": 1.03125,
+    "retain_local_contributions": true,
+    "report_diagonal_offdiagonal_and_integrated_variance": true,
+    "scalar_inflation_counterfactual_only": true,
+    "inflated_forecast_written": false
+  },
+  "history_probe": {
+    "name": "training_frozen_scalar_fieldwise_residual_AR1",
+    "coefficient_source": "training_residual_temporal_pattern_lag1_sufficient_statistics",
+    "bias_source": "training_axisymmetric_residual_bias",
+    "fit_on_validation": false,
+    "teacher_forced": true,
+    "autonomous_rollout": false,
+    "aggregate_improvement_minimum_fraction_for_history_signal": 0.02,
+    "chronological_comparisons_required": 5,
+    "chronological_comparisons_total": 6
+  },
+  "interpretation": {
+    "amplitude_spread_skill_outer_range": [0.67, 1.5],
+    "local_calibrated_spread_skill_range": [0.8, 1.25],
+    "covariance_multiplier_ratio_maximum": 0.67,
+    "scalar_counterfactual_local_overdispersion_minimum": 1.5,
+    "scientific_acceptance_gate": false,
+    "universal_threshold_claimed": false
+  },
+  "execution": {
+    "os": "Rocky_Linux_9",
+    "cluster": "Rusty",
+    "partition": "gen",
+    "accelerator": "none_CPU_only",
+    "cpus": 16,
+    "memory_GB": 160,
+    "walltime_hours": 4,
+    "wandb_online_required": true,
+    "local_Ceph_artifacts_are_scientific_authority": true
+  },
+  "post_analysis": {
+    "one_decision_memo_authorized": true,
+    "one_next_85604_experiment_protocol_may_be_proposed": true,
+    "next_experiment_implementation_authorized": false,
+    "additional_seed_training_authorized": false,
+    "O3_launch_authorized": false,
+    "assimilation_authorized": false,
+    "diagnostic_ranking_authorized": false,
+    "held_out_85606_access_authorized": false
+  }
+}
