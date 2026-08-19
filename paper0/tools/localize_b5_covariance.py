@@ -57,6 +57,10 @@ from tcv_diagnostics.b5_residual_edm_full_training import (  # noqa: E402
 from tcv_diagnostics.b5_residual_forecast import (  # noqa: E402
     B5TrainingForecastArtifact,
 )
+from tcv_diagnostics.b5_residual_audit import (  # noqa: E402
+    cross_field_statistics as legacy_cross_field_statistics,
+    spatial_autocorrelation as legacy_spatial_autocorrelation,
+)
 from tcv_diagnostics.codec_training import sha256_path  # noqa: E402
 from tcv_diagnostics.codec_transport import (  # noqa: E402
     TRANSPORT_QUANTITIES,
@@ -863,6 +867,32 @@ def _legacy_training_cross_check(
         "axisymmetric_bias_maximum_absolute_difference": bias_maximum,
         "tolerance": 2e-6,
         "legacy_statistics_used_as_phi_gauge_fixed_reference": False,
+        "verification_estimator": "exact_legacy_full_tensor_direct_dot_product",
+    }
+
+
+def _legacy_training_batch_record(
+    fluctuation: np.ndarray,
+    region_masks_xy: Mapping[str, np.ndarray],
+) -> dict[str, Any]:
+    """Recompute the integrity anchor with its exact historical implementation.
+
+    The frozen audit evaluated the complete 430-target tensor in one call.
+    Chunked FFT and Gram accumulation follows the same mathematical formula,
+    but it does not reproduce that historical floating-point reduction closely
+    enough on the real tensor to serve as a provenance anchor.
+    """
+
+    spatial: dict[str, Any] = {}
+    for axis in ("x", "y", "stored_toroidal_z"):
+        spatial[axis], _ = legacy_spatial_autocorrelation(fluctuation, axis=axis)
+    cross_field, _ = legacy_cross_field_statistics(
+        fluctuation,
+        region_masks_xy=region_masks_xy,
+    )
+    return {
+        "spatial_autocorrelation": spatial,
+        "cross_field": cross_field,
     }
 
 
@@ -1021,9 +1051,10 @@ def main() -> None:
     training_legacy_fluctuation = subtract_axisymmetric_bias(
         training_raw_residual, recomputed_training_bias
     )
-    legacy_bundle = _new_bundle(region_masks_xy)
-    _update_in_chunks(legacy_bundle, training_legacy_fluctuation)
-    legacy_record, _ = legacy_bundle.finalize()
+    legacy_record = _legacy_training_batch_record(
+        training_legacy_fluctuation,
+        region_masks_xy,
+    )
     legacy_cross_check = _legacy_training_cross_check(
         legacy_record,
         training_audit,

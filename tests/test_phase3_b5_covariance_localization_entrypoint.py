@@ -14,6 +14,7 @@ from paper0.tools.localize_b5_covariance import (
     EXPECTED_PROTOCOL_SHA256,
     _block_index,
     _block_name,
+    _legacy_training_batch_record,
     _legacy_training_cross_check,
     validate_authority,
 )
@@ -119,3 +120,30 @@ def test_legacy_training_cross_check_requires_numerical_reproduction() -> None:
         match=r"spatial_max=0\.099.* at x/Ne; .*frozen_tolerance=",
     ):
         _legacy_training_cross_check(discrepant, record, bias, bias)
+
+
+def test_legacy_training_batch_record_uses_frozen_direct_estimators() -> None:
+    generator = np.random.default_rng(512)
+    fluctuation = generator.normal(size=(3, 5, 4, 3, 8)).astype(np.float32)
+    masks = {
+        "eligible_union": np.ones((4, 3), dtype=bool),
+        "left": np.asarray(
+            [[True, True, True], [True, True, True], [False] * 3, [False] * 3]
+        ),
+    }
+    record = _legacy_training_batch_record(fluctuation, masks)
+    assert tuple(record["spatial_autocorrelation"]) == (
+        "x",
+        "y",
+        "stored_toroidal_z",
+    )
+    assert tuple(record["cross_field"]) == ("global", "eligible_union", "left")
+    result = _legacy_training_cross_check(
+        record,
+        record,
+        np.zeros((5, 4, 3)),
+        np.zeros((5, 4, 3)),
+    )
+    assert result["verification_estimator"] == (
+        "exact_legacy_full_tensor_direct_dot_product"
+    )
