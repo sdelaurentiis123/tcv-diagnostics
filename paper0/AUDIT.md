@@ -1102,3 +1102,21 @@ cross-projection calibration checks fail; separatrix transport spread--skill
 is only approximately `0.060--0.073`. B4 replication, O3, assimilation,
 diagnostic ranking, and 85606 access remain closed. The complete interpretation
 and numerical tables are in `PHASE3_B4_READOUT.md`.
+
+## Phase 3 B5 residual audit freeze
+
+After the completed B4 failure and before any B5 implementation or training,
+the deterministic-mean residual audit was frozen in
+`protocol/PHASE3_B5_RESIDUAL_AUDIT_PROTOCOL.md` and
+`manifests/phase3_b5_residual_audit_85604.json`. It authorizes one Rocky 9
+H100 audit of the exact seed-1701 H1 residual on training targets `[2,432)`.
+The context-only forecast must close and hash before target truth opens.
+
+The audit measures standardized-field residual bias, scale, spatial and
+temporal autocorrelation, geometry-dependent heteroscedasticity, cross-field
+correlation, and toroidal support. It explicitly treats the residuals as
+in-sample model errors rather than independent simulations or identified
+aleatoric noise. The complete stored toroidal axis remains mandatory because
+`zperiod=5`, `n=5k`, and material `k=1` structure spans that domain. This
+protocol authorizes no B5 training, validation read, O3, assimilation,
+diagnostic ranking, or 85606 access.
