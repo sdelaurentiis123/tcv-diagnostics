@@ -427,3 +427,25 @@ It may not regenerate or mutate forecasts, rescore truth, alter thresholds,
 train, launch O3, open 85606, assimilate, or rank diagnostics. The failed
 attempt is retained in
 `results/phase3_b4_pde_refiner_gate_adapter_failure_6901282.json`.
+
+## A019 - Localize the cause of K4 before closing model development
+
+**Status:** frozen after the completed K4 interpretation and before any new
+Phase 3.5 computation.
+
+K4 established that one fixed, global, condition-independent linear residual
+distribution fitted to adjacent 85604 training frames does not describe later
+85604 residuals well. It did not test FGN, PDE-Refiner, diffusion, or
+stochastic emulation generally, and it could not distinguish interval drift,
+coherent periodic transport, translation non-equivariance, omitted state,
+memory, conditional covariance, or inadequate effective sampling.
+
+This amendment narrows the K4 stop rule to permit exactly one 85604-only
+diagnostic cause-localization phase under
+`PHASE3_5_PROTOCOL_AMENDMENT.md`. It authorizes no production model training.
+Frozen H1 inference is allowed only for the all-shift equivariance audit, and
+frozen B5 inference is allowed only for the preregistered fixed-seed
+context-shuffle sensitivity. The train/guard/validation boundaries are
+unchanged; the guard and 85606 remain closed. Physics quantities remain
+evaluation-only. The phase must end with a ranked evidence memo and exactly
+one recommended, not automatically authorized, next action.

@@ -80,3 +80,10 @@ Development-only protocol locks that do not authorize held-out access include:
   conditional stochastic model is proposed; it authorizes no checkpoint
   loading, model inference, training, O3, assimilation, ranking, or 85606
   access.
+- `../PHASE3_5_PROTOCOL_AMENDMENT.md`: the prospective post-K4 85604-only
+  diagnostic cause-localization phase. It distinguishes interval drift,
+  effective sampling, coherent toroidal translation, codec/predictor
+  equivariance, representation locality, conditional covariance, omitted
+  state, and memory. It permits only frozen-checkpoint diagnostic inference
+  and lightweight probes; it authorizes no model training, rollout,
+  assimilation, ranking, steering, or 85606 access.
