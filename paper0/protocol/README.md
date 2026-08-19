@@ -50,3 +50,10 @@ Development-only protocol locks that do not authorize held-out access include:
   temperature closure;
 - `PHASE2_O1_CODEC_PROTOCOL.md` and `PHASE2_O1_TRANSPORT_PROTOCOL.md`: frozen
   historical codec reconstruction and transport attribution.
+- `PHASE3_B4_PDE_REFINER_PROTOCOL.md`: the post-B3, preimplementation B4
+  model definition and bounded smoke authority;
+- `PHASE3_B4_FULL_TRAINING_EVALUATION_PROTOCOL.md`: the post-smoke,
+  pre-full-run seed-1701 B4 training budget, truth-separated one-step
+  generation, separate H-det/H-prob gates, and evaluator-smoke requirement.
+  It explicitly keeps 85606, O3 execution, assimilation, and diagnostic
+  ranking closed.

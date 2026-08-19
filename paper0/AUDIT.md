@@ -920,3 +920,37 @@ mechanical preflight. Passing the smoke authorizes only a separately frozen
 full-training and evaluation protocol. Full training, scientific evaluation,
 O3, replication, assimilation, diagnostic ranking, and 85606 remain closed
 until that authority is committed.
+
+## Phase 3 B4 full-training and evaluation freeze
+
+After the bounded B4 smoke passed and its immutable result was committed, the
+full seed-1701 experiment was frozen before any full-run implementation or
+execution. The new authority permits exactly one 100-epoch B4 training run on
+the 85604 development split, one four-target evaluator smoke, and one
+truth-separated one-step 85604 evaluation. It does not permit schedule or
+architecture tuning, additional seeds, O3 execution, assimilation, diagnostic
+ranking, or any 85606 access.
+
+Training retains the smoke-tested FP32 explicit-denoising model and all five
+physically valid state fields with no time channel. The complete 100 by 430
+refinement-level matrix, inclusive-endpoint cosine learning-rate schedule,
+2,700 optimizer updates, M2 checkpoint-selection bank, twenty validation
+epochs, and earliest-minimum final-stage MAE selection are specified before
+the run. Physics and calibration quantities remain evaluation-only.
+
+The later scientific generator must close and hash both a final M32 forecast
+and an M4 all-stage artifact before truth opens. The final-stage M4 tensor must
+be the exact prefix of M32, while level zero remains exactly shared across
+members. H-det and H-prob are separate decisions: H-det requires absolute
+field/spectral/cross-field/transport quality and an explicit final-versus-
+level-zero repair test; H-prob retains the strict field, material-mode,
+cross-spectrum, member-wise transport, coverage, spread-skill, and Monte Carlo
+calibration gates. Neither a sharp mean nor nonzero diversity can substitute
+for the other hypothesis.
+
+The human-readable authority is
+`protocol/PHASE3_B4_FULL_TRAINING_EVALUATION_PROTOCOL.md` with SHA-256
+`ffa56b2111074253a70c7453f1e36f91ca747ec59a68d632288764d60387aad1`.
+The machine-readable authority is
+`manifests/phase3_b4_full_evaluation_85604.json` with SHA-256
+`e69af9c0e06fa1b0b33333966866098ce9ef20d6f415407ac911504f07ac9229`.
