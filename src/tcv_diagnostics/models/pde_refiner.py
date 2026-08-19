@@ -659,12 +659,23 @@ class C5PPDERefinerOneStepModel(C5POneStepModel):
     ) -> Tensor:
         """Return final-stage ``[batch,member,future_time,channel,x,y,z]``."""
 
-        decoded = self.decoded_stages_with_noise(
-            context,
-            refinement_noise,
-            horizon=horizon,
+        if int(horizon) != 1:
+            raise ValueError("B4 is authorized only for a one-step horizon")
+        standardized = self.standardized_latent_stages(context, refinement_noise)
+        final = standardized[:, :, -1]
+        flattened = final.reshape(
+            final.shape[0] * final.shape[1],
+            *final.shape[2:],
         )
-        return decoded[:, :, -1, None]
+        mean = self.latent_mean[:, 0]
+        standard_deviation = self.latent_standard_deviation[:, 0]
+        decoded = self.codec.decode(flattened * standard_deviation + mean)
+        decoded = decoded.reshape(
+            final.shape[0],
+            final.shape[1],
+            *decoded.shape[1:],
+        )
+        return decoded[:, :, None]
 
     def forward(self, context: Tensor) -> Tensor:
         """Return the deterministic level-0 prediction without refinements."""
