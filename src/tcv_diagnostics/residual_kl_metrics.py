@@ -197,9 +197,17 @@ def projection_dependence_distance_summary(
             }
         spatial[axis] = axis_records
 
+    # JSON persistence sorts mapping keys, whereas freshly accumulated records
+    # retain the frozen B2 insertion order.  Region names are the semantic
+    # identifiers; serialization order is not.  Require exact name equality,
+    # then emit results in the validation record's canonical in-memory order.
     regions = tuple(validation["cross_field"])
-    if any(tuple(record["cross_field"]) != regions for record in (training, projection)):
-        raise ValueError("KL dependence-distance cross-field region order differs")
+    region_names = frozenset(regions)
+    if any(
+        frozenset(record["cross_field"]) != region_names
+        for record in (training, projection)
+    ):
+        raise ValueError("KL dependence-distance cross-field region names differ")
     cross_field: dict[str, Any] = {}
     for region in regions:
         validation_matrix = np.asarray(

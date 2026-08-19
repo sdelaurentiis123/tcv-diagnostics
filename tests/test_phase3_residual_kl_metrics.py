@@ -98,6 +98,31 @@ def test_all_dependence_distances_cover_every_axis_field_and_region() -> None:
     )
 
 
+def test_dependence_distances_ignore_json_mapping_order_but_not_region_names() -> None:
+    rng = np.random.default_rng(52)
+    values = rng.normal(size=(12, 5, 2, 3, 16))
+    validation = _covariance_record(values)
+    training = copy.deepcopy(validation)
+    training["cross_field"] = dict(
+        reversed(tuple(training["cross_field"].items()))
+    )
+
+    result = projection_dependence_distance_summary(
+        training=training,
+        validation=validation,
+        projection=validation,
+    )
+    assert tuple(result["cross_field"]) == tuple(validation["cross_field"])
+
+    training["cross_field"].pop(next(iter(training["cross_field"])))
+    with np.testing.assert_raises_regex(ValueError, "region names differ"):
+        projection_dependence_distance_summary(
+            training=training,
+            validation=validation,
+            projection=validation,
+        )
+
+
 def test_material_power_rule_is_exactly_twelve_of_fifteen() -> None:
     rng = np.random.default_rng(6)
     values = rng.normal(size=(8, 5, 2, 3, 16))
