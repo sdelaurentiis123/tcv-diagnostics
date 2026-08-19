@@ -848,3 +848,41 @@ readable gate is
 `results/phase3_b3_fgn_one_seed_gate_6899224.json`. The next permitted work is
 to freeze a separately justified B4 PDE-Refiner protocol before implementation
 or training.
+
+## Phase 3 B4 prospective PDE-Refiner protocol
+
+After the integrity-clean B3 one-seed failure was frozen, a separate B4
+protocol was written before implementation, smoke testing, or training. B4 is
+an explicit latent denoising adaptation of PDE-Refiner initialized from the
+exact seed-1701 C5P-H1 deterministic transition and the frozen C5P-dcae_l10
+codec. It retains one prior physical frame, all five physically valid state
+channels, no absolute-time input, the 85604-only chronological split, and the
+verified `zperiod=5` mapping `n=5k`. The codec remains frozen and noise is
+introduced in per-channel standardized codec-latent coordinates; this is not
+claimed to be field-space noise.
+
+The protocol separates two hypotheses. The deterministic hypothesis asks
+whether three refinement stages repair one-step realization spectra and mean
+transport without materially degrading point skill. The probabilistic
+hypothesis asks whether independent refinement draws form calibrated field,
+mode, cross-field, and member-wise transport ensembles. Passing only the first
+cannot authorize assimilation because it does not validate forecast
+covariance. Both hypotheses remain prospective.
+
+The frozen refinement schedule has three denoising stages with variance floor
+`4e-7`, four network evaluations per member including the initial transition,
+uniform training over levels zero through three, and no physics-derived loss.
+Level zero predicts the standardized latent increment; later levels predict
+the sampled latent noise. Full FP32 with TF32 disabled is required because the
+last noise standard deviation is below bfloat16 resolution near unit scale.
+The level-conditioning adapters are zero initialized so the unoptimized level-
+zero candidate must reproduce the exact deterministic parent bit for bit.
+
+Only implementation in new files, local and Rocky 9 CPU tests, and a bounded
+two-epoch Rocky 9 GPU smoke on 85604 are authorized. The smoke is explicitly
+not a scientific result and must initialize and finish an online W&B record.
+Full B4 training, scientific evaluation, O3 rollout, replication, assimilation,
+diagnostic ranking, and every access to 85606 remain forbidden until a later
+protocol is frozen. The human-readable authority is
+`protocol/PHASE3_B4_PDE_REFINER_PROTOCOL.md`; its machine-readable companion is
+`manifests/phase3_b4_pde_refiner_85604.json`.
