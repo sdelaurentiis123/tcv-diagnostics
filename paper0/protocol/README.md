@@ -73,3 +73,10 @@ Development-only protocol locks that do not authorize held-out access include:
   scores, and one training-frozen residual-history diagnostic. It authorizes
   no training, inference, forecast modification, downstream assimilation, or
   85606 access.
+- `PHASE3_RESIDUAL_KL_ORACLE_PROTOCOL.md`: the post-localization,
+  preimplementation 85604-only residual Karhunen--Loève representation oracle
+  and one training-rank-selected static Gaussian covariance baseline. It
+  tests whether the missing joint residual covariance is compact before any
+  conditional stochastic model is proposed; it authorizes no checkpoint
+  loading, model inference, training, O3, assimilation, ranking, or 85606
+  access.

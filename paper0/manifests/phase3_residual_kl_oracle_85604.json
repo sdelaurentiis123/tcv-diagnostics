@@ -1,0 +1,319 @@
+{
+  "schema_version": 1,
+  "protocol_status": "frozen_post_B5_preimplementation_residual_KL_representation_oracle",
+  "decision_date": "2026-08-19",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "decision_memo": {
+    "path": "paper0/PHASE3_POST_LOCALIZATION_DECISION.md",
+    "sha256": "742ed3bbdafca1949baba67af19840e83f9e8c28fb9efd93cdee53beef7969bb"
+  },
+  "protocol": {
+    "path": "paper0/protocol/PHASE3_RESIDUAL_KL_ORACLE_PROTOCOL.md",
+    "sha256": "3e1006e52793e612a0daaf21c67e9da2298fc83bfa542af1be4ba376a6acaff7"
+  },
+  "scientific_question": "whether_a_training_fitted_joint_residual_KL_subspace_can_represent_the_validation_covariance_and_transport_structure_missing_from_B5",
+  "authorized_scope": [
+    "one_training_fitted_truth_projected_85604_validation_residual_KL_representation_oracle",
+    "one_training_rank_selected_condition_independent_static_Gaussian_KL_ensemble_around_the_frozen_H1_mean",
+    "one_successful_Rocky9_CPU_execution_after_fail_closed_nonscientific_retries",
+    "online_WandB_compact_monitoring"
+  ],
+  "forbidden_scope": [
+    "model_checkpoint_loading",
+    "model_inference",
+    "optimizer_or_trainable_parameter_creation",
+    "neural_network_training_or_finetuning",
+    "validation_selected_rank",
+    "posthoc_threshold_or_metric_changes",
+    "guard_frame_reads",
+    "85606_access",
+    "O3_fixed_block_forecast",
+    "O4_autonomous_rollout",
+    "O5_periodic_oracle_reset",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering_or_control",
+    "additional_model_seeds"
+  ],
+  "evidence_locks": {
+    "H1_training_forecast": {
+      "job_id": "6901393",
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/h1_training_forecast.h5",
+      "sha256": "d1342e53ac5f9077665f7a707ca035b9069a616d7db10371e1f6c1ae504d9c18",
+      "bytes": 1550112936,
+      "shape": [430, 5, 64, 32, 88],
+      "target_frames": [2, 432]
+    },
+    "H1_validation_forecast": {
+      "job_id": "6896117",
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/task_0_c5p_h1_seed_1701/forecast.h5",
+      "sha256": "a76b389dfc090d1d3061ec4be3526c524645b4cd9cec2f309601af0dd405f1ed",
+      "bytes": 454227352,
+      "shape": [126, 5, 64, 32, 88],
+      "target_frames": [498, 624]
+    },
+    "training_residual_audit": {
+      "job_id": "6901393",
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/residual_audit.json",
+      "sha256": "d8f05af4d1619fbe7ad8774360c29aa38cd69494d80624d55e30fdb57361cf67"
+    },
+    "training_residual_sufficient_statistics": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/raw_accumulators.npz",
+      "sha256": "50c54a8e9dd0f0983cb8360f598bdf00eae22854de2ab471cd7385e767f3058b"
+    },
+    "model_dataset": {
+      "job_id": "6893525",
+      "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    },
+    "native_truth_result": {
+      "path": "paper0/results/phase2_potential_vorticity_all_frame_6893033.json",
+      "sha256": "cc6b00b72605c6457ae3a3b24db7e90dac16989c852df92036a57272f62eddae"
+    },
+    "geometry_manifest": {
+      "path": "paper0/manifests/phase2_85604_geometry_units.json",
+      "sha256": "76426ca83f711aaf9dec79c6df4c4503c2c8eece847b78027633e93e4b2cd460"
+    },
+    "geometry": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+      "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+    },
+    "B5_covariance_localization_result": {
+      "job_id": "6901914",
+      "tracked_path": "paper0/results/phase3_b5_covariance_localization_6901914.json",
+      "sha256": "331e7f3ff5d221d0d3720d9112ce90436d8330647501a2268f974867bbc140d2"
+    }
+  },
+  "data": {
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "field_weighting": "equal_after_training_only_per_field_standardization",
+    "volume_shape": [5, 64, 32, 88],
+    "training_targets": [2, 432],
+    "training_target_count": 430,
+    "guard_targets": [432, 496],
+    "guard_target_count": 64,
+    "validation_targets": [498, 624],
+    "validation_target_count": 126,
+    "chronological_blocks": [
+      [498, 519],
+      [519, 540],
+      [540, 561],
+      [561, 582],
+      [582, 603],
+      [603, 624]
+    ],
+    "cadence_microseconds": 3.131905426352636,
+    "native_toroidal_cells": 81,
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "absolute_time_input_used": false,
+    "guard_frames_read_allowed": false,
+    "temporal_windows_are_independent_shots": false
+  },
+  "residual_definition": {
+    "sign": "truth_minus_H1_mean",
+    "space": "decoded_training_standardized_field_space",
+    "phi_gauge_policy": "subtract_full_spatial_mean_separately_per_truth_and_H1_sample_before_residual_formation",
+    "bias_definition": "mean_over_training_target_and_stored_toroidal_z_for_each_field_x_y",
+    "bias_shape": [5, 64, 32],
+    "training_fluctuation_before_covariance_centering": "gauge_fixed_residual_minus_training_axisymmetric_bias",
+    "covariance_empirical_mean": "mean_over_training_targets_of_training_fluctuation_with_shape_field_x_y_z",
+    "covariance_empirical_mean_toroidal_average": "zero_by_construction",
+    "covariance_empirical_mean_added_to_forecast_mean": false,
+    "covariance_centered_training_matrix": "training_fluctuation_minus_covariance_empirical_mean",
+    "covariance_centering_reason": "prevent_finite_sample_nonaxisymmetric_phase_pattern_from_becoming_persistent_forecast_bias",
+    "validation_fluctuation": "gauge_fixed_residual_minus_frozen_training_axisymmetric_bias",
+    "transport_evaluation_space": "original_physical_fields_with_authoritative_geometry"
+  },
+  "KL_basis": {
+    "method": "method_of_snapshots",
+    "fit_region": "training_targets_only",
+    "matrix_shape": [430, 901120],
+    "gram_definition": "covariance_centered_R_times_R_transpose_divided_by_T_minus_1",
+    "compute_dtype": "float64",
+    "positive_eigenvalue_relative_threshold": 1e-10,
+    "maximum_centered_rank": 429,
+    "rank_ladder": [0, 8, 16, 32, 44, 64, 128, 256, "full_positive_training_rank"],
+    "rank_exceeding_positive_rank_policy": "report_unavailable_without_clipping",
+    "rank_44_relation_to_historical_z44": "scale_comparison_only_no_shared_representation_or_meaning",
+    "orthonormality_maximum_error": 2e-5,
+    "full_rank_covariance_centered_training_relative_RMS_maximum": 2e-5,
+    "nested_projection_required": true,
+    "reconstruction_error_must_be_nonincreasing": true
+  },
+  "training_only_static_rank_selection": {
+    "candidates": [8, 16, 32, 44, 64, 128],
+    "cumulative_training_variance_target": 0.9,
+    "selection": "smallest_available_candidate_reaching_target",
+    "fallback_rank": 128,
+    "fallback_label": "training_variance_cap_bound",
+    "validation_metrics_may_change_rank": false
+  },
+  "tier_A_projection_oracle": {
+    "uses_current_validation_truth_coefficients": true,
+    "is_forecast": false,
+    "is_ensemble": false,
+    "must_be_labeled_oracle": true,
+    "required_metrics": [
+      "total_and_per_field_validation_residual_variance_captured",
+      "residual_RMSE_and_MAE_relative_to_H1_residual_scale",
+      "spatial_ACF_curves_and_distances",
+      "global_and_authoritative_region_cross_field_matrices_and_distances",
+      "toroidal_residual_power_by_frozen_band",
+      "material_band_cross_phase_and_cross_coherence",
+      "memberwise_not_applicable_reconstructed_state_strict_face_and_exact_separatrix_transport",
+      "six_chronological_block_metrics"
+    ],
+    "pass_rule": {
+      "minimum_total_validation_variance_captured": 0.8,
+      "minimum_each_field_validation_variance_captured": 0.6,
+      "systematic_L3_identities_required": 9,
+      "systematic_L3_identity_total": 11,
+      "required_blocks_per_identity": 5,
+      "chronological_block_total": 6,
+      "material_band_power_ratio_range": [0.8, 1.2],
+      "material_field_bands_required": 12,
+      "material_field_bands_total": 15,
+      "strict_face_relative_L2_maximum": 0.4,
+      "strict_face_transport_quantities_required": 3,
+      "strict_face_transport_quantities_total": 4,
+      "exact_separatrix_relative_L2_maximum": 0.3,
+      "exact_separatrix_transport_quantities_required": 4
+    }
+  },
+  "systematic_L3_identities": [
+    "cross_field:private_flux",
+    "spatial:stored_toroidal_z:Pi",
+    "spatial:stored_toroidal_z:phi",
+    "spatial:x:Pe",
+    "spatial:x:Pi",
+    "spatial:x:phi",
+    "spatial:y:Ne",
+    "spatial:y:Pe",
+    "spatial:y:Pi",
+    "spatial:y:Vi",
+    "spatial:y:phi"
+  ],
+  "toroidal_bands": {
+    "k": [[0, 0], [1, 3], [4, 5], [6, 7], [8, 44]],
+    "n": [[0, 0], [5, 15], [20, 25], [30, 35], [40, 220]],
+    "material_field_bands": "five_fields_times_k_1_through_3_k_4_through_5_and_k_6_through_7",
+    "parseval_positive_frequency_weighting": true
+  },
+  "tier_B_static_Gaussian_KL": {
+    "rank_source": "training_only_static_rank_selection",
+    "ensemble_size": 32,
+    "target_count": 126,
+    "master_seed": 2026081901,
+    "generator": "numpy_random_PCG64",
+    "seed_bank_shape": [126, 32],
+    "condition_independent": true,
+    "mean": "frozen_H1_validation_forecast_plus_training_axisymmetric_bias",
+    "coefficient_standard_distribution": "independent_standard_normal",
+    "compressed_forecast_must_close_before_validation_truth_read": true,
+    "nonlinear_metrics_memberwise_before_ensemble_reduction": true,
+    "transport_of_ensemble_mean_fields_is_companion_only": true,
+    "finite_member_conventions": "exact_B5_M32",
+    "required_metrics": [
+      "field_RMSE_MAE_bias_fair_CRPS_spread_skill_coverage_rank_PIT",
+      "member_expected_toroidal_power_realization_coherence_power_calibration",
+      "cross_field_complex_projections",
+      "memberwise_authoritative_strict_face_and_exact_separatrix_transport",
+      "local_versus_integrated_transport_covariance_decomposition",
+      "field_and_transport_variogram_scores",
+      "spread_error_association",
+      "six_chronological_block_metrics",
+      "generation_cost_and_compressed_basis_storage"
+    ],
+    "usefulness_rule": {
+      "transport_quantities_required": 3,
+      "transport_quantities_total": 4,
+      "local_corrected_spread_skill_range": [0.8, 1.25],
+      "integrated_corrected_spread_skill_range": [0.67, 1.5],
+      "minimum_ensemble_to_error_coherence_multiplier_ratio": 0.67,
+      "maximum_scalar_counterfactual_local_spread_skill": 1.5,
+      "aggregate_field_corrected_spread_skill_range": [0.8, 1.25],
+      "finite_noncollapsed_members_required": true,
+      "paper0_forecast_acceptance_gate": false
+    }
+  },
+  "outcome_classification": {
+    "K1_compact_representation_static_covariance_useful": "minimum_passing_tier_A_rank_at_most_64_and_tier_B_useful",
+    "K2_compact_representation_conditional_coefficients_required": "minimum_passing_tier_A_rank_at_most_64_and_tier_B_not_useful",
+    "K3_only_moderate_or_high_rank_adequate": "no_rank_at_most_64_passes_and_a_rank_at_least_128_passes",
+    "K4_training_residual_span_does_not_transfer": "no_available_rank_including_full_positive_training_span_passes",
+    "execution_failed_without_scientific_outcome": "integrity_or_numerical_failure",
+    "inconsistent_diagnostic_requires_review": "logical_edge_case_not_covered_by_K1_through_K4"
+  },
+  "integrity_gates": {
+    "verify_all_input_and_source_hashes": true,
+    "verify_exact_target_coverage_and_order": true,
+    "verify_guard_and_85606_absent_from_opened_file_log": true,
+    "verify_training_bias_and_legacy_covariance_anchors": true,
+    "verify_gram_symmetric_and_PSD": true,
+    "verify_basis_orthonormality": true,
+    "verify_nested_nonincreasing_reconstruction": true,
+    "verify_rank_zero_equals_H1_plus_bias": true,
+    "verify_full_rank_covariance_centered_training_closure": true,
+    "verify_compressed_forecast_closed_before_validation_truth_read": true,
+    "verify_seed_and_member_reload_determinism": true,
+    "transport_local_sum_relative_tolerance": 2e-12,
+    "verify_no_checkpoint_optimizer_or_trainable_parameter": true,
+    "failure_policy": "stop_without_scientific_outcome"
+  },
+  "execution": {
+    "cluster": "Rusty",
+    "os": "Rocky_Linux_9",
+    "submission": "sbatch",
+    "partition": "gen",
+    "accelerator": "none_CPU_only",
+    "maximum_cpus": 32,
+    "maximum_memory_GB": 256,
+    "maximum_walltime_hours": 6,
+    "wandb_online_required": true,
+    "wandb_entity": "sdelaurentiis123-columbia-university",
+    "wandb_project": "tcv-diagnostics-paper0",
+    "wandb_upload_forbidden": [
+      "raw_fields",
+      "basis_arrays",
+      "forecast_members",
+      "raw_accumulators",
+      "figures",
+      "tables",
+      "checkpoints"
+    ],
+    "Ceph_artifacts_are_scientific_authority": true
+  },
+  "implementation": {
+    "status": "not_started_at_protocol_freeze",
+    "source_hashes_pinned_in_launcher_after_implementation": true,
+    "known_answer_tests_required_before_submission": [
+      "method_of_snapshots_PCA",
+      "phi_gauge_handling",
+      "nested_projections",
+      "static_Gaussian_covariance",
+      "fixed_seed_reconstruction",
+      "memberwise_nonlinear_metrics",
+      "no_future_truth_generation",
+      "scope_guards"
+    ]
+  },
+  "post_experiment": {
+    "one_interpretation_memo_authorized": true,
+    "conditional_low_rank_model_proposal_authorized_only_for_K1_or_K2": true,
+    "model_implementation_or_training_automatically_authorized": false,
+    "K3_authorizes_only_multiscale_design_memo": true,
+    "K4_requires_stop_or_scope_narrowing": true,
+    "O3_authorized": false,
+    "O4_authorized": false,
+    "O5_authorized": false,
+    "assimilation_authorized": false,
+    "diagnostic_ranking_authorized": false,
+    "steering_authorized": false,
+    "held_out_85606_access_authorized": false
+  }
+}
