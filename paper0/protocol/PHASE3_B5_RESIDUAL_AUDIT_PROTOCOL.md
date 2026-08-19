@@ -75,6 +75,9 @@ The audit uses only the verified job-6893525 85604 model dataset:
 - guard frames `[432,496)`: unread;
 - validation frames `[496,624)`: unread;
 - saved cadence: `3.131905426352636` microseconds;
+- frozen diagnostic-only training decorrelation reference: `2.2443947105846638`
+  frames (`7.0292319729572625` microseconds), from the median finite `1/e`
+  crossing across the five C5 training fields in Phase 1 job `6890606`;
 - standardized field shape: `[5,64,32,88]`;
 - simulated toroidal periodicity: `zperiod=5`;
 - stored/full-torus Fourier mapping: `n=5k`.
@@ -183,6 +186,10 @@ autocorrelation of per-frame residual RMS.
 This describes residual persistence. It does not identify irreducible noise:
 with one realized trajectory per context, deterministic model error and
 conditional stochastic variability cannot be separated uniquely.
+
+The decorrelation-time conversion is a reporting unit only. The Phase 1
+steady-state gate did not pass, so this value is not evidence that the later
+training targets are independent or samples from one stationary distribution.
 
 ### 4.4 Cross-field dependence
 

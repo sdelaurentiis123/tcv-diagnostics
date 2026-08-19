@@ -87,6 +87,18 @@ def test_B5_residual_audit_preserves_full_toroidal_support() -> None:
     assert bands[3]["full_torus_n"] == [30, 35]
 
 
+def test_B5_residual_audit_pins_diagnostic_only_training_timescale() -> None:
+    reference = _manifest()["evidence_locks"]["training_decorrelation_reference"]
+    assert reference == {
+        "path": "paper0/results/phase1_85604_profile_6890606.json",
+        "sha256": "9ef0868a21ebbee883f154f13fe4068d50d47474017cf775ba3d5c3e51b7fc15",
+        "definition": "median_finite_one_over_e_crossing_across_C5_training_fields",
+        "frames": 2.2443947105846638,
+        "microseconds": 7.0292319729572625,
+        "status": "diagnostic_only_under_nonstationarity",
+    }
+
+
 def test_B5_residual_audit_authorizes_no_training_or_downstream_claim() -> None:
     manifest = _manifest()
     assert manifest["execution"]["training_performed"] is False

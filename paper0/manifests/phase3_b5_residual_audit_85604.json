@@ -36,6 +36,14 @@
       "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
       "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
       "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    },
+    "training_decorrelation_reference": {
+      "path": "paper0/results/phase1_85604_profile_6890606.json",
+      "sha256": "9ef0868a21ebbee883f154f13fe4068d50d47474017cf775ba3d5c3e51b7fc15",
+      "definition": "median_finite_one_over_e_crossing_across_C5_training_fields",
+      "frames": 2.2443947105846638,
+      "microseconds": 7.0292319729572625,
+      "status": "diagnostic_only_under_nonstationarity"
     }
   },
   "data": {

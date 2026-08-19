@@ -1120,3 +1120,19 @@ aleatoric noise. The complete stored toroidal axis remains mandatory because
 `zperiod=5`, `n=5k`, and material `k=1` structure spans that domain. This
 protocol authorizes no B5 training, validation read, O3, assimilation,
 diagnostic ranking, or 85606 access.
+
+Before execution, the reporting-timescale provenance was made explicit without
+changing an audit metric or architecture rule. The frozen reference is the
+Phase 1 job-6890606 median finite C5 `1/e` crossing: `2.2443947105846638`
+frames (`7.0292319729572625` microseconds). Its status remains
+`diagnostic_only_under_nonstationarity`; it is not an independence or
+stationarity claim.
+
+The audit implementation is truth separated. A training-context-only adapter
+generates all H1 forecasts, closes and hashes the HDF5 artifact, and only then
+constructs the target-only reader. Pure known-answer tests cover residual bias,
+valid-overlap and circular autocorrelation, the `n=5k` Fourier mapping,
+cross-field rank, artifact order/hash locks, plot generation, and exact B4 and
+Phase 1 evidence schemas. The initial full local implementation suite passed
+with `1007 passed, 1 skipped`. No cluster audit had been submitted at this
+checkpoint.
