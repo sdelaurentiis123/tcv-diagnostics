@@ -262,6 +262,18 @@ class SpatialCorrelationAccumulator:
                     )
         self.sample_count += int(array.shape[0])
 
+    def merge(self, other: "SpatialCorrelationAccumulator") -> None:
+        if (
+            not isinstance(other, SpatialCorrelationAccumulator)
+            or other.axis != self.axis
+            or other.volume_shape != self.volume_shape
+        ):
+            raise ValueError("spatial-correlation accumulator merge differs")
+        self.numerator += other.numerator
+        self.left_energy += other.left_energy
+        self.right_energy += other.right_energy
+        self.sample_count += other.sample_count
+
     def finalize(self) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
         if self.sample_count < 1:
             raise RuntimeError("spatial-correlation accumulator is empty")
@@ -385,6 +397,22 @@ class CrossFieldCorrelationAccumulator:
         self._update_one("global", array.reshape(array.shape[0], len(B5_FIELDS), -1, 1))
         for name, mask in self.masks.items():
             self._update_one(name, array[:, :, mask, :])
+
+    def merge(self, other: "CrossFieldCorrelationAccumulator") -> None:
+        if (
+            not isinstance(other, CrossFieldCorrelationAccumulator)
+            or other.volume_shape != self.volume_shape
+            or tuple(other.masks) != tuple(self.masks)
+            or any(
+                not np.array_equal(other.masks[name], self.masks[name])
+                for name in self.masks
+            )
+        ):
+            raise ValueError("cross-field accumulator merge differs")
+        for name in self.count:
+            self.count[name] += other.count[name]
+            self.sums[name] += other.sums[name]
+            self.gram[name] += other.gram[name]
 
     def finalize(self) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
         records: dict[str, Any] = {}
@@ -573,6 +601,15 @@ class ToroidalPowerAccumulator:
             )
         self.sample_count += int(array.shape[0])
 
+    def merge(self, other: "ToroidalPowerAccumulator") -> None:
+        if (
+            not isinstance(other, ToroidalPowerAccumulator)
+            or other.volume_shape != self.volume_shape
+        ):
+            raise ValueError("toroidal-power accumulator merge differs")
+        self.unweighted_power += other.unweighted_power
+        self.sample_count += other.sample_count
+
     def finalize(self) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
         if self.sample_count < 1:
             raise RuntimeError("toroidal-power accumulator is empty")
@@ -648,6 +685,14 @@ class CovarianceSummaryAccumulator:
             accumulator.update(array)
         self.cross_field.update(array)
         self.toroidal.update(array)
+
+    def merge(self, other: "CovarianceSummaryAccumulator") -> None:
+        if not isinstance(other, CovarianceSummaryAccumulator):
+            raise TypeError("covariance-summary merge requires a matching accumulator")
+        for axis in self.spatial:
+            self.spatial[axis].merge(other.spatial[axis])
+        self.cross_field.merge(other.cross_field)
+        self.toroidal.merge(other.toroidal)
 
     def finalize(self) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
         spatial: dict[str, Any] = {}

@@ -1043,14 +1043,15 @@ def main() -> None:
     validation_h1_fluctuation = subtract_axisymmetric_bias(
         validation_h1_residual, validation_h1_bias
     )
-    validation_bundle = _new_bundle(region_masks_xy)
-    _update_in_chunks(validation_bundle, validation_h1_fluctuation)
     validation_block_bundles = [_new_bundle(region_masks_xy) for _ in BLOCK_INTERVALS]
     for index, (start, stop) in enumerate(BLOCK_INTERVALS):
         _update_in_chunks(
             validation_block_bundles[index],
             validation_h1_fluctuation[start - 498 : stop - 498],
         )
+    validation_bundle = _new_bundle(region_masks_xy)
+    for bundle in validation_block_bundles:
+        validation_bundle.merge(bundle)
     validation_record, validation_bundle_raw = _finalize_named_bundle(
         "validation_H1_residual", validation_bundle
     )
@@ -1118,7 +1119,6 @@ def main() -> None:
             b5_mean[target_index] = np.mean(members, axis=0, dtype=np.float64)
             innovation[target_index] = validation_truth_gauge[target_index] - mean_gauge
             marginal_anchor.update(members_gauge, validation_truth_gauge[target_index])
-            anomaly_bundle.update(anomalies)
             anomaly_block_bundles[_block_index(target)].update(anomalies)
             field_scores = field_variogram_score(
                 members_gauge,
@@ -1213,6 +1213,8 @@ def main() -> None:
     if max(anchor_differences.values()) > 2e-6:
         raise RuntimeError("B5 marginal integrity anchors do not reproduce")
 
+    for bundle in anomaly_block_bundles:
+        anomaly_bundle.merge(bundle)
     anomaly_record, anomaly_raw = _finalize_named_bundle(
         "B5_ensemble_anomaly", anomaly_bundle
     )
@@ -1226,21 +1228,23 @@ def main() -> None:
 
     innovation_bias = axisymmetric_bias(innovation)
     innovation_fluctuation = subtract_axisymmetric_bias(innovation, innovation_bias)
+    innovation_block_bundles = [_new_bundle(region_masks_xy) for _ in BLOCK_INTERVALS]
+    for index, (start, stop) in enumerate(BLOCK_INTERVALS):
+        _update_in_chunks(
+            innovation_block_bundles[index],
+            innovation_fluctuation[start - 498 : stop - 498],
+        )
     innovation_bundle = _new_bundle(region_masks_xy)
-    _update_in_chunks(innovation_bundle, innovation_fluctuation)
+    for bundle in innovation_block_bundles:
+        innovation_bundle.merge(bundle)
     innovation_record, innovation_raw = _finalize_named_bundle(
         "B5_innovation", innovation_bundle
     )
     all_raw.update(innovation_raw)
     all_raw["B5_innovation_axisymmetric_bias__field_x_y"] = innovation_bias
     innovation_block_records: dict[str, Any] = {}
-    for start, stop in BLOCK_INTERVALS:
+    for (start, stop), block_bundle in zip(BLOCK_INTERVALS, innovation_block_bundles):
         name = _block_name(start, stop)
-        block_bundle = _new_bundle(region_masks_xy)
-        _update_in_chunks(
-            block_bundle,
-            innovation_fluctuation[start - 498 : stop - 498],
-        )
         record, raw = _finalize_named_bundle(f"B5_innovation__{name}", block_bundle)
         innovation_block_records[name] = record
         all_raw.update(raw)

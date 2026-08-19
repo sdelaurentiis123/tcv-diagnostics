@@ -8,6 +8,7 @@ import numpy as np
 
 from tcv_diagnostics.b5_covariance_localization import (
     B5_FINITE_MEMBER_FACTOR,
+    CovarianceSummaryAccumulator,
     CrossFieldCorrelationAccumulator,
     MarginalAnchorAccumulator,
     SpatialCorrelationAccumulator,
@@ -75,6 +76,46 @@ def test_streamed_spatial_correlations_match_frozen_batch_estimator() -> None:
             )
         assert np.array_equal(raw["lags"], np.arange(raw["correlation"].shape[1]))
     assert correlation_curve_distance([1.0, 0.5, 0.0], [1.0, 0.3, 0.2]) == 0.2
+
+
+def test_covariance_summary_sufficient_statistics_merge_exactly() -> None:
+    values = random_fields(8, shape=(4, 3, 12), seed=212)
+    masks = {
+        "eligible": np.ones((4, 3), dtype=bool),
+        "left": np.asarray(
+            [[True, True, True], [True, True, True], [False] * 3, [False] * 3]
+        ),
+    }
+    direct = CovarianceSummaryAccumulator(
+        region_masks_xy=masks, volume_shape=(4, 3, 12)
+    )
+    direct.update(values)
+    first = CovarianceSummaryAccumulator(region_masks_xy=masks, volume_shape=(4, 3, 12))
+    second = CovarianceSummaryAccumulator(
+        region_masks_xy=masks, volume_shape=(4, 3, 12)
+    )
+    first.update(values[:3])
+    second.update(values[3:])
+    first.merge(second)
+    direct_record, direct_raw = direct.finalize()
+    merged_record, merged_raw = first.finalize()
+    for axis in ("x", "y", "stored_toroidal_z"):
+        assert (
+            direct_record["spatial_autocorrelation"][axis]["sample_count"]
+            == merged_record["spatial_autocorrelation"][axis]["sample_count"]
+        )
+        for field in ("Ne", "Pe", "Pi", "phi", "Vi"):
+            assert np.allclose(
+                direct_record["spatial_autocorrelation"][axis]["fields"][field][
+                    "correlation"
+                ],
+                merged_record["spatial_autocorrelation"][axis]["fields"][field][
+                    "correlation"
+                ],
+                atol=1e-12,
+            )
+    for name in direct_raw:
+        assert np.allclose(direct_raw[name], merged_raw[name], atol=1e-12)
 
 
 def test_cross_field_accumulator_recovers_known_dependence_and_distance() -> None:
