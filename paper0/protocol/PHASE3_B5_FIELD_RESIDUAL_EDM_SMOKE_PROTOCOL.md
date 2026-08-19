@@ -142,8 +142,11 @@ The smoke architecture is `B5-H1-JOINT-FIELD-EDM-UNET3D-MINI`:
 - circular padding on stored toroidal `z`;
 - GroupNorm with at most eight groups, SiLU activations, and no dropout;
 - skip connections between matching encoder and decoder resolutions;
-- trilinear upsampling to the exact saved skip shape followed by a mixed-
-  boundary 3-D convolution;
+- periodic trilinear upsampling to the exact saved skip shape followed by a
+  mixed-boundary 3-D convolution: bilinear `align_corners=False`
+  interpolation is applied independently to each toroidal slice in `x/y`,
+  while the equivalent linear weights are applied across the circular `z`
+  seam; ordinary endpoint-clamped 3-D interpolation is prohibited;
 - 256-feature sine/MLP noise embedding;
 - one affine scale-and-shift FiLM projection from the noise embedding in every
   residual block;
@@ -253,8 +256,9 @@ The smoke passes only if all of the following hold:
 7. the final fixed-probe denoising loss is strictly lower than the initial
    fixed-probe loss;
 8. checkpoint reload reproduces one fixed denoiser output bit for bit;
-9. a circular shift of noisy residual, dynamic condition, and output along
-   `z` passes a frozen FP32 equivariance tolerance;
+9. a circular shift by eight stored `z` cells (the product of the three
+   stride-2 reductions) of noisy residual and dynamic condition produces an
+   output shifted by eight cells in FP32 with `rtol=atol=2e-5`;
 10. two sampler members have nonzero residual and field RMS difference;
 11. sampler axes, field order, and composition with the deterministic mean are
     exact;

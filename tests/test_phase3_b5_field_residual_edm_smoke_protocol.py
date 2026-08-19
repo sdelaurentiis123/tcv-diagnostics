@@ -129,6 +129,10 @@ def test_B5_EDM_smoke_architecture_is_joint_full_field_and_periodic() -> None:
         [8, 4, 11],
     ]
     assert model["padding_by_axis"] == ["zeros", "zeros", "circular"]
+    assert model["upsampling"] == (
+        "bilinear_xy_plus_align_corners_false_periodic_linear_z_to_exact_"
+        "skip_shape_then_mixed_boundary_conv3d"
+    )
     assert model["noise_embedding_features"] == 256
     assert model["full_field_required"] is True
     assert model["patch_fallback_allowed_in_this_protocol"] is False
@@ -192,6 +196,9 @@ def test_B5_EDM_smoke_gates_fail_closed_without_scientific_authority() -> None:
     assert gates["final_fixed_probe_loss_strictly_below_initial"] is True
     assert gates["checkpoint_reload_denoiser_probe_bitwise_exact"] is True
     assert gates["toroidal_circular_shift_equivariance_FP32_test"] is True
+    assert gates["toroidal_equivariance_shift_cells"] == 8
+    assert gates["toroidal_equivariance_rtol"] == 2e-5
+    assert gates["toroidal_equivariance_atol"] == 2e-5
     assert gates["sampler_member_diversity_nonzero"] is True
     assert gates["held_out_85606_untouched"] is True
     assert load()["sampler_probe"]["scientific_calibration_result"] is False
