@@ -776,3 +776,17 @@ against the immutable job `6898702` result and 100-epoch history. Compact
 failure evidence is
 `results/phase3_b3_fgn_evaluator_smoke_failure_6899064.json`; a fresh smoke is
 required and the failed output is never reused.
+
+Fresh bounded evaluator smoke job `6899071` ran the repaired, hash-pinned
+evaluator at commit `aa96db0c` on Rocky 9/H100 and completed with exit `0:0`
+in 76 seconds. The complete suite passed (`856 passed, 1 skipped`), both
+artifact ledgers revalidate, the independent PCG64 seed-31032 M32 noise bank
+matches its frozen hash, and the forecast was hashed before validation truth
+was opened. It generated four targets with 32 direct single-pass members,
+found nonzero decoded-field spread for every field, and completed the required
+online W&B record. The four-target MAE, fair CRPS, and corrected spread/skill
+ratio are respectively `0.04353`, `0.03134`, and `0.76737`; these are bounded
+preflight diagnostics, not scientific acceptance estimates. Compact evidence
+is `results/phase3_b3_fgn_evaluator_smoke_6899071.json`. This authorizes only
+the already-frozen full 85604 validation evaluation; O3, additional seeds,
+assimilation, diagnostic ranking, and 85606 remain closed.
