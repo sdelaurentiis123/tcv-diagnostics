@@ -1,0 +1,36 @@
+{
+  "approved_upload_scope": "compact scalar metrics, provenance hashes, and run metadata",
+  "authenticated_username": "sdelaurentiis123",
+  "basis_arrays_uploaded": false,
+  "checkpoints_uploaded": false,
+  "figures_uploaded": false,
+  "forecasts_uploaded": false,
+  "local_artifacts_are_scientific_authority": true,
+  "mode": "online",
+  "raw_accumulators_uploaded": false,
+  "remote_path": "sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/p0reskl-6904897-s1701",
+  "remote_presence_verified_after_finish": true,
+  "remote_state_after_finish": "finished",
+  "required": true,
+  "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0reskl-6904897-s1701",
+  "schema_version": 1,
+  "simulation_fields_uploaded": false,
+  "spec": {
+    "entity": "sdelaurentiis123-columbia-university",
+    "group": "residual-kl-oracle",
+    "job_type": "phase3_residual_KL_oracle",
+    "project": "tcv-diagnostics-paper0",
+    "run_id": "p0reskl-6904897-s1701",
+    "run_name": "residual-kl-oracle-j6904897",
+    "tags": [
+      "paper0",
+      "phase3",
+      "residual-KL",
+      "oracle",
+      "85604-only",
+      "CPU-only"
+    ]
+  },
+  "tables_uploaded": false,
+  "wandb_version": "0.17.9"
+}

@@ -1312,3 +1312,51 @@ tracked in `figures/phase3_b5_covariance_localization/`.
 Training, O3, additional seeds, assimilation, diagnostic ranking, steering,
 and 85606 remain closed. The result permits only a prospective decision memo
 and separately frozen protocol for one next 85604 development intervention.
+
+## Phase 3 residual-KL representation oracle
+
+The prospectively frozen residual-KL oracle completed cleanly on Rocky 9 as
+Slurm job `6904897` at commit
+`6e3469b1a37430a2493e5889f24c653f2f5f5418`. Slurm reports `COMPLETED`, exit
+`0:0`, elapsed time `00:33:23`, and peak batch RSS `20199036K`. The complete
+in-job suite passed with `1216 passed, 1 skipped` and 29 subtests. W&B run
+`p0reskl-6904897-s1701` is remotely verified as finished with compact-only
+telemetry. No model checkpoint, model inference, training, O3/O4/O5,
+assimilation, diagnostic ranking, steering, guard frames, or 85606 was used.
+
+The 430 centered training residuals produce 429 positive field-space KL
+directions over 901,120 features. Their participation-ratio and entropy
+effective ranks are `262.78` and `330.08`; rank 128 captures only `58.45%` of
+training variance. The full basis reconstructs its own centered training
+matrix to `2.64e-8` relative RMS, so implementation closure is not the source
+of the negative result.
+
+On the 126-target chronological validation region, truth-projected variance
+capture rises from `1.68%` at rank 8 to only `22.34%` at full rank 429. Full
+rank captures `11.62--27.52%` by field, passes 6 of 11 frozen dependence
+identities, passes 0 of 15 material field/mode power bands, and passes 0 of 4
+transport quantities. Strict-face and exact-separatrix transport relative-L2
+errors remain approximately `0.70--0.72`. Therefore no Tier-A rank passes.
+
+The separately closed rank-128 static Gaussian M32 ensemble is noncollapsed
+but underdispersed. Equal-field corrected spread--skill is `0.639`; per-field
+values are `0.524--0.737`. Local and integrated transport spread--skill are
+approximately `0.65` and `0.61--0.63`, so zero of four quantities passes the
+static covariance usefulness rule.
+
+The prospectively defined outcome is
+`K4_training_residual_span_does_not_transfer`. The byte-locked compact result
+is `results/phase3_residual_kl_oracle_6904897.json`, SHA-256
+`4f0166308e71d308a960c004cb6f9c247f6e0d9de038d01df5f3a85037fb2879`.
+The authoritative scientific artifact remains on Ceph with SHA-256
+`71be0e38285a06f98bd03138d3e1639a70d88665e698cbb4c96220e57dc991b7`.
+The rank and covariance tables reproduce byte for byte across jobs `6904413`
+and `6904897` on different workers.
+
+The complete interpretation is `PHASE3_RESIDUAL_KL_INTERPRETATION.md`; all
+operational failures and permitted fixes are documented in
+`PHASE3_RESIDUAL_KL_EXECUTION_LOG.md`. Under the frozen decision rule, K4
+stops further architecture iteration on the current single trajectory. The
+next decision is to obtain additional simulator trajectories or narrow Paper
+0 to a reproducible benchmark/failure analysis. All downstream gates and
+85606 remain closed.

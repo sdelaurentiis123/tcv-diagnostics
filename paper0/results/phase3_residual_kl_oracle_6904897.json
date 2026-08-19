@@ -1,0 +1,95 @@
+{
+  "O3_launched": false,
+  "assimilation_performed": false,
+  "checkpoint_loaded": false,
+  "completed_utc": "2026-08-19T20:04:12.922921+00:00",
+  "development_run": "85604",
+  "diagnostic_ranking_performed": false,
+  "figures": [
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-eigenspectrum.png",
+      "sha256": "6823c2847f9518c623b96fd3294a3a8da94c4d831431519c44664448a266c931"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-eigenspectrum.svg",
+      "sha256": "4828811a1a9bc4f9200917993763a6729c2c233294b59e7ec943783648c64598"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-reconstruction.png",
+      "sha256": "7a6137de421ab39d3b104ee953a5b9ba40117d5fa5290382296380fa8c52f202"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-reconstruction.svg",
+      "sha256": "07b7912dbcb4143caa6b07d16e55e49a955d968115a5530263bb4702d4b2f3c2"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-toroidal-power.png",
+      "sha256": "bc14ec56b75aae795ac9c18f717a3a8901d3d0bd510412f61dab6ddef0ccc3c3"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-toroidal-power.svg",
+      "sha256": "6ad7efe266ad4c085651afbb0cfba9477c9b67ad6e4b238c9552aba422b4b70f"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-transport.png",
+      "sha256": "e76370d2580f136b47da51488f31679e0a331692fbb2622bd83f85cb5f83aad6"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-transport.svg",
+      "sha256": "286f597c109ff508420ff43c4757611e6a4037b5219124cb557dc8ec5490b6ce"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-static-field-calibration.png",
+      "sha256": "d468f06b3b79baf39afff5c597b68eebb5c598d44492b142e9fb313a53132888"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-static-field-calibration.svg",
+      "sha256": "c1bd3aca1b7c86045b49ad56893510dd44e9e01292b14359fef9c676af8abbe4"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-static-transport-covariance.png",
+      "sha256": "447848ab591b9c252e7e57639588d07af053263573553224ceb3152aba90d7ef"
+    },
+    {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual-kl-static-transport-covariance.svg",
+      "sha256": "5476b24c09df2b7c1a9c97aa4c44070cfc420f1c615343819cf32abc2db1bd6f"
+    }
+  ],
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "model_inference_performed": false,
+  "model_training_performed": false,
+  "optimizer_or_trainable_parameter_created": false,
+  "paper0_commit": "6e3469b1a37430a2493e5889f24c653f2f5f5418",
+  "physics_metric_used_as_training_loss": false,
+  "positive_rank": 429,
+  "primary_outcome": "K4_training_residual_span_does_not_transfer",
+  "rank_zero_H1_plus_bias_maximum_absolute_difference": 0.0,
+  "raw_sufficient_statistics": {
+    "array_count": 125,
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/raw_sufficient_statistics.npz",
+    "sha256": "98a418b51aabdfee12537ed43c618d100a7625cdc4659eaed729db0d27353552"
+  },
+  "schema_version": 1,
+  "scientific_result": {
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/residual_kl_oracle.json",
+    "sha256": "71be0e38285a06f98bd03138d3e1639a70d88665e698cbb4c96220e57dc991b7"
+  },
+  "scope": "residual_KL_representation_oracle_and_static_covariance_85604",
+  "selected_static_rank": 128,
+  "slurm_job_id": "6904897",
+  "status": "completed_without_model_training_or_downstream_opening",
+  "tables": {
+    "tier_A_rank_summary": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/tier_A_rank_summary.csv",
+      "sha256": "4f006d4ba6d667fc57ddc4ffd158e07d7314d3c7db3b4ce29b5fbb289325aa57"
+    },
+    "tier_B_transport_covariance": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_residual_kl_oracle/job_6904897/evaluation/tier_B_transport_covariance.csv",
+      "sha256": "d36b5a5d2dc9213d3cb20072bee26bbb797433be2d44a0192f0252601d0e74a6"
+    }
+  },
+  "tier_A_minimum_passing_rank": null,
+  "tier_B_static_covariance_useful": false,
+  "wall_seconds": 1787.202376792
+}

@@ -79,3 +79,35 @@ Its network-free fixture uses that same nested schema and asserts both scalar
 projections.  This changes no scientific computation or result.  A fresh
 end-to-end job will rerun the unchanged oracle so that Slurm, W&B, and the
 local artifact closure all finish consistently.  Run 85606 remains unread.
+
+## Job 6904897 — authoritative clean completion
+
+- Submitted from Rocky 9 at commit
+  `6e3469b1a37430a2493e5889f24c653f2f5f5418`.
+- Completed with Slurm exit code 0 in 00:33:23 on `worker6203`; peak batch RSS
+  was 20,199,036 KiB.
+- The complete Rocky 9 suite passed: 1,216 tests passed, one skipped, and 29
+  subtests passed.
+- Reproduced the training basis SHA-256 from job 6904413 exactly:
+  `fcc32c3baaf0deb85fa55456612d3ab8beaf859af20b5ba86f94233c15e0dbbc`.
+- Reproduced both compact scientific CSV tables byte for byte across the two
+  workers.  Their SHA-256 values are
+  `4f006d4ba6d667fc57ddc4ffd158e07d7314d3c7db3b4ce29b5fbb289325aa57`
+  for Tier A and
+  `d36b5a5d2dc9213d3cb20072bee26bbb797433be2d44a0192f0252601d0e74a6`
+  for Tier B.
+- Frozen outcome reproduced:
+  `K4_training_residual_span_does_not_transfer`; no Tier-A rank passed and the
+  Tier-B static covariance usefulness gate failed.
+- W&B run `p0reskl-6904897-s1701` uploaded 78 compact scalars and provenance
+  metadata, was remotely verified in state `finished`, and uploaded no raw
+  fields, forecasts, basis arrays, accumulators, figures, or tables.
+- Final scientific SHA-256:
+  `71be0e38285a06f98bd03138d3e1639a70d88665e698cbb4c96220e57dc991b7`.
+- Final compact result SHA-256:
+  `4f0166308e71d308a960c004cb6f9c247f6e0d9de038d01df5f3a85037fb2879`.
+- Guard frames and run 85606 remained unread.  No model training, inference,
+  O3/O4/O5, assimilation, diagnostic ranking, or steering occurred.
+
+Job 6904897 is the authoritative execution.  Job 6904413 is retained only as
+documented cross-worker numerical reproduction and telemetry-failure history.
