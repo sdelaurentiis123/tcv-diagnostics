@@ -31,8 +31,8 @@ def sha256(path: Path) -> str:
 def test_scope_is_one_read_only_85604_analysis() -> None:
     record = load()
     assert record["protocol_status"] == (
-        "preexecution_amendment_adds_existing_training_H1_forecast_for_"
-        "gauge_consistent_drift_reference"
+        "corrective_pre_science_amendment_retires_hardware_sensitive_"
+        "legacy_spatial_replay"
     )
     assert record["development_run"] == "85604"
     assert record["sequestered_run"] == "85606"
@@ -40,7 +40,7 @@ def test_scope_is_one_read_only_85604_analysis() -> None:
     assert set(record["authorized_scope"]) == {
         "one_read_only_B5_M32_covariance_localization",
         "one_training_frozen_AR1_residual_history_diagnostic",
-        "one_Rocky9_CPU_execution_on_Rusty",
+        "one_successful_Rocky9_CPU_execution_after_fail_closed_corrective_retries",
         "online_WandB_monitoring",
     }
     assert {
@@ -161,8 +161,8 @@ def test_residual_anomaly_and_innovation_are_not_conflated() -> None:
             "gauge_fixed_truth_minus_existing_hash_locked_H1_training_forecast"
         ),
         "legacy_training_sufficient_statistics_policy": (
-            "retain_as_ungauged_cross_check_and_AR1_coefficient_source_not_as_"
-            "phi_gauge_fixed_L3_reference"
+            "retain_as_ungauged_bias_and_cross_field_integrity_checks_and_AR1_"
+            "source_not_as_phi_gauge_fixed_L3_reference"
         ),
         "axisymmetric_bias_policy": (
             "subtract_mean_over_target_and_z_for_realized_residual_and_"
@@ -188,6 +188,26 @@ def test_dependence_metrics_are_frozen_and_evaluation_only() -> None:
     assert variogram["transport_toroidal_lags"] == [1, 2, 4, 8, 16, 32, 40]
     assert variogram["used_as_training_loss"] is False
     assert variogram["pass_threshold"] is None
+
+
+def test_corrective_history_is_fail_closed_and_retires_only_spatial_replay() -> None:
+    record = load()
+    corrective = record["corrective_execution_history"]
+    assert corrective["scientific_output_generated_by_failed_jobs"] is False
+    assert [item["job_id"] for item in corrective["failed_jobs"]] == [
+        "6901864",
+        "6901880",
+        "6901893",
+        "6901897",
+    ]
+    replacement = corrective["replacement_integrity_policy"]
+    assert replacement["legacy_axisymmetric_bias_tolerance"] == 2e-6
+    assert replacement["legacy_cross_field_correlation_tolerance"] == 2e-6
+    assert replacement["legacy_spatial_replay_used_as_pass_fail_gate"] is False
+    assert replacement["legacy_spatial_statistics_used_as_new_training_reference"] is False
+    assert replacement[
+        "all_new_spatial_objects_use_one_shared_streaming_estimator_in_one_execution"
+    ] is True
 
 
 def test_toroidal_mapping_and_transport_covariance_are_physical() -> None:
@@ -265,6 +285,7 @@ def test_protocol_contains_formal_equations_references_and_claim_boundaries() ->
         "Variogram-Based Proper Scoring Rules",
         "cannot identify irreducible aleatoric noise",
         "Pre-execution gauge amendment",
+        "Corrective pre-science reduction amendment",
         "not an autonomous rollout",
         "85606 remain closed",
     ):

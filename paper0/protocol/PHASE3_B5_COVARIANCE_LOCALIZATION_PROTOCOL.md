@@ -1,8 +1,8 @@
 # Phase 3 B5 covariance and conditionality localization protocol
 
-**Decision status:** amended and refrozen before execution after detecting that
-the legacy training residual sufficient statistics predated the explicit
-constant-potential gauge convention
+**Decision status:** correctively amended and refrozen before scientific output
+after four fail-closed executions established that replay of the legacy batch
+spatial reduction is not portable across reduction environments
 
 **Development simulation:** TCV/Hermes 85604
 
@@ -10,10 +10,10 @@ constant-potential gauge convention
 
 **85606 access authorized:** no
 
-**Newly authorized scope:** one read-only analysis of the immutable B5 M32
-validation forecast, frozen H1 validation mean, 85604 validation truth, the
-existing hash-locked H1 training forecast, and training-only H1 residual
-sufficient statistics
+**Newly authorized scope:** one successful read-only analysis of the immutable
+B5 M32 validation forecast, frozen H1 validation mean, 85604 validation truth,
+the existing hash-locked H1 training forecast, and training-only H1 residual
+sufficient statistics, after the documented fail-closed corrective attempts
 
 The machine-readable authority is
 `paper0/manifests/phase3_b5_covariance_localization_85604.json`.
@@ -102,11 +102,48 @@ an immutable, hash-locked artifact. This protocol therefore authorizes reading
 that forecast and the already authorized 85604 training truth to reconstruct
 the training H1 residual, apply the same sample-wise potential gauge fix, and
 then calculate the training covariance reference. This is read-only analysis,
-not regeneration or inference. The legacy sufficient statistics remain
-required: the reconstructed *ungauged* training calculations must reproduce
-their stored spatial and cross-field values within numerical tolerance, and
-they remain the frozen sources for the AR(1) coefficient and axisymmetric bias.
-This amendment was made before any localization result was computed.
+not regeneration or inference. The legacy sufficient statistics remain the
+frozen sources for the AR(1) coefficient and axisymmetric bias. Their ungauged
+cross-field matrix and axisymmetric bias remain numerical integrity checks.
+Their spatial curves are retained as historical audit evidence but are neither
+a portable replay gate nor the gauge-fixed training reference.
+
+### Corrective pre-science reduction amendment
+
+Jobs `6901864`, `6901880`, `6901893`, and `6901897` all stopped before
+scientific output at the legacy-reconstruction anchor. The instrumented runs
+found:
+
+| Job | Replay implementation | max spatial difference | max cross-field difference | max bias difference |
+|---|---|---:|---:|---:|
+| `6901880` | chunked FFT and Gram accumulation | `1.716e-3` | `1.063e-3` | `0` |
+| `6901893` | legacy full-array batch, 16 reduction threads | `4.258e-5` | `0` | `0` |
+| `6901897` | legacy full-array batch, historical 12 threads on a different node | `8.549e-4` | `0` | `0` |
+
+Job `6901864` emitted only the generic failure before the comparison was
+instrumented. Changing only the reduction thread count changed both the size
+and location of the spatial discrepancy. The immutable forecast, dataset,
+normalization, loader source, target order, and residual-bias inputs remained
+unchanged; the exact historical cross-field matrix and axisymmetric bias were
+reproduced. The evidence therefore identifies the old optimized batch dot
+product as a hardware/reduction-order-sensitive replay check, not a stable
+provenance checksum.
+
+Before any scientific output, the integrity policy is refrozen as follows:
+
+1. retain and verify every immutable input and source hash;
+2. require exact training target coverage and order;
+3. reproduce the legacy cross-field matrix and axisymmetric bias at the
+   unchanged `2e-6` tolerance;
+4. do not use the legacy ungauged spatial curves as a pass/fail gate or as the
+   new gauge-fixed training reference; and
+5. compute every new training, validation, anomaly, and innovation spatial
+   curve with one shared streaming estimator in the same successful execution.
+
+No failed job produced accepted scientific output, opened 85606, trained a
+model, ran inference, or changed a forecast. This corrective amendment changes
+only an invalid portability check; it does not change a scientific metric,
+classification rule, or acceptance threshold.
 
 The fields are `[Ne,Pe,Pi,phi,Vi]`, the standardized model volume is
 `[5,64,32,88]`, the cadence is `3.131905426352636` microseconds, the simulated
@@ -201,10 +238,12 @@ Before producing a new diagnostic, the analysis must verify:
 7. every nonlinear transport quantity is evaluated member by member before
    ensemble reduction;
 8. no path, metadata field, or input hash mentions an authorized 85606 read.
-9. the existing H1 training forecast covers exactly targets `2,...,431`, and
-   its recomputed ungauged residual spatial and cross-field statistics match
-   the frozen legacy sufficient statistics before the gauge-fixed training
-   reference is used.
+9. the existing H1 training forecast covers exactly targets `2,...,431`; all
+   locked forecast, dataset, normalization, and source hashes match; and its
+   recomputed ungauged residual cross-field matrix and axisymmetric bias match
+   the frozen legacy values within `2e-6` before the gauge-fixed training
+   reference is used. The hardware-sensitive legacy spatial replay is recorded
+   in the corrective history but is not a pass/fail anchor.
 
 Failure of an integrity anchor stops the analysis without scientific output.
 
@@ -224,8 +263,8 @@ pooled normalized correlation estimator frozen by the training-residual audit:
 Use valid overlap for `x` and `y`, circular pairing for `z`, and lags through
 half the corresponding axis. Compute curves for:
 
-- training H1 residual fluctuations, read from the frozen sufficient
-  statistics;
+- reconstructed gauge-fixed training H1 residual fluctuations, evaluated with
+  the same streaming estimator as every new covariance object;
 - validation H1 residual fluctuations;
 - B5 ensemble anomalies, pooled over targets and members;
 - validation B5 innovations.

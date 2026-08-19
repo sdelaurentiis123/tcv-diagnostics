@@ -1,13 +1,13 @@
 {
-  "schema_version": 2,
-  "protocol_status": "preexecution_amendment_adds_existing_training_H1_forecast_for_gauge_consistent_drift_reference",
+  "schema_version": 3,
+  "protocol_status": "corrective_pre_science_amendment_retires_hardware_sensitive_legacy_spatial_replay",
   "development_run": "85604",
   "sequestered_run": "85606",
   "held_out_85606_access_allowed": false,
   "authorized_scope": [
     "one_read_only_B5_M32_covariance_localization",
     "one_training_frozen_AR1_residual_history_diagnostic",
-    "one_Rocky9_CPU_execution_on_Rusty",
+    "one_successful_Rocky9_CPU_execution_after_fail_closed_corrective_retries",
     "online_WandB_monitoring"
   ],
   "forbidden_scope": [
@@ -28,7 +28,51 @@
   ],
   "protocol": {
     "path": "paper0/protocol/PHASE3_B5_COVARIANCE_LOCALIZATION_PROTOCOL.md",
-    "status": "amended_and_refrozen_before_execution"
+    "status": "correctively_amended_and_refrozen_before_scientific_output"
+  },
+  "corrective_execution_history": {
+    "scientific_output_generated_by_failed_jobs": false,
+    "failed_jobs": [
+      {
+        "job_id": "6901864",
+        "paper0_commit": "f2a581cc6e7b362a6e260715073d5799a9eb12cb",
+        "failure": "generic_legacy_training_reconstruction_mismatch_before_diagnostic_values_were_emitted"
+      },
+      {
+        "job_id": "6901880",
+        "paper0_commit": "43b06f6cd2b650401be1473f363970b15f63ff13",
+        "estimator": "chunked_streaming_FFT_and_Gram",
+        "spatial_maximum_absolute_difference": 0.001715679534588066,
+        "cross_field_maximum_absolute_difference": 0.0010629130752178861,
+        "axisymmetric_bias_maximum_absolute_difference": 0.0
+      },
+      {
+        "job_id": "6901893",
+        "paper0_commit": "9aeb6be4be9d682db9f1b0d0b267580850f37530",
+        "estimator": "exact_legacy_batch_with_16_reduction_threads",
+        "spatial_maximum_absolute_difference": 0.000042575745380135643,
+        "cross_field_maximum_absolute_difference": 0.0,
+        "axisymmetric_bias_maximum_absolute_difference": 0.0
+      },
+      {
+        "job_id": "6901897",
+        "paper0_commit": "8506cb017ca86609ca899995f0644077b85648e8",
+        "estimator": "exact_legacy_batch_with_historical_12_reduction_threads_on_a_different_node",
+        "spatial_maximum_absolute_difference": 0.0008549486106140813,
+        "cross_field_maximum_absolute_difference": 0.0,
+        "axisymmetric_bias_maximum_absolute_difference": 0.0
+      }
+    ],
+    "diagnosis": "legacy_spatial_batch_dot_product_replay_is_hardware_and_reduction_order_sensitive_and_is_not_a_portable_provenance_anchor",
+    "replacement_integrity_policy": {
+      "immutable_forecast_dataset_normalization_and_source_hashes_required": true,
+      "exact_target_order_required": true,
+      "legacy_axisymmetric_bias_tolerance": 0.000002,
+      "legacy_cross_field_correlation_tolerance": 0.000002,
+      "legacy_spatial_replay_used_as_pass_fail_gate": false,
+      "legacy_spatial_statistics_used_as_new_training_reference": false,
+      "all_new_spatial_objects_use_one_shared_streaming_estimator_in_one_execution": true
+    }
   },
   "evidence_locks": {
     "B5_forecast": {
@@ -128,7 +172,7 @@
     "B5_innovation": "truth_minus_B5_ensemble_mean",
     "phi_gauge_policy": "subtract_full_spatial_mean_separately_per_sample_for_field_covariance_only",
     "training_covariance_reference": "gauge_fixed_truth_minus_existing_hash_locked_H1_training_forecast",
-    "legacy_training_sufficient_statistics_policy": "retain_as_ungauged_cross_check_and_AR1_coefficient_source_not_as_phi_gauge_fixed_L3_reference",
+    "legacy_training_sufficient_statistics_policy": "retain_as_ungauged_bias_and_cross_field_integrity_checks_and_AR1_source_not_as_phi_gauge_fixed_L3_reference",
     "axisymmetric_bias_policy": "subtract_mean_over_target_and_z_for_realized_residual_and_innovation_covariance",
     "conditional_covariance_identified": false
   },

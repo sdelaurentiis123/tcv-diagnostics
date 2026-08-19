@@ -82,9 +82,9 @@ if [[ ! -x "${PYTHON}" ]]; then
   exit 2
 fi
 
-check_sha256 "ca60f75de26e6f6af087d1bb5a0af6ead516c6be9445ea226e6281d18c92a7a0" "${LOCALIZATION_MANIFEST}"
-check_sha256 "fa319b8608e3dfc5248f3cfb05e070531409f05be76ca0347c6136a7765f7e8d" "${LOCALIZATION_PROTOCOL}"
-check_sha256 "3dd934a03c152256a5c7c4ee52d6999bac21cf580a857c19e23b5335ca6dd484" "${EVALUATOR}"
+check_sha256 "ca7c343c7789efcbe40661f724a76085ddbcb2b4dceec485fc10b72e97cf12bf" "${LOCALIZATION_MANIFEST}"
+check_sha256 "7e34bc04e4268e2d160b0e8a20d2dccbb3306b38a0eee7dbb75217577e24a0d5" "${LOCALIZATION_PROTOCOL}"
+check_sha256 "b141eb23287d621bffe89b341ce1ed47112eda00baa8c2ca49a80849127bec3f" "${EVALUATOR}"
 check_sha256 "f63c00545bdb7bd7cdb413aa27be2497c58c987ee1e4d79ed2590408ac69963a" "${WANDB_WRAPPER}"
 check_sha256 "f521de9a886f360b9b494c4506895dd32134fc82faf0c753ecbd9dabc730eba1" "${PAPER0_ROOT}/src/tcv_diagnostics/b5_covariance_localization.py"
 check_sha256 "c2d0f5e764b783f7a6a240fbd3f11f6c0a4fd52a173d9f1dd1eb97ccff62a0db" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_field_metrics.py"
@@ -145,7 +145,7 @@ readonly RUN_ID="p0b5covloc-${SLURM_JOB_ID}-s1701"
 COMMAND=(
   "${PYTHON}" -u "${WANDB_WRAPPER}"
   --evaluator "${EVALUATOR}"
-  --evaluator-sha256 "3dd934a03c152256a5c7c4ee52d6999bac21cf580a857c19e23b5335ca6dd484"
+  --evaluator-sha256 "b141eb23287d621bffe89b341ce1ed47112eda00baa8c2ca49a80849127bec3f"
   --output-directory "${RUN_OUTPUT}"
   --paper0-commit "${PAPER0_COMMIT}"
   --slurm-job-id "${SLURM_JOB_ID}"
@@ -156,9 +156,9 @@ COMMAND=(
   --wandb-run-name "b5-covariance-localization-j${SLURM_JOB_ID}"
   --
   --localization-manifest "${LOCALIZATION_MANIFEST}"
-  --localization-manifest-sha256 "ca60f75de26e6f6af087d1bb5a0af6ead516c6be9445ea226e6281d18c92a7a0"
+  --localization-manifest-sha256 "ca7c343c7789efcbe40661f724a76085ddbcb2b4dceec485fc10b72e97cf12bf"
   --localization-protocol "${LOCALIZATION_PROTOCOL}"
-  --localization-protocol-sha256 "fa319b8608e3dfc5248f3cfb05e070531409f05be76ca0347c6136a7765f7e8d"
+  --localization-protocol-sha256 "7e34bc04e4268e2d160b0e8a20d2dccbb3306b38a0eee7dbb75217577e24a0d5"
   --artifact-root "${MODEL_DATA}"
   --b5-forecast "${B5_FORECAST}"
   --b5-forecast-sha256 "1a5f3ea7e0d1722363205be569d2db60905cdda798b4597a6c47e74d99fab68b"

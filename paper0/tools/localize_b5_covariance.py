@@ -59,7 +59,6 @@ from tcv_diagnostics.b5_residual_forecast import (  # noqa: E402
 )
 from tcv_diagnostics.b5_residual_audit import (  # noqa: E402
     cross_field_statistics as legacy_cross_field_statistics,
-    spatial_autocorrelation as legacy_spatial_autocorrelation,
 )
 from tcv_diagnostics.codec_training import sha256_path  # noqa: E402
 from tcv_diagnostics.codec_transport import (  # noqa: E402
@@ -86,10 +85,10 @@ from tcv_diagnostics.resampling import periodic_resample_float32  # noqa: E402
 
 
 EXPECTED_MANIFEST_SHA256 = (
-    "ca60f75de26e6f6af087d1bb5a0af6ead516c6be9445ea226e6281d18c92a7a0"
+    "ca7c343c7789efcbe40661f724a76085ddbcb2b4dceec485fc10b72e97cf12bf"
 )
 EXPECTED_PROTOCOL_SHA256 = (
-    "fa319b8608e3dfc5248f3cfb05e070531409f05be76ca0347c6136a7765f7e8d"
+    "7e34bc04e4268e2d160b0e8a20d2dccbb3306b38a0eee7dbb75217577e24a0d5"
 )
 TARGETS = tuple(range(498, 624))
 BLOCK_INTERVALS = (
@@ -204,12 +203,31 @@ def validate_authority(manifest: Mapping[str, Any], args: argparse.Namespace) ->
         args.localization_manifest_sha256 != EXPECTED_MANIFEST_SHA256
         or args.localization_protocol_sha256 != EXPECTED_PROTOCOL_SHA256
         or manifest.get("protocol_status")
-        != "preexecution_amendment_adds_existing_training_H1_forecast_for_gauge_consistent_drift_reference"
+        != "corrective_pre_science_amendment_retires_hardware_sensitive_legacy_spatial_replay"
         or manifest.get("development_run") != "85604"
         or manifest.get("sequestered_run") != "85606"
         or manifest.get("held_out_85606_access_allowed") is not False
     ):
         raise RuntimeError("B5 covariance-localization authority differs")
+    corrective = manifest.get("corrective_execution_history", {})
+    replacement = corrective.get("replacement_integrity_policy", {})
+    if (
+        manifest.get("protocol", {}).get("status")
+        != "correctively_amended_and_refrozen_before_scientific_output"
+        or corrective.get("scientific_output_generated_by_failed_jobs") is not False
+        or [item.get("job_id") for item in corrective.get("failed_jobs", ())]
+        != ["6901864", "6901880", "6901893", "6901897"]
+        or replacement.get("legacy_axisymmetric_bias_tolerance") != 2e-6
+        or replacement.get("legacy_cross_field_correlation_tolerance") != 2e-6
+        or replacement.get("legacy_spatial_replay_used_as_pass_fail_gate") is not False
+        or replacement.get("legacy_spatial_statistics_used_as_new_training_reference")
+        is not False
+        or replacement.get(
+            "all_new_spatial_objects_use_one_shared_streaming_estimator_in_one_execution"
+        )
+        is not True
+    ):
+        raise RuntimeError("B5 corrective pre-science authority differs")
     if tuple(manifest.get("data", {}).get("fields", ())) != B5_COVARIANCE_FIELDS:
         raise RuntimeError("B5 covariance-localization field order differs")
     data = manifest["data"]
@@ -818,22 +836,6 @@ def _legacy_training_cross_check(
     recomputed_bias: np.ndarray,
     stored_bias: np.ndarray,
 ) -> dict[str, Any]:
-    spatial_maximum = 0.0
-    spatial_worst = "none"
-    for axis in ("x", "y", "stored_toroidal_z"):
-        for field in B5_COVARIANCE_FIELDS:
-            actual = np.asarray(
-                recomputed["spatial_autocorrelation"][axis]["fields"][field][
-                    "correlation"
-                ]
-            )
-            expected = np.asarray(
-                stored["spatial_autocorrelation"][axis]["fields"][field]["correlation"]
-            )
-            difference = float(np.max(np.abs(actual - expected)))
-            if difference > spatial_maximum:
-                spatial_maximum = difference
-                spatial_worst = f"{axis}/{field}"
     cross_maximum = 0.0
     cross_worst = "none"
     for region in stored["cross_field"]:
@@ -851,23 +853,26 @@ def _legacy_training_cross_check(
             int(np.argmax(bias_difference)), bias_difference.shape
         )
     )
-    passed = spatial_maximum <= 2e-6 and cross_maximum <= 2e-6 and bias_maximum <= 2e-6
+    passed = cross_maximum <= 2e-6 and bias_maximum <= 2e-6
     if not passed:
         raise RuntimeError(
             "reconstructed ungauged training residual fails legacy audit: "
-            f"spatial_max={spatial_maximum:.17g} at {spatial_worst}; "
             f"cross_field_max={cross_maximum:.17g} at {cross_worst}; "
             f"axisymmetric_bias_max={bias_maximum:.17g} at {bias_index}; "
             "frozen_tolerance=1.9999999999999999e-06"
         )
     return {
         "passed": True,
-        "spatial_correlation_maximum_absolute_difference": spatial_maximum,
         "cross_field_correlation_maximum_absolute_difference": cross_maximum,
         "axisymmetric_bias_maximum_absolute_difference": bias_maximum,
         "tolerance": 2e-6,
         "legacy_statistics_used_as_phi_gauge_fixed_reference": False,
-        "verification_estimator": "exact_legacy_full_tensor_direct_dot_product",
+        "legacy_spatial_correlation_replay_gate": False,
+        "legacy_spatial_statistics_used_as_new_training_reference": False,
+        "verification_estimator": (
+            "exact_legacy_full_tensor_cross_field_direct_dot_product_and_"
+            "axisymmetric_bias"
+        ),
     }
 
 
@@ -875,25 +880,18 @@ def _legacy_training_batch_record(
     fluctuation: np.ndarray,
     region_masks_xy: Mapping[str, np.ndarray],
 ) -> dict[str, Any]:
-    """Recompute the integrity anchor with its exact historical implementation.
+    """Recompute the portable integrity anchors with historical implementations.
 
-    The frozen audit evaluated the complete 430-target tensor in one call.
-    Chunked FFT and Gram accumulation follows the same mathematical formula,
-    but it does not reproduce that historical floating-point reduction closely
-    enough on the real tensor to serve as a provenance anchor.
+    The frozen cross-field calculation is portable at the frozen tolerance.
+    The old optimized spatial batch reduction is explicitly excluded because
+    the fail-closed corrective runs established hardware sensitivity.
     """
 
-    spatial: dict[str, Any] = {}
-    for axis in ("x", "y", "stored_toroidal_z"):
-        spatial[axis], _ = legacy_spatial_autocorrelation(fluctuation, axis=axis)
     cross_field, _ = legacy_cross_field_statistics(
         fluctuation,
         region_masks_xy=region_masks_xy,
     )
-    return {
-        "spatial_autocorrelation": spatial,
-        "cross_field": cross_field,
-    }
+    return {"cross_field": cross_field}
 
 
 def _toroidal_power_ratios(
@@ -1630,6 +1628,9 @@ def main() -> None:
         "spread_error_association": association,
         "interpretation_labels": labels,
         "integrity_anchors": {
+            "corrective_execution_history": manifest[
+                "corrective_execution_history"
+            ],
             "legacy_training_reconstruction": legacy_cross_check,
             "B5_marginal_recomputation": {
                 "passed": True,

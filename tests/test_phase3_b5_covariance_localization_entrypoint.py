@@ -114,10 +114,10 @@ def test_legacy_training_cross_check_requires_numerical_reproduction() -> None:
     assert result["legacy_statistics_used_as_phi_gauge_fixed_reference"] is False
 
     discrepant = json.loads(json.dumps(record))
-    discrepant["spatial_autocorrelation"]["x"]["fields"]["Ne"]["correlation"][1] = 0.4
+    discrepant["cross_field"]["global"]["correlation_matrix"][0][1] = 0.1
     with pytest.raises(
         RuntimeError,
-        match=r"spatial_max=0\.099.* at x/Ne; .*frozen_tolerance=",
+        match=r"cross_field_max=0\.1.* at global; .*frozen_tolerance=",
     ):
         _legacy_training_cross_check(discrepant, record, bias, bias)
 
@@ -132,11 +132,6 @@ def test_legacy_training_batch_record_uses_frozen_direct_estimators() -> None:
         ),
     }
     record = _legacy_training_batch_record(fluctuation, masks)
-    assert tuple(record["spatial_autocorrelation"]) == (
-        "x",
-        "y",
-        "stored_toroidal_z",
-    )
     assert tuple(record["cross_field"]) == ("global", "eligible_union", "left")
     result = _legacy_training_cross_check(
         record,
@@ -144,6 +139,8 @@ def test_legacy_training_batch_record_uses_frozen_direct_estimators() -> None:
         np.zeros((5, 4, 3)),
         np.zeros((5, 4, 3)),
     )
+    assert result["legacy_spatial_correlation_replay_gate"] is False
     assert result["verification_estimator"] == (
-        "exact_legacy_full_tensor_direct_dot_product"
+        "exact_legacy_full_tensor_cross_field_direct_dot_product_and_"
+        "axisymmetric_bias"
     )
