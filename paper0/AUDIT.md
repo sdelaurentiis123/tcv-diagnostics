@@ -740,3 +740,23 @@ changes zero median numerical checks, zero family decisions, and no
 architecture decision. The definitive interpretation is
 `PHASE3_B2_READOUT.md`; compact evidence is
 `results/phase3_b2_event_eligibility_amendment_6898348.json`.
+
+## Phase 3 B3 seed-1701 training completion
+
+The prospectively frozen B3 functional-generative H1 training job `6898702`
+completed on Rocky 9 at training commit
+`a2a17cf3fc30fd504bc3eee3274e78623bf15e2b`. It ran all 100 epochs and
+2,700 optimizer steps, selected epoch 72 by the fixed two-member validation
+fair-CRPS bank, reloaded its selected checkpoint bit-for-bit, preserved the
+frozen codec bit-for-bit, and produced nonzero latent and decoded-field member
+diversity. The finished online W&B record contains all 100 epochs. Both the
+per-run and wrapper SHA-256 ledgers revalidate in full. The selected
+equal-channel validation fair CRPS is `0.032789371468658964`; this is a
+training-selection statistic, not a scientific calibration or physics gate.
+No physics-derived loss was used and 85606 was not read. The compact immutable
+record is `results/phase3_b3_fgn_full_training_6898702.json`.
+
+B3 remains scientifically undecided. The frozen independent M32 forecast,
+field/spectral/cross-field/transport scorer, matched H1 comparator, and
+one-seed acceptance gate must complete before any replication, O3,
+assimilation, diagnostic-ranking, or held-out-run decision is permitted.

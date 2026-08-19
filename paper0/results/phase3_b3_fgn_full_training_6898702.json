@@ -1,0 +1,121 @@
+{
+  "O3_launch_allowed": false,
+  "artifact_index": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_full/job_6898702/b3_fgn_h1_seed_1701/artifact_sha256.txt",
+    "sha256": "3daac34aa7c277bf43e57620328cb9f387693a6e95933eeff4b55b988127563b"
+  },
+  "completed_epochs": 100,
+  "completed_optimizer_steps": 2700,
+  "development_run": "85604",
+  "final_training_state": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_full/job_6898702/b3_fgn_h1_seed_1701/final_training_state.pt",
+    "sha256": "99fd722f6d61929681394dd51187df0d948083b19fc6e1d85d0463dfaac66fb9"
+  },
+  "held_out_85606_read": false,
+  "member_probe": {
+    "canonical_forecast_shape": [
+      1,
+      2,
+      1,
+      5,
+      64,
+      32,
+      88
+    ],
+    "ensemble_size": 2,
+    "field_member_rms_difference": 0.0908835381269455,
+    "finite": true,
+    "latent_member_rms_difference": 0.2816689610481262,
+    "nonzero_field_diversity": true,
+    "nonzero_latent_diversity": true,
+    "reload_forecast_bitwise_exact": true,
+    "reload_latent_bitwise_exact": true,
+    "target_frame_index": 498
+  },
+  "paper0_commit": "a2a17cf3fc30fd504bc3eee3274e78623bf15e2b",
+  "parameter_count": 61161600,
+  "peak_cuda_bytes": 2454682624,
+  "probabilistic_scientific_gate_evaluated": false,
+  "run_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_full/job_6898702/b3_fgn_h1_seed_1701/result.json",
+    "sha256": "dd978851fb38ea29d2007cbf0abc481daa29f979d0afcbed39e795240782e0b1"
+  },
+  "schema_version": 1,
+  "scientific_acceptance": false,
+  "scope": "phase3_B3_FGN_H1_seed1701_full_training",
+  "selected_checkpoint": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_full/job_6898702/b3_fgn_h1_seed_1701/selected.pt",
+    "sha256": "0e0fdca97f13e2e33934d667167294d293cfc6ceedd9dee8b0504bf724acdbe9"
+  },
+  "selected_epoch": 72,
+  "selected_validation": {
+    "accuracy_by_channel": {
+      "Ne": 0.05921021940570975,
+      "Pe": 0.038914902608782526,
+      "Pi": 0.05022334200995309,
+      "Vi": 0.0898134678838745,
+      "phi": 0.057807221890441955
+    },
+    "ensemble_members": 2,
+    "equal_channel_fair_crps": 0.032789371468658964,
+    "fair_crps_by_channel": {
+      "Ne": 0.03381258490244075,
+      "Pe": 0.021571376752699652,
+      "Pi": 0.027845510991201514,
+      "Vi": 0.04763601945033149,
+      "phi": 0.03308136524662139
+    },
+    "spread_by_channel": {
+      "Ne": 0.025397634591966395,
+      "Pe": 0.017343525649122303,
+      "Pi": 0.0223778311887549,
+      "Vi": 0.042177448803115455,
+      "phi": 0.02472585668077781
+    },
+    "target_count": 126
+  },
+  "slurm_job_id": "6898702",
+  "status": "training_completed",
+  "validation_noise_bank": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_full/job_6898702/b3_fgn_h1_seed_1701/validation_noise.npy",
+    "seed": 31003,
+    "sha256": "a08c295a10af530040518e9509fd29aa260a527c0cca2779de031067797f9ac7",
+    "shape": [
+      126,
+      2,
+      32
+    ]
+  },
+  "wall_seconds": 5360.03574001501,
+  "wandb": {
+    "authenticated_username": "sdelaurentiis123",
+    "checkpoints_uploaded": false,
+    "epochs_logged": 100,
+    "local_artifacts_are_scientific_authority": true,
+    "mode": "online",
+    "remote_path": "sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/p0b3full-6898702-s1701",
+    "remote_presence_verified_after_finish": true,
+    "remote_state_after_finish": "finished",
+    "required": true,
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0b3full-6898702-s1701",
+    "schema_version": 1,
+    "spec": {
+      "entity": "sdelaurentiis123-columbia-university",
+      "group": "b3-fgn-h1-full",
+      "job_type": "phase3_b3_fgn_full",
+      "project": "tcv-diagnostics-paper0",
+      "run_id": "p0b3full-6898702-s1701",
+      "run_name": "b3-fgn-h1-full-s1701-j6898702",
+      "tags": [
+        "paper0",
+        "phase3",
+        "b3",
+        "fgn",
+        "full-training",
+        "85604-only",
+        "seed-1701"
+      ]
+    },
+    "wandb_version": "0.17.9"
+  }
+}
