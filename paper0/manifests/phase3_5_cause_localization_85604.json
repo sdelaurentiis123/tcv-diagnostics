@@ -9,6 +9,12 @@
     "path": "paper0/PHASE3_5_PROTOCOL_AMENDMENT.md",
     "sha256": "5fa2e73f10b8ab996987e7502f451e54584bcdc0c080c176d8f11efa7e26f8cf"
   },
+  "clarifying_amendments": [
+    {
+      "path": "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md",
+      "sha256": "4846c2f63a5dd634ead314517516e6727ddff5e85c6779cc114e35300db73d75"
+    }
+  ],
   "authorized_scope": [
     "read_only_85604_stationarity_and_residual_transfer",
     "effective_sample_size_and_chronological_learning_curves",

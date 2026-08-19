@@ -2,6 +2,27 @@
 
 Cluster scripts are committed, bounded, and provenance-locked before submission. They must print the repository revision and refuse dirty worktrees or mismatched inputs.
 
+## Phase 3.5 85604 cause localization
+
+`phase3_5_cause_localization.sbatch` runs the frozen post-K4 diagnostic audit
+on 85604 only. It computes chronological transfer, ESS, truth-assisted
+toroidal-position oracles, all-shift codec/H1 equivariance, matched-budget
+representations, lightweight context/state/history probes, and the fixed-seed
+B5 conditioning sensitivity. It does not train a production model or perform
+assimilation, sensor ranking, steering, guard reads, or held-out access.
+
+Submit the exact clean commit from Rocky 9:
+
+```bash
+export PAPER0_EXPECTED_COMMIT="$(git rev-parse HEAD)"
+sbatch --export=ALL,PAPER0_EXPECTED_COMMIT cluster/phase3_5_cause_localization.sbatch
+```
+
+The unique authoritative result directory is
+`/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_5_cause_localization/job_<id>/analysis`.
+The launcher requests one H100, 24 CPUs, 128 GB, and eight hours, initializes
+online W&B, and refuses dirty, mismatched, or pre-existing outputs.
+
 ## Phase 2 shared model dataset
 
 `phase2_85604_model_dataset.sbatch` builds the one common engineering input

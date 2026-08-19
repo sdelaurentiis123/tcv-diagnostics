@@ -7,10 +7,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "paper0" / "PHASE3_5_PROTOCOL_AMENDMENT.md"
+CLARIFICATION = (
+    ROOT / "paper0" / "PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md"
+)
 MANIFEST = (
     ROOT / "paper0" / "manifests" / "phase3_5_cause_localization_85604.json"
 )
 AUDIT = ROOT / "paper0" / "phase3_5" / "DATA_STATE_AUDIT.md"
+LAUNCHER = ROOT / "cluster" / "phase3_5_cause_localization.sbatch"
 
 
 def _manifest() -> dict:
@@ -26,6 +30,12 @@ def test_phase3_5_protocol_files_exist_and_hash_lock() -> None:
         "path": "paper0/PHASE3_5_PROTOCOL_AMENDMENT.md",
         "sha256": digest,
     }
+    assert record["clarifying_amendments"] == [
+        {
+            "path": "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md",
+            "sha256": hashlib.sha256(CLARIFICATION.read_bytes()).hexdigest(),
+        }
+    ]
 
 
 def test_phase3_5_scope_keeps_guard_and_held_out_closed() -> None:
@@ -106,3 +116,18 @@ def test_phase3_5_protocol_records_narrow_k4_statement() -> None:
     assert required in text
     assert "stochastic emulation in general" in normalized
     assert "No production-scale neural model" in normalized
+
+
+def test_phase3_5_launcher_is_bounded_and_commit_locked() -> None:
+    text = LAUNCHER.read_text()
+    assert "#SBATCH --constraint=h100" in text
+    assert "#SBATCH --gres=gpu:1" in text
+    assert "#SBATCH --cpus-per-task=24" in text
+    assert "#SBATCH --mem=128G" in text
+    assert "#SBATCH --time=08:00:00" in text
+    assert "PAPER0_EXPECTED_COMMIT" in text
+    assert "status --porcelain --untracked-files=all" in text
+    assert "WANDB_MODE=online" in text
+    assert "run_phase3_5_cause_localization.py" in text
+    assert "tests/test_phase3_5_protocol.py" in text
+    assert "tests/test_phase3_5_analysis.py" in text

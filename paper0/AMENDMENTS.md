@@ -449,3 +449,17 @@ context-shuffle sensitivity. The train/guard/validation boundaries are
 unchanged; the guard and 85606 remain closed. Physics quantities remain
 evaluation-only. The phase must end with a ranked evidence memo and exactly
 one recommended, not automatically authorized, next action.
+
+## A020 - Freeze Phase 3.5 execution definitions before computation
+
+**Status:** frozen during implementation and before any Phase 3.5 numerical
+result or checkpoint inference.
+
+The original Phase 3.5 amendment left the numerical meaning of an
+"unambiguous" translation peak and the exact matched H5 source subset
+implicit. A separate prospective clarification fixes those definitions,
+retains K4's zero-empirical-mean projection convention, specifies the
+first-to-last stationarity contrast, and fixes the eight-member B5 sampler
+path. It changes no split, hypothesis, representation family, architecture
+authorization, or held-out access rule. See
+`PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md`.
