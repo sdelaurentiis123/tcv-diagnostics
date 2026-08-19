@@ -1,6 +1,6 @@
 {
-  "schema_version": 1,
-  "protocol_status": "frozen_after_B5_seed1701_gate_failure_before_covariance_localization_implementation_or_execution",
+  "schema_version": 2,
+  "protocol_status": "preexecution_amendment_adds_existing_training_H1_forecast_for_gauge_consistent_drift_reference",
   "development_run": "85604",
   "sequestered_run": "85606",
   "held_out_85606_access_allowed": false,
@@ -28,7 +28,7 @@
   ],
   "protocol": {
     "path": "paper0/protocol/PHASE3_B5_COVARIANCE_LOCALIZATION_PROTOCOL.md",
-    "status": "frozen_before_implementation_or_execution"
+    "status": "amended_and_refrozen_before_execution"
   },
   "evidence_locks": {
     "B5_forecast": {
@@ -75,6 +75,16 @@
       "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/raw_accumulators.npz",
       "sha256": "50c54a8e9dd0f0983cb8360f598bdf00eae22854de2ab471cd7385e767f3058b"
     },
+    "H1_training_forecast": {
+      "job_id": "6901393",
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/h1_training_forecast.h5",
+      "sha256": "d1342e53ac5f9077665f7a707ca035b9069a616d7db10371e1f6c1ae504d9c18",
+      "bytes": 1550112936,
+      "shape": [430, 5, 64, 32, 88],
+      "target_frames": [2, 432],
+      "model_inference_performed_by_localization": false,
+      "purpose": "reconstruct_gauge_fixed_training_H1_residual_for_like_for_like_covariance_drift_reference"
+    },
     "model_dataset": {
       "job_id": "6893525",
       "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
@@ -117,6 +127,8 @@
     "B5_anomaly": "B5_member_minus_B5_ensemble_mean",
     "B5_innovation": "truth_minus_B5_ensemble_mean",
     "phi_gauge_policy": "subtract_full_spatial_mean_separately_per_sample_for_field_covariance_only",
+    "training_covariance_reference": "gauge_fixed_truth_minus_existing_hash_locked_H1_training_forecast",
+    "legacy_training_sufficient_statistics_policy": "retain_as_ungauged_cross_check_and_AR1_coefficient_source_not_as_phi_gauge_fixed_L3_reference",
     "axisymmetric_bias_policy": "subtract_mean_over_target_and_z_for_realized_residual_and_innovation_covariance",
     "conditional_covariance_identified": false
   },

@@ -31,8 +31,8 @@ def sha256(path: Path) -> str:
 def test_scope_is_one_read_only_85604_analysis() -> None:
     record = load()
     assert record["protocol_status"] == (
-        "frozen_after_B5_seed1701_gate_failure_before_covariance_"
-        "localization_implementation_or_execution"
+        "preexecution_amendment_adds_existing_training_H1_forecast_for_"
+        "gauge_consistent_drift_reference"
     )
     assert record["development_run"] == "85604"
     assert record["sequestered_run"] == "85606"
@@ -99,6 +99,25 @@ def test_completed_B5_artifacts_and_training_comparators_are_hash_locked() -> No
     assert locks["training_residual_sufficient_statistics"]["sha256"] == (
         "50c54a8e9dd0f0983cb8360f598bdf00eae22854de2ab471cd7385e767f3058b"
     )
+    assert locks["H1_training_forecast"] == {
+        "job_id": "6901393",
+        "path": (
+            "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/"
+            "phase3_b5_h1_residual_audit/job_6901393/audit/"
+            "h1_training_forecast.h5"
+        ),
+        "sha256": (
+            "d1342e53ac5f9077665f7a707ca035b9069a616d7db10371e1f6c1ae504d9c18"
+        ),
+        "bytes": 1_550_112_936,
+        "shape": [430, 5, 64, 32, 88],
+        "target_frames": [2, 432],
+        "model_inference_performed_by_localization": False,
+        "purpose": (
+            "reconstruct_gauge_fixed_training_H1_residual_for_like_for_like_"
+            "covariance_drift_reference"
+        ),
+    }
     assert sha256(LOCALIZATION) == (
         "ae10349b98394914f6a87dc99bebdc965056a941356f32b0392e261169cbf1f6"
     )
@@ -137,6 +156,13 @@ def test_residual_anomaly_and_innovation_are_not_conflated() -> None:
         "phi_gauge_policy": (
             "subtract_full_spatial_mean_separately_per_sample_for_field_"
             "covariance_only"
+        ),
+        "training_covariance_reference": (
+            "gauge_fixed_truth_minus_existing_hash_locked_H1_training_forecast"
+        ),
+        "legacy_training_sufficient_statistics_policy": (
+            "retain_as_ungauged_cross_check_and_AR1_coefficient_source_not_as_"
+            "phi_gauge_fixed_L3_reference"
         ),
         "axisymmetric_bias_policy": (
             "subtract_mean_over_target_and_z_for_realized_residual_and_"
@@ -238,6 +264,7 @@ def test_protocol_contains_formal_equations_references_and_claim_boundaries() ->
         "\\widehat R^{\\mathrm{AR1}}",
         "Variogram-Based Proper Scoring Rules",
         "cannot identify irreducible aleatoric noise",
+        "Pre-execution gauge amendment",
         "not an autonomous rollout",
         "85606 remain closed",
     ):
