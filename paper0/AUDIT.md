@@ -1167,3 +1167,27 @@ do not identify irreducible aleatoric uncertainty and do not establish
 validation skill. Full B5 training, O3, assimilation, diagnostic ranking, and
 85606 remain closed. The complete numerical interpretation is in
 `PHASE3_B5_RESIDUAL_AUDIT_READOUT.md`.
+
+## Phase 3 B5 joint field-residual EDM smoke completion
+
+Rocky 9 H100 job `6901469` completed the frozen bounded B5 implementation
+smoke at exact commit `8cd5b3465dcc7092b9f5a50cfdccca39dcb17c07`. Slurm
+reports `COMPLETED`, exit `0:0`, and elapsed time `00:01:29`. The complete
+Rusty-side suite passed (`1047 passed, 1 skipped, 29 subtests passed`), W&B
+finished online, all artifacts were hash indexed, and the frozen H1 forecast
+and residual audit were reverified after execution.
+
+The `11,604,709`-parameter full-field joint residual U-Net completed all 64
+optimizer steps with `1.2504 GiB` peak allocated CUDA memory. Its fixed-probe
+EDM loss decreased from `0.9942206` to `0.9706594`; checkpoint reload was
+bitwise exact; the eight-cell toroidal shift probe passed with maximum absolute
+difference `9.5367e-7`; and the 18-step Heun sampler produced finite, distinct
+members with canonical axes `[1,2,1,5,64,32,88]`.
+
+This is an implementation result only. It establishes feasibility, correct
+boundary behavior, and a non-collapsed sampling path; it does not establish
+validation skill, transport fidelity, or calibration. Full B5 training and
+validation remain unauthorized until a separate prospective protocol is
+frozen. The detailed interpretation is in
+`PHASE3_B5_EDM_SMOKE_READOUT.md`, and the compact result is tracked at
+`results/phase3_b5_field_residual_edm_smoke_6901469.json`.

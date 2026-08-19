@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "scope": "phase3_B5_joint_field_residual_EDM_bounded_GPU_smoke",
+  "status": "passed",
+  "scientific_result": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "validation_frames_read": false,
+  "paper0_commit": "8cd5b3465dcc7092b9f5a50cfdccca39dcb17c07",
+  "slurm": {
+    "job_id": "6901469",
+    "state": "COMPLETED",
+    "elapsed": "00:01:29",
+    "exit_code": "0:0",
+    "node": "workergpu217",
+    "accelerator": "NVIDIA H100"
+  },
+  "tests": {
+    "passed": 1047,
+    "skipped": 1,
+    "subtests_passed": 29
+  },
+  "source_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_field_residual_edm_smoke/job_6901469/result.json",
+    "sha256": "956f3490d115461ad294a6023c39a65f522fd73db6b47ce58633790ce77c9322"
+  },
+  "run_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_field_residual_edm_smoke/job_6901469/b5_joint_field_residual_edm_seed_1701/result.json",
+    "sha256": "fe7535de3a8affd9af0408c5302368cae5daf35fa1b19ba45e9fc789b76bc440"
+  },
+  "artifact_index": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_field_residual_edm_smoke/job_6901469/b5_joint_field_residual_edm_seed_1701/artifact_sha256.txt",
+    "sha256": "5e00e8376f80ff0c3073c09009a86c13265a2cbcabb6a476c40db796e5335942"
+  },
+  "mechanics": {
+    "parameter_count": 11604709,
+    "optimizer_steps": 64,
+    "peak_cuda_GiB": 1.2503986358642578,
+    "training_and_sampler_wall_seconds": 8.954212455020752,
+    "initial_fixed_probe_EDM_loss": 0.9942206144332886,
+    "final_fixed_probe_EDM_loss": 0.9706593751907349,
+    "fixed_probe_relative_change": -0.02369820027920433,
+    "checkpoint_reload_bitwise_exact": true,
+    "toroidal_equivariance_shift_cells": 8,
+    "toroidal_equivariance_maximum_absolute_difference": 9.5367431640625e-07,
+    "toroidal_equivariance_passed": true
+  },
+  "sampler_probe": {
+    "canonical_field_shape": [1, 2, 1, 5, 64, 32, 88],
+    "steps": 18,
+    "network_evaluations_per_member": 35,
+    "wall_seconds": 1.2879554129904136,
+    "finite": true,
+    "nonzero_member_diversity": true,
+    "normalized_residual_member_RMS_difference": 1.5198627710342407,
+    "standardized_field_member_RMS_difference": 0.10032203793525696,
+    "scientific_calibration_result": false
+  },
+  "wandb": {
+    "mode": "online",
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0b5edmsmk-6901469-s1701",
+    "remote_state_after_finish": "finished",
+    "steps_logged": 64
+  },
+  "frozen_H1_inputs_reverified_after_smoke": true,
+  "full_B5_training_authorized": false,
+  "scientific_B5_evaluation_authorized": false,
+  "O3_launch_allowed": false,
+  "assimilation_allowed": false,
+  "diagnostic_ranking_allowed": false,
+  "next_permitted_action": "write_separate_B5_full_training_and_validation_protocol_only"
+}
