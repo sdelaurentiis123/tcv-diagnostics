@@ -67,6 +67,21 @@ def adapt_b4_numerical_gates(
         raise ValueError("B4 chronological gate differs")
     det = gates["H_det"]
     prob = gates["H_prob"]
+    strict_faces = det.get("strict_faces", {})
+    separatrix = det.get("separatrix", {})
+    if set(strict_faces) != {
+        "relative_L2_max",
+        "correlation_min",
+        "weighted_sign_disagreement_max",
+    }:
+        raise ValueError("B4 strict-face threshold schema differs")
+    if set(separatrix) != {
+        "relative_L2_max",
+        "absolute_normalized_bias_max",
+        "correlation_min",
+        "weighted_sign_disagreement_max",
+    }:
+        raise ValueError("B4 separatrix threshold schema differs")
     return {
         "field": {
             "aggregate_mean_rmse_relative_to_paired_deterministic_max": det[
@@ -116,9 +131,26 @@ def adapt_b4_numerical_gates(
             ],
         },
         "transport": {
-            "strict_faces": deepcopy(det["strict_faces"]),
+            # The prospectively frozen B4 document uses the displayed
+            # mathematical spelling ``L2``.  The byte-locked B2 reducer uses
+            # the Python-schema spelling ``l2``.  Normalize that name here;
+            # the numerical value is unchanged.
+            "strict_faces": {
+                "relative_l2_max": strict_faces["relative_L2_max"],
+                "correlation_min": strict_faces["correlation_min"],
+                "weighted_sign_disagreement_max": strict_faces[
+                    "weighted_sign_disagreement_max"
+                ],
+            },
             "separatrix": {
-                **deepcopy(det["separatrix"]),
+                "relative_l2_max": separatrix["relative_L2_max"],
+                "absolute_normalized_bias_max": separatrix[
+                    "absolute_normalized_bias_max"
+                ],
+                "correlation_min": separatrix["correlation_min"],
+                "weighted_sign_disagreement_max": separatrix[
+                    "weighted_sign_disagreement_max"
+                ],
                 "fourth_fair_crps_relative_max": prob[
                     "fourth_separatrix_fair_CRPS_relative_max"
                 ],

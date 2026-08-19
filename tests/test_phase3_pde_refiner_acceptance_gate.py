@@ -68,6 +68,41 @@ def test_B4_gate_adapter_preserves_frozen_thresholds() -> None:
     ] == MANIFEST["gates"]["H_prob"][
         "separatrix_fair_CRPS_better_than_parent_H1_required"
     ]
+    assert adapted["transport"]["strict_faces"] == {
+        "relative_l2_max": MANIFEST["gates"]["H_det"]["strict_faces"][
+            "relative_L2_max"
+        ],
+        "correlation_min": MANIFEST["gates"]["H_det"]["strict_faces"][
+            "correlation_min"
+        ],
+        "weighted_sign_disagreement_max": MANIFEST["gates"]["H_det"][
+            "strict_faces"
+        ]["weighted_sign_disagreement_max"],
+    }
+    assert set(adapted["transport"]["separatrix"]) == {
+        "relative_l2_max",
+        "absolute_normalized_bias_max",
+        "correlation_min",
+        "weighted_sign_disagreement_max",
+        "fourth_fair_crps_relative_max",
+        "fair_crps_better_than_paired_deterministic_required",
+    }
+    assert adapted["transport"]["separatrix"]["relative_l2_max"] == MANIFEST[
+        "gates"
+    ]["H_det"]["separatrix"]["relative_L2_max"]
+
+
+def test_B4_gate_adapter_rejects_transport_threshold_schema_drift() -> None:
+    changed = deepcopy(MANIFEST["gates"])
+    changed["H_det"]["strict_faces"]["relative_l2_max"] = changed["H_det"][
+        "strict_faces"
+    ].pop("relative_L2_max")
+    try:
+        gate.adapt_b4_numerical_gates(changed)
+    except ValueError as error:
+        assert str(error) == "B4 strict-face threshold schema differs"
+    else:
+        raise AssertionError("B4 adapter accepted an unfrozen threshold schema")
 
 
 def test_B4_projection_separates_deterministic_and_probabilistic_checks(

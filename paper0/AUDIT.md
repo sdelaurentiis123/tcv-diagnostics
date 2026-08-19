@@ -1031,3 +1031,29 @@ thresholds. It runs the complete Rocky 9 suite before generation, performs
 truth-separated M32/M4 scoring, closes W&B, and only then invokes the pure
 acceptance finalizer. Regardless of outcome, it cannot authorize O3 execution,
 assimilation, diagnostic ranking, additional seeds, or access to 85606.
+
+## Phase 3 B4 full evaluation completion and gate-adapter failure
+
+Rocky 9 H100 job `6901015` completed the expensive scientific portion before
+its wrapper exited. It passed the complete in-job suite (`982 passed, 1
+skipped, 29 subtests passed`), generated all 126 M32 final forecasts and M4
+four-stage forecasts, closed and hashed both artifacts before truth opened,
+completed both frozen score records, and finished W&B online. The nested
+evaluation result has SHA-256
+`0988f71aa0749044e51ded92b9ea594563232df746415dccbbc6031443ca7e92`;
+the final and stage score hashes are respectively
+`055d81979f46a96bc0c983e0ef2f387f3032a2505117849089047e4f00b67dd3`
+and `33cb4ba9256c214bf0e625511464b51076f96eb1b979c0be32ec0f3b3180e9c2`.
+The exact compact evaluation manifest is tracked at
+`results/phase3_b4_pde_refiner_evaluation_full_6901015.json`.
+
+The final pure reducer then raised `KeyError: 'relative_l2_max'`: the B4
+manifest's display spelling is `relative_L2_max`, while the reused B2 reducer
+expects `relative_l2_max`. Therefore Slurm records job `6901015` as `FAILED`
+after 23:01 even though no forecast or score failed. No H-det/H-prob decision
+was emitted. A017 maps only that schema name, preserves the two threshold
+values, and authorizes a fresh CPU-only reduction over the immutable records.
+The original failure remains in
+`results/phase3_b4_pde_refiner_gate_adapter_failure_6901015.json`.
+Until that reduction completes, replication, O3, assimilation, diagnostic
+ranking, and 85606 remain closed.

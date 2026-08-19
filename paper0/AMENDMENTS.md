@@ -375,3 +375,26 @@ seeds and every future model must be reduced consistently under the new rule.
 No forecast, score, threshold, block, or other acceptance rule changes, and
 O3, assimilation, ranking, and 85606 access remain closed. Exact rules are in
 `protocol/PHASE3_B2_EVENT_ELIGIBILITY_AMENDMENT.md`.
+
+## A017 - Normalize the B4 transport L2 display key at the reducer boundary
+
+**Status:** frozen after job `6901015` completed forecast generation and
+truth-separated scoring, and before any retry of its acceptance reduction.
+
+Job `6901015` completed the full 126-target M32 final forecast, M4 all-stage
+forecast, both frozen scientific score records, and its online W&B run. The
+subsequent pure gate failed before producing an H-det or H-prob decision. The
+frozen B4 manifest spells the two displayed transport thresholds
+`relative_L2_max`; the unchanged B2 Python reducer consumes
+`relative_l2_max`. The B4 adapter copied the display key verbatim and raised
+`KeyError: 'relative_l2_max'` on the first transport check.
+
+The repair explicitly maps only `relative_L2_max` to `relative_l2_max` for
+the strict-face and separatrix dictionaries, validates the complete source
+key sets, and preserves every numerical value. A regression now asserts the
+exact reducer-facing dictionaries and rejects schema drift. One CPU-only
+Rocky 9 retry may reduce the immutable job-`6901015` result and score hashes.
+It may not regenerate or mutate forecasts, rescore truth, change a threshold,
+train a model, run O3, open 85606, assimilate diagnostics, or rank sensors.
+The failed attempt remains tracked in
+`results/phase3_b4_pde_refiner_gate_adapter_failure_6901015.json`.

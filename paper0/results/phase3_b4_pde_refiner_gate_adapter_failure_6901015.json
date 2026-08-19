@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "scope": "phase3_B4_PDE_Refiner_H1_gate_adapter_failure_85604",
+  "status": "scientific_evaluation_completed_gate_reduction_failed_before_decision",
+  "scientific_authority": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "slurm": {
+    "job_id": "6901015",
+    "state": "FAILED",
+    "elapsed": "00:23:01",
+    "exit_code": "1:0",
+    "node": "workergpu217"
+  },
+  "evaluation": {
+    "completed": true,
+    "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b4_pde_refiner_evaluation_full/job_6901015/b4_pde_refiner_h1_seed_1701/result.json",
+    "result_sha256": "0988f71aa0749044e51ded92b9ea594563232df746415dccbbc6031443ca7e92",
+    "final_score_sha256": "055d81979f46a96bc0c983e0ef2f387f3032a2505117849089047e4f00b67dd3",
+    "stage_score_sha256": "33cb4ba9256c214bf0e625511464b51076f96eb1b979c0be32ec0f3b3180e9c2",
+    "wandb_sha256": "b678542a19d33abc8a212888f3834f687b784bdfb60eb491bd1dd7ebd7572b21",
+    "wandb_remote_state": "finished"
+  },
+  "failure": {
+    "phase": "pure_H_det_H_prob_reduction",
+    "exception": "KeyError",
+    "missing_key": "relative_l2_max",
+    "cause": "The frozen B4 manifest uses relative_L2_max while the reused B2 Python reducer consumes relative_l2_max; the adapter copied the display-schema key instead of explicitly normalizing its name.",
+    "job_log_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b4_pde_refiner_evaluation_full/job_6901015/job.log",
+    "job_log_sha256": "6d8cb1b99cdb9a756ff696378c8f6e530a5fe598dc24ca073e16bfad18df06d1",
+    "gate_command_sha256": "d61b674471f2a6b02f6fa357e8f7adb65344685f5ad78690f8adf5bfb60e02fc"
+  },
+  "effects": {
+    "raw_forecasts_changed": false,
+    "raw_scores_changed": false,
+    "metrics_recomputed": false,
+    "threshold_values_changed": false,
+    "training_performed_by_retry": false,
+    "inference_performed_by_retry": false,
+    "truth_scoring_performed_by_retry": false
+  },
+  "authorized_repair": "Normalize only the frozen display key relative_L2_max to the existing reducer key relative_l2_max, add fail-closed regression tests, and rerun the pure gate on the immutable job-6901015 records.",
+  "H_det_decided": false,
+  "H_prob_decided": false,
+  "O3_launch_allowed": false,
+  "assimilation_allowed": false,
+  "diagnostic_ranking_allowed": false,
+  "held_out_85606_access_allowed": false
+}
