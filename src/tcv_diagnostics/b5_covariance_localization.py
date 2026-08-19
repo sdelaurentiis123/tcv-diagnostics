@@ -92,6 +92,66 @@ def subtract_axisymmetric_bias(values: np.ndarray, bias: np.ndarray) -> np.ndarr
     return np.asarray(array - baseline[None, ..., None], dtype=np.float32)
 
 
+class MarginalAnchorAccumulator:
+    """Recompute the frozen eligible-region RMSE and spread--skill anchors."""
+
+    def __init__(self, *, region_mask_xy: np.ndarray) -> None:
+        mask = np.asarray(region_mask_xy, dtype=bool)
+        if mask.ndim != 2 or not np.any(mask):
+            raise ValueError("marginal-anchor mask must be a nonempty x-y mask")
+        self.mask = mask
+        self.scalar_count = np.zeros(len(B5_FIELDS), dtype=np.int64)
+        self.squared_error_sum = np.zeros(len(B5_FIELDS), dtype=np.float64)
+        self.member_variance_sum = np.zeros(len(B5_FIELDS), dtype=np.float64)
+
+    def update(self, members: np.ndarray, truth: np.ndarray) -> None:
+        ensemble = _finite_real("marginal-anchor members", members, dtype=np.float32)
+        observed = _finite_real("marginal-anchor truth", truth, dtype=np.float32)
+        if ensemble.ndim != 5 or ensemble.shape[1] != len(B5_FIELDS):
+            raise ValueError("marginal-anchor members must be [member,field,x,y,z]")
+        if (
+            observed.shape != ensemble.shape[1:]
+            or self.mask.shape != observed.shape[1:3]
+        ):
+            raise ValueError("marginal-anchor truth or mask shape differs")
+        mean = np.mean(ensemble, axis=0, dtype=np.float64)
+        variance = np.var(ensemble, axis=0, ddof=1, dtype=np.float64)
+        for channel in range(len(B5_FIELDS)):
+            error = mean[channel, self.mask, :] - observed[channel, self.mask, :]
+            selected_variance = variance[channel, self.mask, :]
+            self.scalar_count[channel] += int(error.size)
+            self.squared_error_sum[channel] += float(np.sum(error * error))
+            self.member_variance_sum[channel] += float(np.sum(selected_variance))
+
+    def finalize(self) -> dict[str, Any]:
+        if np.any(self.scalar_count <= 0) or len(set(self.scalar_count.tolist())) != 1:
+            raise RuntimeError("marginal-anchor accumulator is empty or unbalanced")
+        rmse = np.sqrt(self.squared_error_sum / self.scalar_count)
+        member_variance = self.member_variance_sum / self.scalar_count
+        aggregate_rmse = float(np.sqrt(np.mean(rmse * rmse)))
+        aggregate_spread = float(
+            np.sqrt(B5_FINITE_MEMBER_FACTOR * np.mean(member_variance))
+        )
+        return {
+            "region": "eligible_union",
+            "member_variance_ddof": 1,
+            "finite_member_variance_factor": B5_FINITE_MEMBER_FACTOR,
+            "fields": {
+                field: {
+                    "scalar_count": int(self.scalar_count[channel]),
+                    "ensemble_mean_RMSE": float(rmse[channel]),
+                    "mean_unbiased_member_variance": float(member_variance[channel]),
+                }
+                for channel, field in enumerate(B5_FIELDS)
+            },
+            "equal_channel_ensemble_mean_RMSE": aggregate_rmse,
+            "equal_channel_corrected_RMS_spread": aggregate_spread,
+            "equal_channel_corrected_spread_skill_ratio": (
+                aggregate_spread / aggregate_rmse if aggregate_rmse > 0.0 else math.nan
+            ),
+        }
+
+
 def _canonical_samples(name: str, values: np.ndarray) -> np.ndarray:
     array = _finite_real(name, values, dtype=np.float32)
     if array.ndim != 5 or array.shape[1] != len(B5_FIELDS):
@@ -105,8 +165,8 @@ def _dot(left: np.ndarray, right: np.ndarray) -> float:
     return float(
         np.einsum(
             "...,...->",
-            np.asarray(left, dtype=np.float32),
-            np.asarray(right, dtype=np.float32),
+            np.asarray(left),
+            np.asarray(right),
             dtype=np.float64,
             optimize=True,
         )
@@ -151,29 +211,55 @@ class SpatialCorrelationAccumulator:
         array = _canonical_samples("spatial-correlation samples", values)
         if array.shape[2:] != self.volume_shape:
             raise ValueError("spatial-correlation volume shape differs")
-        sample_axis = self._AXES[self.axis] - 1
+        field_axis = self._AXES[self.axis] - 1
         for channel in range(len(B5_FIELDS)):
-            field = array[:, channel]
+            field = np.asarray(array[:, channel], dtype=np.float64)
             total = _dot(field, field)
-            self.numerator[channel, 0] += total
-            self.left_energy[channel, 0] += total
-            self.right_energy[channel, 0] += total
-            for lag in range(1, self.maximum_lag + 1):
-                if self.axis == "stored_toroidal_z":
-                    shifted = np.roll(field, -lag, axis=-1)
-                    self.numerator[channel, lag] += _dot(field, shifted)
-                    self.left_energy[channel, lag] += total
-                    self.right_energy[channel, lag] += total
-                else:
-                    left_slice = [slice(None)] * field.ndim
-                    right_slice = [slice(None)] * field.ndim
-                    left_slice[sample_axis] = slice(None, -lag)
-                    right_slice[sample_axis] = slice(lag, None)
-                    left = field[tuple(left_slice)]
-                    right = field[tuple(right_slice)]
-                    self.numerator[channel, lag] += _dot(left, right)
-                    self.left_energy[channel, lag] += _dot(left, left)
-                    self.right_energy[channel, lag] += _dot(right, right)
+            if self.axis == "stored_toroidal_z":
+                coefficients = np.fft.rfft(field, axis=-1)
+                autocorrelation = np.fft.irfft(
+                    coefficients * np.conjugate(coefficients),
+                    n=self.extent,
+                    axis=-1,
+                )
+                numerator = np.sum(
+                    autocorrelation[..., : self.maximum_lag + 1],
+                    axis=(0, 1, 2),
+                    dtype=np.float64,
+                )
+                self.numerator[channel] += numerator
+                self.left_energy[channel] += total
+                self.right_energy[channel] += total
+            else:
+                # Zero padding turns the FFT circular correlation into the
+                # exact valid-overlap linear correlation for nonnegative lags.
+                moved = np.moveaxis(field, field_axis, -1)
+                transform_length = 1 << (2 * self.extent - 1).bit_length()
+                coefficients = np.fft.rfft(moved, n=transform_length, axis=-1)
+                autocorrelation = np.fft.irfft(
+                    coefficients * np.conjugate(coefficients),
+                    n=transform_length,
+                    axis=-1,
+                )
+                reduction_axes = tuple(range(autocorrelation.ndim - 1))
+                self.numerator[channel] += np.sum(
+                    autocorrelation[..., : self.maximum_lag + 1],
+                    axis=reduction_axes,
+                    dtype=np.float64,
+                )
+                position_energy = np.sum(
+                    moved * moved,
+                    axis=tuple(range(moved.ndim - 1)),
+                    dtype=np.float64,
+                )
+                cumulative = np.concatenate(
+                    ([0.0], np.cumsum(position_energy, dtype=np.float64))
+                )
+                for lag in range(self.maximum_lag + 1):
+                    self.left_energy[channel, lag] += cumulative[self.extent - lag]
+                    self.right_energy[channel, lag] += (
+                        cumulative[self.extent] - cumulative[lag]
+                    )
         self.sample_count += int(array.shape[0])
 
     def finalize(self) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
@@ -212,7 +298,9 @@ class SpatialCorrelationAccumulator:
         return record, raw
 
 
-def correlation_curve_distance(first: Sequence[float], second: Sequence[float]) -> float:
+def correlation_curve_distance(
+    first: Sequence[float], second: Sequence[float]
+) -> float:
     """RMS distance between equal lag curves, excluding the shared zero lag."""
 
     left = _finite_real("first correlation curve", np.asarray(first))
@@ -236,7 +324,9 @@ def _matrix_record(*, count: int, sums: np.ndarray, gram: np.ndarray) -> dict[st
     nonnegative = np.clip(eigenvalues, 0.0, None)
     probabilities = nonnegative / np.sum(nonnegative)
     entropy = -float(
-        np.sum(probabilities[probabilities > 0] * np.log(probabilities[probabilities > 0]))
+        np.sum(
+            probabilities[probabilities > 0] * np.log(probabilities[probabilities > 0])
+        )
     )
     participation = float(np.sum(nonnegative) ** 2 / np.sum(nonnegative**2))
     return {
@@ -306,7 +396,9 @@ class CrossFieldCorrelationAccumulator:
             centered = np.asarray(record.pop("centered_gram"), dtype=np.float64)
             record["field_order"] = list(B5_FIELDS)
             records[name] = record
-            raw[f"{name}__sample_count"] = np.asarray([self.count[name]], dtype=np.int64)
+            raw[f"{name}__sample_count"] = np.asarray(
+                [self.count[name]], dtype=np.int64
+            )
             raw[f"{name}__sums"] = self.sums[name].copy()
             raw[f"{name}__uncentered_gram"] = self.gram[name].copy()
             raw[f"{name}__centered_gram"] = centered
@@ -325,6 +417,130 @@ def off_diagonal_rms_distance(first: np.ndarray, second: np.ndarray) -> float:
         raise ValueError("correlation matrices must be equal and square")
     indices = np.triu_indices(left.shape[0], k=1)
     return float(np.sqrt(np.mean((left[indices] - right[indices]) ** 2)))
+
+
+def dependence_distance_summary(
+    *,
+    training: Mapping[str, Any],
+    validation_h1: Mapping[str, Any],
+    b5_anomaly: Mapping[str, Any],
+    b5_innovation: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Compare B5 dependence errors with training-to-validation drift."""
+
+    spatial: dict[str, Any] = {}
+    for axis in ("x", "y", "stored_toroidal_z"):
+        axis_record: dict[str, Any] = {}
+        for field in B5_FIELDS:
+            train_curve = training["spatial_autocorrelation"][axis]["fields"][field][
+                "correlation"
+            ]
+            validation_curve = validation_h1["spatial_autocorrelation"][axis]["fields"][
+                field
+            ]["correlation"]
+            anomaly_curve = b5_anomaly["spatial_autocorrelation"][axis]["fields"][
+                field
+            ]["correlation"]
+            innovation_curve = b5_innovation["spatial_autocorrelation"][axis]["fields"][
+                field
+            ]["correlation"]
+            drift = correlation_curve_distance(train_curve, validation_curve)
+            anomaly = correlation_curve_distance(anomaly_curve, validation_curve)
+            innovation = correlation_curve_distance(innovation_curve, validation_curve)
+            axis_record[field] = {
+                "training_to_validation_H1_residual_RMS": drift,
+                "B5_anomaly_to_validation_H1_residual_RMS": anomaly,
+                "B5_innovation_to_validation_H1_residual_RMS": innovation,
+                "B5_anomaly_exceeds_within_run_drift": anomaly > drift,
+            }
+        spatial[axis] = axis_record
+    cross_field: dict[str, Any] = {}
+    regions = tuple(validation_h1["cross_field"])
+    if any(
+        tuple(record["cross_field"]) != regions
+        for record in (training, b5_anomaly, b5_innovation)
+    ):
+        raise ValueError("dependence-distance cross-field region order differs")
+    for region in regions:
+        validation_matrix = np.asarray(
+            validation_h1["cross_field"][region]["correlation_matrix"]
+        )
+        drift = off_diagonal_rms_distance(
+            np.asarray(training["cross_field"][region]["correlation_matrix"]),
+            validation_matrix,
+        )
+        anomaly = off_diagonal_rms_distance(
+            np.asarray(b5_anomaly["cross_field"][region]["correlation_matrix"]),
+            validation_matrix,
+        )
+        innovation = off_diagonal_rms_distance(
+            np.asarray(b5_innovation["cross_field"][region]["correlation_matrix"]),
+            validation_matrix,
+        )
+        cross_field[region] = {
+            "training_to_validation_H1_residual_RMS": drift,
+            "B5_anomaly_to_validation_H1_residual_RMS": anomaly,
+            "B5_innovation_to_validation_H1_residual_RMS": innovation,
+            "B5_anomaly_exceeds_within_run_drift": anomaly > drift,
+        }
+    identities = [
+        f"spatial:{axis}:{field}"
+        for axis, records in spatial.items()
+        for field, record in records.items()
+        if record["B5_anomaly_exceeds_within_run_drift"]
+    ] + [
+        f"cross_field:{region}"
+        for region, record in cross_field.items()
+        if record["B5_anomaly_exceeds_within_run_drift"]
+    ]
+    return {
+        "spatial": spatial,
+        "cross_field": cross_field,
+        "B5_anomaly_exceeds_drift_count": len(identities),
+        "B5_anomaly_exceeds_drift_identities": identities,
+        "empirical_within_run_drift_is_not_a_sampling_distribution": True,
+    }
+
+
+def blockwise_l3_summary(
+    *,
+    training: Mapping[str, Any],
+    validation_h1_blocks: Mapping[str, Mapping[str, Any]],
+    b5_anomaly_blocks: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Apply the frozen five-of-six direction rule to L3 identities."""
+
+    block_names = tuple(validation_h1_blocks)
+    if len(block_names) != 6 or tuple(b5_anomaly_blocks) != block_names:
+        raise ValueError("L3 requires six identically ordered chronological blocks")
+    counts: dict[str, int] = {}
+    by_block: dict[str, Any] = {}
+    for block in block_names:
+        comparison = dependence_distance_summary(
+            training=training,
+            validation_h1=validation_h1_blocks[block],
+            b5_anomaly=b5_anomaly_blocks[block],
+            b5_innovation=b5_anomaly_blocks[block],
+        )
+        identities = comparison["B5_anomaly_exceeds_drift_identities"]
+        by_block[block] = {
+            "B5_anomaly_exceeds_drift_count": len(identities),
+            "B5_anomaly_exceeds_drift_identities": identities,
+        }
+        for identity in identities:
+            counts[identity] = counts.get(identity, 0) + 1
+    systematic = sorted(identity for identity, count in counts.items() if count >= 5)
+    return {
+        "chronological_block_count": 6,
+        "required_direction_count": 5,
+        "by_block": by_block,
+        "direction_counts": dict(sorted(counts.items())),
+        "systematic_identity_count": len(systematic),
+        "systematic_identities": systematic,
+        "L3_field_dependence_mismatch_beyond_within_run_drift_supported": bool(
+            systematic
+        ),
+    }
 
 
 class ToroidalPowerAccumulator:
@@ -376,7 +592,11 @@ class ToroidalPowerAccumulator:
                 raise ValueError("toroidal power is nonpositive")
             bands: dict[str, Any] = {}
             for label, (start, frozen_stop) in B5_COVARIANCE_TOROIDAL_BANDS.items():
-                stop = self.n_k - 1 if frozen_stop is None else min(frozen_stop, self.n_k - 1)
+                stop = (
+                    self.n_k - 1
+                    if frozen_stop is None
+                    else min(frozen_stop, self.n_k - 1)
+                )
                 power = float(np.sum(density[channel, start : stop + 1]))
                 bands[label] = {
                     "stored_k_inclusive": [int(start), int(stop)],
@@ -403,6 +623,54 @@ class ToroidalPowerAccumulator:
         return record, raw
 
 
+class CovarianceSummaryAccumulator:
+    """Bundle the three frozen spatial, regional, and toroidal estimators."""
+
+    def __init__(
+        self,
+        *,
+        region_masks_xy: Mapping[str, np.ndarray],
+        volume_shape: Sequence[int],
+    ) -> None:
+        self.spatial = {
+            axis: SpatialCorrelationAccumulator(axis=axis, volume_shape=volume_shape)
+            for axis in ("x", "y", "stored_toroidal_z")
+        }
+        self.cross_field = CrossFieldCorrelationAccumulator(
+            region_masks_xy=region_masks_xy,
+            volume_shape=volume_shape,
+        )
+        self.toroidal = ToroidalPowerAccumulator(volume_shape=volume_shape)
+
+    def update(self, values: np.ndarray) -> None:
+        array = _canonical_samples("covariance-summary samples", values)
+        for accumulator in self.spatial.values():
+            accumulator.update(array)
+        self.cross_field.update(array)
+        self.toroidal.update(array)
+
+    def finalize(self) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
+        spatial: dict[str, Any] = {}
+        cross: dict[str, Any]
+        toroidal: dict[str, Any]
+        raw: dict[str, np.ndarray] = {}
+        for axis, accumulator in self.spatial.items():
+            spatial[axis], values = accumulator.finalize()
+            for name, array in values.items():
+                raw[f"spatial__{axis}__{name}"] = array
+        cross, values = self.cross_field.finalize()
+        for name, array in values.items():
+            raw[f"cross_field__{name}"] = array
+        toroidal, values = self.toroidal.finalize()
+        for name, array in values.items():
+            raw[f"toroidal__{name}"] = array
+        return {
+            "spatial_autocorrelation": spatial,
+            "cross_field": cross,
+            "toroidal_support": toroidal,
+        }, raw
+
+
 def field_variogram_score(
     forecast: np.ndarray,
     truth: np.ndarray,
@@ -423,30 +691,35 @@ def field_variogram_score(
     if observed.shape != members.shape[1:]:
         raise ValueError("variogram truth shape differs")
     masks = {"global": np.ones(observed.shape[1:3], dtype=bool)}
-    masks.update({str(name): np.asarray(mask, dtype=bool) for name, mask in region_masks_xy.items()})
-    result: dict[str, float] = {}
-    for name, mask in masks.items():
+    masks.update(
+        {
+            str(name): np.asarray(mask, dtype=bool)
+            for name, mask in region_masks_xy.items()
+        }
+    )
+    for mask in masks.values():
         if mask.shape != observed.shape[1:3] or not np.any(mask):
             raise ValueError("variogram mask differs or is empty")
-        terms = []
-        for first in range(len(B5_FIELDS)):
-            for second in range(first + 1, len(B5_FIELDS)):
-                truth_difference = np.abs(
-                    observed[first, mask, :] - observed[second, mask, :]
-                )
-                forecast_difference = np.mean(
-                    np.abs(
-                        members[:, first, mask, :]
-                        - members[:, second, mask, :]
-                    ),
-                    axis=0,
-                    dtype=np.float64,
-                )
-                terms.append(
-                    float(np.mean((truth_difference - forecast_difference) ** 2))
-                )
-        result[name] = float(np.mean(terms))
-    return result
+    sums = {name: 0.0 for name in masks}
+    pair_count = 0
+    # Form each member-wise difference only once.  Region reductions then use
+    # the same score map, which is both the frozen estimator and substantially
+    # less memory traffic than recomputing it independently for every mask.
+    for first in range(len(B5_FIELDS)):
+        for second in range(first + 1, len(B5_FIELDS)):
+            truth_difference = np.abs(observed[first] - observed[second])
+            forecast_difference = np.mean(
+                np.abs(members[:, first] - members[:, second]),
+                axis=0,
+                dtype=np.float64,
+            )
+            score_map = np.square(truth_difference - forecast_difference)
+            for name, mask in masks.items():
+                sums[name] += float(np.mean(score_map[mask, :]))
+            pair_count += 1
+    if pair_count != 10:
+        raise RuntimeError("five-field variogram pair count differs")
+    return {name: value / pair_count for name, value in sums.items()}
 
 
 def transport_variogram_score(
@@ -460,13 +733,17 @@ def transport_variogram_score(
     members = _finite_real("transport variogram forecast", forecast)
     observed = _finite_real("transport variogram truth", truth)
     if members.ndim != 3 or observed.shape != members.shape[1:]:
-        raise ValueError("transport variogram arrays must be [member,row,z] and [row,z]")
+        raise ValueError(
+            "transport variogram arrays must be [member,row,z] and [row,z]"
+        )
     n_z = observed.shape[-1]
     records: dict[str, float] = {}
     for lag_value in lags:
         lag = int(lag_value)
         if lag <= 0 or lag > n_z // 2:
-            raise ValueError("transport variogram lag is outside the periodic half-domain")
+            raise ValueError(
+                "transport variogram lag is outside the periodic half-domain"
+            )
         truth_difference = np.abs(observed - np.roll(observed, -lag, axis=-1))
         member_difference = np.mean(
             np.abs(members - np.roll(members, -lag, axis=-1)),
@@ -483,6 +760,60 @@ def transport_variogram_score(
         "by_lag": records,
         "equal_lag_mean": float(np.mean(list(records.values()))),
     }
+
+
+def exact_separatrix_local_contributions(
+    evaluated_transport: Mapping[str, Mapping[str, np.ndarray]],
+    *,
+    strict_face_mask: np.ndarray,
+    separatrix_face_mask: np.ndarray,
+    expected_rows: int = 16,
+) -> tuple[dict[str, np.ndarray], float]:
+    """Select exact-separatrix rows and verify their sum against each wedge.
+
+    ``strict_face_contributions`` already contain geometry and quadrature
+    weights.  The selector maps the separatrix mask into that strict-face
+    ordering; no image-coordinate interpretation is introduced here.
+    """
+
+    strict = np.asarray(strict_face_mask, dtype=bool)
+    separatrix = np.asarray(separatrix_face_mask, dtype=bool)
+    if strict.ndim != 2 or separatrix.shape != strict.shape:
+        raise ValueError("transport face masks must be matched two-dimensional arrays")
+    if np.any(separatrix & ~strict):
+        raise ValueError("separatrix face mask leaves the strict-face support")
+    selector = np.asarray(separatrix[strict], dtype=bool)
+    if int(np.sum(selector)) != int(expected_rows):
+        raise ValueError("exact separatrix row count differs")
+    if not evaluated_transport:
+        raise ValueError("evaluated transport mapping is empty")
+    selected: dict[str, np.ndarray] = {}
+    maximum_relative_closure = 0.0
+    for quantity, reductions in evaluated_transport.items():
+        contributions = _finite_real(
+            f"{quantity} strict-face contributions",
+            reductions["strict_face_contributions"],
+        )
+        wedge = _finite_real(
+            f"{quantity} separatrix wedge", reductions["separatrix_wedge"]
+        )
+        if contributions.ndim != 3 or contributions.shape[1] != selector.size:
+            raise ValueError("strict-face contribution tensor shape differs")
+        if wedge.shape != (contributions.shape[0],):
+            raise ValueError("separatrix wedge tensor shape differs")
+        local = np.ascontiguousarray(contributions[:, selector, :], dtype=np.float64)
+        reconstructed = np.sum(local, axis=(1, 2), dtype=np.float64)
+        difference = np.abs(reconstructed - wedge)
+        scale = np.maximum.reduce(
+            [np.abs(wedge), np.abs(reconstructed), np.ones_like(wedge)]
+        )
+        maximum_relative_closure = max(
+            maximum_relative_closure, float(np.max(difference / scale))
+        )
+        if not np.allclose(reconstructed, wedge, rtol=2e-12, atol=1e-12):
+            raise RuntimeError(f"{quantity} exact-separatrix sum does not close")
+        selected[str(quantity)] = local
+    return selected, maximum_relative_closure
 
 
 class ScalarCircularCorrelationAccumulator:
@@ -550,11 +881,15 @@ class _TransportSums:
     error_integrated_squared_sum: float = 0.0
     scalar_point_count: int = 0
 
-    def update(self, members: np.ndarray, truth: np.ndarray) -> tuple[np.ndarray, dict[str, float]]:
+    def update(
+        self, members: np.ndarray, truth: np.ndarray
+    ) -> tuple[np.ndarray, dict[str, float]]:
         ensemble = _finite_real("local transport members", members)
         observed = _finite_real("local transport truth", truth)
         if ensemble.ndim != 2 or observed.shape != ensemble.shape[1:]:
-            raise ValueError("local transport arrays must be [member,point] and [point]")
+            raise ValueError(
+                "local transport arrays must be [member,point] and [point]"
+            )
         if ensemble.shape[0] < 2:
             raise ValueError("local transport covariance needs at least two members")
         mean = np.mean(ensemble, axis=0)
@@ -578,19 +913,26 @@ class _TransportSums:
     def finalize(self) -> dict[str, float | int | None]:
         if self.target_count < 1 or self.scalar_point_count < 1:
             raise RuntimeError("transport covariance sums are empty")
-        diagonal_ssr = math.sqrt(
-            B5_FINITE_MEMBER_FACTOR
-            * self.ensemble_diagonal_variance_sum
-            / self.error_diagonal_squared_sum
-        ) if self.error_diagonal_squared_sum > 0.0 else math.nan
-        integrated_ssr = math.sqrt(
-            B5_FINITE_MEMBER_FACTOR
-            * self.ensemble_integrated_variance_sum
-            / self.error_integrated_squared_sum
-        ) if self.error_integrated_squared_sum > 0.0 else math.nan
+        diagonal_ssr = (
+            math.sqrt(
+                B5_FINITE_MEMBER_FACTOR
+                * self.ensemble_diagonal_variance_sum
+                / self.error_diagonal_squared_sum
+            )
+            if self.error_diagonal_squared_sum > 0.0
+            else math.nan
+        )
+        integrated_ssr = (
+            math.sqrt(
+                B5_FINITE_MEMBER_FACTOR
+                * self.ensemble_integrated_variance_sum
+                / self.error_integrated_squared_sum
+            )
+            if self.error_integrated_squared_sum > 0.0
+            else math.nan
+        )
         ensemble_multiplier = (
-            self.ensemble_integrated_variance_sum
-            / self.ensemble_diagonal_variance_sum
+            self.ensemble_integrated_variance_sum / self.ensemble_diagonal_variance_sum
             if self.ensemble_diagonal_variance_sum > 0.0
             else math.nan
         )
@@ -602,7 +944,8 @@ class _TransportSums:
         alpha = 1.0 / integrated_ssr if integrated_ssr > 0.0 else math.nan
         return {
             "target_count": self.target_count,
-            "local_point_count_per_target": self.scalar_point_count // self.target_count,
+            "local_point_count_per_target": self.scalar_point_count
+            // self.target_count,
             "member_variance_ddof": 1,
             "finite_member_variance_factor": B5_FINITE_MEMBER_FACTOR,
             "ensemble_diagonal_variance_mean_over_targets": (
@@ -614,7 +957,8 @@ class _TransportSums:
             "ensemble_off_diagonal_variance_mean_over_targets": (
                 self.ensemble_integrated_variance_sum
                 - self.ensemble_diagonal_variance_sum
-            ) / self.target_count,
+            )
+            / self.target_count,
             "error_diagonal_MSE_sum_mean_over_targets": (
                 self.error_diagonal_squared_sum / self.target_count
             ),
@@ -649,8 +993,7 @@ class TransportCovarianceAccumulator:
         self.n_z = int(n_z)
         self.sums = {name: _TransportSums() for name in names}
         self.ensemble_z = {
-            name: ScalarCircularCorrelationAccumulator(n_z=self.n_z)
-            for name in names
+            name: ScalarCircularCorrelationAccumulator(n_z=self.n_z) for name in names
         }
         self.row_count = {name: 0 for name in names}
         self.row_sums = {name: np.zeros(self.rows) for name in names}
@@ -667,7 +1010,10 @@ class TransportCovarianceAccumulator:
     ) -> None:
         if tuple(forecast) != self.quantities or tuple(truth) != self.quantities:
             raise ValueError("transport quantity order differs")
-        target_record: dict[str, Any] = {"target_frame": int(target_frame), "quantities": {}}
+        target_record: dict[str, Any] = {
+            "target_frame": int(target_frame),
+            "quantities": {},
+        }
         for name in self.quantities:
             members = _finite_real(f"{name} forecast local transport", forecast[name])
             observed = _finite_real(f"{name} truth local transport", truth[name])
@@ -683,9 +1029,7 @@ class TransportCovarianceAccumulator:
             row = np.sum(anomalies, axis=-1)
             self.row_count[name] += int(row.shape[0])
             self.row_sums[name] += np.sum(row, axis=0)
-            self.row_gram[name] += np.einsum(
-                "mi,mj->ij", row, row, dtype=np.float64
-            )
+            self.row_gram[name] += np.einsum("mi,mj->ij", row, row, dtype=np.float64)
             self.errors[name].append(error.reshape(self.rows, self.n_z))
             scalar["transport_variogram_score"] = transport_variogram_score(
                 members, observed
@@ -704,13 +1048,17 @@ class TransportCovarianceAccumulator:
             centered = error - np.mean(error, axis=0, keepdims=True)
             diagonal = float(np.sum(np.var(error, axis=0, ddof=0)))
             integrated = float(np.var(np.sum(error, axis=(1, 2)), ddof=0))
-            innovation_multiplier = integrated / diagonal if diagonal > 0.0 else math.nan
+            innovation_multiplier = (
+                integrated / diagonal if diagonal > 0.0 else math.nan
+            )
             aggregate["time_centered_innovation_covariance_ddof"] = 0
             aggregate["innovation_diagonal_variance_sum"] = diagonal
             aggregate["innovation_integrated_variance"] = integrated
             aggregate["innovation_coherence_multiplier"] = innovation_multiplier
             ensemble_z_record, ensemble_z_raw = self.ensemble_z[name].finalize()
-            innovation_z_accumulator = ScalarCircularCorrelationAccumulator(n_z=self.n_z)
+            innovation_z_accumulator = ScalarCircularCorrelationAccumulator(
+                n_z=self.n_z
+            )
             innovation_z_accumulator.update(centered)
             innovation_z_record, innovation_z_raw = innovation_z_accumulator.finalize()
             row_record = _matrix_record(
@@ -767,7 +1115,9 @@ class TransportCovarianceAccumulator:
         return _json_safe(record), raw
 
 
-def training_frozen_ar1_coefficients(raw_accumulators: Mapping[str, np.ndarray]) -> np.ndarray:
+def training_frozen_ar1_coefficients(
+    raw_accumulators: Mapping[str, np.ndarray]
+) -> np.ndarray:
     """Return fieldwise lag-one least-squares coefficients from frozen training sums."""
 
     numerator = _finite_real(
@@ -814,7 +1164,9 @@ def deterministic_field_error_summary(
 ) -> dict[str, Any]:
     """Gauge-aware standardized RMSE, MAE, and bias for deterministic fields."""
 
-    candidate = gauge_fix_fields(_canonical_samples("deterministic prediction", prediction))
+    candidate = gauge_fix_fields(
+        _canonical_samples("deterministic prediction", prediction)
+    )
     observed = gauge_fix_fields(_canonical_samples("deterministic truth", truth))
     if candidate.shape != observed.shape:
         raise ValueError("deterministic prediction/truth shapes differ")
@@ -831,8 +1183,12 @@ def deterministic_field_error_summary(
         "target_count": int(error.shape[0]),
         "phi_gauge_fixed": True,
         "fields": fields,
-        "equal_field_mean_RMSE": float(np.mean([item["RMSE"] for item in fields.values()])),
-        "equal_field_mean_MAE": float(np.mean([item["MAE"] for item in fields.values()])),
+        "equal_field_mean_RMSE": float(
+            np.mean([item["RMSE"] for item in fields.values()])
+        ),
+        "equal_field_mean_MAE": float(
+            np.mean([item["MAE"] for item in fields.values()])
+        ),
     }
 
 
@@ -867,14 +1223,18 @@ def deterministic_toroidal_summary(
             bands[label] = {
                 "stored_k_inclusive": [int(low), int(high)],
                 "full_torus_n_inclusive": [int(5 * low), int(5 * high)],
-                "power_ratio": pred_power / truth_power if truth_power > 0.0 else math.nan,
+                "power_ratio": pred_power / truth_power
+                if truth_power > 0.0
+                else math.nan,
                 "realization_coherence": coherence,
             }
         fields[field] = {"bands": bands}
     return _json_safe({"target_count": int(candidate.shape[0]), "fields": fields})
 
 
-def association_summary(predicted_variance: Sequence[float], squared_error: Sequence[float]) -> dict[str, Any]:
+def association_summary(
+    predicted_variance: Sequence[float], squared_error: Sequence[float]
+) -> dict[str, Any]:
     """Pearson and Spearman flow-dependence summaries across targets."""
 
     spread = _finite_real("predicted variance", np.asarray(predicted_variance))

@@ -9,6 +9,7 @@ import numpy as np
 from tcv_diagnostics.b5_covariance_localization import (
     B5_FINITE_MEMBER_FACTOR,
     CrossFieldCorrelationAccumulator,
+    MarginalAnchorAccumulator,
     SpatialCorrelationAccumulator,
     ToroidalPowerAccumulator,
     TransportCovarianceAccumulator,
@@ -18,6 +19,7 @@ from tcv_diagnostics.b5_covariance_localization import (
     correlation_curve_distance,
     deterministic_field_error_summary,
     deterministic_toroidal_summary,
+    exact_separatrix_local_contributions,
     field_variogram_score,
     gauge_fix_fields,
     off_diagonal_rms_distance,
@@ -138,6 +140,67 @@ def test_variogram_scores_are_zero_for_an_exact_ensemble() -> None:
     }
 
 
+def test_optimized_field_variogram_matches_direct_region_definition() -> None:
+    truth = random_fields(1, shape=(4, 3, 8), seed=31)[0]
+    forecast = random_fields(7, shape=(4, 3, 8), seed=32)
+    mask = np.zeros((4, 3), dtype=bool)
+    mask[1:3, 1:] = True
+    actual = field_variogram_score(forecast, truth, region_masks_xy={"selected": mask})[
+        "selected"
+    ]
+    terms = []
+    for first in range(5):
+        for second in range(first + 1, 5):
+            observed = np.abs(truth[first, mask, :] - truth[second, mask, :])
+            predicted = np.mean(
+                np.abs(forecast[:, first, mask, :] - forecast[:, second, mask, :]),
+                axis=0,
+            )
+            terms.append(float(np.mean((observed - predicted) ** 2)))
+    assert math.isclose(actual, float(np.mean(terms)), rel_tol=1e-7)
+
+
+def test_marginal_anchor_reproduces_equal_field_spread_skill_definition() -> None:
+    generator = np.random.default_rng(4)
+    truth = generator.normal(size=(5, 4, 3, 8)).astype(np.float32)
+    members = np.repeat(truth[None], 32, axis=0)
+    member_offsets = np.linspace(-1.0, 1.0, 32, dtype=np.float32)
+    members += member_offsets[:, None, None, None, None]
+    mask = np.ones((4, 3), dtype=bool)
+    accumulator = MarginalAnchorAccumulator(region_mask_xy=mask)
+    accumulator.update(members, truth)
+    accumulator.update(members, truth)
+    record = accumulator.finalize()
+    expected_variance = float(np.var(member_offsets, ddof=1))
+    assert record["equal_channel_ensemble_mean_RMSE"] < 1e-7
+    assert math.isclose(
+        record["equal_channel_corrected_RMS_spread"],
+        math.sqrt(B5_FINITE_MEMBER_FACTOR * expected_variance),
+        rel_tol=1e-7,
+    )
+
+
+def test_exact_separatrix_selector_preserves_topology_order_and_closes() -> None:
+    strict = np.asarray([[True, True, False], [True, True, True]])
+    separatrix = np.asarray([[False, True, False], [True, False, False]])
+    contributions = np.arange(2 * 5 * 4, dtype=np.float64).reshape(2, 5, 4)
+    selected_expected = contributions[:, [1, 2], :]
+    evaluated = {
+        "particle": {
+            "strict_face_contributions": contributions,
+            "separatrix_wedge": np.sum(selected_expected, axis=(1, 2)),
+        }
+    }
+    selected, closure = exact_separatrix_local_contributions(
+        evaluated,
+        strict_face_mask=strict,
+        separatrix_face_mask=separatrix,
+        expected_rows=2,
+    )
+    assert np.array_equal(selected["particle"], selected_expected)
+    assert closure == 0.0
+
+
 def test_transport_covariance_decomposes_diagonal_and_coherent_variance() -> None:
     members = 32
     rows = 2
@@ -147,12 +210,19 @@ def test_transport_covariance_decomposes_diagonal_and_coherent_variance() -> Non
     pattern = np.ones((rows, n_z), dtype=np.float64)
     forecast_values = amplitudes[:, None, None] * pattern[None]
     truth_values = np.full((rows, n_z), 0.25)
-    quantities = ("particle", "electron_internal_energy", "ion_internal_energy", "total_internal_energy")
+    quantities = (
+        "particle",
+        "electron_internal_energy",
+        "ion_internal_energy",
+        "total_internal_energy",
+    )
     accumulator = TransportCovarianceAccumulator(
         quantities=quantities, rows=rows, n_z=n_z
     )
     for target in (498, 499, 500):
-        forecast = {name: forecast_values + 0.01 * (target - 498) for name in quantities}
+        forecast = {
+            name: forecast_values + 0.01 * (target - 498) for name in quantities
+        }
         truth = {name: truth_values for name in quantities}
         accumulator.update(target_frame=target, forecast=forecast, truth=truth)
     record, raw = accumulator.finalize()
@@ -169,7 +239,9 @@ def test_transport_covariance_decomposes_diagonal_and_coherent_variance() -> Non
     assert record["nonlinear_operator_applied_memberwise_before_reduction"] is True
 
 
-def test_training_frozen_ar1_uses_only_supplied_training_sufficient_statistics() -> None:
+def test_training_frozen_ar1_uses_only_supplied_training_sufficient_statistics() -> (
+    None
+):
     numerator = np.zeros((5, 4), dtype=np.float64)
     left_energy = np.ones((5, 4), dtype=np.float64)
     numerator[:, 1] = np.asarray([-0.2, -0.1, 0.0, 0.25, 0.5])
@@ -206,9 +278,7 @@ def test_deterministic_metrics_remove_phi_gauge_and_resolve_known_mode() -> None
     spectral = deterministic_toroidal_summary(prediction, truth)
     for field in spectral["fields"].values():
         assert math.isclose(field["bands"]["k4_5"]["power_ratio"], 1.0)
-        assert math.isclose(
-            field["bands"]["k4_5"]["realization_coherence"], 1.0
-        )
+        assert math.isclose(field["bands"]["k4_5"]["realization_coherence"], 1.0)
 
 
 def test_association_and_frozen_interpretation_labels_are_explicit() -> None:
