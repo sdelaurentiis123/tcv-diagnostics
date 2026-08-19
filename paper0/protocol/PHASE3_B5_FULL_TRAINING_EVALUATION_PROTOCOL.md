@@ -224,7 +224,8 @@ The exact full run is:
 - total optimizer steps: 10,800;
 - optimizer: AdamW, betas `(0.9,0.99)`, zero weight decay;
 - global gradient clip: one;
-- EMA decay: 0.999 after every optimizer step;
+- EMA decay: 0.999 after every optimizer step, applied after the raw optimizer
+  update as `ema_parameter = 0.999*ema_parameter + 0.001*raw_parameter`;
 - precision: H100 bfloat16 autocast, FP32 loss, optimizer state, and EMA;
 - TF32: disabled;
 - warmup: none;
@@ -265,7 +266,8 @@ and its `.npy` SHA-256 is
 Each seed initializes PCG64, draws `log(sigma)` under the frozen distribution,
 then draws one full float32 noise field. The selection metric is the mean EDM
 denoising loss over all `126*4=504` fixed probes. This is a data-only
-score-matching objective in normalized residual coordinates.
+score-matching objective in normalized residual coordinates. Candidate
+validation uses FP32 without autocast and with TF32 disabled.
 
 After all 100 epochs finish, select the earliest candidate with the
 numerically lowest validation metric. No sampled forecast, RMSE, CRPS,

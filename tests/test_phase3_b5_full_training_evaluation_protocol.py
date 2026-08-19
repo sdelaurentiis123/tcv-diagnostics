@@ -127,6 +127,9 @@ def test_B5_full_order_and_budget_are_exact_and_byte_locked() -> None:
     assert config["optimizer_steps_per_epoch"] == 108
     assert config["total_optimizer_steps"] == 10800
     assert config["EMA_decay_per_optimizer_step"] == 0.999
+    assert config["EMA_update"] == (
+        "ema_parameter=0.999*ema_parameter+0.001*raw_parameter_after_each_optimizer_step"
+    )
     assert config["early_stopping"] is False
     generator = np.random.Generator(np.random.PCG64(67501))
     order = np.ascontiguousarray(
@@ -184,6 +187,7 @@ def test_B5_full_selection_bank_and_rule_are_exact() -> None:
     assert selection["candidate_completed_epochs"] == list(range(5, 101, 5))
     assert selection["validation_probe_draws_per_target"] == 4
     assert selection["validation_probe_count_per_candidate"] == 504
+    assert selection["validation_precision"] == "float32_no_autocast_TF32_disabled"
     values, npy_hash = seed_bank(67503, (126, 4))
     assert hashlib.sha256(values.tobytes(order="C")).hexdigest() == selection[
         "seed_bank_raw_sha256"
