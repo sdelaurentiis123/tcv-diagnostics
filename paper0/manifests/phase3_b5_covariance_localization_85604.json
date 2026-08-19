@@ -39,6 +39,13 @@
       "shape": [126, 32, 1, 5, 64, 32, 88],
       "mutated_or_regenerated": false
     },
+    "B5_scientific_sampler_seed_bank": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_residual_edm_evaluation_full/job_6901587/b5_joint_field_residual_edm_seed_1701/scientific_sampler_seeds_M32.npy",
+      "sha256": "013a5cbd11525f41d9ec44a5f7bab30a6fd52aa8e4541757cf1e30ded0e63e14",
+      "bytes": 32384,
+      "shape": [126, 32],
+      "dtype": "uint64"
+    },
     "H1_validation_forecast": {
       "job_id": "6896117",
       "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/task_0_c5p_h1_seed_1701/forecast.h5",
@@ -146,6 +153,8 @@
     "surface": "exact_confined_separatrix",
     "operator": "authoritative_native81_shifted_y_radial_ExB_memberwise",
     "finite_member_variance_factor": 1.03125,
+    "member_variance_ddof": 1,
+    "time_centered_innovation_covariance_ddof": 0,
     "retain_local_contributions": true,
     "report_diagonal_offdiagonal_and_integrated_variance": true,
     "scalar_inflation_counterfactual_only": true,

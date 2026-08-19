@@ -64,6 +64,8 @@ The localization uses only these already completed artifacts:
 - B5 M32 one-step standardized forecast, targets `[498,624)`, job `6901587`,
   SHA-256
   `1a5f3ea7e0d1722363205be569d2db60905cdda798b4597a6c47e74d99fab68b`;
+- its immutable `126 x 32` uint64 scientific sampler seed bank, SHA-256
+  `013a5cbd11525f41d9ec44a5f7bab30a6fd52aa8e4541757cf1e30ded0e63e14`;
 - frozen C5P-H1 seed-1701 standardized validation forecast, targets
   `[498,624)`, SHA-256
   `a76b389dfc090d1d3061ec4be3526c524645b4cd9cec2f309601af0dd405f1ed`;
@@ -318,6 +320,11 @@ finite-member factor `(M+1)/M`, the off-diagonal contribution
 innovations, and the 16-by-16 correlation matrix of toroidally integrated
 separatrix-row contributions. The row coordinate is a topology index, not an
 assumed Euclidean distance.
+
+Member variance uses `ddof=1`, matching the frozen B2--B5 finite-ensemble
+convention. Time-centered innovation covariance uses `ddof=0`; time targets
+are not asserted to be independent samples, and the divisor cancels from each
+reported innovation coherence multiplier.
 
 As a diagnostic counterfactual only, calculate the scalar anomaly factor that
 would force each integrated spread--skill ratio to one:

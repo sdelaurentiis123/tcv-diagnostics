@@ -67,6 +67,20 @@ def test_completed_B5_artifacts_and_training_comparators_are_hash_locked() -> No
     assert locks["B5_forecast"]["bytes"] == 14_535_535_504
     assert locks["B5_forecast"]["shape"] == [126, 32, 1, 5, 64, 32, 88]
     assert locks["B5_forecast"]["mutated_or_regenerated"] is False
+    assert locks["B5_scientific_sampler_seed_bank"] == {
+        "path": (
+            "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/"
+            "phase3_b5_residual_edm_evaluation_full/job_6901587/"
+            "b5_joint_field_residual_edm_seed_1701/"
+            "scientific_sampler_seeds_M32.npy"
+        ),
+        "sha256": (
+            "013a5cbd11525f41d9ec44a5f7bab30a6fd52aa8e4541757cf1e30ded0e63e14"
+        ),
+        "bytes": 32384,
+        "shape": [126, 32],
+        "dtype": "uint64",
+    }
     assert locks["H1_validation_forecast"]["sha256"] == (
         "a76b389dfc090d1d3061ec4be3526c524645b4cd9cec2f309601af0dd405f1ed"
     )
@@ -163,6 +177,8 @@ def test_toroidal_mapping_and_transport_covariance_are_physical() -> None:
         "authoritative_native81_shifted_y_radial_ExB_memberwise"
     )
     assert transport["finite_member_variance_factor"] == 33 / 32
+    assert transport["member_variance_ddof"] == 1
+    assert transport["time_centered_innovation_covariance_ddof"] == 0
     assert transport["retain_local_contributions"] is True
     assert transport["report_diagonal_offdiagonal_and_integrated_variance"] is True
     assert transport["scalar_inflation_counterfactual_only"] is True
