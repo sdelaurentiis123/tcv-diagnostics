@@ -74,6 +74,9 @@ EXPECTED_MANIFEST_SHA256 = (
 EXPECTED_PROTOCOL_SHA256 = (
     "ffa56b2111074253a70c7453f1e36f91ca747ec59a68d632288764d60387aad1"
 )
+B4_PASSING_EVALUATOR_SMOKE_COMMIT = (
+    "029f6d9d425fd9bbac11aebf82466588a97ac658"
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -757,7 +760,7 @@ def main() -> None:
     if smoke_path is not None:
         validate_bounded_smoke_result(
             load_strict_json(smoke_path),
-            paper0_commit=args.paper0_commit,
+            paper0_commit=B4_PASSING_EVALUATOR_SMOKE_COMMIT,
             training_result_sha256=args.training_result_sha256,
         )
     if not torch.cuda.is_available() or torch.cuda.device_count() != 1:

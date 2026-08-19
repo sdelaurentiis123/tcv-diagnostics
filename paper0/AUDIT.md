@@ -954,3 +954,80 @@ The human-readable authority is
 The machine-readable authority is
 `manifests/phase3_b4_full_evaluation_85604.json` with SHA-256
 `e69af9c0e06fa1b0b33333966866098ce9ef20d6f415407ac911504f07ac9229`.
+
+## Phase 3 B4 full seed-1701 training
+
+Rocky 9 H100 job `6899682` completed all 100 epochs and 2,700 optimizer
+updates at training commit `0350b063a1f7e5c6a00b76bf4d6aeaec71d511ef`.
+Slurm reports `COMPLETED`, exit `0:0`, and elapsed time `01:41:13`. The job
+first passed the complete Rocky 9 suite, all recorded losses and gradients
+remained finite, the frozen codec was bitwise unchanged, and checkpoint
+reload reproduced the saved latent and decoded probes bit for bit. W&B logged
+all 100 epochs and finished online. The run did not read 85606 and did not
+evaluate H-det, H-prob, O3, or assimilation.
+
+The prospectively specified earliest-minimum rule selected the final candidate,
+completed epoch 100. On the fixed M2 selection bank, equal-channel decoded
+standardized MAE was `0.0450318` at shared level zero, `0.0438262` after the
+first refinement, `0.0438300` after the second, and `0.0438299` after the
+third. Thus the selection diagnostic improved by approximately 2.67 percent,
+almost entirely at the first refinement stage; later stages were numerically
+neutral on this marginal diagnostic. These are checkpoint-selection
+measurements, not evidence of calibrated covariance or transport fidelity.
+
+The compact immutable record is
+`results/phase3_b4_pde_refiner_full_training_6899682.json` with SHA-256
+`12d9e65aebccd31612484ad25735bbcb49a4d89ed395be2eddeb717f30deebe2`.
+The 257 MB selected checkpoint, 980 MB resumable state, complete history, seed
+banks, environment, logs, and artifact inventories remain on Ceph under job
+`6899682`.
+
+## Phase 3 B4 evaluator smoke
+
+After training closed, evaluator commit
+`029f6d9d425fd9bbac11aebf82466588a97ac658` was transferred to Rusty by a
+verified immutable Git bundle. Rocky 9 H100 job `6900991` completed in 93
+seconds with exit `0:0`. Its complete in-job suite passed (`971 passed, 1
+skipped, 29 subtests passed`), all training and input artifacts revalidated,
+all eight 85604 shards were staged and checked, and the online W&B record
+finished remotely. It generated and hashed the canonical four-target M32
+final artifact and M4 four-stage artifact before opening truth. The M4 stage-
+three forecasts are the exact M32 prefix, level zero is bitwise shared across
+members, and final spread is nonzero in every field and primary region.
+
+The bounded score shows why the full frozen evaluation is necessary. Over
+only four smoke targets, the first refinement lowered stage field error and
+slightly improved realization coherence, while spectral-power, cross-field,
+and separatrix-transport aggregate errors worsened. Final aggregate corrected
+spread-skill was only `0.226`, indicating marked underdispersion. Stages two
+and three again changed the stage aggregates negligibly. These numbers are
+retained as a mechanical warning, but the four-target smoke was prospectively
+declared non-scientific and neither H-det nor H-prob was evaluated.
+
+The compact record is
+`results/phase3_b4_pde_refiner_evaluator_smoke_6900991.json` with SHA-256
+`f2a5b62620063372b600e63d36da2b0c6aef30b45925700a3906b61f81d23a88`.
+Its approximately 692 MB of forecast artifacts and detailed score tables
+remain on Ceph under job `6900991`.
+
+## Phase 3 B4 frozen acceptance implementation
+
+Before opening the full 126-target score, the H-det/H-prob reducer was
+implemented as a pure reduction over already scored records. It reuses the
+tested B2 field, spectral, cross-field, event-eligibility, and member-wise
+transport reducers without changing their numerical definitions. A name
+adapter maps the already frozen B4 thresholds, and an explicit projection
+separates deterministic-fidelity checks from probabilistic-calibration checks.
+The reducer requires the same five of six chronological blocks to pass all
+applicable field, spectral, and transport families; five different passing
+blocks in separate families cannot satisfy a hypothesis. H-det additionally
+requires the prospectively frozen M4 stagewise-repair test. H-prob is reduced
+independently and cannot borrow an H-det pass.
+
+The full launcher pins the completed training, the passing smoke and its
+historical commit, the frozen H1 and uncompressed comparators, metric-engine
+source hashes, the scientific seed bank, the geometry, and the event
+thresholds. It runs the complete Rocky 9 suite before generation, performs
+truth-separated M32/M4 scoring, closes W&B, and only then invokes the pure
+acceptance finalizer. Regardless of outcome, it cannot authorize O3 execution,
+assimilation, diagnostic ranking, additional seeds, or access to 85606.

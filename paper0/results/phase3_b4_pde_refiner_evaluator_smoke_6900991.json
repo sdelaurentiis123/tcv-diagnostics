@@ -1,0 +1,93 @@
+{
+  "H_det_evaluated": false,
+  "H_prob_evaluated": false,
+  "M4_stage3_bitwise_prefix_of_M32": true,
+  "O3_launch_allowed": false,
+  "development_run": "85604",
+  "final_ensemble_members": 32,
+  "final_forecast": {
+    "bytes": 461405328,
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b4_pde_refiner_evaluator_smoke/job_6900991/b4_pde_refiner_h1_seed_1701/forecast_final_M32.h5",
+    "sha256": "43213f8da89ef197ee0f969ad564501821480adecf6f9e58235dea0dd93650ab"
+  },
+  "final_score": {
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b4_pde_refiner_evaluator_smoke/job_6900991/b4_pde_refiner_h1_seed_1701/score_final_M32.json",
+    "sha256": "388b3ad7b82fd924c9d137e067b190f5219930b85ceb3588fd61427c24ead577"
+  },
+  "full_evaluation_preconditions_passed": true,
+  "held_out_85606_read": false,
+  "level0_bitwise_shared_across_members": true,
+  "paper0_commit": "029f6d9d425fd9bbac11aebf82466588a97ac658",
+  "run_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b4_pde_refiner_evaluator_smoke/job_6900991/b4_pde_refiner_h1_seed_1701/result.json",
+    "sha256": "b3c825c73af333b56ff5906deac0c3b5d85fa4a7e835c24d106c11e33afd9be5"
+  },
+  "schema_version": 1,
+  "scientific_result": false,
+  "scientific_seed_bank": {
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b4_pde_refiner_evaluator_smoke/job_6900991/b4_pde_refiner_h1_seed_1701/scientific_seed_bank_M32x3.npy",
+    "seed": 41032,
+    "sha256": "a1871e069bce6244073bfe1aa835a53c1d7a59302b01f6a366b3dc88297b6205",
+    "shape": [
+      126,
+      32,
+      3
+    ]
+  },
+  "scope": "phase3_B4_PDE_Refiner_H1_bounded_evaluator_smoke",
+  "slurm_job_id": "6900991",
+  "stage_forecast": {
+    "bytes": 230702704,
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b4_pde_refiner_evaluator_smoke/job_6900991/b4_pde_refiner_h1_seed_1701/forecast_stages_M4.h5",
+    "sha256": "10bd5aae5997dda2acc93aeffa11b080440c63f2dda29d3418fccea971a80edd"
+  },
+  "stage_prefix_members": 4,
+  "stage_score": {
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b4_pde_refiner_evaluator_smoke/job_6900991/b4_pde_refiner_h1_seed_1701/score_stages_M4.json",
+    "sha256": "5bb54031d77ad5c3d467e4d270d5c85d40b0ac2d3b07946e41fa09ac973edff7",
+    "stage_repair_gate_evaluated": false,
+    "stage_repair_passes": null
+  },
+  "status": "passed_bounded_evaluator_smoke",
+  "target_frames": [
+    498,
+    502
+  ],
+  "training_commit": "0350b063a1f7e5c6a00b76bf4d6aeaec71d511ef",
+  "training_result": {
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b4_pde_refiner_full/job_6899682/b4_pde_refiner_h1_seed_1701/result.json",
+    "sha256": "95107fd536607022a6af331f8886748d13beaf42ce3eba6aef20cf42cb76bac2"
+  },
+  "truth_opened_only_after_both_forecast_hashes": true,
+  "wandb": {
+    "authenticated_username": "sdelaurentiis123",
+    "checkpoints_uploaded": false,
+    "evaluation_mode": "smoke",
+    "forecasts_uploaded": false,
+    "local_artifacts_are_scientific_authority": true,
+    "mode": "online",
+    "remote_path": "sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/p0b4evalsmoke-6900991-s1701",
+    "remote_presence_verified_after_finish": true,
+    "remote_state_after_finish": "finished",
+    "required": true,
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0b4evalsmoke-6900991-s1701",
+    "schema_version": 1,
+    "spec": {
+      "entity": "sdelaurentiis123-columbia-university",
+      "group": "b4-pde-refiner-h1-evaluator-smoke-85604",
+      "job_type": "phase3_b4_pde_refiner_evaluation",
+      "project": "tcv-diagnostics-paper0",
+      "run_id": "p0b4evalsmoke-6900991-s1701",
+      "run_name": "b4-pde-refiner-evaluator-smoke-s1701-j6900991",
+      "tags": [
+        "paper0",
+        "phase3",
+        "b4",
+        "pde-refiner",
+        "evaluation",
+        "85604-only"
+      ]
+    },
+    "wandb_version": "0.17.9"
+  }
+}
