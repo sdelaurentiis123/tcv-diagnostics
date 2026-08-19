@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_job_6901393_before_B5_model_implementation_or_optimization",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "authorized_scope": [
+    "B5_joint_field_residual_EDM_implementation",
+    "B5_joint_field_residual_EDM_CPU_tests",
+    "one_Rocky9_H100_bounded_full_field_mechanical_smoke"
+  ],
+  "forbidden_scope": [
+    "B5_full_training",
+    "B5_validation_read_or_scoring",
+    "scientific_checkpoint_selection",
+    "B5_replication",
+    "O3",
+    "assimilation",
+    "diagnostic_ranking",
+    "85606_access"
+  ],
+  "protocol": {
+    "path": "paper0/protocol/PHASE3_B5_FIELD_RESIDUAL_EDM_SMOKE_PROTOCOL.md",
+    "status": "frozen_before_implementation_or_execution"
+  },
+  "evidence_locks": {
+    "residual_audit": {
+      "job_id": "6901393",
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/residual_audit.json",
+      "sha256": "d8f05af4d1619fbe7ad8774360c29aa38cd69494d80624d55e30fdb57361cf67",
+      "readout": "paper0/PHASE3_B5_RESIDUAL_AUDIT_READOUT.md"
+    },
+    "H1_training_forecast": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/h1_training_forecast.h5",
+      "sha256": "d1342e53ac5f9077665f7a707ca035b9069a616d7db10371e1f6c1ae504d9c18",
+      "canonical_shape": [430, 5, 64, 32, 88],
+      "forecast_closed_and_hashed_before_truth_read": true
+    },
+    "H1_checkpoint": {
+      "arm": "C5P-H1",
+      "seed": 1701,
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/selected.pt",
+      "sha256": "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e",
+      "trainable": false,
+      "reselection_allowed": false
+    },
+    "model_dataset": {
+      "job_id": "6893525",
+      "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    }
+  },
+  "data": {
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "input_channels": "physically_valid_complete_C5P_state_plus_frozen_H1_mean_condition",
+    "dynamic_condition": ["x_t_minus_1_five_fields", "frozen_H1_mean_five_fields"],
+    "target": "standardized_truth_minus_frozen_H1_standardized_mean",
+    "target_field_coordinate_system": "decoded_training_standardized_coordinates",
+    "smoke_target_frames": [2, 10],
+    "smoke_target_count": 8,
+    "context_offset_frames": -1,
+    "guard_frames_read_allowed": false,
+    "validation_frames_read_allowed": false,
+    "absolute_time_input_allowed": false,
+    "normalized_frame_index_input_allowed": false,
+    "shot_label_input_allowed": false,
+    "diagnostic_input_allowed": false,
+    "region_mask_input_allowed": false,
+    "future_truth_condition_allowed": false,
+    "internal_static_position_channels": {
+      "count": 2,
+      "axes": ["x", "y"],
+      "range": [-1.0, 1.0],
+      "absolute_z_coordinate_allowed": false
+    },
+    "volume_shape": [5, 64, 32, 88],
+    "zperiod": 5,
+    "mode_mapping": "n=5k",
+    "toroidal_augmentation_allowed": false
+  },
+  "residual_normalization": {
+    "operation": "divide_without_centering",
+    "source": "job_6901393_global_population_standard_deviation",
+    "field_order": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "scale": [
+      0.05503048051260375,
+      0.04825854004472835,
+      0.06096460194410047,
+      0.04632595196855943,
+      0.10251610501339582
+    ],
+    "nonzero_mean_preserved": true,
+    "pointwise_or_region_scaling_allowed": false
+  },
+  "model": {
+    "name": "B5-H1-JOINT-FIELD-EDM-UNET3D-MINI",
+    "family": "conditional_joint_field_residual_EDM",
+    "representation": "full_decoded_standardized_field_coordinates",
+    "joint_output_fields": 5,
+    "noisy_input_channels": 5,
+    "dynamic_condition_channels": 10,
+    "internal_position_channels": 2,
+    "base_channels": 32,
+    "channel_multipliers": [1, 2, 4, 4],
+    "residual_blocks_per_encoder_resolution": 2,
+    "residual_blocks_per_decoder_resolution": 2,
+    "downsample_count": 3,
+    "downsample_stride": [2, 2, 2],
+    "resolution_path": [
+      [64, 32, 88],
+      [32, 16, 44],
+      [16, 8, 22],
+      [8, 4, 11]
+    ],
+    "kernel_size": 3,
+    "padding_by_axis": ["zeros", "zeros", "circular"],
+    "normalization": "GroupNorm_maximum_8_groups",
+    "activation": "SiLU",
+    "dropout": 0.0,
+    "upsampling": "trilinear_to_exact_skip_shape_then_mixed_boundary_conv3d",
+    "noise_embedding_features": 256,
+    "noise_conditioning": "FiLM_scale_and_shift_in_every_residual_block",
+    "final_convolution_initialization": "zeros",
+    "full_field_required": true,
+    "patch_fallback_allowed_in_this_protocol": false,
+    "attention_allowed": false,
+    "DCAE_or_latent_representation_allowed": false,
+    "spectral_operator_allowed": false,
+    "deterministic_parent_trainable": false
+  },
+  "edm": {
+    "sigma_data": 1.0,
+    "preconditioning": {
+      "c_in": "1/sqrt(sigma^2+1)",
+      "c_skip": "1/(sigma^2+1)",
+      "c_out": "sigma/sqrt(sigma^2+1)",
+      "c_noise": "log(sigma)/4"
+    },
+    "training_sigma": {
+      "distribution": "log_normal",
+      "P_mean": -1.2,
+      "P_std": 1.2
+    },
+    "training_noise": "elementwise_standard_normal",
+    "loss": "((sigma^2+1)/sigma^2)*mean((D_theta-z)^2)",
+    "equal_normalized_channel_weight": true,
+    "physics_derived_training_loss_allowed": false
+  },
+  "optimization": {
+    "seed": 1701,
+    "optimizer": "AdamW",
+    "optimizer_steps": 64,
+    "target_order": "deterministic_cycle_over_2_through_9",
+    "microbatch_targets": 1,
+    "gradient_accumulation_targets": 1,
+    "learning_rate": 0.0001,
+    "betas": [0.9, 0.99],
+    "weight_decay": 0.0,
+    "gradient_clip": 1.0,
+    "training_precision": "bfloat16_autocast_with_FP32_loss",
+    "training_order_seed": 67001,
+    "training_noise_seed": 67002,
+    "sampler_seed": 67003,
+    "fixed_probe_seed": 67004,
+    "fixed_probe_targets": [2, 6],
+    "validation_used_for_selection": false,
+    "scientific_checkpoint_selection": false
+  },
+  "sampler_probe": {
+    "algorithm": "deterministic_EDM_probability_flow_ODE_Heun",
+    "steps": 18,
+    "sigma_max": 80.0,
+    "sigma_min": 0.002,
+    "rho": 7.0,
+    "stochastic_churn": 0.0,
+    "ensemble_members": 2,
+    "fresh_noise_per_member": true,
+    "fresh_noise_per_future_autoregressive_step_required": true,
+    "trajectory_constant_noise_primary_allowed": false,
+    "output_axes": [
+      "batch",
+      "ensemble_member",
+      "future_time",
+      "channel",
+      "x",
+      "y",
+      "z"
+    ],
+    "expected_shape": [1, 2, 1, 5, 64, 32, 88],
+    "scientific_calibration_result": false
+  },
+  "mechanical_gates": {
+    "complete_Rocky9_test_suite_passes": true,
+    "exact_input_hashes": true,
+    "exact_smoke_targets_only": true,
+    "optimizer_steps_exact": 64,
+    "peak_allocated_cuda_memory_GiB_strictly_below": 75.0,
+    "all_values_finite": true,
+    "final_fixed_probe_loss_strictly_below_initial": true,
+    "checkpoint_reload_denoiser_probe_bitwise_exact": true,
+    "toroidal_circular_shift_equivariance_FP32_test": true,
+    "sampler_member_diversity_nonzero": true,
+    "canonical_axes_and_composition_exact": true,
+    "frozen_H1_artifacts_unchanged": true,
+    "wandb_online_finished": true,
+    "local_artifacts_hash_indexed": true,
+    "held_out_85606_untouched": true
+  },
+  "execution": {
+    "os": "Rocky_Linux_9",
+    "accelerator": "one_H100",
+    "submission": "sbatch_from_rusty9",
+    "wandb": {
+      "required": true,
+      "mode": "online",
+      "entity": "sdelaurentiis123-columbia-university",
+      "project": "tcv-diagnostics-paper0",
+      "group": "b5-joint-field-residual-edm-smoke",
+      "local_artifacts_are_scientific_authority": true,
+      "large_artifact_upload_allowed": false
+    }
+  },
+  "post_smoke": {
+    "B5_full_training_authorized": false,
+    "B5_full_training_protocol_may_be_written_if_smoke_passes": true,
+    "validation_read_allowed": false,
+    "O3_launch_allowed": false,
+    "assimilation_allowed": false,
+    "diagnostic_ranking_allowed": false,
+    "held_out_85606_access_allowed": false
+  }
+}
