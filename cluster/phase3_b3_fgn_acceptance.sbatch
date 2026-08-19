@@ -75,7 +75,7 @@ if [[ ! -x "${PYTHON}" ]]; then
 fi
 
 check_sha256 "36640742fea989cc5e94604fc6a2970cf431802ca32f176ca06302158a454737" "${ENTRYPOINT}"
-check_sha256 "53ece13a1f3bb520ad52056a970b76a362b8319405af842d1bfb12b7bbee5896" "${PAPER0_ROOT}/src/tcv_diagnostics/fgn_acceptance_gate.py"
+check_sha256 "611229c0333feed3b42870760f0f4f9c0776e95d5ee58028a1885e4405c9c655" "${PAPER0_ROOT}/src/tcv_diagnostics/fgn_acceptance_gate.py"
 check_sha256 "6bb5d825b30c9c8292cda020d3bec824d9b04198617dc89afafa264daab44ea5" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_acceptance_gate.py"
 check_sha256 "899bf42d7d709badd2631e5b94db11e6c6603635d2ce5f0cf341e747216f86d3" "${PAPER0_ROOT}/src/tcv_diagnostics/b2_acceptance_gate_event_eligibility.py"
 check_sha256 "2f1f83b3c4ce50a789d26ed6877142400b5f9f8e994b3e6bc92f997840832ad2" "${EVALUATION_MANIFEST}"

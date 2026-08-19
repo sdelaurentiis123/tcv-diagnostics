@@ -256,7 +256,8 @@ def evaluate_b3_integrity(
     )
     book.boolean(
         "integrity.evaluation.checkpoint_matches_training",
-        result.get("selected_checkpoint") == training.get("selected_checkpoint"),
+        result.get("selected_checkpoint", {}).get("sha256")
+        == training.get("selected_checkpoint", {}).get("sha256"),
     )
     history_audit = result.get("training_history_audit", {})
     book.boolean(

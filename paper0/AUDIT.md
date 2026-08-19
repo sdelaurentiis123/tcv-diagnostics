@@ -790,3 +790,17 @@ preflight diagnostics, not scientific acceptance estimates. Compact evidence
 is `results/phase3_b3_fgn_evaluator_smoke_6899071.json`. This authorizes only
 the already-frozen full 85604 validation evaluation; O3, additional seeds,
 assimilation, diagnostic ranking, and 85606 remain closed.
+
+The first frozen B3 reduction, CPU-only job `6899154`, completed all numerical
+families but reported one false provenance failure:
+`integrity.evaluation.checkpoint_matches_training`. Training, evaluation, and
+a direct file re-hash all record the same selected-checkpoint SHA-256
+`0e0fdca97f13e2e33934d667167294d293cfc6ceedd9dee8b0504bf724acdbe9`.
+Only the path spellings differ because evaluator input verification resolves
+the shared Ceph alias from `/mnt/home/sdelaurentiis/ceph/...` to
+`/mnt/ceph/users/sdelaurentiis/...`. The reducer had incorrectly compared the
+entire `{path, sha256}` objects. The repair defines immutable checkpoint
+identity by the content hash and adds a regression in which alias paths with
+the same hash pass while a forged hash fails. No forecast, score, threshold,
+family reducer, or numerical value changes. A fresh CPU-only reduction is
+required; the original gate remains preserved for exact before/after audit.

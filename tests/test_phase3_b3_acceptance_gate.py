@@ -86,7 +86,10 @@ def _result(training: dict[str, object]) -> dict[str, object]:
         "diagnostic_ranking_allowed": False,
         "seed": 1701,
         "selected_epoch": training["selected_epoch"],
-        "selected_checkpoint": training["selected_checkpoint"],
+        "selected_checkpoint": {
+            "path": "/canonical/development/selected.pt",
+            "sha256": training["selected_checkpoint"]["sha256"],
+        },
         "training_history_audit": {
             "epochs": 100,
             "optimizer_steps": 2700,
@@ -292,6 +295,16 @@ def test_B3_integrity_accepts_known_answer_and_rejects_held_out_contamination() 
     assert record["passes"] is False
     assert any(
         item["name"] == "integrity.evaluation.held_out_85606_read"
+        and item["passes"] is False
+        for item in record["checks"]
+    )
+
+    forged_checkpoint = deepcopy(inputs)
+    forged_checkpoint["result"]["selected_checkpoint"]["sha256"] = "f" * 64
+    record = gate.evaluate_b3_integrity(**forged_checkpoint)
+    assert record["passes"] is False
+    assert any(
+        item["name"] == "integrity.evaluation.checkpoint_matches_training"
         and item["passes"] is False
         for item in record["checks"]
     )
