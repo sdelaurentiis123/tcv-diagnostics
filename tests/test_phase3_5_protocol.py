@@ -7,8 +7,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "paper0" / "PHASE3_5_PROTOCOL_AMENDMENT.md"
-CLARIFICATION = (
+CLARIFICATION_A = (
     ROOT / "paper0" / "PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md"
+)
+CLARIFICATION_B = (
+    ROOT / "paper0" / "PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19B.md"
 )
 MANIFEST = (
     ROOT / "paper0" / "manifests" / "phase3_5_cause_localization_85604.json"
@@ -33,7 +36,11 @@ def test_phase3_5_protocol_files_exist_and_hash_lock() -> None:
     assert record["clarifying_amendments"] == [
         {
             "path": "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md",
-            "sha256": hashlib.sha256(CLARIFICATION.read_bytes()).hexdigest(),
+            "sha256": hashlib.sha256(CLARIFICATION_A.read_bytes()).hexdigest(),
+        },
+        {
+            "path": "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19B.md",
+            "sha256": hashlib.sha256(CLARIFICATION_B.read_bytes()).hexdigest(),
         }
     ]
 

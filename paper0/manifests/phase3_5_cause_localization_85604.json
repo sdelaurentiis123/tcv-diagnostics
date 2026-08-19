@@ -13,6 +13,10 @@
     {
       "path": "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md",
       "sha256": "4846c2f63a5dd634ead314517516e6727ddff5e85c6779cc114e35300db73d75"
+    },
+    {
+      "path": "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19B.md",
+      "sha256": "0870d968ae898ed4058dfd1eec0b6a8ecd1d1fd10c4de5cad6c1e2490d61d3e0"
     }
   ],
   "authorized_scope": [

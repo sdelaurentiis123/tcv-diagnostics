@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Sequence
 
 import numpy as np
 import torch
 
 from tcv_diagnostics.o2_forecast import load_selected_o2_model
+from tcv_diagnostics.model_data import assert_development_path
 
 from .data import H1_CHECKPOINT, H1_CHECKPOINT_SHA256, H1_CODEC, H1_CODEC_SHA256
 
@@ -16,11 +18,19 @@ FIELDS = ("Ne", "Pe", "Pi", "phi", "Vi")
 H1_TRAINING_COMMIT = "9035bc3ce9d2351cd17586f4429af8116d43a47e"
 
 
+def canonical_existing_development_path(path: Path) -> Path:
+    """Resolve a Rusty mount alias without weakening the frozen loader."""
+
+    candidate = Path(path)
+    assert_development_path(candidate)
+    return candidate.resolve(strict=True)
+
+
 def load_frozen_h1(device: torch.device) -> torch.nn.Module:
     model = load_selected_o2_model(
         checkpoint=H1_CHECKPOINT,
         expected_checkpoint_sha256=H1_CHECKPOINT_SHA256,
-        codec_checkpoint=H1_CODEC,
+        codec_checkpoint=canonical_existing_development_path(H1_CODEC),
         expected_codec_sha256=H1_CODEC_SHA256,
         arm="C5P-H1",
         seed=1701,

@@ -2529,9 +2529,17 @@ def main() -> None:
     checkout = verify_checkout(args.paper0_commit)
     protocol = load_phase3_5_protocol(args.manifest, root=ROOT)
     manifest_hash = sha256_path(args.manifest)
-    clarification = ROOT / "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md"
-    if sha256_path(clarification) != "4846c2f63a5dd634ead314517516e6727ddff5e85c6779cc114e35300db73d75":
-        raise RuntimeError("Phase 3.5 execution clarification hash differs")
+    clarifications = {
+        ROOT / "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md":
+            "4846c2f63a5dd634ead314517516e6727ddff5e85c6779cc114e35300db73d75",
+        ROOT / "paper0/PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19B.md":
+            "0870d968ae898ed4058dfd1eec0b6a8ecd1d1fd10c4de5cad6c1e2490d61d3e0",
+    }
+    for clarification, expected_hash in clarifications.items():
+        if sha256_path(clarification) != expected_hash:
+            raise RuntimeError(
+                f"Phase 3.5 execution clarification hash differs: {clarification.name}"
+            )
     native_result_path = ROOT / NATIVE_RESULT_RELATIVE
     geometry_manifest_path = ROOT / GEOMETRY_MANIFEST_RELATIVE
     if sha256_path(native_result_path) != NATIVE_RESULT_SHA256:
@@ -2567,7 +2575,10 @@ def main() -> None:
             "production_model_training": False,
             "manifest_sha256": manifest_hash,
             "protocol_sha256": protocol.record["protocol"]["sha256"],
-            "clarification_sha256": sha256_path(clarification),
+            "clarification_sha256s": {
+                path.name: expected_hash
+                for path, expected_hash in clarifications.items()
+            },
             "zperiod": 5,
             "mode_mapping": "n=5k",
         },
