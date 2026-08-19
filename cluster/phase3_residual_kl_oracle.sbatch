@@ -38,7 +38,8 @@ readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3
 readonly OUTDIR="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly PRETRUTH_OUTPUT="${OUTDIR}/pretruth"
 readonly EVALUATION_OUTPUT="${OUTDIR}/evaluation"
-readonly SCRATCH_ROOT="${SLURM_TMPDIR}/paper0_residual_kl_${SLURM_JOB_ID}"
+readonly NODE_SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
+readonly SCRATCH_ROOT="${NODE_SCRATCH}/paper0_residual_kl_${SLURM_JOB_ID}"
 readonly WANDB_ENTITY="sdelaurentiis123-columbia-university"
 readonly WANDB_PROJECT="tcv-diagnostics-paper0"
 readonly WANDB_GROUP="residual-kl-oracle"
@@ -82,8 +83,8 @@ if [[ ! -x "${PYTHON}" ]]; then
   echo "Pinned Python is unavailable: ${PYTHON}" >&2
   exit 2
 fi
-if [[ -z "${SLURM_TMPDIR:-}" ]]; then
-  echo "SLURM_TMPDIR is required" >&2
+if [[ ! -d "${NODE_SCRATCH}" || ! -w "${NODE_SCRATCH}" ]]; then
+  echo "Writable node scratch is required: ${NODE_SCRATCH}" >&2
   exit 2
 fi
 

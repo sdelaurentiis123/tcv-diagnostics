@@ -27,7 +27,8 @@ def test_launcher_is_one_Rocky9_CPU_job_within_frozen_budget() -> None:
     assert "PAPER0_EXPECTED_COMMIT" in source
     assert "pytest -p no:cacheprovider -q" in source
     assert "WANDB_MODE=online" in source
-    assert "SLURM_TMPDIR" in source
+    assert 'NODE_SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"' in source
+    assert "Writable node scratch is required" in source
 
 
 def test_launcher_hash_pins_protocol_programs_and_direct_modules() -> None:
