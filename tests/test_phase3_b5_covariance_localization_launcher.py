@@ -41,6 +41,7 @@ def test_launcher_pins_protocol_wrapper_evaluator_and_direct_modules() -> None:
         "src/tcv_diagnostics/b5_residual_edm_forecast.py",
         "src/tcv_diagnostics/b5_residual_edm_full_training.py",
         "src/tcv_diagnostics/b5_residual_forecast.py",
+        "src/tcv_diagnostics/b5_residual_audit.py",
         "src/tcv_diagnostics/codec_training.py",
         "src/tcv_diagnostics/codec_transport.py",
         "src/tcv_diagnostics/matched_o1_transport.py",
