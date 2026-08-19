@@ -196,6 +196,14 @@ def test_B5_full_selection_bank_and_rule_are_exact() -> None:
     assert selection["rule"] == (
         "earliest_numerically_lowest_metric_after_complete_100_epoch_budget"
     )
+    assert selection["reload_probe"] == {
+        "purpose": "mechanical_selected_checkpoint_serialization_check_only",
+        "seed": 67504,
+        "validation_target_frame": 498,
+        "precision": "float32_no_autocast_TF32_disabled",
+        "bitwise_exact_output_required": True,
+        "checkpoint_selection_allowed": False,
+    }
     assert selection["physics_metric_allowed"] is False
     assert selection["sampled_forecast_metric_allowed"] is False
     assert selection["85606_value_allowed"] is False

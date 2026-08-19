@@ -277,7 +277,12 @@ selection from the later scientific verdict. The validation interval remains
 a development set, so its final scientific scores are not an unbiased test.
 
 The selected EMA checkpoint and the final resumable raw training state are
-separate artifacts. A fixed FP32 denoiser probe must reload bit for bit.
+separate artifacts. A mechanical serialization probe uses validation target
+498 and an independent `PCG64(67504)` corruption. The selected EMA checkpoint
+is evaluated in FP32 without autocast and with TF32 disabled, saved, reloaded,
+and evaluated again on identical tensors. Its denoiser output must be bitwise
+identical. This probe cannot select a checkpoint and is not a scientific
+forecast or validation score.
 
 ## 8. Truth-separated scientific ensemble
 

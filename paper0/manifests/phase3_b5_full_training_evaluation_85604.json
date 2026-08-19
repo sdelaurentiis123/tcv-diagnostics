@@ -188,6 +188,14 @@
     "seed_bank_dtype": "uint64",
     "seed_bank_raw_sha256": "f0e736a16be18289ef64fc190fac917eda284eac13ed5117fa7be2d7c2b7d411",
     "seed_bank_npy_sha256": "fca7f1254b28fda0a1dad91aea4e1e8ce2faef5dbe7484e13c86ee885e5a5e12",
+    "reload_probe": {
+      "purpose": "mechanical_selected_checkpoint_serialization_check_only",
+      "seed": 67504,
+      "validation_target_frame": 498,
+      "precision": "float32_no_autocast_TF32_disabled",
+      "bitwise_exact_output_required": true,
+      "checkpoint_selection_allowed": false
+    },
     "metric": "mean_equal_element_equal_normalized_channel_EDM_denoising_loss_over_126_targets_and_4_fixed_probes",
     "rule": "earliest_numerically_lowest_metric_after_complete_100_epoch_budget",
     "physics_metric_allowed": false,
