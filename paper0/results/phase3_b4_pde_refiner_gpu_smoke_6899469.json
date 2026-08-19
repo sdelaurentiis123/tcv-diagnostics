@@ -1,0 +1,161 @@
+{
+  "artifact_index": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b4_pde_refiner_gpu_smoke/job_6899469/b4_pde_refiner_h1_seed_1701/artifact_sha256.txt",
+    "sha256": "916610573761bced45cda305388b7bc755b15e22409b895a33a3057c0ba06ec8"
+  },
+  "checkpoint_reload_bitwise_exact": true,
+  "codec_bitwise_unchanged": true,
+  "development_run": "85604",
+  "full_B4_training_authorized": false,
+  "held_out_85606_read": false,
+  "member_and_stage_probe": {
+    "canonical_final_forecast_shape": [
+      4,
+      2,
+      1,
+      5,
+      64,
+      32,
+      88
+    ],
+    "canonical_stage_shape": [
+      4,
+      2,
+      4,
+      5,
+      64,
+      32,
+      88
+    ],
+    "final_member_RMS_difference_by_field": {
+      "Ne": 0.03362415358424187,
+      "Pe": 0.021402275189757347,
+      "Pi": 0.027139117941260338,
+      "Vi": 0.04514073207974434,
+      "phi": 0.03155934438109398
+    },
+    "finite": true,
+    "level0_shared_bitwise_across_members": true,
+    "nonzero_final_diversity_in_every_field": true,
+    "reload_forecast_bitwise_exact": true,
+    "reload_latent_bitwise_exact": true,
+    "target_frame_index": 498
+  },
+  "next_permitted_action": "write_separate_full_training_and_evaluation_protocol_only",
+  "paper0_commit": "2277e1b9d402a2b1627950f772b9f77a6a054f9e",
+  "preoptimization_parent_identity": {
+    "bitwise_exact": true,
+    "maximum_absolute_difference": 0.0,
+    "target_frame_index": 498
+  },
+  "run_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b4_pde_refiner_gpu_smoke/job_6899469/b4_pde_refiner_h1_seed_1701/result.json",
+    "sha256": "50dc6ee75b47744505cc61704149f86a6a30912aa3e37133e4b7fd76b91af8ad"
+  },
+  "schema_version": 1,
+  "scientific_result": false,
+  "scope": "phase3_B4_PDE_Refiner_H1_bounded_GPU_smoke",
+  "selected_checkpoint": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b4_pde_refiner_gpu_smoke/job_6899469/b4_pde_refiner_h1_seed_1701/selected.pt",
+    "sha256": "873accba65071ba107651b43df4da2d36ef714474e818e1628d57eecc4ce4f6f"
+  },
+  "slurm_job_id": "6899469",
+  "status": "passed",
+  "training_level_counts": [
+    8,
+    10,
+    7,
+    7
+  ],
+  "validation_decoded_stages": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b4_pde_refiner_gpu_smoke/job_6899469/b4_pde_refiner_h1_seed_1701/validation_decoded_stages.pt",
+    "sha256": "d92ec0a160dd37c46f3966b60d998b6467ebb7e758c6f04e2eba4f7341d887ff",
+    "validation": {
+      "MAE_by_level_and_channel": [
+        {
+          "Ne": 0.03985293582081795,
+          "Pe": 0.031241608783602715,
+          "Pi": 0.03999623656272888,
+          "Vi": 0.060577171854674816,
+          "phi": 0.04026796855032444
+        },
+        {
+          "Ne": 0.043780725449323654,
+          "Pe": 0.032323630061000586,
+          "Pi": 0.041967508383095264,
+          "Vi": 0.06536765582859516,
+          "phi": 0.04332804121077061
+        },
+        {
+          "Ne": 0.044011990539729595,
+          "Pe": 0.032372860703617334,
+          "Pi": 0.04207354970276356,
+          "Vi": 0.06557319033890963,
+          "phi": 0.043544105254113674
+        },
+        {
+          "Ne": 0.04403131082653999,
+          "Pe": 0.0323777636513114,
+          "Pi": 0.04208306223154068,
+          "Vi": 0.06558924168348312,
+          "phi": 0.0435632411390543
+        }
+      ],
+      "checkpoint_weights": "EMA",
+      "ensemble_mean_equal_channel_decoded_standardized_field_MAE": 0.045528923906385896,
+      "ensemble_members": 2,
+      "equal_channel_MAE_by_level": [
+        0.04238718431442976,
+        0.04535351218655705,
+        0.04551513930782676,
+        0.045528923906385896
+      ],
+      "final_MAE_by_channel": {
+        "Ne": 0.04403131082653999,
+        "Pe": 0.0323777636513114,
+        "Pi": 0.04208306223154068,
+        "Vi": 0.06558924168348312,
+        "phi": 0.0435632411390543
+      },
+      "physics_metrics_used": false,
+      "refinement_levels": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "target_count": 4
+    }
+  },
+  "wandb": {
+    "authenticated_username": "sdelaurentiis123",
+    "checkpoints_uploaded": false,
+    "epochs_logged": 2,
+    "local_artifacts_are_scientific_authority": true,
+    "mode": "online",
+    "remote_path": "sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/p0b4smoke-6899469-s1701",
+    "remote_presence_verified_after_finish": true,
+    "remote_state_after_finish": "finished",
+    "required": true,
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0b4smoke-6899469-s1701",
+    "schema_version": 1,
+    "spec": {
+      "entity": "sdelaurentiis123-columbia-university",
+      "group": "b4-pde-refiner-h1-smoke",
+      "job_type": "phase3_b4_pde_refiner_smoke",
+      "project": "tcv-diagnostics-paper0",
+      "run_id": "p0b4smoke-6899469-s1701",
+      "run_name": "b4-pde-refiner-h1-smoke-s1701-j6899469",
+      "tags": [
+        "paper0",
+        "phase3",
+        "b4",
+        "pde-refiner",
+        "smoke",
+        "85604-only",
+        "non-scientific"
+      ]
+    },
+    "wandb_version": "0.17.9"
+  }
+}

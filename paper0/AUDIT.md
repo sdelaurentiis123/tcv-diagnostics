@@ -886,3 +886,37 @@ diagnostic ranking, and every access to 85606 remain forbidden until a later
 protocol is frozen. The human-readable authority is
 `protocol/PHASE3_B4_PDE_REFINER_PROTOCOL.md`; its machine-readable companion is
 `manifests/phase3_b4_pde_refiner_85604.json`.
+
+## Phase 3 B4 bounded implementation smoke
+
+Rocky 9 H100 job `6899469` ran the exact hash-pinned implementation at commit
+`2277e1b9d402a2b1627950f772b9f77a6a054f9e` and completed with Slurm state
+`COMPLETED`, exit `0:0`, and elapsed time 61 seconds. The complete in-job CPU
+suite passed (`905 passed, 1 skipped, 29 subtests passed`), all ten indexed
+run artifacts revalidate against their SHA-256 inventory, and the required
+online W&B run finished remotely. The 85604-only result manifest is tracked
+byte for byte at
+`results/phase3_b4_pde_refiner_gpu_smoke_6899469.json` with SHA-256
+`fd2b5465f612eb8da4943f6284e317145eff64b25346895137981ce3e3993eef`.
+
+The smoke establishes the intended engineering invariants. Before any
+optimization, the conditioned level-zero transition reproduced the selected
+C5P-H1 parent bit for bit with maximum absolute difference zero. The frozen
+codec remained bitwise unchanged, the selected checkpoint reproduced both
+latent and decoded probes bit for bit after reload, all four refinement levels
+were exercised with counts `[8,10,7,7]`, and both the 51,612,800 inherited
+transition parameters and 9,606,144 new refinement parameters received finite
+gradients. The saved decoded stage tensor has canonical shape
+`[4,2,4,5,64,32,88]`; level zero is shared exactly across members, while the
+final stage has finite nonzero member diversity in every field.
+
+The four-target equal-channel MAE values at levels zero through three are
+respectively `0.0423872`, `0.0453535`, `0.0455151`, and `0.0455289`. Thus the
+untrained-near-initial refinement stages are worse than level zero after only
+two optimizer steps. This observation is retained rather than hidden, but it
+is not an H-det failure or any other scientific conclusion: four targets, two
+members, and two optimizer steps were prospectively designated only as a
+mechanical preflight. Passing the smoke authorizes only a separately frozen
+full-training and evaluation protocol. Full training, scientific evaluation,
+O3, replication, assimilation, diagnostic ranking, and 85606 remain closed
+until that authority is committed.
