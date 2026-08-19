@@ -116,9 +116,9 @@ export CUDA_VISIBLE_DEVICES=""
 export WANDB_MODE=online
 export WANDB_REQUIRE_SERVICE=true
 export MPLCONFIGDIR="${OUTDIR}/runtime/matplotlib"
-export OMP_NUM_THREADS=16
-export OPENBLAS_NUM_THREADS=16
-export MKL_NUM_THREADS=16
+export OMP_NUM_THREADS=12
+export OPENBLAS_NUM_THREADS=12
+export MKL_NUM_THREADS=12
 mkdir -p "${MPLCONFIGDIR}"
 {
   echo "captured_at=$(date --iso-8601=seconds)"
@@ -130,6 +130,9 @@ mkdir -p "${MPLCONFIGDIR}"
   echo "model_inference_performed=false"
   echo "held_out_85606_read=false"
   echo "raw_artifacts_uploaded=false"
+  echo "OMP_NUM_THREADS=${OMP_NUM_THREADS}"
+  echo "OPENBLAS_NUM_THREADS=${OPENBLAS_NUM_THREADS}"
+  echo "MKL_NUM_THREADS=${MKL_NUM_THREADS}"
   "${PYTHON}" --version
   "${PYTHON}" -c 'import h5py,matplotlib,numpy,pytest,scipy,wandb; print("h5py="+h5py.__version__); print("matplotlib="+matplotlib.__version__); print("numpy="+numpy.__version__); print("scipy="+scipy.__version__); print("wandb="+wandb.__version__)'
 } > "${OUTDIR}/environment.txt" 2>&1

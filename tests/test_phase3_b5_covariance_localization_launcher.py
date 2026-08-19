@@ -22,6 +22,9 @@ def test_launcher_is_Rocky9_CPU_only_online_read_only_analysis() -> None:
     assert "#SBATCH --gres" not in source
     assert "nvidia-smi" not in source
     assert 'export CUDA_VISIBLE_DEVICES=""' in source
+    assert "export OMP_NUM_THREADS=12" in source
+    assert "export OPENBLAS_NUM_THREADS=12" in source
+    assert "export MKL_NUM_THREADS=12" in source
     assert "PAPER0_EXPECTED_COMMIT" in source
     assert "Rocky Linux 9" in source
     assert "WANDB_MODE=online" in source
