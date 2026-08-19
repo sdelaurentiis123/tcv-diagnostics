@@ -546,7 +546,11 @@ def classify_kl_outcome(
     if full_rank < 1:
         raise ValueError("full positive KL rank must be positive")
     if minimum_passing_rank is None:
-        return "K4_training_residual_span_does_not_transfer"
+        return (
+            "inconsistent_diagnostic_requires_review"
+            if bool(tier_b_useful)
+            else "K4_training_residual_span_does_not_transfer"
+        )
     rank = int(minimum_passing_rank)
     if rank < 1 or rank > full_rank:
         raise ValueError("minimum passing KL rank is invalid")

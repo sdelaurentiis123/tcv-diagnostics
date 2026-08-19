@@ -225,3 +225,8 @@ def test_outcome_classification(rank: int, useful: bool, expected: str) -> None:
         full_positive_rank=200,
         tier_b_useful=False,
     ) == "K4_training_residual_span_does_not_transfer"
+    assert classify_kl_outcome(
+        minimum_passing_rank=None,
+        full_positive_rank=200,
+        tier_b_useful=True,
+    ) == "inconsistent_diagnostic_requires_review"
