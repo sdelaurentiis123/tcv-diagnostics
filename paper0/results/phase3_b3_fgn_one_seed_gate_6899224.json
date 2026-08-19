@@ -1,0 +1,315 @@
+{
+  "artifact_indices": {
+    "evaluation_run": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluation_full/job_6899073/b3_fgn_h1_seed_1701/artifact_sha256.txt",
+      "sha256": "318aa6ce12efbf1afe3c3ce6ca4517de8e53416b8bd4f7faa9e6d71509465b09"
+    },
+    "evaluation_wrapper": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_evaluation_full/job_6899073/artifact_sha256.txt",
+      "sha256": "c8bdb6e5368f15782932f4aa74d701048239af7bbcdcd51d1009c6538d8fabfb"
+    },
+    "gate_run": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_acceptance/job_6899224/gate/artifact_sha256.txt",
+      "sha256": "0ef0146c03247088cbb81c35751c1cfaddec5b8305c865249d1990bdd090284e"
+    },
+    "gate_wrapper": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_acceptance/job_6899224/artifact_sha256.txt",
+      "sha256": "93c2475edfa7d128af1bb5d9df1a610b4ef6e70e8019a16d4eeb970ce4b82fbc"
+    }
+  },
+  "decision": {
+    "O3_launch_allowed": false,
+    "assimilation_allowed": false,
+    "diagnostic_ranking_allowed": false,
+    "passes_complete_one_seed_gate": false,
+    "post_gate_instruction": "stop_B3_and_diagnose_before_replication",
+    "seed1702_1703_replication_protocol_may_be_written": false,
+    "seed1702_1703_training_authorized": false
+  },
+  "development_run": "85604",
+  "evaluation": {
+    "commit": "aa96db0c3a01a1424aa900edaeaf90f706229ee2",
+    "ensemble_members": 32,
+    "forecast_bytes": 14535252816,
+    "forecast_sha256": "0f5c97b20fbf7ef32f2bd2b9695dc173d78155dcde356ef5b1a451dc4276e3ef",
+    "horizon_frames": 1,
+    "horizon_microseconds": 3.131905426352636,
+    "job_id": "6899073",
+    "score_sha256": "c32508a85a68859aa676d2fada4f76a304984fea5988c81fb106ae6f724654d0",
+    "target_count": 126,
+    "target_frames": [
+      498,
+      624
+    ],
+    "truth_opened_only_after_forecast_hash": true
+  },
+  "family_summary": {
+    "field": {
+      "blocks_passing": 0,
+      "blocks_required": 5,
+      "check_count": 54,
+      "failed_check_count": 6,
+      "passes": false
+    },
+    "spectral": {
+      "blocks_passing": 0,
+      "blocks_required": 5,
+      "check_count": 148,
+      "failed_check_count": 59,
+      "passes": false
+    },
+    "transport": {
+      "blocks_passing": 0,
+      "blocks_required": 5,
+      "check_count": 77,
+      "failed_check_count": 6,
+      "passes": false
+    }
+  },
+  "field_and_marginal": {
+    "aggregate": {
+      "corrected_rms_spread": 0.06272095779292382,
+      "corrected_spread_skill_ratio": 0.7896950750205585,
+      "ensemble_mean_MAE": 0.04589509192536863,
+      "ensemble_mean_MAE_relative_to_parent_H1": 1.0030825630261506,
+      "ensemble_mean_RMSE": 0.07942427371893003,
+      "ensemble_mean_RMSE_relative_to_parent_H1": 0.9972214817968783,
+      "fair_CRPS": 0.03308237816786412,
+      "fair_CRPS_relative_to_best_uncompressed_MAE": 0.5988470790069054,
+      "fair_CRPS_relative_to_parent_H1_MAE": 0.7230480491810231
+    },
+    "by_field": {
+      "Ne": {
+        "coverage_error": {
+          "I17": 0.04890353315313184,
+          "I27": 0.0704328405973671,
+          "I31": 0.06240435965556357
+        },
+        "ensemble_mean_MAE": 0.04374742309128245,
+        "fair_CRPS": 0.03201221186666742,
+        "fair_CRPS_relative_to_parent_H1_MAE": 0.7378860450668019,
+        "parent_H1_MAE": 0.043383679743895016,
+        "spread_skill": 0.7037759106372408
+      },
+      "Pe": {
+        "coverage_error": {
+          "I17": 0.08116511557522793,
+          "I27": 0.10551050518947791,
+          "I31": 0.0850122990973714
+        },
+        "ensemble_mean_MAE": 0.03255417174427053,
+        "fair_CRPS": 0.02324986466565885,
+        "fair_CRPS_relative_to_parent_H1_MAE": 0.7112383584622652,
+        "parent_H1_MAE": 0.03268927271572681,
+        "spread_skill": 0.7977972416072027
+      },
+      "Pi": {
+        "coverage_error": {
+          "I17": 0.07498883391740535,
+          "I27": 0.09867530884786102,
+          "I31": 0.07999436580897257
+        },
+        "ensemble_mean_MAE": 0.04197545067748713,
+        "fair_CRPS": 0.029993821223307106,
+        "fair_CRPS_relative_to_parent_H1_MAE": 0.7139298599158349,
+        "parent_H1_MAE": 0.04201228006746079,
+        "spread_skill": 0.7874052134366574
+      },
+      "Vi": {
+        "coverage_error": {
+          "I17": 0.033873040193264925,
+          "I27": 0.050264984554711734,
+          "I31": 0.04448414821609048
+        },
+        "ensemble_mean_MAE": 0.06595722594066387,
+        "fair_CRPS": 0.047198099940924124,
+        "fair_CRPS_relative_to_parent_H1_MAE": 0.7251755442804223,
+        "parent_H1_MAE": 0.06508506845436698,
+        "spread_skill": 0.8386942433484937
+      },
+      "phi": {
+        "coverage_error": {
+          "I17": 0.12407370734015999,
+          "I27": 0.15313939671885102,
+          "I31": 0.1193804300746516
+        },
+        "ensemble_mean_MAE": 0.04524118817313915,
+        "fair_CRPS": 0.03295789314276311,
+        "fair_CRPS_relative_to_parent_H1_MAE": 0.7227614501566193,
+        "parent_H1_MAE": 0.04559995989772459,
+        "spread_skill": 0.7261340628034342
+      }
+    },
+    "coverage_tolerance_primary": {
+      "I17": 0.1,
+      "I27": 0.08,
+      "I31": 0.06
+    },
+    "fields_meeting_primary_coverage": 1,
+    "fields_meeting_primary_spread_skill": 1,
+    "primary_spread_skill_range": [
+      0.8,
+      1.25
+    ],
+    "private_flux_I31_coverage": {
+      "Ne": 0.6961629504437724,
+      "Pe": 0.7302377987309494,
+      "Pi": 0.7624891280713199,
+      "Vi": 0.7937611601995164,
+      "phi": 0.7254813299333848
+    }
+  },
+  "gate": {
+    "all_required_numeric_metrics_finite": true,
+    "execution_commit": "bade06465f2bdb7b3d951ce9fa51a3362ab865f7",
+    "full_result": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b3_fgn_acceptance/job_6899224/gate/final_gate.json",
+      "sha256": "882ba10898bbf132eea7713098202d8e814e3f709e8693c5b25366c52ffbc391"
+    },
+    "integrity_failed_check_count": 0,
+    "integrity_passes": true,
+    "job_id": "6899224"
+  },
+  "gate_path_alias_amendment": {
+    "decision_changed": false,
+    "family_numerical_values_changed": false,
+    "family_summaries_changed": false,
+    "new_integrity_failed_check_count": 0,
+    "old_integrity_failed_check_count": 1,
+    "original_gate_job_id": "6899154",
+    "original_gate_sha256": "ad5a957254484d1c95228117dc0911f16bcef742f194c8f53dba6b87d9281f4c",
+    "reason": "two Ceph path aliases identified the same selected-checkpoint content hash"
+  },
+  "held_out_85606_read": false,
+  "interpretation": {
+    "next_action": "freeze a separately justified B4 PDE-Refiner protocol; do not replicate B3",
+    "negative": "global functional noise and marginal fair CRPS do not preserve calibrated mode-resolved and nonlinear transport uncertainty",
+    "positive": "near-parent point skill, improved marginal fair CRPS, exact M16-to-M32 stability, preserved ensemble-mean cross-phase/coherence, useful separatrix means, and noncollapsed ensembles"
+  },
+  "mode_mapping": {
+    "k1_3": "n=5..15",
+    "k4_5": "n=20..25",
+    "k6_7": "n=30..35",
+    "rule": "n=5k",
+    "zperiod": 5
+  },
+  "monte_carlo_stability": {
+    "aggregate_fair_CRPS_M16": 0.033089723602788,
+    "aggregate_fair_CRPS_M32": 0.03308237816786412,
+    "relative_difference": 0.0002220339989830559
+  },
+  "schema_version": 1,
+  "scope": "compact_phase3_B3_FGN_H1_seed1701_gate_85604",
+  "seed": 1701,
+  "spectral_and_cross_field": {
+    "cross_coherence_change": {
+      "maximum": 0.0950507501610387,
+      "minimum": 0.008889291528886949,
+      "passing": 9,
+      "required": 9,
+      "threshold_max": 0.15
+    },
+    "cross_phase_absolute_error_degrees": {
+      "maximum": 1.9807629134453237,
+      "minimum": 0.4777344570781863,
+      "passing": 9,
+      "required": 9,
+      "threshold_max": 20.0
+    },
+    "high_band_k6_7": {
+      "Ne": {
+        "power_ratio": 0.6918586641771269,
+        "realization_coherence": 0.4434768557292846
+      },
+      "Pe": {
+        "power_ratio": 0.6430854432423919,
+        "realization_coherence": 0.4860519243791131
+      },
+      "Pi": {
+        "power_ratio": 0.6517093452260073,
+        "realization_coherence": 0.47309229856049
+      },
+      "Vi": {
+        "power_ratio": 0.9098557340369654,
+        "realization_coherence": 0.006760503955210822
+      },
+      "phi": {
+        "power_ratio": 0.7264824003292732,
+        "realization_coherence": 0.3030337776197814
+      }
+    },
+    "material_field_power_checks": {
+      "passing": 11,
+      "total": 15
+    },
+    "material_realization_coherence_checks": {
+      "passing": 4,
+      "total": 15
+    },
+    "power_ratio_range": [
+      0.75,
+      1.3
+    ],
+    "realization_coherence_min": 0.8
+  },
+  "status": "completed_failed_frozen_one_seed_gate",
+  "training": {
+    "checkpoint_sha256": "0e0fdca97f13e2e33934d667167294d293cfc6ceedd9dee8b0504bf724acdbe9",
+    "commit": "a2a17cf3fc30fd504bc3eee3274e78623bf15e2b",
+    "job_id": "6898702",
+    "selected_epoch": 72,
+    "training_loss": "equal_channel_decoded_standardized_field_fair_CRPS_M2"
+  },
+  "transport": {
+    "event_conditioned_all_eligible_metrics_pass": true,
+    "quantities": {
+      "electron_internal_energy": {
+        "separatrix_I27_coverage_error": 0.3102453102453103,
+        "separatrix_I31_coverage_error": 0.30447330447330456,
+        "separatrix_correlation": 0.9118385334142778,
+        "separatrix_fair_CRPS_relative_to_parent_H1_absolute_error": 0.7193565003679822,
+        "separatrix_relative_l2": 0.1806168397677954,
+        "separatrix_spread_skill": 0.6038692342685462,
+        "strict_correlation": 0.708391384153028,
+        "strict_relative_l2": 0.743547888172424,
+        "strict_sign_disagreement": 0.1745457703571295
+      },
+      "ion_internal_energy": {
+        "separatrix_I27_coverage_error": 0.31818181818181823,
+        "separatrix_I31_coverage_error": 0.3203463203463204,
+        "separatrix_correlation": 0.8495865919892046,
+        "separatrix_fair_CRPS_relative_to_parent_H1_absolute_error": 0.7197151366177491,
+        "separatrix_relative_l2": 0.20282606713615606,
+        "separatrix_spread_skill": 0.5299225598101127,
+        "strict_correlation": 0.7116613582790835,
+        "strict_relative_l2": 0.7384985567643773,
+        "strict_sign_disagreement": 0.17478986618444792
+      },
+      "particle": {
+        "separatrix_I27_coverage_error": 0.35786435786435794,
+        "separatrix_I31_coverage_error": 0.29653679653679654,
+        "separatrix_correlation": 0.800464574627429,
+        "separatrix_fair_CRPS_relative_to_parent_H1_absolute_error": 0.6948725061014347,
+        "separatrix_relative_l2": 0.2316017170803809,
+        "separatrix_spread_skill": 0.5618676675709786,
+        "strict_correlation": 0.7122406180430787,
+        "strict_relative_l2": 0.737545117958953,
+        "strict_sign_disagreement": 0.17664905282217255
+      },
+      "total_internal_energy": {
+        "separatrix_I27_coverage_error": 0.3261183261183262,
+        "separatrix_I31_coverage_error": 0.28860028860028863,
+        "separatrix_correlation": 0.8896073841183524,
+        "separatrix_fair_CRPS_relative_to_parent_H1_absolute_error": 0.7130957234679954,
+        "separatrix_relative_l2": 0.18704660028821168,
+        "separatrix_spread_skill": 0.5756228616609159,
+        "strict_correlation": 0.71038572453042,
+        "strict_relative_l2": 0.7406106924469352,
+        "strict_sign_disagreement": 0.17467219205955514
+      }
+    },
+    "separatrix_calibrated_count": 0,
+    "separatrix_fair_CRPS_better_than_parent_H1_count": 4,
+    "strict_relative_l2_max": 0.4
+  }
+}

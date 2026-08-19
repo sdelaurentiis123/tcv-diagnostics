@@ -804,3 +804,47 @@ identity by the content hash and adds a regression in which alias paths with
 the same hash pass while a forged hash fails. No forecast, score, threshold,
 family reducer, or numerical value changes. A fresh CPU-only reduction is
 required; the original gate remains preserved for exact before/after audit.
+
+## Phase 3 B3 completed evaluation and one-seed decision
+
+The frozen full B3 evaluation job `6899073` completed on Rocky 9/H100 at
+commit `aa96db0c3a01a1424aa900edaeaf90f706229ee2`. It generated all 126
+validation targets with 32 direct single-pass members, wrote the canonical
+14,535,252,816-byte forecast, and closed and hashed it before validation truth
+was opened. The forecast SHA-256 is
+`0f5c97b20fbf7ef32f2bd2b9695dc173d78155dcde356ef5b1a451dc4276e3ef`;
+the complete score SHA-256 is
+`c32508a85a68859aa676d2fada4f76a304984fea5988c81fb106ae6f724654d0`.
+Its required online W&B run finished, both nested artifact ledgers revalidate,
+the guard remains unread, and 85606 was not accessed. The tracked root result
+is byte-identical to the Rusty manifest with SHA-256
+`87b6ea353bfe9928404f01d1b494c94bfd2491395c28c0ec0a46105f0ee5e20c`.
+
+CPU-only amended reduction job `6899224` then ran commit
+`bade06465f2bdb7b3d951ce9fa51a3362ab865f7`. It replaces only the erroneous
+path-object identity check from job `6899154` with immutable checkpoint
+content identity. All 85604 numerical values and family summaries are exactly
+unchanged; integrity now passes with zero failed checks. The complete amended
+gate SHA-256 is
+`882ba10898bbf132eea7713098202d8e814e3f709e8693c5b25366c52ffbc391`.
+
+B3 fails scientifically. The field family fails 6 of 54 checks, the spectral
+family 59 of 148, and the transport family 6 of 77; each has zero of five
+required chronological blocks passing. Aggregate ensemble-mean MAE is 1.0031
+times the deterministic H1 parent and fair CRPS is 0.7230 times parent H1 MAE.
+Only one of five fields meets strict spread--skill and coverage criteria.
+Eleven of 15 material power checks pass but only four of 15 realization-
+coherence checks pass. All nine member-expected cross-phase and all nine
+member-expected cross-coherence-change checks pass, yet mode-resolved
+uncertainty remains underdispersed. All four separatrix mean-error and
+fair-CRPS checks are useful, but zero of four separatrix transport quantities
+is calibrated and all four
+strict-face relative-L2 errors are approximately 0.74 against a 0.40 limit.
+
+The frozen decision is `stop_B3_and_diagnose_before_replication`. Seeds 1702
+and 1703, O3, assimilation, diagnostic ranking, and 85606 remain closed. The
+definitive interpretation is `PHASE3_B3_READOUT.md`; the compact machine-
+readable gate is
+`results/phase3_b3_fgn_one_seed_gate_6899224.json`. The next permitted work is
+to freeze a separately justified B4 PDE-Refiner protocol before implementation
+or training.
