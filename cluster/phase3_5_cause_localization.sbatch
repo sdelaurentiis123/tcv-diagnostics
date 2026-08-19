@@ -25,7 +25,7 @@ readonly RUNNER="${PAPER0_ROOT}/paper0/tools/run_phase3_5_cause_localization.py"
 readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_5_cause_localization"
 readonly JOB_ROOT="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly RUN_OUTPUT="${JOB_ROOT}/analysis"
-readonly NODE_SCRATCH="${SLURM_TMPDIR:-/tmp/${USER}/phase3_5_${SLURM_JOB_ID}}"
+readonly NODE_SCRATCH="${SLURM_TMPDIR:-/tmp/${USER}_phase3_5_${SLURM_JOB_ID}}"
 readonly SCRATCH_ROOT="${NODE_SCRATCH}/cause_localization"
 
 if [[ -e "${JOB_ROOT}" ]]; then
