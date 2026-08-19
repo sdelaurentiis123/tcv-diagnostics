@@ -152,7 +152,7 @@
     "seed": 1701,
     "optimizer": "AdamW",
     "optimizer_steps": 64,
-    "target_order": "deterministic_cycle_over_2_through_9",
+    "target_order": "seed_67001_permutation_6_3_9_2_4_5_8_7_repeated_eight_times",
     "microbatch_targets": 1,
     "gradient_accumulation_targets": 1,
     "learning_rate": 0.0001,

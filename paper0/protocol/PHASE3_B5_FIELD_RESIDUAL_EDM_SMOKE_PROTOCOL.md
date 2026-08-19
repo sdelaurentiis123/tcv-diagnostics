@@ -205,10 +205,11 @@ PDE residual, region, event, calibration, or diagnostic term is permitted.
 
 The smoke uses seed `1701`, one H100, bfloat16 autocast with FP32 loss
 accumulation, and no distributed training. It performs exactly 64 optimizer
-steps, cycling deterministically over the eight smoke targets. The optimizer
-is AdamW with learning rate `1e-4`, betas `(0.9,0.99)`, zero weight decay, and
-global gradient clipping at `1.0`. Microbatch size is one target and there is
-no gradient accumulation.
+steps. Seed `67001` fixes one permutation, `[6,3,9,2,4,5,8,7]`, which is
+repeated exactly eight times so every smoke target appears eight times. The
+optimizer is AdamW with learning rate `1e-4`, betas `(0.9,0.99)`, zero weight
+decay, and global gradient clipping at `1.0`. Microbatch size is one target and
+there is no gradient accumulation.
 
 Per-step noise is reproduced from an immutable key containing smoke seed,
 optimizer step, and target frame; it is not stored as a full-volume bank. A

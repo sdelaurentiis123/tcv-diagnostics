@@ -164,6 +164,9 @@ def test_B5_EDM_smoke_budget_and_sampler_are_bounded_and_exact() -> None:
     optimization = record["optimization"]
     assert optimization["seed"] == 1701
     assert optimization["optimizer_steps"] == 64
+    assert optimization["target_order"] == (
+        "seed_67001_permutation_6_3_9_2_4_5_8_7_repeated_eight_times"
+    )
     assert optimization["microbatch_targets"] == 1
     assert optimization["gradient_accumulation_targets"] == 1
     assert math.isclose(optimization["learning_rate"], 1e-4)
