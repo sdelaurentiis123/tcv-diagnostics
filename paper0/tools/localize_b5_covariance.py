@@ -815,6 +815,7 @@ def _legacy_training_cross_check(
     stored_bias: np.ndarray,
 ) -> dict[str, Any]:
     spatial_maximum = 0.0
+    spatial_worst = "none"
     for axis in ("x", "y", "stored_toroidal_z"):
         for field in B5_COVARIANCE_FIELDS:
             actual = np.asarray(
@@ -825,19 +826,35 @@ def _legacy_training_cross_check(
             expected = np.asarray(
                 stored["spatial_autocorrelation"][axis]["fields"][field]["correlation"]
             )
-            spatial_maximum = max(
-                spatial_maximum, float(np.max(np.abs(actual - expected)))
-            )
+            difference = float(np.max(np.abs(actual - expected)))
+            if difference > spatial_maximum:
+                spatial_maximum = difference
+                spatial_worst = f"{axis}/{field}"
     cross_maximum = 0.0
+    cross_worst = "none"
     for region in stored["cross_field"]:
         actual = np.asarray(recomputed["cross_field"][region]["correlation_matrix"])
         expected = np.asarray(stored["cross_field"][region]["correlation_matrix"])
-        cross_maximum = max(cross_maximum, float(np.max(np.abs(actual - expected))))
-    bias_maximum = float(np.max(np.abs(recomputed_bias - stored_bias)))
+        difference = float(np.max(np.abs(actual - expected)))
+        if difference > cross_maximum:
+            cross_maximum = difference
+            cross_worst = str(region)
+    bias_difference = np.abs(recomputed_bias - stored_bias)
+    bias_maximum = float(np.max(bias_difference))
+    bias_index = tuple(
+        int(value)
+        for value in np.unravel_index(
+            int(np.argmax(bias_difference)), bias_difference.shape
+        )
+    )
     passed = spatial_maximum <= 2e-6 and cross_maximum <= 2e-6 and bias_maximum <= 2e-6
     if not passed:
         raise RuntimeError(
-            "reconstructed ungauged training residual fails legacy audit"
+            "reconstructed ungauged training residual fails legacy audit: "
+            f"spatial_max={spatial_maximum:.17g} at {spatial_worst}; "
+            f"cross_field_max={cross_maximum:.17g} at {cross_worst}; "
+            f"axisymmetric_bias_max={bias_maximum:.17g} at {bias_index}; "
+            "frozen_tolerance=1.9999999999999999e-06"
         )
     return {
         "passed": True,

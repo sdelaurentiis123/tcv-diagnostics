@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 from paper0.tools.localize_b5_covariance import (
     EXPECTED_MANIFEST_SHA256,
@@ -110,3 +111,11 @@ def test_legacy_training_cross_check_requires_numerical_reproduction() -> None:
     result = _legacy_training_cross_check(record, record, bias, bias)
     assert result["passed"] is True
     assert result["legacy_statistics_used_as_phi_gauge_fixed_reference"] is False
+
+    discrepant = json.loads(json.dumps(record))
+    discrepant["spatial_autocorrelation"]["x"]["fields"]["Ne"]["correlation"][1] = 0.4
+    with pytest.raises(
+        RuntimeError,
+        match=r"spatial_max=0\.099.* at x/Ne; .*frozen_tolerance=",
+    ):
+        _legacy_training_cross_check(discrepant, record, bias, bias)
