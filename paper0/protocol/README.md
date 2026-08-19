@@ -57,3 +57,13 @@ Development-only protocol locks that do not authorize held-out access include:
   generation, separate H-det/H-prob gates, and evaluator-smoke requirement.
   It explicitly keeps 85606, O3 execution, assimilation, and diagnostic
   ranking closed.
+- `PHASE3_B5_RESIDUAL_AUDIT_PROTOCOL.md`: the post-B4, training-region-only
+  deterministic-H1 residual audit and truth-separated residual provenance.
+- `PHASE3_B5_FIELD_RESIDUAL_EDM_SMOKE_PROTOCOL.md`: the bounded joint
+  field-space residual-EDM mechanics test; it contains no scientific result.
+- `PHASE3_B5_FULL_TRAINING_EVALUATION_PROTOCOL.md`: the post-smoke,
+  pre-full-run seed-1701 B5 budget, data-only EDM-loss selection,
+  truth-separated M32 evaluation, and complete one-seed field, spectral,
+  cross-field, transport, Monte Carlo, and chronological gate. Its completed
+  failure leaves O3, more seeds, assimilation, diagnostic ranking, and 85606
+  closed.

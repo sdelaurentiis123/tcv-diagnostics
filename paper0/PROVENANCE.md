@@ -920,3 +920,47 @@ checkpoint reload, noncollapsed members, and a finished 100-epoch W&B record.
 At this provenance point no full B3 job has been submitted and no new
 scientific result exists. The separate M32 forecast writer and scientific
 scorer still remain to be implemented and smoke-tested before evaluation.
+
+### Completed Phase 3 B5 joint field-residual EDM chain
+
+The intervening B3, B4, and B5 protocol, implementation, smoke, and negative
+gate history is detailed chronologically in `paper0/AUDIT.md` and the
+arm-specific readouts. The final B5 execution used clean commit
+`512c987d49a1a572430ed6f9fca18975798fc599` for training job `6901531`,
+bounded evaluator job `6901582`, full scientific evaluation job `6901587`,
+and CPU-only acceptance job `6901661`.
+
+The final chain is content-locked by:
+
+- training result SHA-256
+  `31d17363261cbe3e007bdeb0862760cfb731b2490da7d76b37f474f8fdb93068`;
+- training history SHA-256
+  `8236c79dd2e83d7bea0b8f7afaf2162306d911195bd46f11834e482a6d7b7401`;
+- evaluation result SHA-256
+  `bb8b5edfb8e01c45cdc8002895d4479d92728671cb023fdea106e9136bfca0f6`;
+- M32 forecast SHA-256
+  `1a5f3ea7e0d1722363205be569d2db60905cdda798b4597a6c47e74d99fab68b`;
+- score SHA-256
+  `c81c0e06313c652816be77025c2b42bbfce10728df7ac14787e00edf7d978ba6`;
+- final gate SHA-256
+  `a1d9cf00de0a2b0b3cc0c13d31c727420214040dcbf575afa67c6ae64015974b`.
+
+Forecast generation atomically closed and hashed the M32 HDF5 before the
+target-only truth reader opened. The checkpoint-selection and scientific
+sampler seed banks are separate. All 120 final integrity checks pass; guard
+frames and simulation 85606 were not read. W&B completed online for training
+and evaluation but is not the scientific authority.
+
+The no-rescoring localization tool verifies the B5 hashes above plus the
+frozen B3, B4, and H1 comparator hashes. Its tracked output is
+`paper0/results/phase3_b5_residual_edm_one_seed_localization_6901661.json`,
+SHA-256
+`ae10349b98394914f6a87dc99bebdc965056a941356f32b0392e261169cbf1f6`.
+It performs no training, inference, scoring, calibration, or threshold change.
+The six figure pairs in `paper0/figures/phase3_b5/` are generated only from
+that compact output by `paper0/tools/plot_b5_residual_edm_gate.py`.
+
+The authoritative decision remains a failed one-seed development gate with
+disposition `B5_one_step_gate_failed_localize_without_retuning`. It does not
+authorize O3, additional seeds, assimilation, diagnostic ranking, steering,
+or access to 85606.

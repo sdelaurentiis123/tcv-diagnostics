@@ -1191,3 +1191,80 @@ validation remain unauthorized until a separate prospective protocol is
 frozen. The detailed interpretation is in
 `PHASE3_B5_EDM_SMOKE_READOUT.md`, and the compact result is tracked at
 `results/phase3_b5_field_residual_edm_smoke_6901469.json`.
+
+## Phase 3 B5 full protocol, implementation, and execution
+
+After the bounded job-`6901469` smoke passed, the seed-1701 full-training and
+scientific-evaluation contract was frozen in
+`protocol/PHASE3_B5_FULL_TRAINING_EVALUATION_PROTOCOL.md` and
+`manifests/phase3_b5_full_training_evaluation_85604.json`. The contract pins
+one 100-epoch, 10,800-step training run, fixed-seed data-only EDM-loss
+selection every five epochs, one four-target M32 evaluator smoke, one complete
+126-target M32 one-step evaluation, and one frozen acceptance reduction. It
+forbids architecture or schedule sweeps, post-hoc calibration, more seeds,
+O3/O4/O5, assimilation, diagnostic ranking, steering, and 85606 access.
+
+The implementation preserves the frozen H1 mean and learns a fresh
+11,604,709-parameter joint residual directly in five-field space. No DCAE is
+used by the residual generator. Context-only forecast generation closes and
+hashes the 14.5-GB M32 forecast before validation truth is opened. Checkpoint
+selection and the scientific ensemble use separate frozen seed banks. The
+complete local and Rocky 9 suite at execution commit
+`512c987d49a1a572430ed6f9fca18975798fc599` passed with
+`1120 passed, 1 skipped`.
+
+Rocky 9 H100 training job `6901531` completed in `00:45:38` with all 100
+epochs, 10,800 optimizer steps, and 43,000 target presentations. Validation
+EDM loss decreased through the final candidate, so epoch 100 was selected at
+`0.30807498889783075`. The selected checkpoint SHA-256 is
+`255904ef362c4d3f0fdb873131cd0b30bc02ea384e76e244d50698bd50df0c72`;
+fresh reload was bitwise exact. The online W&B run finished, and guard frames
+and 85606 remained unread.
+
+Bounded evaluator job `6901582` completed exactly four targets with M32, 18
+Heun steps, and 35 network evaluations per member. It was marked
+non-scientific and used only to establish mechanics. Full evaluation job
+`6901587` then completed all 126 targets. Its closed 14,535,535,504-byte
+forecast has SHA-256
+`1a5f3ea7e0d1722363205be569d2db60905cdda798b4597a6c47e74d99fab68b`;
+the independent score has SHA-256
+`c81c0e06313c652816be77025c2b42bbfce10728df7ac14787e00edf7d978ba6`.
+All prefixes and hashes verified, and W&B finished online.
+
+CPU-only Rocky 9 gate job `6901661` passed all 120 integrity checks and found
+every required metric finite. The field, spectral, and transport families all
+failed with zero of six passing chronological blocks. Overall failed-check
+counts are respectively 4 of 54, 83 of 148, and 7 of 77. The authoritative
+gate SHA-256 is
+`a1d9cf00de0a2b0b3cc0c13d31c727420214040dcbf575afa67c6ae64015974b`.
+The exact disposition is
+`B5_one_step_gate_failed_localize_without_retuning`; O3 protocol writing,
+additional seeds, assimilation, diagnostic ranking, and 85606 access remain
+closed.
+
+## Phase 3 B5 reproducible failure localization
+
+The completed B5 artifacts were copied read-only for a no-rescoring
+localization. `tools/summarize_b5_residual_edm_gate.py` verifies the exact
+training, history, evaluation, score, gate, B3, B4, and H1 comparator hashes
+before extracting a compact record. It performs no training, inference, truth
+scoring, or threshold modification. `tools/plot_b5_residual_edm_gate.py`
+renders six fully labeled figure pairs from that compact record.
+
+The localization establishes that B5 improves H1 mean MAE by `4.41%`, mean
+RMSE by `5.95%`, and fair CRPS to `0.687` times H1 MAE. Aggregate pixel
+spread--skill is `0.802`, and 13 of 15 expected-member power checks pass.
+Nevertheless only 4 of 15 realization-coherence checks pass; zero of 15
+mode-power and zero of 18 cross-projection calibration checks pass. All nine
+cross-phase checks pass, while the three high-band cross-coherence checks
+fail. Strict transport relative-L2 remains approximately `0.71`, and none of
+the four separatrix transport distributions is calibrated.
+
+The pooled strict-face flux spread is close to its local error
+(`0.979--0.994` spread--skill), but integrated separatrix spread is only
+`0.413--0.485`. This local-to-integrated collapse identifies missing coherent
+spatial/cross-field covariance more specifically than a global lack of noise.
+The complete interpretation is `PHASE3_B5_READOUT.md`; the tracked compact
+record is
+`results/phase3_b5_residual_edm_one_seed_localization_6901661.json`, SHA-256
+`ae10349b98394914f6a87dc99bebdc965056a941356f32b0392e261169cbf1f6`.
