@@ -1083,3 +1083,22 @@ family without a schema exception: H-det field passed while H-det spectral
 and transport failed; all three H-prob families failed. That dry run is a
 pre-submission regression, not the formal gate. A clean CPU-only Rocky 9 job
 must still produce and archive the authoritative decision.
+
+## Phase 3 B4 final one-seed decision
+
+CPU-only Rocky 9 job `6901285` completed the frozen reduction over immutable
+evaluation job `6901015`. It passed the complete suite (`987 passed, 1
+skipped, 29 subtests passed`) and all 138 provenance/integrity checks. The
+exact final gate has SHA-256
+`4c07a7f4886c14ca2e53d6e322fe309e5efde1f76ab2ed779a3acd14d110f6be`
+and is tracked at
+`results/phase3_b4_pde_refiner_one_seed_gate_6901285.json`.
+
+H-det fails: the field family passes overall and all six blocks, but spectral
+and transport each pass zero blocks, and the stagewise repair test fails.
+H-prob fails: field, spectral, and transport each pass zero blocks. The final
+aggregate field spread--skill is `0.2172696873820019`; all material-mode and
+cross-projection calibration checks fail; separatrix transport spread--skill
+is only approximately `0.060--0.073`. B4 replication, O3, assimilation,
+diagnostic ranking, and 85606 access remain closed. The complete interpretation
+and numerical tables are in `PHASE3_B4_READOUT.md`.
