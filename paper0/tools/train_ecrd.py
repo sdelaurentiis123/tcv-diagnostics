@@ -192,6 +192,23 @@ def authorize_manifest(
         raise RuntimeError("the bounded ECRD smoke is seed 1701 only")
     if bool(manifest.get("full_training_authorized")) != (mode == "full"):
         raise RuntimeError("ECRD full-training authorization differs")
+    parent_use = manifest.get("symmetrized_parent_use", {})
+    if mode == "smoke":
+        if (
+            parent_use.get("artifact_authority")
+            != "bounded_non_scientific_engineering_smoke_only"
+            or parent_use.get("execution_device") != "cpu-smoke"
+            or parent_use.get("authorized_modes") != ["smoke"]
+            or parent_use.get("H100_comparison_required_before_full_training")
+            is not True
+        ):
+            raise RuntimeError("ECRD smoke parent-use restriction differs")
+    elif (
+        parent_use.get("artifact_authority") != "scientific_H100_parent"
+        or parent_use.get("execution_device") != "h100"
+        or parent_use.get("authorized_modes") != ["smoke", "full"]
+    ):
+        raise RuntimeError("ECRD full-training parent authority differs")
     locks = manifest.get("evidence_locks", {})
     for name, observed in input_hashes.items():
         if _lock_sha(locks, name) != observed:
@@ -589,6 +606,25 @@ def main() -> int:
                         expected_sha256=input_hashes["sym_H1_validation_parent"],
                     )
                 )
+                expected_parent_authority = manifest["symmetrized_parent_use"][
+                    "artifact_authority"
+                ]
+                expected_execution_device = manifest["symmetrized_parent_use"][
+                    "execution_device"
+                ]
+                for label, parent_artifact in (
+                    ("training", train_parent),
+                    ("validation", validation_parent),
+                ):
+                    if (
+                        parent_artifact.artifact_authority
+                        != expected_parent_authority
+                        or parent_artifact.execution_device
+                        != expected_execution_device
+                    ):
+                        raise RuntimeError(
+                            f"ECRD {label} parent execution authority differs"
+                        )
             training_dataset = ECRDResidualDataset(
                 training_windows,
                 train_parent,

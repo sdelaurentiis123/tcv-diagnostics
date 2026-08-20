@@ -292,6 +292,9 @@ class ECRDParentMeanArtifact(AbstractContextManager["ECRDParentMeanArtifact"]):
         metadata = json.loads(_text(self.handle.attrs["metadata_json"]))
         if _mentions_held_out(metadata):
             raise ValueError("ECRD parent metadata mentions the held-out run")
+        self.metadata = metadata
+        self.artifact_authority = str(metadata.get("artifact_authority", ""))
+        self.execution_device = str(metadata.get("execution_device", ""))
 
     def read(self, start: int, stop: int) -> np.ndarray:
         if self.handle is None:

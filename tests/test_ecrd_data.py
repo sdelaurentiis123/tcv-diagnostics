@@ -185,3 +185,39 @@ def test_parent_writer_refuses_held_out_metadata(tmp_path: Path) -> None:
             target_frames=data.ECRD_TRAIN_TARGETS,
             metadata={"target_truth_read": False, "source": "85606"},
         )
+
+
+def test_parent_artifact_exposes_bounded_execution_authority(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(data, "ECRD_TRAIN_TARGETS", (2,))
+    monkeypatch.setattr(data, "VOLUME_SHAPE", (2, 2, 4))
+    path = tmp_path / "parent.h5"
+    with data.ECRDParentMeanWriter(
+        path,
+        split="train",
+        target_frames=(2,),
+        metadata={
+            "target_truth_read": False,
+            "artifact_authority": "bounded_non_scientific_engineering_smoke_only",
+            "execution_device": "cpu-smoke",
+        },
+    ) as writer:
+        writer.append(
+            target_frame=2,
+            standardized_parent_mean=np.zeros((5, 2, 2, 4), dtype=np.float32),
+            inference_seconds=1.0,
+        )
+        writer.finalize()
+    artifact = data.ECRDParentMeanArtifact(
+        path,
+        split="train",
+        expected_sha256=data.sha256_path(path),
+    )
+    try:
+        assert artifact.artifact_authority == (
+            "bounded_non_scientific_engineering_smoke_only"
+        )
+        assert artifact.execution_device == "cpu-smoke"
+    finally:
+        artifact.close()
