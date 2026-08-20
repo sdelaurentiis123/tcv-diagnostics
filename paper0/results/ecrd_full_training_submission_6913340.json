@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "scope": "ECRD_matched_four_arm_three_seed_full_training_submission_85604",
+  "status": "submitted_first_two_tasks_running_after_hash_test_and_wandb_preflight",
+  "snapshot_date": "2026-08-20",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "guard_frames_read": false,
+  "physics_metric_evaluated": false,
+  "scientific_forecast_generated": false,
+  "assimilation_performed": false,
+  "paper0_commit": "d822ee2147a98713f1b2ecdfd0f5a4077eded062",
+  "clean_rusty_checkout": "/mnt/home/sdelaurentiis/tcv-diagnostics-ecrd-d822ee2",
+  "manifest": {
+    "path": "paper0/manifests/ecrd_full_training_85604.json",
+    "sha256": "94100e13a20aa23249aa39f0d910f160ad7aadf60ab42b7e4975969dd3abe6e1"
+  },
+  "launcher": {
+    "path": "cluster/ecrd_full_training.sbatch",
+    "sha256": "0df030978fb0368bd45b8ddd73d742f1eaca0fca486f81882b10c15cd17e6b7a"
+  },
+  "slurm": {
+    "array_job_id": "6913340",
+    "partition": "gpupreempt",
+    "qos": "gpupreempt",
+    "constraint": "h100",
+    "array": "0-10%2",
+    "time_limit": "08:00:00",
+    "accelerators_per_task": 1,
+    "new_task_count": 11
+  },
+  "training_matrix": [
+    {"array_index": 0, "arm": "B5", "seed": 1702},
+    {"array_index": 1, "arm": "B5", "seed": 1703},
+    {"array_index": 2, "arm": "B5-Context", "seed": 1701},
+    {"array_index": 3, "arm": "B5-Context", "seed": 1702},
+    {"array_index": 4, "arm": "B5-Context", "seed": 1703},
+    {"array_index": 5, "arm": "ECRD", "seed": 1701},
+    {"array_index": 6, "arm": "ECRD", "seed": 1702},
+    {"array_index": 7, "arm": "ECRD", "seed": 1703},
+    {"array_index": 8, "arm": "ECRD-History", "seed": 1701},
+    {"array_index": 9, "arm": "ECRD-History", "seed": 1702},
+    {"array_index": 10, "arm": "ECRD-History", "seed": 1703}
+  ],
+  "historical_twelfth_run": {
+    "arm": "B5",
+    "seed": 1701,
+    "training_job_id": "6901531",
+    "selected_checkpoint_sha256": "255904ef362c4d3f0fdb873131cd0b30bc02ea384e76e244d50698bd50df0c72",
+    "artifact_index_verified": true
+  },
+  "launch_health": {
+    "task_0": {
+      "state": "RUNNING",
+      "arm": "B5",
+      "seed": 1702,
+      "manifest_and_all_input_hashes_verified": true,
+      "complete_suite_passed": 1326,
+      "wandb_authenticated": true,
+      "wandb_run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdfull-6913340-0-s1702"
+    },
+    "task_1": {
+      "state": "RUNNING",
+      "arm": "B5",
+      "seed": 1703,
+      "manifest_and_all_input_hashes_verified": true,
+      "complete_suite_passed": 1326,
+      "wandb_authenticated": true,
+      "wandb_run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdfull-6913340-1-s1703"
+    },
+    "remaining_tasks_state": "PENDING_JOB_ARRAY_TASK_LIMIT"
+  },
+  "training_budget_per_new_task": {
+    "epochs": 100,
+    "target_presentations": 43000,
+    "optimizer_steps": 10800,
+    "candidate_checkpoints": 20,
+    "physics_derived_loss_allowed": false
+  },
+  "wandb": {
+    "mode": "online_required",
+    "entity": "sdelaurentiis123-columbia-university",
+    "project": "tcv-diagnostics-paper0",
+    "group": "ecrd-model-development"
+  },
+  "next_event": "monitor_all_tasks_to_hash_verified_completion_before_freezing_scientific_evaluation"
+}
