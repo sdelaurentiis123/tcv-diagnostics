@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "scope": "truth_free_four_phase_H1_parent_generation_85604",
+  "status": "completed_and_independently_checksum_verified",
+  "scientific_result": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "target_truth_read": false,
+  "guard_frames_read": false,
+  "training_performed": false,
+  "full_training_authorized": true,
+  "artifact_authority": "scientific_H100_parent",
+  "execution_device": "h100",
+  "paper0_commit": "21b48595fdc28d20a249df7d8cc943287755497c",
+  "slurm": {
+    "job_id": "6913234",
+    "state": "COMPLETED",
+    "elapsed": "00:02:40",
+    "exit_code": "0:0",
+    "node": "workergpu201",
+    "accelerator": "NVIDIA H100"
+  },
+  "tests": {
+    "passed": 1318,
+    "skipped": 1,
+    "subtests_passed": 29
+  },
+  "parent": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent/job_6913234/parent",
+    "result_sha256": "e52abfae2616ad14ea468dc4e7ff18f56a43d15775a7cb373e6b52f75539c1af",
+    "artifact_index_sha256": "740047ad1d3cf7a4ecef992ea082ef1a79f9ea8dedc2ab3d33a8551347f6cf76",
+    "job_artifact_index_sha256": "4c7e71a2953087455cf973270e762297cf1d5f85e130f2c78849c969627a9813",
+    "train": {
+      "target_frames": [2, 432],
+      "target_count": 430,
+      "shape": [430, 5, 64, 32, 88],
+      "wall_seconds": 75.17606506199809,
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent/job_6913234/parent/sym_h1_train.h5",
+      "sha256": "21725a5ae29832068676840aabea37a2e59eac861e8b9243bf45414de6811cbd"
+    },
+    "validation": {
+      "target_frames": [498, 624],
+      "target_count": 126,
+      "shape": [126, 5, 64, 32, 88],
+      "wall_seconds": 21.954292205977254,
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent/job_6913234/parent/sym_h1_validation.h5",
+      "sha256": "fd23a42a6603e9150868a7eb0dc5f76580f0044bf1bd0b9e8e01ef04b378fd8d"
+    }
+  },
+  "wandb": {
+    "mode": "online",
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdparent-6913234",
+    "remote_state_after_finish": "finished",
+    "record_sha256": "e9a607d6ce028aa1695d4e63efcfb05d0c4dd1c1311f3aece1d33da589dd6da7"
+  },
+  "independent_verification": {
+    "parent_artifact_index_sha256_check": "passed",
+    "job_artifact_index_sha256_check": "passed",
+    "verified_at": "2026-08-20"
+  },
+  "next_permitted_use": "ECRD_smoke_or_full_training_on_85604_only"
+}

@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "status": "frozen_after_passing_ECRD_smoke_before_full_training",
+  "freeze_date": "2026-08-20",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "protocol": {
+    "path": "paper0/protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md",
+    "sha256": "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4"
+  },
+  "authorized_scope": [
+    "eleven_new_four_arm_three_seed_85604_full_training_runs",
+    "reuse_of_hash_verified_historical_B5_seed1701_as_the_twelfth_run",
+    "data_only_checkpoint_selection_on_three_equal_chronological_validation_blocks"
+  ],
+  "forbidden_scope": [
+    "85606_access",
+    "guard_reads",
+    "physics_derived_training_loss",
+    "scientific_forecast_generation_during_training",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering_or_control"
+  ],
+  "authorized_arms": ["B5", "B5-Context", "ECRD", "ECRD-History"],
+  "authorized_seeds": [1701, 1702, 1703],
+  "full_training_authorized": true,
+  "symmetrized_parent_use": {
+    "artifact_authority": "scientific_H100_parent",
+    "execution_device": "h100",
+    "authorized_modes": ["smoke", "full"]
+  },
+  "evidence_locks": {
+    "model_dataset": {
+      "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    },
+    "H1_training_parent": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/h1_training_forecast.h5",
+      "sha256": "d1342e53ac5f9077665f7a707ca035b9069a616d7db10371e1f6c1ae504d9c18",
+      "parent": "frozen_unsymmetrized_C5P_H1_seed1701",
+      "target_frames": [2, 432]
+    },
+    "H1_validation_parent": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/task_0_c5p_h1_seed_1701/forecast.h5",
+      "sha256": "a76b389dfc090d1d3061ec4be3526c524645b4cd9cec2f309601af0dd405f1ed",
+      "parent": "frozen_unsymmetrized_C5P_H1_seed1701",
+      "target_frames": [498, 624]
+    },
+    "sym_H1_training_parent": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent/job_6913234/parent/sym_h1_train.h5",
+      "sha256": "21725a5ae29832068676840aabea37a2e59eac861e8b9243bf45414de6811cbd",
+      "parent": "four_phase_symmetrized_C5P_H1_seed1701",
+      "target_frames": [2, 432],
+      "artifact_authority": "scientific_H100_parent",
+      "execution_device": "h100"
+    },
+    "sym_H1_validation_parent": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent/job_6913234/parent/sym_h1_validation.h5",
+      "sha256": "fd23a42a6603e9150868a7eb0dc5f76580f0044bf1bd0b9e8e01ef04b378fd8d",
+      "parent": "four_phase_symmetrized_C5P_H1_seed1701",
+      "target_frames": [498, 624],
+      "artifact_authority": "scientific_H100_parent",
+      "execution_device": "h100"
+    },
+    "sym_H1_parent_generation": {
+      "slurm_job_id": "6913234",
+      "paper0_commit": "21b48595fdc28d20a249df7d8cc943287755497c",
+      "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent/job_6913234/parent/result.json",
+      "result_sha256": "e52abfae2616ad14ea468dc4e7ff18f56a43d15775a7cb373e6b52f75539c1af",
+      "parent_artifact_index_sha256": "740047ad1d3cf7a4ecef992ea082ef1a79f9ea8dedc2ab3d33a8551347f6cf76",
+      "job_artifact_index_sha256": "4c7e71a2953087455cf973270e762297cf1d5f85e130f2c78849c969627a9813",
+      "wandb_sha256": "e9a607d6ce028aa1695d4e63efcfb05d0c4dd1c1311f3aece1d33da589dd6da7",
+      "wandb_run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdparent-6913234",
+      "remote_state_after_finish": "finished",
+      "training_performed": false,
+      "target_truth_read": false,
+      "guard_frames_read": false,
+      "held_out_85606_read": false,
+      "full_training_authorized": true
+    },
+    "CPU_H100_parent_comparison": {
+      "slurm_job_id": "6913271",
+      "paper0_commit": "e2b03186ba007fc98a99baf7b84e1ea0a0b8fafe",
+      "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_parent_execution_comparison/job_6913271/comparison/result.json",
+      "result_sha256": "b4fb353bb4070309c8d59234951f738fe4bf0eee13d59f8ad4cba366b3bed908",
+      "artifact_index_sha256": "553ab5434bfc8abc26080db671157ab75d41070a7870a656716aa2a2e10ff7db",
+      "job_artifact_index_sha256": "e42f5346894f18f32e63f7e3a24b0fe240f9a4f8b600df3cb146568b26cac938",
+      "train_guard_passed": true,
+      "validation_guard_passed": true,
+      "CPU_parent_promoted": false,
+      "full_training_parent_authority": "scientific_H100_parent_only"
+    }
+  },
+  "data": {
+    "training_targets": [2, 432],
+    "guard_frames": [432, 496],
+    "validation_targets": [498, 624],
+    "validation_blocks": {
+      "V00": [498, 540],
+      "V01": [540, 582],
+      "V02": [582, 624]
+    },
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "cadence_microseconds": 3.131905426352636,
+    "volume_shape": [5, 64, 32, 88],
+    "periodic_axes_xyz": [false, false, true],
+    "zperiod": 5,
+    "mode_mapping": "n=5k"
+  },
+  "smoke": {
+    "training_targets": [2, 6],
+    "validation_targets": [498, 502],
+    "epochs": 1,
+    "optimizer_steps": 2,
+    "target_presentations": 4,
+    "scientific_result": false
+  },
+  "smoke_evidence": {
+    "all_four_arms_passed": true,
+    "array_job_id": "6912495",
+    "smoke_paper0_commit": "fe4ba35ff0134729371209d89d42ac895792026b",
+    "verifier_job_id": "6913232",
+    "verifier_paper0_commit": "21b48595fdc28d20a249df7d8cc943287755497c",
+    "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_engineering_smoke/job_6912495/result.json",
+    "result_sha256": "e135c78a925c09137f6609f38ebb40e8de218dd99e9b6a393f34dc26fd8768ad",
+    "artifact_index_sha256": "a939e8c42e3ecbc7341de80d8ac04c5ee54a4bdf4f07dcdc530ea64c486d7ece",
+    "all_wandb_runs_finished": true,
+    "scientific_result": false
+  },
+  "exact_implementation": {
+    "parameter_counts": {
+      "B5": 11604709,
+      "B5-Context": 11350909,
+      "ECRD": 11455746,
+      "ECRD-History": 11462766
+    },
+    "multiscale_noise": {
+      "distribution": "full_rank_global_plus_xy_mesoscale_plus_local_Gaussian",
+      "global_weight": 0.35,
+      "mesoscale_weight": 0.55,
+      "local_weight": 1.0,
+      "mesoscale_xy": [4, 4],
+      "posthoc_spread_multiplier": false,
+      "toroidal_cells_retained_at_all_scales": true
+    },
+    "parameter_matching_reference": 11604709,
+    "relative_parameter_tolerance": 0.1,
+    "configuration_selected_without_validation_or_physics_results": true
+  },
+  "training": {
+    "epochs": 100,
+    "target_presentations": 43000,
+    "optimizer_steps": 10800,
+    "microbatch_targets": 1,
+    "gradient_accumulation_targets": 4,
+    "candidate_epochs": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
+    "physics_derived_loss_allowed": false,
+    "scientific_forecast_generated_during_training": false
+  },
+  "historical_B5_seed1701": {
+    "reuse_authorized": true,
+    "reason": "same_frozen_architecture_data_order_corruption_optimizer_budget_and_equal_size_block_mean_selection",
+    "training_job_id": "6901531",
+    "training_commit": "512c987d49a1a572430ed6f9fca18975798fc599",
+    "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_field_residual_edm_full/job_6901531/b5_joint_field_residual_edm_seed_1701/result.json",
+    "result_sha256": "31d17363261cbe3e007bdeb0862760cfb731b2490da7d76b37f474f8fdb93068",
+    "selected_checkpoint_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_field_residual_edm_full/job_6901531/b5_joint_field_residual_edm_seed_1701/selected.pt",
+    "selected_checkpoint_sha256": "255904ef362c4d3f0fdb873131cd0b30bc02ea384e76e244d50698bd50df0c72",
+    "artifact_index_sha256": "19cacc363d7c886e754c0181ee999a24d469b11db60076ae0d71e0c2236901a0",
+    "artifact_index_verified": true,
+    "completed_epochs": 100,
+    "completed_optimizer_steps": 10800,
+    "target_presentations": 43000,
+    "candidate_count": 20,
+    "checkpoint_reload_bitwise_exact": true,
+    "held_out_85606_read": false
+  },
+  "new_training_matrix": [
+    {"array_index": 0, "arm": "B5", "seed": 1702},
+    {"array_index": 1, "arm": "B5", "seed": 1703},
+    {"array_index": 2, "arm": "B5-Context", "seed": 1701},
+    {"array_index": 3, "arm": "B5-Context", "seed": 1702},
+    {"array_index": 4, "arm": "B5-Context", "seed": 1703},
+    {"array_index": 5, "arm": "ECRD", "seed": 1701},
+    {"array_index": 6, "arm": "ECRD", "seed": 1702},
+    {"array_index": 7, "arm": "ECRD", "seed": 1703},
+    {"array_index": 8, "arm": "ECRD-History", "seed": 1701},
+    {"array_index": 9, "arm": "ECRD-History", "seed": 1702},
+    {"array_index": 10, "arm": "ECRD-History", "seed": 1703}
+  ],
+  "execution": {
+    "cluster": "Rusty",
+    "os": "Rocky_Linux_9",
+    "accelerator": "one_H100_per_task",
+    "array": "0-10%2",
+    "submission": "sbatch_from_rusty9",
+    "wandb_online_required": true,
+    "wandb_entity": "sdelaurentiis123-columbia-university",
+    "wandb_project": "tcv-diagnostics-paper0",
+    "wandb_group": "ecrd-model-development",
+    "Ceph_artifacts_are_scientific_authority": true
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "scope": "ECRD_CPU_smoke_to_scientific_H100_parent_framewise_comparison_85604",
+  "status": "comparison_completed_H100_remains_only_scientific_parent",
+  "scientific_result": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "target_truth_read": false,
+  "guard_frames_read": false,
+  "training_performed": false,
+  "physics_metric_evaluated": false,
+  "CPU_parent_promoted": false,
+  "full_training_parent_authority": "scientific_H100_parent_only",
+  "paper0_commit": "e2b03186ba007fc98a99baf7b84e1ea0a0b8fafe",
+  "slurm": {
+    "job_id": "6913271",
+    "state": "COMPLETED",
+    "elapsed": "00:01:25",
+    "exit_code": "0:0",
+    "node": "worker6203",
+    "accelerator": "CPU"
+  },
+  "tests": {
+    "passed": 1322,
+    "skipped": 1,
+    "subtests_passed": 29
+  },
+  "comparison": {
+    "train": {
+      "frame_count": 430,
+      "element_count": 387481600,
+      "exact_fraction": 0.03223534485250396,
+      "mean_absolute_difference": 7.336843404233204e-7,
+      "maximum_absolute_difference": 0.000015497207641601562,
+      "relative_RMS_difference": 1.054298218861197e-6,
+      "engineering_consistency_guard_passed": true
+    },
+    "validation": {
+      "frame_count": 126,
+      "element_count": 113541120,
+      "exact_fraction": 0.03193816478118236,
+      "mean_absolute_difference": 7.311259084033994e-7,
+      "maximum_absolute_difference": 0.0000133514404296875,
+      "relative_RMS_difference": 1.035835742292422e-6,
+      "engineering_consistency_guard_passed": true
+    },
+    "guards": {
+      "global_relative_RMS_limit": 0.00005,
+      "maximum_absolute_limit": 0.0005,
+      "diagnostic_only": true,
+      "may_promote_CPU_parent": false
+    }
+  },
+  "artifacts": {
+    "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_parent_execution_comparison/job_6913271/comparison/result.json",
+    "result_sha256": "b4fb353bb4070309c8d59234951f738fe4bf0eee13d59f8ad4cba366b3bed908",
+    "artifact_index_sha256": "553ab5434bfc8abc26080db671157ab75d41070a7870a656716aa2a2e10ff7db",
+    "job_artifact_index_sha256": "e42f5346894f18f32e63f7e3a24b0fe240f9a4f8b600df3cb146568b26cac938"
+  },
+  "independent_verification": {
+    "comparison_artifact_index_sha256_check": "passed",
+    "job_artifact_index_sha256_check": "passed",
+    "verified_at": "2026-08-20"
+  }
+}

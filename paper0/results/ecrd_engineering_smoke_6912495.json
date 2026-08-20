@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "scope": "bounded_non_scientific_four_arm_ECRD_engineering_smoke_85604",
+  "status": "all_four_arms_passed_and_independently_verified",
+  "scientific_result": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "guard_frames_read": false,
+  "physics_metric_evaluated": false,
+  "full_training_authorized_by_this_record": false,
+  "smoke_paper0_commit": "fe4ba35ff0134729371209d89d42ac895792026b",
+  "verifier_paper0_commit": "21b48595fdc28d20a249df7d8cc943287755497c",
+  "manifest": {
+    "path": "paper0/manifests/ecrd_engineering_smoke_85604.json",
+    "sha256": "6204e7bfef02c449f464ea7647b8d6fc14c0bba22135c0b56ea47d77f530ac45"
+  },
+  "array": {
+    "job_id": "6912495",
+    "accelerator": "one_H100_per_task",
+    "task_order": ["B5", "B5-Context", "ECRD", "ECRD-History"],
+    "seed": 1701,
+    "completed_optimizer_steps_per_task": 2,
+    "target_presentations_per_task": 4,
+    "states": ["COMPLETED", "COMPLETED", "COMPLETED", "COMPLETED"],
+    "elapsed": ["00:01:52", "00:01:09", "00:01:11", "00:01:09"],
+    "exit_codes": ["0:0", "0:0", "0:0", "0:0"],
+    "tests_per_task": {
+      "passed": 1318,
+      "skipped": 1,
+      "subtests_passed": 29
+    }
+  },
+  "mechanical_results": {
+    "B5": {
+      "parameter_count": 11604709,
+      "checkpoint_reload_bitwise_exact": true,
+      "member_diversity": 0.0739043727517128,
+      "peak_cuda_GiB": 0.6069788932800293,
+      "maximum_generator_equivariance_error": 0.000004168694886175217,
+      "equivariance_required": false,
+      "artifact_index_sha256": "9cf0a5f48e45c19c13403511668b3b57293182ad45538fef9cd8848a8c93f1d1",
+      "wandb_run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdsmk-6912495-0-s1701",
+      "wandb_remote_state": "finished"
+    },
+    "B5-Context": {
+      "parameter_count": 11350909,
+      "checkpoint_reload_bitwise_exact": true,
+      "member_diversity": 0.0739043653011322,
+      "peak_cuda_GiB": 0.6058249473571777,
+      "maximum_generator_equivariance_error": 0.0000033453941341576865,
+      "equivariance_required": false,
+      "artifact_index_sha256": "00d4476d44532a8f9b2bf67c7eac90ff072b73b714d4f08ed0d87fe370a28801",
+      "wandb_run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdsmk-6912495-1-s1701",
+      "wandb_remote_state": "finished"
+    },
+    "ECRD": {
+      "parameter_count": 11455746,
+      "checkpoint_reload_bitwise_exact": true,
+      "member_diversity": 0.07516879588365555,
+      "peak_cuda_GiB": 0.6439075469970703,
+      "maximum_generator_equivariance_error": 1.064413890361493e-9,
+      "maximum_mean_head_equivariance_error": 2.608985880669934e-7,
+      "equivariance_required": true,
+      "artifact_index_sha256": "06a97e0faf21ec5a708150c813a892bfe3345ab042847d1156b6a5a0152b93f7",
+      "wandb_run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdsmk-6912495-2-s1701",
+      "wandb_remote_state": "finished"
+    },
+    "ECRD-History": {
+      "parameter_count": 11462766,
+      "checkpoint_reload_bitwise_exact": true,
+      "member_diversity": 0.07516878098249435,
+      "peak_cuda_GiB": 0.6537604331970215,
+      "maximum_generator_equivariance_error": 1.3267106302450316e-9,
+      "maximum_mean_head_equivariance_error": 2.562026963914832e-7,
+      "equivariance_required": true,
+      "artifact_index_sha256": "84153e0b08d29e06c9850f825567f0415a52e876df32c66e846534e9e929aa6a",
+      "wandb_run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdsmk-6912495-3-s1701",
+      "wandb_remote_state": "finished"
+    }
+  },
+  "finalizer": {
+    "successful_job_id": "6913232",
+    "state": "COMPLETED",
+    "elapsed": "00:00:23",
+    "exit_code": "0:0",
+    "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_engineering_smoke/job_6912495/result.json",
+    "result_sha256": "e135c78a925c09137f6609f38ebb40e8de218dd99e9b6a393f34dc26fd8768ad",
+    "artifact_index_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_engineering_smoke/job_6912495/finalizer_job_6913232/artifact_sha256.txt",
+    "artifact_index_sha256": "a939e8c42e3ecbc7341de80d8ac04c5ee54a4bdf4f07dcdc530ea64c486d7ece"
+  },
+  "documented_non_scientific_failures": [
+    {
+      "job_id": "6912499",
+      "cause": "finalizer_expected_residual_scales_at_the_wrong_result_JSON_level",
+      "effect": "verification_only_failure_after_all_four_tasks_completed",
+      "model_artifacts_changed": false
+    },
+    {
+      "job_id": "6913231",
+      "cause": "submission_supplied_an_incorrect_expected_verifier_commit",
+      "effect": "clean_checkout_guard_stopped_before_artifact_processing",
+      "model_artifacts_changed": false
+    }
+  ],
+  "independent_verification": {
+    "all_task_artifact_indices_checked": true,
+    "finalizer_artifact_index_checked": true,
+    "all_four_wandb_runs_finished": true,
+    "verified_at": "2026-08-20"
+  }
+}
