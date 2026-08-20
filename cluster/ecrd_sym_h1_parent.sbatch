@@ -86,7 +86,7 @@ fi
 check_sha256 "6fa7c02499cb94dac13d29d797b3f06693d2b07a922e0812a033079ea7185fa5" "${MANIFEST}"
 check_sha256 "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4" "${PROTOCOL}"
 check_sha256 "9f1aba341b5301e09f97eaaacce82f1bb44606c269b6260f5a130fdb84dc261a" "${ENTRYPOINT}"
-check_sha256 "2c97802e0bcff3b47f14867c62ba1b55583e98b7a9a2ec3e5e83566a8cc2c35c" "${PAPER0_ROOT}/src/tcv_diagnostics/ecrd_data.py"
+check_sha256 "1c03bb2f3cc0249a58c8a14f238348692798970a6424188833acfbf10b35f679" "${PAPER0_ROOT}/src/tcv_diagnostics/ecrd_data.py"
 check_sha256 "38d1d69a930fa27923de1cebf98553f70bf797a1e8ac250a7c4aef9b4961421f" "${PAPER0_ROOT}/src/tcv_diagnostics/models/ecrd.py"
 check_sha256 "a42e3c9ed2ff652573288bbb11e610bae5dca3c66d14c98a89caa80fe9cd5ae2" "${PAPER0_ROOT}/src/tcv_diagnostics/ecrd_wandb_tracking.py"
 check_sha256 "4e28c00ab6c166256f899b5384fa140dae8a6bf64da73fb56e5183d50118ec53" "${PAPER0_ROOT}/src/tcv_diagnostics/b5_residual_forecast.py"

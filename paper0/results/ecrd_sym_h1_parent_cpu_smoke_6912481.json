@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "scope": "truth_free_four_phase_H1_CPU_parent_for_bounded_smoke_85604",
+  "status": "completed_and_independently_checksum_verified",
+  "scientific_result": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "target_truth_read": false,
+  "guard_frames_read": false,
+  "training_performed": false,
+  "full_training_authorized": false,
+  "artifact_authority": "bounded_non_scientific_engineering_smoke_only",
+  "paper0_commit": "b6720c3adddcef6c2137767d405e25987b588cad",
+  "slurm": {
+    "job_id": "6912481",
+    "state": "COMPLETED",
+    "elapsed": "00:24:17",
+    "exit_code": "0:0",
+    "node": "worker6203",
+    "accelerator": "CPU"
+  },
+  "tests": {
+    "passed": 1306,
+    "skipped": 1,
+    "warnings": 14,
+    "subtests_passed": 29
+  },
+  "parent": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent_cpu_smoke/job_6912481/parent",
+    "result_sha256": "ba8710e1e0813652fbbddc5c0ce7de20ddcdc39a3d74cf478ed344d8f3bb4037",
+    "artifact_index_sha256": "7a81650059e9ca3d2157843e0072477713cfe9f9c74744b89aae86a9fc159643",
+    "job_artifact_index_sha256": "56b4372f7c08ab5df88d3f4e68a3a78d040a978849710c6750b7b769c471f919",
+    "train": {
+      "target_frames": [2, 432],
+      "target_count": 430,
+      "shape": [430, 5, 64, 32, 88],
+      "wall_seconds": 1023.1570053899995,
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent_cpu_smoke/job_6912481/parent/sym_h1_train.h5",
+      "sha256": "d238d055c3f1da9e3096a81cac67176f90365c99dfb423a1a0629f85b61f9532"
+    },
+    "validation": {
+      "target_frames": [498, 624],
+      "target_count": 126,
+      "shape": [126, 5, 64, 32, 88],
+      "wall_seconds": 302.4407730219973,
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent_cpu_smoke/job_6912481/parent/sym_h1_validation.h5",
+      "sha256": "9acaf190507d2cc0216a4f137e7e63717370e52484e99351d6ded903e30cc2d3"
+    }
+  },
+  "wandb": {
+    "mode": "online",
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdparentsmoke-6912481",
+    "remote_state_after_finish": "finished",
+    "record_sha256": "d87238d14fed38015b6797fc226a9991a43ca5747834ff0bf274ff450f714a42"
+  },
+  "independent_verification": {
+    "parent_artifact_index_sha256_check": "passed",
+    "job_artifact_index_sha256_check": "passed",
+    "verified_at": "2026-08-20"
+  },
+  "next_permitted_use": "bounded_non_scientific_four_arm_ECRD_engineering_smoke_only",
+  "H100_parent_required_before_full_training": true
+}

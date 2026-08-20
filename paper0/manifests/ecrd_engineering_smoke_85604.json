@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_ECRD_engineering_smoke",
+  "freeze_date": "2026-08-20",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "protocol": {
+    "path": "paper0/protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md",
+    "sha256": "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4"
+  },
+  "authorized_scope": [
+    "bounded_four_arm_seed1701_engineering_smoke_on_85604",
+    "two_optimizer_steps_per_arm",
+    "four_target_data_only_validation_per_arm",
+    "full_volume_two_member_sampler_probe",
+    "mechanical_checkpoint_reload_memory_diversity_and_equivariance_checks"
+  ],
+  "forbidden_scope": [
+    "full_training",
+    "scientific_model_selection",
+    "physics_metric_evaluation",
+    "scientific_forecast_generation",
+    "guard_reads",
+    "85606_access",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering_or_control"
+  ],
+  "authorized_arms": [
+    "B5",
+    "B5-Context",
+    "ECRD",
+    "ECRD-History"
+  ],
+  "authorized_seeds": [1701],
+  "full_training_authorized": false,
+  "symmetrized_parent_use": {
+    "artifact_authority": "bounded_non_scientific_engineering_smoke_only",
+    "execution_device": "cpu-smoke",
+    "authorized_modes": ["smoke"],
+    "H100_comparison_required_before_full_training": true
+  },
+  "evidence_locks": {
+    "model_dataset": {
+      "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    },
+    "H1_training_parent": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase3_b5_h1_residual_audit/job_6901393/audit/h1_training_forecast.h5",
+      "sha256": "d1342e53ac5f9077665f7a707ca035b9069a616d7db10371e1f6c1ae504d9c18",
+      "parent": "frozen_unsymmetrized_C5P_H1_seed1701",
+      "target_frames": [2, 432]
+    },
+    "H1_validation_parent": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_evaluation_full/job_6896117/task_0_c5p_h1_seed_1701/forecast.h5",
+      "sha256": "a76b389dfc090d1d3061ec4be3526c524645b4cd9cec2f309601af0dd405f1ed",
+      "parent": "frozen_unsymmetrized_C5P_H1_seed1701",
+      "target_frames": [498, 624]
+    },
+    "sym_H1_training_parent": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent_cpu_smoke/job_6912481/parent/sym_h1_train.h5",
+      "sha256": "d238d055c3f1da9e3096a81cac67176f90365c99dfb423a1a0629f85b61f9532",
+      "parent": "four_phase_symmetrized_C5P_H1_seed1701",
+      "target_frames": [2, 432],
+      "artifact_authority": "bounded_non_scientific_engineering_smoke_only",
+      "execution_device": "cpu-smoke"
+    },
+    "sym_H1_validation_parent": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent_cpu_smoke/job_6912481/parent/sym_h1_validation.h5",
+      "sha256": "9acaf190507d2cc0216a4f137e7e63717370e52484e99351d6ded903e30cc2d3",
+      "parent": "four_phase_symmetrized_C5P_H1_seed1701",
+      "target_frames": [498, 624],
+      "artifact_authority": "bounded_non_scientific_engineering_smoke_only",
+      "execution_device": "cpu-smoke"
+    },
+    "sym_H1_parent_generation": {
+      "slurm_job_id": "6912481",
+      "paper0_commit": "b6720c3adddcef6c2137767d405e25987b588cad",
+      "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent_cpu_smoke/job_6912481/parent/result.json",
+      "result_sha256": "ba8710e1e0813652fbbddc5c0ce7de20ddcdc39a3d74cf478ed344d8f3bb4037",
+      "parent_artifact_index_sha256": "7a81650059e9ca3d2157843e0072477713cfe9f9c74744b89aae86a9fc159643",
+      "job_artifact_index_sha256": "56b4372f7c08ab5df88d3f4e68a3a78d040a978849710c6750b7b769c471f919",
+      "wandb_sha256": "d87238d14fed38015b6797fc226a9991a43ca5747834ff0bf274ff450f714a42",
+      "wandb_run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0ecrdparentsmoke-6912481",
+      "remote_state_after_finish": "finished",
+      "training_performed": false,
+      "target_truth_read": false,
+      "guard_frames_read": false,
+      "held_out_85606_read": false,
+      "full_training_authorized": false
+    }
+  },
+  "data": {
+    "training_targets": [2, 432],
+    "guard_frames": [432, 496],
+    "validation_targets": [498, 624],
+    "validation_blocks": {
+      "V00": [498, 540],
+      "V01": [540, 582],
+      "V02": [582, 624]
+    },
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "cadence_microseconds": 3.131905426352636,
+    "volume_shape": [5, 64, 32, 88],
+    "periodic_axes_xyz": [false, false, true],
+    "zperiod": 5,
+    "mode_mapping": "n=5k"
+  },
+  "smoke": {
+    "training_targets": [2, 6],
+    "validation_targets": [498, 502],
+    "epochs": 1,
+    "optimizer_steps": 2,
+    "target_presentations": 4,
+    "ensemble_members": 2,
+    "EDM_steps": 18,
+    "network_evaluations_per_member": 35,
+    "full_volume_sampling": true,
+    "checkpoint_reload_bitwise_exact_required": true,
+    "finished_online_wandb_required": true,
+    "scientific_result": false
+  },
+  "exact_implementation": {
+    "parameter_counts": {
+      "B5": 11604709,
+      "B5-Context": 11350909,
+      "ECRD": 11455746,
+      "ECRD-History": 11462766
+    },
+    "multiscale_noise": {
+      "distribution": "full_rank_global_plus_xy_mesoscale_plus_local_Gaussian",
+      "global_weight": 0.35,
+      "mesoscale_weight": 0.55,
+      "local_weight": 1.0,
+      "mesoscale_xy": [4, 4],
+      "posthoc_spread_multiplier": false,
+      "toroidal_cells_retained_at_all_scales": true
+    },
+    "parameter_matching_reference": 11604709,
+    "relative_parameter_tolerance": 0.1,
+    "configuration_selected_without_validation_or_physics_results": true
+  },
+  "execution": {
+    "cluster": "Rusty",
+    "os": "Rocky_Linux_9",
+    "accelerator": "one_H100_per_task",
+    "array": "0-3%1",
+    "submission": "sbatch_from_rusty9",
+    "wandb_online_required": true,
+    "wandb_entity": "sdelaurentiis123-columbia-university",
+    "wandb_project": "tcv-diagnostics-paper0",
+    "wandb_group": "ecrd-engineering-smoke-85604",
+    "Ceph_artifacts_are_scientific_authority": false,
+    "scientific_scores_exported_to_wandb": false
+  }
+}
