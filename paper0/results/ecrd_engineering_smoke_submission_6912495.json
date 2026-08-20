@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "scope": "bounded_non_scientific_four_arm_ECRD_engineering_smoke_submission_85604",
+  "status": "submitted_awaiting_resources",
+  "snapshot_date": "2026-08-20",
+  "scientific_result": false,
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "full_training_authorized": false,
+  "paper0_commit": "fe4ba35ff0134729371209d89d42ac895792026b",
+  "clean_rusty_checkout": "/mnt/home/sdelaurentiis/tcv-diagnostics-ecrd-fe4ba35",
+  "manifest": {
+    "path": "paper0/manifests/ecrd_engineering_smoke_85604.json",
+    "sha256": "6204e7bfef02c449f464ea7647b8d6fc14c0bba22135c0b56ea47d77f530ac45"
+  },
+  "smoke_array": {
+    "slurm_job_id": "6912495",
+    "partition": "gpupreempt",
+    "qos": "gpupreempt",
+    "constraint": "h100",
+    "array": "0-3%1",
+    "time_limit": "01:00:00",
+    "arms_in_task_order": [
+      "B5",
+      "B5-Context",
+      "ECRD",
+      "ECRD-History"
+    ],
+    "seed": 1701,
+    "optimizer_steps_per_task": 2,
+    "target_presentations_per_task": 4,
+    "scientific_result": false
+  },
+  "mechanical_finalizer": {
+    "slurm_job_id": "6912499",
+    "dependency": "afterok:6912495",
+    "expected_output": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_engineering_smoke/job_6912495/result.json",
+    "full_training_authorized_on_success": false
+  },
+  "scientific_H100_parent": {
+    "slurm_job_id": "6912245",
+    "snapshot_state": "PENDING_RESOURCES",
+    "required_before_full_training": true,
+    "not_cancelled_or_modified": true
+  },
+  "wandb": {
+    "mode": "online_required",
+    "entity": "sdelaurentiis123-columbia-university",
+    "project": "tcv-diagnostics-paper0",
+    "group": "ecrd-engineering-smoke-85604"
+  },
+  "next_event": "mechanical_finalizer_runs_only_after_all_four_smoke_tasks_pass"
+}
