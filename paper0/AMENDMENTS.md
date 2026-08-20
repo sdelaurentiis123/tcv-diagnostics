@@ -463,3 +463,28 @@ first-to-last stationarity contrast, and fixes the eight-member B5 sampler
 path. It changes no split, hypothesis, representation family, architecture
 authorization, or held-out access rule. See
 `PHASE3_5_PROTOCOL_AMENDMENT_2026-08-19A.md`.
+
+## A021 - Begin the ECRD model-development repair
+
+**Status:** frozen after completed Phase 3.5 job `6907468` and before ECRD
+implementation, engineering smoke training, or new model results.
+
+Phase 3.5 localized K4's failure sufficiently to stop treating diagnosis as a
+blocking phase. It found strong evidence of H1/codec non-equivariance,
+within-85604 drift, and state-dependent residual summaries; partial evidence
+for retained state and history; and little H1-residual benefit from a single
+truth-assisted bulk toroidal shift. The user explicitly authorized model
+development on 2026-08-20.
+
+The next intervention is the four-arm, three-seed 85604 ladder frozen in
+`protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md` and
+`manifests/ecrd_model_development_85604.json`: historical B5, deeply
+conditioned B5, ECRD, and two-frame ECRD-History. ECRD combines a four-phase
+symmetrized frozen H1 mean, a small equivariant residual-mean head, deep raw
+C5P spatial FiLM, no toroidal downsampling, joint multiscale Gaussian
+innovation, and shared circular-shift augmentation. All training objectives
+remain field-only.
+
+Simulation 85606, the guard, assimilation, diagnostic ranking, and steering
+remain closed. A successful three-seed 85604 gate may only create a separate
+explicit held-out release record; it does not silently open 85606.

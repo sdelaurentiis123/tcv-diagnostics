@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_ECRD_implementation_smoke_or_training",
+  "freeze_date": "2026-08-20",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "protocol": {
+    "path": "paper0/protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md",
+    "sha256": "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4"
+  },
+  "authorized_scope": [
+    "ECRD_implementation_and_unit_tests",
+    "synthetic_and_bounded_85604_engineering_smoke",
+    "four_arm_three_seed_85604_training",
+    "three_block_85604_checkpoint_selection",
+    "truth_separated_M32_85604_validation_forecasts",
+    "frozen_field_spectral_cross_field_and_transport_evaluation",
+    "one_seed_privileged_state_ablation_after_separate_input_lock"
+  ],
+  "forbidden_scope": [
+    "85606_access_before_explicit_release_record",
+    "guard_reads",
+    "physics_derived_training_loss",
+    "architecture_zoo_or_unregistered_hyperparameter_search",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering_or_control"
+  ],
+  "data": {
+    "training_targets": [2, 432],
+    "guard_frames": [432, 496],
+    "validation_targets": [498, 624],
+    "validation_blocks": {
+      "V00": [498, 540],
+      "V01": [540, 582],
+      "V02": [582, 624]
+    },
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "primary_context": "raw_training_standardized_C5P_history",
+    "cadence_microseconds": 3.131905426352636,
+    "volume_shape": [5, 64, 32, 88],
+    "periodic_axes_xyz": [false, false, true],
+    "zperiod": 5,
+    "mode_mapping": "n=5k"
+  },
+  "arms": [
+    {
+      "name": "B5",
+      "history_frames": 1,
+      "deep_conditioning": false,
+      "symmetrized_H1": false,
+      "toroidal_downsampling": true,
+      "mean_head": false,
+      "multiscale_noise": false,
+      "toroidal_roll_augmentation": false
+    },
+    {
+      "name": "B5-Context",
+      "history_frames": 1,
+      "deep_conditioning": true,
+      "symmetrized_H1": false,
+      "toroidal_downsampling": true,
+      "mean_head": false,
+      "multiscale_noise": false,
+      "toroidal_roll_augmentation": true
+    },
+    {
+      "name": "ECRD",
+      "history_frames": 1,
+      "deep_conditioning": true,
+      "symmetrized_H1": true,
+      "toroidal_downsampling": false,
+      "mean_head": true,
+      "multiscale_noise": true,
+      "toroidal_roll_augmentation": true
+    },
+    {
+      "name": "ECRD-History",
+      "history_frames": 2,
+      "deep_conditioning": true,
+      "symmetrized_H1": true,
+      "toroidal_downsampling": false,
+      "mean_head": true,
+      "multiscale_noise": true,
+      "toroidal_roll_augmentation": true
+    }
+  ],
+  "model_seeds": [1701, 1702, 1703],
+  "historical_B5_seed1701_reuse_allowed_after_hash_verification": true,
+  "parameter_matching": {
+    "reference": 11604709,
+    "relative_tolerance": 0.1,
+    "exact_widths_and_counts_frozen_after_synthetic_smoke_before_full_training": true,
+    "validation_or_physics_results_may_choose_width": false
+  },
+  "residual_scales": [
+    0.05503048051260375,
+    0.04825854004472835,
+    0.06096460194410047,
+    0.04632595196855943,
+    0.10251610501339582
+  ],
+  "training": {
+    "epochs": 100,
+    "target_presentations": 43000,
+    "optimizer_steps": 10800,
+    "microbatch_targets": 1,
+    "gradient_accumulation_targets": 4,
+    "optimizer": "AdamW",
+    "betas": [0.9, 0.99],
+    "weight_decay": 0.0,
+    "peak_learning_rate": 0.0001,
+    "minimum_learning_rate": 0.000001,
+    "gradient_clip": 1.0,
+    "EMA_decay": 0.999,
+    "mean_loss_weight": 1.0,
+    "physics_derived_loss_allowed": false
+  },
+  "sampling": {
+    "ensemble_size": 32,
+    "EDM_steps": 18,
+    "network_evaluations_per_member": 35,
+    "paired_member_seeds_across_arms": true,
+    "posthoc_inflation_allowed": false
+  },
+  "selection": {
+    "checkpoint_metric": "unweighted_mean_of_three_block_data_only_objectives",
+    "candidate_epochs": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
+    "physics_checkpoint_selection_allowed": false,
+    "primary_model_gate": "Section_8_of_ECRD_MODEL_DEVELOPMENT_PROTOCOL"
+  },
+  "execution": {
+    "cluster": "Rusty",
+    "os": "Rocky_Linux_9",
+    "accelerator": "H100",
+    "submission": "sbatch_from_rusty9",
+    "wandb_online_required": true,
+    "wandb_entity": "sdelaurentiis123-columbia-university",
+    "wandb_project": "tcv-diagnostics-paper0",
+    "wandb_group": "ecrd-model-development",
+    "Ceph_artifacts_are_scientific_authority": true
+  }
+}
