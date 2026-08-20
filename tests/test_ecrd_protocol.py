@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "paper0/protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md"
 MANIFEST = ROOT / "paper0/manifests/ecrd_model_development_85604.json"
+PARENT_MANIFEST = ROOT / "paper0/manifests/ecrd_sym_h1_parent_85604.json"
 
 
 def test_protocol_hash_and_sequestered_scope() -> None:
@@ -66,3 +67,15 @@ def test_model_module_has_no_physics_or_data_dependency() -> None:
     assert "from ..spect" not in source
     assert "h5py" not in source
     assert "85606" not in source
+
+
+def test_parent_generation_is_truth_free_and_hash_locked() -> None:
+    manifest = json.loads(PARENT_MANIFEST.read_text(encoding="utf-8"))
+    assert manifest["protocol"]["sha256"] == hashlib.sha256(
+        PROTOCOL.read_bytes()
+    ).hexdigest()
+    assert manifest["development_run"] == "85604"
+    assert manifest["held_out_85606_access_allowed"] is False
+    assert manifest["data"]["target_truth_read_allowed"] is False
+    assert manifest["symmetrization"]["phase_shifts"] == [0, 1, 2, 3]
+    assert manifest["symmetrization"]["future_truth_used"] is False
