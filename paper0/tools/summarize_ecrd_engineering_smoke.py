@@ -42,6 +42,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--paper0-commit", required=True)
+    parser.add_argument("--smoke-paper0-commit", required=True)
     parser.add_argument("--slurm-job-id", required=True)
     return parser.parse_args()
 
@@ -359,7 +360,7 @@ def main() -> int:
             run=path,
             manifest=manifest,
             manifest_sha256=args.manifest_sha256,
-            paper0_commit=args.paper0_commit,
+            paper0_commit=args.smoke_paper0_commit,
         )
         for arm, path in runs.items()
     }
@@ -367,7 +368,8 @@ def main() -> int:
         "schema_version": 1,
         "status": "all_four_arms_passed_mechanical_smoke",
         "scope": "bounded_non_scientific_ECRD_engineering_smoke_85604",
-        "paper0_commit": args.paper0_commit,
+        "paper0_commit": args.smoke_paper0_commit,
+        "verifier_paper0_commit": args.paper0_commit,
         "slurm_job_id": str(args.slurm_job_id),
         "development_run": "85604",
         "manifest": {

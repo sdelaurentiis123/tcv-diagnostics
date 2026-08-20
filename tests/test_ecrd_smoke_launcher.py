@@ -136,8 +136,9 @@ def test_finalizer_requires_all_four_runs_and_is_non_scientific() -> None:
     assert "__ECRD" not in source
     assert "ECRD_SMOKE_ARRAY_JOB_ID" in source
     assert "--dependency=afterok:<array-job-id>" in source
+    assert '--smoke-paper0-commit "fe4ba35ff0134729371209d89d42ac895792026b"' in source
     assert EXPECTED_MANIFEST_SHA256 in source
-    assert "e00521421bdeaab56bdac7899257f9e0521d736a4f191f4c19d053f2a4077ccd" in source
+    assert "b6307b419a2cccc41fa945376ee69d6c71a16f5d73d9c198f6eb1d2015dede43" in source
     run_arguments = [
         'B5=${JOB_ROOT}/task_0_b5_seed_1701/model',
         'B5-Context=${JOB_ROOT}/task_1_b5_context_seed_1701/model',

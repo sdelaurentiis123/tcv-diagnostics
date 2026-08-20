@@ -68,7 +68,7 @@ if [[ "${ID}" != "rocky" || "${VERSION_ID%%.*}" != "9" ]]; then
   exit 2
 fi
 check_sha256 "${MANIFEST_SHA}" "${MANIFEST}"
-check_sha256 "e00521421bdeaab56bdac7899257f9e0521d736a4f191f4c19d053f2a4077ccd" "${ENTRYPOINT}"
+check_sha256 "b6307b419a2cccc41fa945376ee69d6c71a16f5d73d9c198f6eb1d2015dede43" "${ENTRYPOINT}"
 check_sha256 "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4" "${PAPER0_ROOT}/paper0/protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md"
 check_sha256 "b366f067217f8fe675ddd5ab0741ecb4b1c19325c6af7cd27d97b21a3e51f0e2" "${PAPER0_ROOT}/src/tcv_diagnostics/ecrd_training.py"
 check_sha256 "38d1d69a930fa27923de1cebf98553f70bf797a1e8ac250a7c4aef9b4961421f" "${PAPER0_ROOT}/src/tcv_diagnostics/models/ecrd.py"
@@ -100,6 +100,7 @@ COMMAND=(
   --run "ECRD-History=${JOB_ROOT}/task_3_ecrd_history_seed_1701/model"
   --output "${SUMMARY_OUTPUT}"
   --paper0-commit "${PAPER0_COMMIT}"
+  --smoke-paper0-commit "fe4ba35ff0134729371209d89d42ac895792026b"
   --slurm-job-id "${SLURM_JOB_ID}"
 )
 printf '%q ' "${COMMAND[@]}" > "${FINALIZER_ROOT}/command.sh"
