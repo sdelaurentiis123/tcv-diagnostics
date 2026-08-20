@@ -69,6 +69,51 @@ class _ParentArtifact(Protocol):
         ...
 
 
+class HistoricalB5ForecastAdapter:
+    """Expose the immutable seed-1701 B5 forecast to the ECRD scorer.
+
+    The historical artifact predates the explicit ``arm`` attribute.  This
+    adapter supplies only that identity and preserves the original path,
+    bytes, metadata, timing, member order, and read implementation.
+    """
+
+    def __init__(self, artifact: Any) -> None:
+        if int(getattr(artifact, "model_seed", -1)) != 1701:
+            raise ValueError("historical B5 reuse is restricted to seed 1701")
+        if tuple(getattr(artifact, "target_frames", ())) != B5_FULL_VALIDATION_TARGETS:
+            raise ValueError("historical B5 forecast target interval differs")
+        metadata = dict(getattr(artifact, "metadata", {}))
+        if (
+            metadata.get("source_kind") != "selected_B5_residual_EDM"
+            or metadata.get("seed") != 1701
+            or metadata.get("context_frames") != 1
+            or metadata.get("target_truth_read") is not False
+            or metadata.get("posthoc_calibration") is not False
+            or _mentions_held_out(metadata)
+        ):
+            raise ValueError("historical B5 forecast metadata differs")
+        sha256 = str(getattr(artifact, "sha256", ""))
+        if len(sha256) != 64:
+            raise ValueError("historical B5 forecast lacks an immutable hash")
+        self.artifact = artifact
+        self.path = artifact.path
+        self.sha256 = sha256
+        self.target_frames = B5_FULL_VALIDATION_TARGETS
+        self.arm = "B5"
+        self.model_seed = 1701
+        self.metadata = {
+            **metadata,
+            "held_out_85606_read": False,
+            "historical_artifact_reused_without_copy_or_relabel": True,
+        }
+
+    def read(self, start: int, stop: int) -> np.ndarray:
+        return self.artifact.read(start, stop)
+
+    def timing_record(self) -> Mapping[str, Any]:
+        return self.artifact.timing_record()
+
+
 def _text(value: Any) -> str:
     return value.decode("utf-8") if isinstance(value, bytes) else str(value)
 

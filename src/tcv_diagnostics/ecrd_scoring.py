@@ -502,6 +502,18 @@ def score_ecrd_forecast(
                 "full_spatial_covariance_sketch": block_sketch.finalize(),
             }
         )
+    field_record = field.finalize()
+    # B2's embedded uncertainty record uses its historical six-by-21-frame
+    # convention.  Keep all validated point estimates, but explicitly remove
+    # that incompatible interval before publishing an ECRD score.  The model-
+    # ladder reducer recomputes the prospectively frozen paired 12-frame
+    # bootstrap from the retained per-target sufficient statistics.
+    field_record["conditional_uncertainty"] = {
+        "reported_here": False,
+        "reason": "replaced_by_paired_three_seed_ECRD_block_bootstrap",
+        "block_length_frames": 12,
+        "replicates": 2000,
+    }
     return _json_safe(
         {
             "schema_version": 1,
@@ -528,7 +540,7 @@ def score_ecrd_forecast(
                 "timing": dict(forecast_artifact.timing_record()),
             },
             "transport_event_thresholds": dict(event_threshold_record),
-            "field_and_marginal_calibration": field.finalize(),
+            "field_and_marginal_calibration": field_record,
             "spectral_and_cross_field": {
                 "overall": spectral.finalize(),
                 "chronological_blocks": [

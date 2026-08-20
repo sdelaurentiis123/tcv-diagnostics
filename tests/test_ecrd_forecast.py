@@ -19,6 +19,7 @@ from tcv_diagnostics.codec_training import sha256_path
 from tcv_diagnostics.ecrd_forecast import (
     ECRDForecastArtifact,
     ECRDForecastWriter,
+    HistoricalB5ForecastAdapter,
     initial_noise_for_arm,
 )
 
@@ -111,3 +112,37 @@ def test_forecast_writer_rejects_wrong_parent_and_held_out_metadata(
             seed_bank_sha256=bank_sha,
             schema=schema,
         )
+
+
+def test_historical_b5_adapter_changes_no_forecast_bytes_or_reads() -> None:
+    values = np.zeros((1, 32, 1, 5, 2, 3, 4), dtype=np.float32)
+
+    class Artifact:
+        path = Path("/tmp/historical_b5.h5")
+        sha256 = "a" * 64
+        target_frames = tuple(range(498, 624))
+        model_seed = 1701
+        metadata = {
+            "source_kind": "selected_B5_residual_EDM",
+            "seed": 1701,
+            "context_frames": 1,
+            "target_truth_read": False,
+            "posthoc_calibration": False,
+        }
+
+        @staticmethod
+        def read(start: int, stop: int) -> np.ndarray:
+            assert (start, stop) == (0, 1)
+            return values
+
+        @staticmethod
+        def timing_record() -> dict:
+            return {"target_count": 126}
+
+    adapter = HistoricalB5ForecastAdapter(Artifact())
+    assert adapter.arm == "B5"
+    assert adapter.model_seed == 1701
+    assert adapter.path == Artifact.path
+    assert adapter.sha256 == Artifact.sha256
+    assert adapter.read(0, 1) is values
+    assert adapter.metadata["historical_artifact_reused_without_copy_or_relabel"]
