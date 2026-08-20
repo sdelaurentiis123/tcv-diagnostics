@@ -116,6 +116,30 @@ class ECRDOnlineWandbTracker(OnlineWandbTracker):
         )
         self.epochs_logged += 1
 
+    def log_smoke_probe(self, probe: Mapping[str, Any]) -> None:
+        """Mirror bounded mechanical checks without treating them as science."""
+
+        if self._finished:
+            raise RuntimeError("cannot log to a finished W&B run")
+        self._run.log(
+            {
+                "smoke/finite": int(bool(probe["finite"])),
+                "smoke/member_diversity": float(probe["member_diversity"]),
+                "smoke/peak_cuda_GiB": float(probe["peak_cuda_GiB"]),
+                "smoke/max_generator_equivariance_error": float(
+                    probe["max_generator_equivariance_error"]
+                ),
+                "smoke/max_mean_head_equivariance_error": float(
+                    probe["max_mean_head_equivariance_error"]
+                ),
+                "smoke/all_mechanical_gates_passed": int(
+                    bool(probe["all_mechanical_gates_passed"])
+                ),
+            },
+            step=int(probe["optimizer_steps"]),
+            commit=True,
+        )
+
     def finish_success(self, result: Mapping[str, Any]) -> dict[str, Any]:
         if self._finished:
             raise RuntimeError("W&B run is already finished")

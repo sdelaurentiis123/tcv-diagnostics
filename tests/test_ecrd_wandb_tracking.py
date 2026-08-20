@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from tcv_diagnostics.ecrd_wandb_tracking import ecrd_epoch_metrics
+from tcv_diagnostics.ecrd_wandb_tracking import (
+    ecrd_epoch_metrics,
+    ecrd_result_summary,
+)
 
 
 def test_epoch_mapping_preserves_validation_blocks() -> None:
@@ -35,3 +38,30 @@ def test_epoch_mapping_preserves_validation_blocks() -> None:
     assert metrics["validation/checkpoint_score"] == 2.5
     assert metrics["validation/V00/objective"] == 2.0
     assert metrics["validation/V02/mean_head_MSE"] == 0.4
+
+
+def test_result_summary_keeps_scope_and_selected_hash() -> None:
+    result = {
+        "status": "training_completed_checkpoint_selected",
+        "completed_epochs": 1,
+        "completed_optimizer_steps": 2,
+        "candidate_count": 1,
+        "selected_completed_epoch": 1,
+        "selected_validation": {"checkpoint_score": 2.0},
+        "checkpoint_reload_bitwise_exact": True,
+        "parameter_count": 11,
+        "peak_cuda_memory_GiB": 1.5,
+        "wall_seconds": 3.0,
+        "paper0_commit": "abc",
+        "artifacts": {
+            "selected_checkpoint": {"sha256": "d" * 64},
+            "history": {"sha256": "e" * 64},
+        },
+        "physics_derived_loss_used": False,
+        "held_out_85606_read": False,
+        "scientific_forecast_generated": False,
+    }
+    summary = ecrd_result_summary(result)
+    assert summary["final/selected_validation_objective"] == 2.0
+    assert summary["provenance/selected_checkpoint_sha256"] == "d" * 64
+    assert summary["scope/held_out_85606_read"] is False
