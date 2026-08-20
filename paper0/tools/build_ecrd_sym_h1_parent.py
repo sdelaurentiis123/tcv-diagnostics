@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -34,12 +35,16 @@ ROOT = Path(__file__).resolve().parents[2]
 EXPECTED_MANIFEST_SHA256 = (
     "6fa7c02499cb94dac13d29d797b3f06693d2b07a922e0812a033079ea7185fa5"
 )
+EXPECTED_CPU_SMOKE_MANIFEST_SHA256 = (
+    "6bdc16136cdcd532ca3b9faf41e7d58df6aaca629b354335fd40875d27f884a9"
+)
 EXPECTED_PROTOCOL_SHA256 = (
     "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4"
 )
-EXPECTED_H1_SHA256 = (
-    "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e"
+EXPECTED_CPU_SMOKE_AMENDMENT_SHA256 = (
+    "4165cdc2f035c62eb7e6ade88a6380a8060e012e8c40c0b243ba446396276cbc"
 )
+EXPECTED_H1_SHA256 = "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e"
 EXPECTED_CODEC_SHA256 = (
     "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
 )
@@ -55,6 +60,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--codec-checkpoint-sha256", required=True)
     parser.add_argument("--h1-training-commit", required=True)
     parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument(
+        "--execution-device",
+        choices=("h100", "cpu-smoke"),
+        default="h100",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--paper0-commit", required=True)
     parser.add_argument("--slurm-job-id", required=True)
@@ -92,27 +102,49 @@ def verify_checkout(expected_commit: str) -> None:
         raise RuntimeError(f"Paper 0 checkout is dirty:\n{dirty}")
 
 
-def require_rocky9_h100() -> dict[str, Any]:
+def require_rocky9_execution(execution_device: str) -> dict[str, Any]:
     release: dict[str, str] = {}
     for line in Path("/etc/os-release").read_text(encoding="utf-8").splitlines():
         if "=" in line:
             key, value = line.split("=", 1)
             release[key] = value.strip().strip('"')
-    if release.get("ID") != "rocky" or release.get("VERSION_ID", "").split(".")[0] != "9":
+    if (
+        release.get("ID") != "rocky"
+        or release.get("VERSION_ID", "").split(".")[0] != "9"
+    ):
         raise RuntimeError("ECRD parent generation requires Rocky Linux 9")
-    if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
-        raise RuntimeError("ECRD parent generation requires exactly one CUDA GPU")
-    accelerator = torch.cuda.get_device_name(0)
-    if "H100" not in accelerator:
-        raise RuntimeError(f"ECRD parent generation requires H100, found {accelerator!r}")
-    if not torch.cuda.is_bf16_supported():
-        raise RuntimeError("the allocated H100 does not report bfloat16 support")
+    if execution_device == "h100":
+        if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
+            raise RuntimeError("ECRD parent generation requires exactly one CUDA GPU")
+        accelerator = torch.cuda.get_device_name(0)
+        if "H100" not in accelerator:
+            raise RuntimeError(
+                f"ECRD parent generation requires H100, found {accelerator!r}"
+            )
+        if not torch.cuda.is_bf16_supported():
+            raise RuntimeError("the allocated H100 does not report bfloat16 support")
+        return {
+            "os_id": release["ID"],
+            "os_version": release["VERSION_ID"],
+            "execution_device": execution_device,
+            "accelerator": accelerator,
+            "cuda_device_count": torch.cuda.device_count(),
+            "bfloat16_supported": True,
+            "artifact_authority": "scientific_H100_parent",
+        }
+    if execution_device != "cpu-smoke":
+        raise ValueError("unsupported ECRD parent execution device")
+    if os.environ.get("CUDA_VISIBLE_DEVICES", "") not in ("", "NoDevFiles"):
+        raise RuntimeError("the bounded CPU parent must hide CUDA devices")
     return {
         "os_id": release["ID"],
         "os_version": release["VERSION_ID"],
-        "accelerator": accelerator,
-        "cuda_device_count": torch.cuda.device_count(),
-        "bfloat16_supported": True,
+        "execution_device": execution_device,
+        "accelerator": "CPU",
+        "cuda_device_count": 0,
+        "torch_threads": int(torch.get_num_threads()),
+        "torch_interop_threads": int(torch.get_num_interop_threads()),
+        "artifact_authority": "bounded_non_scientific_engineering_smoke_only",
     }
 
 
@@ -136,11 +168,22 @@ def authorize_manifest(
     codec_checkpoint: Path,
     codec_sha256: str,
     h1_training_commit: str,
+    execution_device: str,
 ) -> dict[str, Any]:
-    if sha256_path(manifest_path) != EXPECTED_MANIFEST_SHA256:
+    expected_manifest_sha256 = (
+        EXPECTED_MANIFEST_SHA256
+        if execution_device == "h100"
+        else EXPECTED_CPU_SMOKE_MANIFEST_SHA256
+    )
+    if sha256_path(manifest_path) != expected_manifest_sha256:
         raise RuntimeError("ECRD parent manifest bytes differ")
+    expected_status = (
+        "frozen_before_truth_free_parent_generation"
+        if execution_device == "h100"
+        else "frozen_before_truth_free_CPU_parent_for_non_scientific_smoke"
+    )
     if (
-        manifest.get("status") != "frozen_before_truth_free_parent_generation"
+        manifest.get("status") != expected_status
         or manifest.get("development_run") != "85604"
         or manifest.get("held_out_85606_access_allowed") is not False
     ):
@@ -152,13 +195,39 @@ def authorize_manifest(
         or sha256_path(ROOT / protocol["path"]) != EXPECTED_PROTOCOL_SHA256
     ):
         raise RuntimeError("ECRD protocol identity differs")
-    required_scope = {
-        "load_frozen_C5P_H1_seed1701",
-        "read_85604_training_and_validation_context_only",
-        "generate_four_phase_symmetrized_H1_parent_means",
-    }
+    required_scope = (
+        {
+            "load_frozen_C5P_H1_seed1701",
+            "read_85604_training_and_validation_context_only",
+            "generate_four_phase_symmetrized_H1_parent_means",
+        }
+        if execution_device == "h100"
+        else {
+            "load_frozen_C5P_H1_seed1701",
+            "read_85604_training_and_validation_context_only",
+            "generate_four_phase_symmetrized_H1_parent_means_on_CPU",
+            "use_parent_only_for_bounded_non_scientific_ECRD_smoke",
+        }
+    )
     if set(manifest.get("authorized_scope", ())) != required_scope:
         raise RuntimeError("ECRD parent authorization differs")
+    if execution_device == "cpu-smoke":
+        amendment = manifest.get("execution_amendment", {})
+        execution = manifest.get("execution", {})
+        if (
+            amendment.get("path")
+            != "paper0/protocol/ECRD_PARENT_CPU_SMOKE_AMENDMENT_2026-08-20.md"
+            or amendment.get("sha256") != EXPECTED_CPU_SMOKE_AMENDMENT_SHA256
+            or sha256_path(ROOT / amendment["path"])
+            != EXPECTED_CPU_SMOKE_AMENDMENT_SHA256
+            or execution.get("accelerator") != "CPU"
+            or execution.get("artifact_authority")
+            != "bounded_non_scientific_engineering_smoke_only"
+            or execution.get("full_training_authorized") is not False
+            or execution.get("H100_parent_comparison_required_before_full_training")
+            is not True
+        ):
+            raise RuntimeError("ECRD CPU-smoke execution amendment differs")
     locks = manifest.get("evidence_locks", {})
     model_data = locks.get("model_dataset", {})
     if Path(model_data.get("root", "")) != Path(
@@ -206,12 +275,22 @@ def authorize_manifest(
         raise RuntimeError("ECRD H1 symmetrization differs")
     return {
         "authorized": True,
-        "scope": "truth_free_four_phase_H1_parent_generation_85604",
+        "scope": (
+            "truth_free_four_phase_H1_parent_generation_85604"
+            if execution_device == "h100"
+            else "truth_free_four_phase_H1_CPU_parent_for_bounded_smoke_85604"
+        ),
+        "execution_device": execution_device,
+        "artifact_authority": (
+            "scientific_H100_parent"
+            if execution_device == "h100"
+            else "bounded_non_scientific_engineering_smoke_only"
+        ),
         "development_run": "85604",
         "target_truth_read": False,
         "guard_frames_read": False,
         "held_out_85606_read": False,
-        "manifest_sha256": EXPECTED_MANIFEST_SHA256,
+        "manifest_sha256": expected_manifest_sha256,
         "protocol_sha256": EXPECTED_PROTOCOL_SHA256,
     }
 
@@ -219,20 +298,25 @@ def authorize_manifest(
 def main() -> int:
     args = parse_args()
     verify_checkout(args.paper0_commit)
-    environment = require_rocky9_h100()
-    torch.cuda.set_device(0)
+    environment = require_rocky9_execution(args.execution_device)
     torch.set_float32_matmul_precision("highest")
-    torch.backends.cuda.matmul.allow_tf32 = False
-    torch.backends.cudnn.allow_tf32 = False
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    device = torch.device("cuda", 0)
+    if args.execution_device == "h100":
+        torch.cuda.set_device(0)
+        torch.backends.cuda.matmul.allow_tf32 = False
+        torch.backends.cudnn.allow_tf32 = False
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+        device = torch.device("cuda", 0)
+    else:
+        device = torch.device("cpu")
 
     manifest_path = args.manifest.resolve()
     try:
         manifest_relative = manifest_path.relative_to(ROOT.resolve())
     except ValueError as error:
-        raise ValueError("ECRD parent manifest must be inside the repository") from error
+        raise ValueError(
+            "ECRD parent manifest must be inside the repository"
+        ) from error
     runtime_paths = (
         args.artifact_root,
         args.h1_checkpoint,
@@ -254,6 +338,7 @@ def main() -> int:
         codec_checkpoint=args.codec_checkpoint,
         codec_sha256=args.codec_checkpoint_sha256,
         h1_training_commit=args.h1_training_commit,
+        execution_device=args.execution_device,
     )
     locks = manifest["evidence_locks"]
     for filename, key in (
@@ -290,7 +375,14 @@ def main() -> int:
         run_id=args.wandb_run_id,
         run_name=args.wandb_run_name,
         job_type="ecrd_symmetrized_h1_parent_generation",
-        tags=("paper0", "ecrd", "h1-parent", "85604-only", "truth-free"),
+        tags=(
+            "paper0",
+            "ecrd",
+            "h1-parent",
+            "85604-only",
+            "truth-free",
+            args.execution_device,
+        ),
     )
     tracking_config = {
         "schema_version": 1,
@@ -315,9 +407,7 @@ def main() -> int:
         "software": {
             "torch": torch.__version__,
             "cuda": torch.version.cuda,
-            "ecrd_data_sha256": sha256_path(
-                ROOT / "src/tcv_diagnostics/ecrd_data.py"
-            ),
+            "ecrd_data_sha256": sha256_path(ROOT / "src/tcv_diagnostics/ecrd_data.py"),
             "ecrd_model_sha256": sha256_path(
                 ROOT / "src/tcv_diagnostics/models/ecrd.py"
             ),
@@ -344,7 +434,7 @@ def main() -> int:
         metadata = {
             "paper0_commit": args.paper0_commit,
             "slurm_job_id": str(args.slurm_job_id),
-            "manifest_sha256": EXPECTED_MANIFEST_SHA256,
+            "manifest_sha256": authorization["manifest_sha256"],
             "H1_checkpoint": {"path": str(h1_path), "sha256": sha256_path(h1_path)},
             "codec_checkpoint": {
                 "path": str(codec_path),
@@ -353,6 +443,8 @@ def main() -> int:
             "target_truth_read": False,
             "guard_frames_read": False,
             "held_out_85606_read": False,
+            "execution_device": args.execution_device,
+            "artifact_authority": authorization["artifact_authority"],
         }
         train = generate_symmetrized_h1_parent(
             model=model,
@@ -377,6 +469,9 @@ def main() -> int:
             "paper0_commit": args.paper0_commit,
             "slurm_job_id": str(args.slurm_job_id),
             "development_run": "85604",
+            "execution_device": args.execution_device,
+            "artifact_authority": authorization["artifact_authority"],
+            "full_training_authorized": args.execution_device == "h100",
             "authorization": authorization,
             "environment": environment,
             "splits": {"train": train, "validation": validation},

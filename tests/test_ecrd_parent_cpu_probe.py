@@ -33,7 +33,7 @@ def test_probe_is_commit_locked_nonoverwriting_and_85604_only() -> None:
     entrypoint = ENTRYPOINT.read_text(encoding="utf-8")
     assert "PAPER0_EXPECTED_COMMIT" in source
     assert "status --porcelain --untracked-files=all" in source
-    assert "if [[ -e \"${JOB_ROOT}\" ]]" in source
+    assert 'if [[ -e "${JOB_ROOT}" ]]' in source
     assert '"85606" in str(path).lower()' in entrypoint
     assert '"held_out_85606_read": False' in entrypoint
     assert "PROBE_TARGET_FRAME = 2" in entrypoint

@@ -1,18 +1,16 @@
 #!/bin/bash
-# Truth-free four-phase H1 parent generation for ECRD on 85604 only.
-# No targets are opened by the forecasting datasets and no training occurs.
-#SBATCH --job-name=p0_ecrd_parent
-#SBATCH --partition=gpupreempt
-#SBATCH --qos=gpupreempt
-#SBATCH --gres=gpu:1
-#SBATCH --constraint=h100
+# Truth-free four-phase H1 parent generation on CPU for bounded ECRD smoke.
+# This artifact is explicitly unauthorized for full training or science.
+#SBATCH --job-name=p0_ecrd_cpu_parent
+#SBATCH --partition=gen
+#SBATCH --qos=gen
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=32
 #SBATCH --mem=160G
-#SBATCH --time=03:00:00
+#SBATCH --time=02:00:00
 #SBATCH --no-requeue
-#SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/ecrd_sym_h1_parent_%j.log
+#SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/ecrd_sym_h1_parent_cpu_smoke_%j.log
 
 set -euo pipefail
 
@@ -26,20 +24,21 @@ readonly H1_SHA="5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671
 readonly H1_TRAINING_COMMIT="9035bc3ce9d2351cd17586f4429af8116d43a47e"
 readonly CODEC_CHECKPOINT="/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt"
 readonly CODEC_SHA="9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
-readonly NODE_LOCAL_ROOT="/tmp/${USER}/tcv_diagnostics_ecrd_parent_${SLURM_JOB_ID}"
+readonly NODE_LOCAL_ROOT="/tmp/${USER}/tcv_diagnostics_ecrd_cpu_parent_${SLURM_JOB_ID}"
 readonly MODEL_DATA_STAGED="${NODE_LOCAL_ROOT}/phase2_model_dataset_85604"
-readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent"
+readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_sym_h1_parent_cpu_smoke"
 readonly JOB_ROOT="${RESULT_BASE}/job_${SLURM_JOB_ID}"
 readonly RUN_OUTPUT="${JOB_ROOT}/parent"
-readonly MANIFEST="${PAPER0_ROOT}/paper0/manifests/ecrd_sym_h1_parent_85604.json"
+readonly MANIFEST="${PAPER0_ROOT}/paper0/manifests/ecrd_sym_h1_parent_cpu_smoke_85604.json"
 readonly PROTOCOL="${PAPER0_ROOT}/paper0/protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md"
+readonly AMENDMENT="${PAPER0_ROOT}/paper0/protocol/ECRD_PARENT_CPU_SMOKE_AMENDMENT_2026-08-20.md"
 readonly ENTRYPOINT="${PAPER0_ROOT}/paper0/tools/build_ecrd_sym_h1_parent.py"
 readonly WANDB_ENTITY="sdelaurentiis123-columbia-university"
 readonly WANDB_PROJECT="tcv-diagnostics-paper0"
-readonly WANDB_GROUP="ecrd-sym-h1-parent-85604"
+readonly WANDB_GROUP="ecrd-sym-h1-parent-cpu-smoke-85604"
 
 if [[ -e "${JOB_ROOT}" || -e "${NODE_LOCAL_ROOT}" ]]; then
-  echo "Refusing to overwrite an ECRD parent or node-local directory" >&2
+  echo "Refusing to overwrite an ECRD CPU parent or node-local directory" >&2
   exit 2
 fi
 mkdir -p "${JOB_ROOT}"
@@ -52,7 +51,6 @@ if [[ "${PAPER0_COMMIT}" != "${PAPER0_EXPECTED_COMMIT}" ]]; then
 fi
 if [[ -n "$(git -C "${PAPER0_ROOT}" status --porcelain --untracked-files=all)" ]]; then
   echo "Paper 0 checkout is dirty" >&2
-  git -C "${PAPER0_ROOT}" status --short >&2
   exit 2
 fi
 
@@ -70,33 +68,13 @@ check_sha256() {
 
 source /etc/os-release
 if [[ "${ID}" != "rocky" || "${VERSION_ID%%.*}" != "9" ]]; then
-  echo "ECRD parent generation requires Rocky Linux 9" >&2
-  exit 2
-fi
-nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total --format=csv,noheader
-if [[ "$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)" -ne 1 ]]; then
-  echo "Exactly one allocated H100 is required" >&2
-  exit 2
-fi
-if nvidia-smi --query-gpu=name --format=csv,noheader | grep -Evq "H100"; then
-  echo "The allocated accelerator is not an H100" >&2
+  echo "ECRD CPU parent generation requires Rocky Linux 9" >&2
   exit 2
 fi
 
-check_sha256 "6fa7c02499cb94dac13d29d797b3f06693d2b07a922e0812a033079ea7185fa5" "${MANIFEST}"
+check_sha256 "6bdc16136cdcd532ca3b9faf41e7d58df6aaca629b354335fd40875d27f884a9" "${MANIFEST}"
 check_sha256 "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4" "${PROTOCOL}"
-check_sha256 "9f1aba341b5301e09f97eaaacce82f1bb44606c269b6260f5a130fdb84dc261a" "${ENTRYPOINT}"
-check_sha256 "2c97802e0bcff3b47f14867c62ba1b55583e98b7a9a2ec3e5e83566a8cc2c35c" "${PAPER0_ROOT}/src/tcv_diagnostics/ecrd_data.py"
-check_sha256 "38d1d69a930fa27923de1cebf98553f70bf797a1e8ac250a7c4aef9b4961421f" "${PAPER0_ROOT}/src/tcv_diagnostics/models/ecrd.py"
-check_sha256 "a42e3c9ed2ff652573288bbb11e610bae5dca3c66d14c98a89caa80fe9cd5ae2" "${PAPER0_ROOT}/src/tcv_diagnostics/ecrd_wandb_tracking.py"
-check_sha256 "4e28c00ab6c166256f899b5384fa140dae8a6bf64da73fb56e5183d50118ec53" "${PAPER0_ROOT}/src/tcv_diagnostics/b5_residual_forecast.py"
-check_sha256 "f3b815fe3141f61a91bec06be3ede42b67ab876b4a6efd90f1e63fddb8117ede" "${PAPER0_ROOT}/src/tcv_diagnostics/o2_context_data.py"
-check_sha256 "7847e57452020b7fb23f8cfec4c4e7f00f0b6585df51fbac53aa62bd2fe0223e" "${PAPER0_ROOT}/src/tcv_diagnostics/o2_forecast.py"
-check_sha256 "5425b76d501c7385bb63e53f2a01e8882f29759b64f41d71d8372bb55e628ceb" "${PAPER0_ROOT}/src/tcv_diagnostics/models/o2.py"
-check_sha256 "0ff54f09bbb62fad11274e4f8561e6f15d95a332926520a427e65e28c24e5111" "${PAPER0_ROOT}/src/tcv_diagnostics/o2_training.py"
-check_sha256 "af3fc3be94101338a796e19a751014bbcb033f95a42598b947a97a6f66be9af2" "${PAPER0_ROOT}/src/tcv_diagnostics/model_training_data.py"
-check_sha256 "57b40c3d1be4b065c71d1598876fe2edb69e76f25fe6ce4e87c6dea08d9a6690" "${PAPER0_ROOT}/src/tcv_diagnostics/codec_training.py"
-
+check_sha256 "4165cdc2f035c62eb7e6ade88a6380a8060e012e8c40c0b243ba446396276cbc" "${AMENDMENT}"
 check_sha256 "${H1_SHA}" "${H1_CHECKPOINT}"
 check_sha256 "${CODEC_SHA}" "${CODEC_CHECKPOINT}"
 check_sha256 "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18" "${MODEL_DATA_SOURCE}/model_dataset_manifest.json"
@@ -107,22 +85,21 @@ scontrol show job -dd "${SLURM_JOB_ID}" > "${JOB_ROOT}/slurm_job.txt"
 export PYTHONNOUSERSITE=1
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPATH="${PAPER0_ROOT}/src:${PAPER0_ROOT}"
+export CUDA_VISIBLE_DEVICES=""
 export WANDB_MODE=online
 export WANDB_REQUIRE_SERVICE=true
 export TOKENIZERS_PARALLELISM=false
-export OMP_NUM_THREADS=8
-export OPENBLAS_NUM_THREADS=8
-export MKL_NUM_THREADS=8
-export CUBLAS_WORKSPACE_CONFIG=:4096:8
+export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK}"
+export OPENBLAS_NUM_THREADS="${SLURM_CPUS_PER_TASK}"
+export MKL_NUM_THREADS="${SLURM_CPUS_PER_TASK}"
 
 {
   echo "captured_at=$(date --iso-8601=seconds)"
   echo "host=$(hostname --fqdn)"
   echo "paper0_commit=${PAPER0_COMMIT}"
-  echo "scope=truth_free_four_phase_H1_parent_generation_85604"
+  echo "scope=truth_free_four_phase_H1_CPU_parent_for_bounded_smoke_85604"
   "${PYTHON}" --version
-  "${PYTHON}" -c 'import h5py,numpy,pytest,torch,wandb; print("h5py="+h5py.__version__); print("numpy="+numpy.__version__); print("pytest="+pytest.__version__); print("torch="+torch.__version__); print("torch_cuda="+str(torch.version.cuda)); print("cudnn="+str(torch.backends.cudnn.version())); print("wandb="+wandb.__version__)'
-  nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total --format=csv,noheader
+  "${PYTHON}" -c 'import h5py,numpy,pytest,torch,wandb; print("h5py="+h5py.__version__); print("numpy="+numpy.__version__); print("pytest="+pytest.__version__); print("torch="+torch.__version__); print("torch_cuda="+str(torch.version.cuda)); print("torch_threads="+str(torch.get_num_threads())); print("wandb="+wandb.__version__)'
 } > "${JOB_ROOT}/environment.txt" 2>&1
 
 export PAPER0_WANDB_ENTITY="${WANDB_ENTITY}"
@@ -146,7 +123,7 @@ print(json.dumps({
 }, sort_keys=True))
 PY
 
-echo "Running the complete clean Rocky 9 suite before parent generation"
+echo "Running the complete clean Rocky 9 suite before CPU parent generation"
 cd "${PAPER0_ROOT}"
 "${PYTHON}" -m pytest -p no:cacheprovider -q | tee "${JOB_ROOT}/test_output.txt"
 
@@ -174,7 +151,7 @@ if [[ "${verified_shards}" -ne 8 ]]; then
   exit 2
 fi
 
-readonly RUN_ID="p0ecrdparent-${SLURM_JOB_ID}"
+readonly RUN_ID="p0ecrdparentsmoke-${SLURM_JOB_ID}"
 COMMAND=(
   "${PYTHON}" -u "${ENTRYPOINT}"
   --artifact-root "${MODEL_DATA_STAGED}"
@@ -184,6 +161,7 @@ COMMAND=(
   --codec-checkpoint-sha256 "${CODEC_SHA}"
   --h1-training-commit "${H1_TRAINING_COMMIT}"
   --manifest "${MANIFEST}"
+  --execution-device cpu-smoke
   --output "${RUN_OUTPUT}"
   --paper0-commit "${PAPER0_COMMIT}"
   --slurm-job-id "${SLURM_JOB_ID}"
@@ -191,7 +169,7 @@ COMMAND=(
   --wandb-project "${WANDB_PROJECT}"
   --wandb-group "${WANDB_GROUP}"
   --wandb-run-id "${RUN_ID}"
-  --wandb-run-name "ecrd-sym-h1-parent-j${SLURM_JOB_ID}"
+  --wandb-run-name "ecrd-sym-h1-parent-cpu-smoke-j${SLURM_JOB_ID}"
 )
 printf '%q ' "${COMMAND[@]}" > "${JOB_ROOT}/command.sh"
 printf '\n' >> "${JOB_ROOT}/command.sh"
@@ -214,14 +192,15 @@ from pathlib import Path
 
 import h5py
 
-from tcv_diagnostics.model_data import write_strict_json_atomic
-
 root = Path(os.environ["PAPER0_ECRD_PARENT_ROOT"])
 result = json.loads((root / "result.json").read_text())
 tracking = json.loads((root / "wandb.json").read_text())
 required = {
     "status": "completed",
     "development_run": "85604",
+    "execution_device": "cpu-smoke",
+    "artifact_authority": "bounded_non_scientific_engineering_smoke_only",
+    "full_training_authorized": False,
     "target_truth_read": False,
     "guard_frames_read": False,
     "held_out_85606_read": False,
@@ -231,44 +210,46 @@ required = {
 }
 for name, expected in required.items():
     if result.get(name) != expected:
-        raise RuntimeError(f"ECRD parent result field {name!r} differs")
+        raise RuntimeError(f"ECRD CPU parent result field {name!r} differs")
 if result["splits"]["train"]["target_count"] != 430:
-    raise RuntimeError("ECRD parent training count differs")
+    raise RuntimeError("ECRD CPU parent training count differs")
 if result["splits"]["validation"]["target_count"] != 126:
-    raise RuntimeError("ECRD parent validation count differs")
+    raise RuntimeError("ECRD CPU parent validation count differs")
 if tracking.get("remote_state_after_finish") != "finished":
-    raise RuntimeError("ECRD parent lacks finished online W&B")
-for split, count in (("train", 430), ("validation", 126)):
-    with h5py.File(root / f"sym_h1_{split}.h5", "r") as handle:
-        if handle["standardized_parent_mean"].shape != (count, 5, 64, 32, 88):
-            raise RuntimeError(f"ECRD {split} parent shape differs")
+    raise RuntimeError("ECRD CPU parent lacks finished online W&B")
+for filename, split, count in (
+    ("sym_h1_train.h5", "train", 430),
+    ("sym_h1_validation.h5", "validation", 126),
+):
+    with h5py.File(root / filename, "r") as handle:
         if not bool(handle.attrs["completed"]):
-            raise RuntimeError(f"ECRD {split} parent is incomplete")
+            raise RuntimeError(f"{filename} is incomplete")
+        if str(handle.attrs["split"]) != split:
+            raise RuntimeError(f"{filename} split differs")
         if bool(handle.attrs["target_truth_read"]):
-            raise RuntimeError(f"ECRD {split} parent read target truth")
-summary = {
-    "schema_version": 1,
-    "scope": result["scope"],
-    "status": "passed",
-    "scientific_result": False,
-    "paper0_commit": result["paper0_commit"],
-    "slurm_job_id": result["slurm_job_id"],
-    "train": result["splits"]["train"]["artifact"],
-    "validation": result["splits"]["validation"]["artifact"],
-    "wandb": tracking,
-    "target_truth_read": False,
+            raise RuntimeError(f"{filename} read target truth")
+        if handle["standardized_parent_mean"].shape != (count, 5, 64, 32, 88):
+            raise RuntimeError(f"{filename} shape differs")
+        metadata = json.loads(str(handle.attrs["metadata_json"]))
+        if metadata.get("artifact_authority") != "bounded_non_scientific_engineering_smoke_only":
+            raise RuntimeError(f"{filename} authority differs")
+print(json.dumps({
+    "status": "verified",
+    "scope": "bounded_non_scientific_ECRD_smoke_parent_only",
+    "full_training_authorized": False,
     "held_out_85606_read": False,
-}
-write_strict_json_atomic(root.parent / "execution_summary.json", summary)
+}, sort_keys=True))
 PY
 
 sha256sum \
-  "${JOB_ROOT}/slurm_job.txt" \
-  "${JOB_ROOT}/environment.txt" \
-  "${JOB_ROOT}/wandb_preflight.json" \
-  "${JOB_ROOT}/test_output.txt" \
   "${JOB_ROOT}/command.sh" \
-  "${JOB_ROOT}/execution_summary.json" \
-  > "${JOB_ROOT}/job_artifact_sha256.txt"
+  "${JOB_ROOT}/environment.txt" \
+  "${JOB_ROOT}/slurm_job.txt" \
+  "${JOB_ROOT}/test_output.txt" \
+  "${JOB_ROOT}/wandb_preflight.json" \
+  "${RUN_OUTPUT}/artifact_sha256.txt" \
+  > "${JOB_ROOT}/artifact_sha256.txt"
 
-echo "ECRD symmetrized-H1 parent generation completed"
+echo "Bounded-smoke CPU parent generation finished at $(date --iso-8601=seconds)"
+echo "Result directory: ${JOB_ROOT}"
+echo "This parent remains unauthorized for full training or scientific evaluation."

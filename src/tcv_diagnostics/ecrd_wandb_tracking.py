@@ -210,6 +210,10 @@ class ECRDParentOnlineWandbTracker(ECRDOnlineWandbTracker):
             raise RuntimeError("ECRD parent W&B requires both splits")
         if result.get("held_out_85606_read") is not False:
             raise RuntimeError("ECRD parent result crossed the held-out boundary")
+        artifact_authority = str(
+            result.get("artifact_authority", "scientific_H100_parent")
+        )
+        is_scientific_authority = artifact_authority == "scientific_H100_parent"
         self._run.summary.update(
             {
                 "final/parent_generation_completed": True,
@@ -222,6 +226,16 @@ class ECRDParentOnlineWandbTracker(ECRDOnlineWandbTracker):
                 "provenance/paper0_commit": str(result["paper0_commit"]),
                 "scope/target_truth_read": bool(result["target_truth_read"]),
                 "scope/held_out_85606_read": bool(result["held_out_85606_read"]),
+                "scope/full_training_authorized": bool(
+                    result.get("full_training_authorized", True)
+                ),
+                "provenance/artifact_authority": artifact_authority,
             }
         )
-        return self._finish_and_verify(extra={"splits_logged": self.splits_logged})
+        return self._finish_and_verify(
+            extra={
+                "splits_logged": self.splits_logged,
+                "artifact_authority": artifact_authority,
+                "local_artifacts_are_scientific_authority": is_scientific_authority,
+            }
+        )

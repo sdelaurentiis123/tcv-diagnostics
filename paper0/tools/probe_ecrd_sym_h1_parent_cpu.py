@@ -36,9 +36,7 @@ EXPECTED_MANIFEST_SHA256 = (
 EXPECTED_PROTOCOL_SHA256 = (
     "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4"
 )
-EXPECTED_H1_SHA256 = (
-    "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e"
-)
+EXPECTED_H1_SHA256 = "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e"
 EXPECTED_CODEC_SHA256 = (
     "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d"
 )
@@ -82,7 +80,10 @@ def require_rocky9_cpu() -> dict[str, Any]:
         if "=" in line:
             key, value = line.split("=", 1)
             release[key] = value.strip().strip('"')
-    if release.get("ID") != "rocky" or release.get("VERSION_ID", "").split(".")[0] != "9":
+    if (
+        release.get("ID") != "rocky"
+        or release.get("VERSION_ID", "").split(".")[0] != "9"
+    ):
         raise RuntimeError("ECRD CPU timing probe requires Rocky Linux 9")
     if os.environ.get("CUDA_VISIBLE_DEVICES", "") not in ("", "NoDevFiles"):
         raise RuntimeError("ECRD CPU timing probe must hide CUDA devices")
@@ -172,9 +173,7 @@ def main() -> int:
     finally:
         dataset.close()
 
-    estimated_full_seconds = inference_seconds * (
-        len(ECRD_TRAIN_TARGETS) + 126
-    )
+    estimated_full_seconds = inference_seconds * (len(ECRD_TRAIN_TARGETS) + 126)
     result = {
         "schema_version": 1,
         "status": "completed",

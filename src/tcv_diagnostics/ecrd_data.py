@@ -337,13 +337,25 @@ def generate_symmetrized_h1_parent(
         raise ValueError("ECRD parent context dataset differs")
     if getattr(model, "context_frames", None) != 1:
         raise ValueError("ECRD parent must use frozen one-frame H1")
-    if device.type != "cuda" or not torch.cuda.is_available():
-        raise RuntimeError("ECRD parent generation requires an allocated CUDA device")
+    if device.type not in ("cpu", "cuda"):
+        raise RuntimeError("ECRD parent generation supports only CPU or CUDA")
+    if device.type == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("ECRD CUDA parent generation requires an allocated GPU")
+    execution_device = str(metadata.get("execution_device", ""))
+    if device.type == "cuda" and execution_device != "h100":
+        raise RuntimeError("ECRD CUDA parent metadata must identify H100 execution")
+    if device.type == "cpu" and (
+        execution_device != "cpu-smoke"
+        or metadata.get("artifact_authority")
+        != "bounded_non_scientific_engineering_smoke_only"
+    ):
+        raise RuntimeError("ECRD CPU parent lacks bounded-smoke authorization")
     model.eval()
     model.requires_grad_(False)
-    torch.backends.cuda.matmul.allow_tf32 = False
-    torch.backends.cudnn.allow_tf32 = False
-    torch.cuda.reset_peak_memory_stats(device)
+    if device.type == "cuda":
+        torch.backends.cuda.matmul.allow_tf32 = False
+        torch.backends.cudnn.allow_tf32 = False
+        torch.cuda.reset_peak_memory_stats(device)
     started_wall = time.monotonic()
     with ECRDParentMeanWriter(
         output,
@@ -361,12 +373,14 @@ def generate_symmetrized_h1_parent(
                 context = torch.from_numpy(np.asarray(item["context"]))[None].to(
                     device=device,
                     dtype=torch.float32,
-                    non_blocking=True,
+                    non_blocking=device.type == "cuda",
                 )
-                torch.cuda.synchronize(device)
+                if device.type == "cuda":
+                    torch.cuda.synchronize(device)
                 started = time.perf_counter()
                 parent = symmetrized_h1_mean(model, context)
-                torch.cuda.synchronize(device)
+                if device.type == "cuda":
+                    torch.cuda.synchronize(device)
                 writer.append(
                     target_frame=target,
                     standardized_parent_mean=parent[0].to("cpu", torch.float32).numpy(),
@@ -393,7 +407,10 @@ def generate_symmetrized_h1_parent(
             "axes": list(ECRD_PARENT_AXES),
         },
         "wall_seconds": time.monotonic() - started_wall,
-        "peak_cuda_memory_bytes": int(torch.cuda.max_memory_allocated(device)),
+        "execution_device": execution_device,
+        "peak_cuda_memory_bytes": (
+            int(torch.cuda.max_memory_allocated(device)) if device.type == "cuda" else 0
+        ),
         "metadata": dict(metadata),
     }
 

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_truth_free_CPU_parent_for_non_scientific_smoke",
+  "freeze_date": "2026-08-20",
+  "development_run": "85604",
+  "sequestered_run": "85606",
+  "held_out_85606_access_allowed": false,
+  "protocol": {
+    "path": "paper0/protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md",
+    "sha256": "74028e90568a4cfea0721c7fd7a28297a230672c538b3e7908784603c3b2fea4"
+  },
+  "execution_amendment": {
+    "path": "paper0/protocol/ECRD_PARENT_CPU_SMOKE_AMENDMENT_2026-08-20.md",
+    "sha256": "4165cdc2f035c62eb7e6ade88a6380a8060e012e8c40c0b243ba446396276cbc"
+  },
+  "authorized_scope": [
+    "load_frozen_C5P_H1_seed1701",
+    "read_85604_training_and_validation_context_only",
+    "generate_four_phase_symmetrized_H1_parent_means_on_CPU",
+    "use_parent_only_for_bounded_non_scientific_ECRD_smoke"
+  ],
+  "forbidden_scope": [
+    "target_truth_read_during_parent_generation",
+    "guard_reads",
+    "training_or_checkpoint_selection_during_parent_generation",
+    "physics_metric_evaluation",
+    "85606_access",
+    "full_ECRD_training_with_CPU_parent",
+    "scientific_forecast_with_CPU_parent"
+  ],
+  "evidence_locks": {
+    "model_dataset": {
+      "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    },
+    "H1_checkpoint": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o2_full/job_6894980/task_0_c5p_h1_seed_1701/selected.pt",
+      "sha256": "5562095a9316077fb16299b08fa9527b33c768efdde48a066e3e71f94150671e",
+      "training_commit": "9035bc3ce9d2351cd17586f4429af8116d43a47e",
+      "arm": "C5P-H1",
+      "seed": 1701,
+      "trainable": false
+    },
+    "codec_checkpoint": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase2_o1_codec_r2/job_6894463/task_0_c5p_seed_1701/selected.pt",
+      "sha256": "9fc7fbd684d660bd9f33e9db32500aa2795fc354c90886d2e893cd470ea6bc9d",
+      "trainable": false
+    },
+    "CPU_timing_probe": {
+      "slurm_job_id": "6912444",
+      "result_path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/ecrd_parent_cpu_probe/job_6912444/result.json",
+      "result_sha256": "fd57ec47ae9230ae98135a8cac17d90f31664299a9f5180f9a1b35bffdd3b39d",
+      "artifact_index_sha256": "c72d55831b02675244c940e7d053ccfa5fc0f80dbcc20cb7e5e16bccdf3cdae2"
+    }
+  },
+  "data": {
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "training_targets": [2, 432],
+    "validation_targets": [498, 624],
+    "guard_frames": [432, 496],
+    "target_truth_read_allowed": false,
+    "volume_shape": [5, 64, 32, 88],
+    "periodic_axes_xyz": [false, false, true],
+    "zperiod": 5,
+    "mode_mapping": "n=5k"
+  },
+  "symmetrization": {
+    "phase_shifts": [0, 1, 2, 3],
+    "definition": "mean_q0_to_3_T_minus_q_H1_T_q",
+    "shared_shift_for_all_fields": true,
+    "future_truth_used": false
+  },
+  "execution": {
+    "cluster": "Rusty",
+    "os": "Rocky_Linux_9",
+    "accelerator": "CPU",
+    "torch_threads": 32,
+    "submission": "sbatch_from_rusty9",
+    "wandb_online_required": true,
+    "wandb_entity": "sdelaurentiis123-columbia-university",
+    "wandb_project": "tcv-diagnostics-paper0",
+    "wandb_group": "ecrd-sym-h1-parent-cpu-smoke-85604",
+    "Ceph_artifacts_are_scientific_authority": false,
+    "artifact_authority": "bounded_non_scientific_engineering_smoke_only",
+    "full_training_authorized": false,
+    "H100_parent_comparison_required_before_full_training": true
+  }
+}
