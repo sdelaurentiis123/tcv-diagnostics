@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "scope": "prospective_85604_ECRD_scientific_evaluation_pipeline_submission",
+  "status": "scheduled_behind_success_only_training_dependencies",
+  "snapshot_date": "2026-08-20",
+  "development_run": "85604",
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "held_out_85606_access_authorized": false,
+  "physics_metric_used_for_training_or_checkpoint_selection": false,
+  "scientific_forecast_generated_at_submission": false,
+  "assimilation_authorized": false,
+  "diagnostic_ranking_authorized": false,
+  "paper0_commit": "1e7b9fc4c2e138307e24a77b8d672c636e4dc377",
+  "clean_rusty_checkout": "/mnt/home/sdelaurentiis/tcv-diagnostics-eval-1e7b9fc",
+  "source_bundle": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics-1e7b9fc.bundle",
+    "sha256": "7b90829dbe7433c090e5891ee4f53f95fe184319f4aad550b53204f5d4b2306a"
+  },
+  "pre_submission_verification": {
+    "complete_suite_passed": 1343,
+    "complete_suite_skipped": 1,
+    "shell_syntax_checked": true,
+    "focused_contract_tests_passed": 20,
+    "worktree_clean_at_bundle_creation": true
+  },
+  "jobs": {
+    "training_array": {
+      "job_id": "6913340",
+      "task_count": 11,
+      "state_at_submission": "RUNNING"
+    },
+    "training_finalizer": {
+      "job_id": "6913439",
+      "dependency": "afterok:6913340_*",
+      "partition": "gen",
+      "scope": "checksum_only_training_artifact_finalization"
+    },
+    "evaluation_freeze": {
+      "job_id": "6913511",
+      "dependency": "afterok:6913439",
+      "partition": "gen",
+      "scope": "metadata_only_post_training_pre_forecast_freeze"
+    },
+    "scientific_evaluation": {
+      "array_job_id": "6913512",
+      "dependency": "afterok:6913511",
+      "array": "0-11%2",
+      "partition": "gpupreempt",
+      "constraint": "h100",
+      "ensemble_members": 32,
+      "EDM_steps": 18,
+      "network_evaluations_per_member": 35,
+      "target_frames": [498, 624]
+    },
+    "model_ladder_reducer": {
+      "job_id": "6913520",
+      "dependency": "afterok:6913512_*",
+      "partition": "gen",
+      "scope": "data_free_predeclared_seven_family_gate"
+    }
+  },
+  "failure_policy": "no_downstream_job_runs_if_any_upstream_job_fails",
+  "next_event": "complete_and_verify_all_eleven_training_tasks_before_automatic_85604_evaluation"
+}
