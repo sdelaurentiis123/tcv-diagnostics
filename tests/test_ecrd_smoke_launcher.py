@@ -137,6 +137,7 @@ def test_finalizer_requires_all_four_runs_and_is_non_scientific() -> None:
     assert "ECRD_SMOKE_ARRAY_JOB_ID" in source
     assert "--dependency=afterok:<array-job-id>" in source
     assert EXPECTED_MANIFEST_SHA256 in source
+    assert "e00521421bdeaab56bdac7899257f9e0521d736a4f191f4c19d053f2a4077ccd" in source
     run_arguments = [
         'B5=${JOB_ROOT}/task_0_b5_seed_1701/model',
         'B5-Context=${JOB_ROOT}/task_1_b5_context_seed_1701/model',

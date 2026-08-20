@@ -91,7 +91,6 @@ def _synthetic_b5_run(
         "training": config.to_record(),
         "model": model_config_record("B5"),
         "parameter_count": frozen_parameter_counts()["B5"],
-        "residual_scales": list(B5_RESIDUAL_SCALES),
         "completed_epochs": 1,
         "completed_optimizer_steps": 2,
         "target_presentations": 4,

@@ -145,7 +145,6 @@ def validate_smoke_run(
             "training": config.to_record(),
             "model": model_config_record(arm),
             "parameter_count": frozen_parameter_counts()[arm],
-            "residual_scales": list(B5_RESIDUAL_SCALES),
             "completed_epochs": 1,
             "completed_optimizer_steps": 2,
             "target_presentations": 4,
