@@ -1,0 +1,1686 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src 'unsafe-inline' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Paper 0 scientific state of the union — 21 August 2026</title>
+<style>:root{color-scheme:light dark;background:light-dark(rgb(255 255 255), rgb(24 24 24))}html,body{margin:0}body{box-sizing:border-box;padding:1rem;background:inherit}iframe{display:block;width:100%;max-width:736px;height:calc(100vh - 2rem);margin:0 auto;border:0}</style>
+</head>
+<body>
+<iframe sandbox="allow-scripts" referrerpolicy="no-referrer" title="Paper 0 scientific state of the union — 21 August 2026" srcdoc="&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+&lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &#x27;none&#x27;; script-src &#x27;unsafe-inline&#x27; &#x27;unsafe-eval&#x27; &#x27;wasm-unsafe-eval&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; style-src &#x27;unsafe-inline&#x27; blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; img-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; font-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; media-src blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://esm.sh https://fonts.bunny.net https://fonts.googleapis.com https://fonts.gstatic.com https://unpkg.com; worker-src blob:; connect-src blob: data:; frame-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;&quot;&gt;
+&lt;title&gt;Paper 0 scientific state of the union — 21 August 2026&lt;/title&gt;
+&lt;style&gt;:root {
+  color-scheme: light dark;
+  background-color: var(--background) !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: light-dark(rgb(255 255 255), rgb(24 24 24));
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(rgb(243 136 59), rgb(245 154 86));
+  --viz-series-3: light-dark(rgb(93 201 119), rgb(116 213 139));
+  --viz-series-4: light-dark(rgb(235 119 177), rgb(240 143 192));
+  --viz-series-5: light-dark(rgb(155 121 236), rgb(170 145 239));
+  --viz-series-6: light-dark(rgb(58 185 177), rgb(90 203 194));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, &quot;Segoe UI&quot;, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;,
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 12.5px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url(&quot;data:image/svg+xml,%3Csvg xmlns=&#x27;http://www.w3.org/2000/svg&#x27; viewBox=&#x27;0 0 17 17&#x27;%3E%3Cpath d=&#x27;M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z&#x27;/%3E%3C/svg%3E&quot;);
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-theme=&quot;light&quot;] {
+  color-scheme: light;
+}
+
+:root[data-theme=&quot;dark&quot;] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html &gt; body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--viz-font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  corner-shape: superellipse(1.5);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget &gt; :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls &gt; .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls &gt; .form-label &gt; :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--primary-foreground);
+  background: var(--foreground);
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(in srgb, var(--primary-foreground) 50%, transparent);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type=&quot;file&quot;] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type=&quot;file&quot;]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type=&quot;file&quot;]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type=&quot;color&quot;] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type=&quot;color&quot;]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+  corner-shape: superellipse(1.5);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  corner-shape: superellipse(1.5);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  corner-shape: superellipse(1.5);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type=&quot;checkbox&quot;]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type=&quot;checkbox&quot;]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: &quot;&quot;;
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type=&quot;radio&quot;] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type=&quot;radio&quot;]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: &quot;&quot;;
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed=&quot;true&quot;],
+    [aria-selected=&quot;true&quot;],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed=&quot;true&quot;], [aria-selected=&quot;true&quot;], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget &gt; svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+
+html&gt;body{padding:0}&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;section id=&quot;paper0-state-of-union&quot; aria-label=&quot;Paper 0 scientific evidence summary&quot;&gt;
+  &lt;style&gt;
+    #paper0-state-of-union {
+      color: var(--foreground);
+      display: grid;
+      gap: 2.5rem;
+      width: 100%;
+    }
+    #paper0-state-of-union .scope-line,
+    #paper0-state-of-union .status-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      align-items: center;
+    }
+    #paper0-state-of-union figure {
+      display: grid;
+      gap: 0.65rem;
+      margin: 0;
+    }
+    #paper0-state-of-union figcaption {
+      color: var(--foreground);
+      max-width: 76ch;
+    }
+    #paper0-state-of-union .source-line {
+      color: var(--muted-foreground);
+    }
+    #paper0-state-of-union .plot {
+      display: block;
+      height: auto;
+      overflow: visible;
+      width: 100%;
+    }
+    #paper0-state-of-union .plot text {
+      fill: var(--foreground);
+      font-weight: 400;
+    }
+    #paper0-state-of-union .plot .strong {
+      font-weight: 500;
+    }
+    #paper0-state-of-union .strong {
+      font-weight: 500;
+    }
+    #paper0-state-of-union .plot .muted {
+      fill: var(--muted-foreground);
+    }
+    #paper0-state-of-union .plot .axis,
+    #paper0-state-of-union .plot .gridline,
+    #paper0-state-of-union .plot .connector {
+      fill: none;
+      stroke: var(--border);
+      stroke-width: 1;
+    }
+    #paper0-state-of-union .plot .connector {
+      stroke-width: 2;
+    }
+    #paper0-state-of-union .plot .target-line {
+      fill: none;
+      stroke: var(--muted-foreground);
+      stroke-dasharray: 5 4;
+      stroke-width: 1;
+    }
+    #paper0-state-of-union .plot .series-1-fill { fill: var(--viz-series-1); }
+    #paper0-state-of-union .plot .series-2-fill { fill: var(--viz-series-2); }
+    #paper0-state-of-union .plot .series-3-fill { fill: var(--viz-series-3); }
+    #paper0-state-of-union .plot .series-4-fill { fill: var(--viz-series-4); }
+    #paper0-state-of-union .plot .series-5-fill { fill: var(--viz-series-5); }
+    #paper0-state-of-union .plot .series-6-fill { fill: var(--viz-series-6); }
+    #paper0-state-of-union .plot .series-1-stroke { fill: none; stroke: var(--viz-series-1); stroke-width: 3; }
+    #paper0-state-of-union .plot .series-2-stroke { fill: none; stroke: var(--viz-series-2); stroke-width: 3; }
+    #paper0-state-of-union .plot .series-3-stroke { fill: none; stroke: var(--viz-series-3); stroke-width: 3; }
+    #paper0-state-of-union .plot .series-4-stroke { fill: none; stroke: var(--viz-series-4); stroke-width: 3; }
+    #paper0-state-of-union .plot .series-5-stroke { fill: none; stroke: var(--viz-series-5); stroke-width: 3; }
+    #paper0-state-of-union .plot .pass-node {
+      fill: color-mix(in srgb, var(--viz-series-2) 14%, transparent);
+      stroke: var(--viz-series-2);
+      stroke-width: 2;
+    }
+    #paper0-state-of-union .plot .mixed-node {
+      fill: color-mix(in srgb, var(--viz-series-4) 14%, transparent);
+      stroke: var(--viz-series-4);
+      stroke-width: 2;
+    }
+    #paper0-state-of-union .plot .fail-node {
+      fill: color-mix(in srgb, var(--destructive) 12%, transparent);
+      stroke: var(--destructive);
+      stroke-width: 2;
+    }
+    #paper0-state-of-union .plot .active-node {
+      fill: color-mix(in srgb, var(--viz-series-1) 14%, transparent);
+      stroke: var(--viz-series-1);
+      stroke-width: 2;
+    }
+    #paper0-state-of-union .plot .closed-node {
+      fill: color-mix(in srgb, var(--muted) 24%, transparent);
+      stroke: var(--muted-foreground);
+      stroke-width: 1;
+    }
+    #paper0-state-of-union .plot .none-dot {
+      fill: var(--muted);
+      stroke: var(--muted-foreground);
+      stroke-width: 1;
+    }
+    #paper0-state-of-union .claims {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    #paper0-state-of-union .claims section {
+      min-width: 0;
+    }
+    #paper0-state-of-union .claims ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+    #paper0-state-of-union .claims li + li {
+      margin-top: 0.5rem;
+    }
+    #paper0-state-of-union .evidence-index {
+      display: grid;
+      gap: 0.4rem;
+    }
+    @media (max-width: 560px) {
+      #paper0-state-of-union { gap: 2rem; }
+      #paper0-state-of-union .claims { grid-template-columns: 1fr; }
+    }
+    @media print {
+      #paper0-state-of-union figure { break-inside: avoid; }
+    }
+  &lt;/style&gt;
+
+  &lt;div class=&quot;scope-line&quot; aria-label=&quot;Scope and evidence state&quot;&gt;
+    &lt;span class=&quot;viz-badge&quot;&gt;85604 development evidence only&lt;/span&gt;
+    &lt;span class=&quot;viz-badge&quot;&gt;85606 sealed&lt;/span&gt;
+    &lt;span class=&quot;viz-badge&quot;&gt;transport never used as a loss&lt;/span&gt;
+    &lt;span class=&quot;text-muted&quot;&gt;Snapshot: 21 Aug 2026, 09:30 EDT · repository cbf78d8&lt;/span&gt;
+  &lt;/div&gt;
+
+  &lt;figure aria-labelledby=&quot;p0-fig1-caption&quot;&gt;
+    &lt;svg class=&quot;plot&quot; viewBox=&quot;0 0 920 315&quot; role=&quot;img&quot; aria-labelledby=&quot;p0-fig1-title p0-fig1-desc&quot;&gt;
+      &lt;title id=&quot;p0-fig1-title&quot;&gt;Paper 0 evidence ladder and current gate state&lt;/title&gt;
+      &lt;desc id=&quot;p0-fig1-desc&quot;&gt;A sequential evidence ladder from data audit through representation, one-step forecasting, failure localization, and active ECRD evaluation. Held-out evaluation and assimilation remain closed.&lt;/desc&gt;
+      &lt;defs&gt;
+        &lt;marker id=&quot;p0-arrow-1&quot; viewBox=&quot;0 0 10 10&quot; refX=&quot;8&quot; refY=&quot;5&quot; markerWidth=&quot;5&quot; markerHeight=&quot;5&quot; orient=&quot;auto-start-reverse&quot;&gt;
+          &lt;path d=&quot;M 0 0 L 10 5 L 0 10 z&quot; fill=&quot;var(--border)&quot;&gt;&lt;/path&gt;
+        &lt;/marker&gt;
+      &lt;/defs&gt;
+      &lt;text x=&quot;20&quot; y=&quot;24&quot; class=&quot;strong&quot;&gt;Evidence ladder&lt;/text&gt;
+      &lt;text x=&quot;900&quot; y=&quot;24&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;green = established · red = failed gate · blue = active · gray = closed&lt;/text&gt;
+
+      &lt;line x1=&quot;156&quot; y1=&quot;115&quot; x2=&quot;184&quot; y2=&quot;115&quot; class=&quot;connector&quot; marker-end=&quot;url(#p0-arrow-1)&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;336&quot; y1=&quot;115&quot; x2=&quot;364&quot; y2=&quot;115&quot; class=&quot;connector&quot; marker-end=&quot;url(#p0-arrow-1)&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;516&quot; y1=&quot;115&quot; x2=&quot;544&quot; y2=&quot;115&quot; class=&quot;connector&quot; marker-end=&quot;url(#p0-arrow-1)&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;696&quot; y1=&quot;115&quot; x2=&quot;724&quot; y2=&quot;115&quot; class=&quot;connector&quot; marker-end=&quot;url(#p0-arrow-1)&quot;&gt;&lt;/line&gt;
+
+      &lt;rect x=&quot;20&quot; y=&quot;56&quot; width=&quot;136&quot; height=&quot;118&quot; rx=&quot;12&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;34&quot; y=&quot;82&quot; class=&quot;strong&quot;&gt;Data audit&lt;/text&gt;
+      &lt;text x=&quot;34&quot; y=&quot;107&quot; class=&quot;text-small&quot;&gt;cadence and axes&lt;/text&gt;
+      &lt;text x=&quot;34&quot; y=&quot;129&quot; class=&quot;text-small&quot;&gt;n = 5k mapping&lt;/text&gt;
+      &lt;text x=&quot;34&quot; y=&quot;151&quot; class=&quot;text-small&quot;&gt;drift + translation&lt;/text&gt;
+      &lt;text x=&quot;142&quot; y=&quot;164&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;established&lt;/text&gt;
+
+      &lt;rect x=&quot;184&quot; y=&quot;56&quot; width=&quot;152&quot; height=&quot;118&quot; rx=&quot;12&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;198&quot; y=&quot;82&quot; class=&quot;strong&quot;&gt;Representation&lt;/text&gt;
+      &lt;text x=&quot;198&quot; y=&quot;107&quot; class=&quot;text-small&quot;&gt;C5P DCAE-L10&lt;/text&gt;
+      &lt;text x=&quot;198&quot; y=&quot;129&quot; class=&quot;text-small&quot;&gt;3/3 seeds pass O1&lt;/text&gt;
+      &lt;text x=&quot;198&quot; y=&quot;151&quot; class=&quot;text-small&quot;&gt;codec no longer main fault&lt;/text&gt;
+      &lt;text x=&quot;322&quot; y=&quot;164&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;accepted rung&lt;/text&gt;
+
+      &lt;rect x=&quot;364&quot; y=&quot;56&quot; width=&quot;152&quot; height=&quot;118&quot; rx=&quot;12&quot; class=&quot;fail-node&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;378&quot; y=&quot;82&quot; class=&quot;strong&quot;&gt;One-step models&lt;/text&gt;
+      &lt;text x=&quot;378&quot; y=&quot;107&quot; class=&quot;text-small&quot;&gt;H1/H2 + B2–B5&lt;/text&gt;
+      &lt;text x=&quot;378&quot; y=&quot;129&quot; class=&quot;text-small&quot;&gt;field skill improves&lt;/text&gt;
+      &lt;text x=&quot;378&quot; y=&quot;151&quot; class=&quot;text-small&quot;&gt;joint transport gate fails&lt;/text&gt;
+      &lt;text x=&quot;502&quot; y=&quot;164&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;scientific failure&lt;/text&gt;
+
+      &lt;rect x=&quot;544&quot; y=&quot;56&quot; width=&quot;152&quot; height=&quot;118&quot; rx=&quot;12&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;558&quot; y=&quot;82&quot; class=&quot;strong&quot;&gt;Cause localization&lt;/text&gt;
+      &lt;text x=&quot;558&quot; y=&quot;107&quot; class=&quot;text-small&quot;&gt;equivariance defect&lt;/text&gt;
+      &lt;text x=&quot;558&quot; y=&quot;129&quot; class=&quot;text-small&quot;&gt;drift + state dependence&lt;/text&gt;
+      &lt;text x=&quot;558&quot; y=&quot;151&quot; class=&quot;text-small&quot;&gt;not simple low ESS&lt;/text&gt;
+      &lt;text x=&quot;682&quot; y=&quot;164&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;completed&lt;/text&gt;
+
+      &lt;rect x=&quot;724&quot; y=&quot;56&quot; width=&quot;176&quot; height=&quot;118&quot; rx=&quot;12&quot; class=&quot;active-node&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;738&quot; y=&quot;82&quot; class=&quot;strong&quot;&gt;ECRD repair&lt;/text&gt;
+      &lt;text x=&quot;738&quot; y=&quot;107&quot; class=&quot;text-small&quot;&gt;4 arms × 3 seeds trained&lt;/text&gt;
+      &lt;text x=&quot;738&quot; y=&quot;129&quot; class=&quot;text-small&quot;&gt;M32 one-step scoring&lt;/text&gt;
+      &lt;text x=&quot;738&quot; y=&quot;151&quot; class=&quot;text-small&quot;&gt;8 done · 2 run · 2 wait&lt;/text&gt;
+      &lt;text x=&quot;886&quot; y=&quot;164&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;active job 6913512&lt;/text&gt;
+
+      &lt;line x1=&quot;812&quot; y1=&quot;174&quot; x2=&quot;812&quot; y2=&quot;211&quot; class=&quot;connector&quot; marker-end=&quot;url(#p0-arrow-1)&quot;&gt;&lt;/line&gt;
+      &lt;rect x=&quot;614&quot; y=&quot;216&quot; width=&quot;176&quot; height=&quot;68&quot; rx=&quot;12&quot; class=&quot;closed-node&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;628&quot; y=&quot;242&quot; class=&quot;strong&quot;&gt;Held-out 85606&lt;/text&gt;
+      &lt;text x=&quot;628&quot; y=&quot;265&quot; class=&quot;text-small&quot;&gt;opens only if ECRD gate passes&lt;/text&gt;
+      &lt;rect x=&quot;804&quot; y=&quot;216&quot; width=&quot;96&quot; height=&quot;68&quot; rx=&quot;12&quot; class=&quot;closed-node&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;818&quot; y=&quot;242&quot; class=&quot;strong&quot;&gt;Assimilation&lt;/text&gt;
+      &lt;text x=&quot;818&quot; y=&quot;265&quot; class=&quot;text-small&quot;&gt;closed&lt;/text&gt;
+      &lt;line x1=&quot;790&quot; y1=&quot;250&quot; x2=&quot;802&quot; y2=&quot;250&quot; class=&quot;connector&quot; marker-end=&quot;url(#p0-arrow-1)&quot;&gt;&lt;/line&gt;
+    &lt;/svg&gt;
+    &lt;figcaption id=&quot;p0-fig1-caption&quot;&gt;&lt;span class=&quot;strong&quot;&gt;Figure 1.&lt;/span&gt; Paper 0 has isolated a one-step joint-distribution failure before any autonomous rollout claim. The current experiment is a controlled repair, not an architecture sweep.&lt;/figcaption&gt;
+    &lt;div class=&quot;source-line text-small&quot;&gt;Sources: PHASE1_READOUT.md · PHASE2_O2_READOUT.md · PHASE3_B2/B3/B4/B5_READOUT.md · ECRD_MODEL_DEVELOPMENT_PROTOCOL.md&lt;/div&gt;
+  &lt;/figure&gt;
+
+  &lt;figure aria-labelledby=&quot;p0-fig2-caption&quot;&gt;
+    &lt;svg class=&quot;plot&quot; viewBox=&quot;0 0 920 455&quot; role=&quot;img&quot; aria-labelledby=&quot;p0-fig2-title p0-fig2-desc&quot;&gt;
+      &lt;title id=&quot;p0-fig2-title&quot;&gt;Temporal structure of simulation 85604&lt;/title&gt;
+      &lt;desc id=&quot;p0-fig2-desc&quot;&gt;Left panel compares fixed-grid and truth-shift-aligned one-step correlations for five fields. Right panel compares full-pattern and toroidal-residual first one-over-e decorrelation times.&lt;/desc&gt;
+      &lt;text x=&quot;20&quot; y=&quot;24&quot; class=&quot;strong&quot;&gt;85604 contains slow drift and fast coherent toroidal motion&lt;/text&gt;
+      &lt;text x=&quot;20&quot; y=&quot;48&quot; class=&quot;muted text-small&quot;&gt;624 frames · 3.131905 microseconds per frame · 1/5 torus · stored k maps to full-torus n = 5k&lt;/text&gt;
+
+      &lt;text x=&quot;70&quot; y=&quot;84&quot; class=&quot;strong&quot;&gt;A. One-step correlation&lt;/text&gt;
+      &lt;line x1=&quot;70&quot; y1=&quot;330&quot; x2=&quot;420&quot; y2=&quot;330&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;70&quot; y1=&quot;105&quot; x2=&quot;70&quot; y2=&quot;360&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;70&quot; y1=&quot;266&quot; x2=&quot;420&quot; y2=&quot;266&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;70&quot; y1=&quot;202&quot; x2=&quot;420&quot; y2=&quot;202&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;70&quot; y1=&quot;138&quot; x2=&quot;420&quot; y2=&quot;138&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;text x=&quot;62&quot; y=&quot;334&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0.0&lt;/text&gt;
+      &lt;text x=&quot;62&quot; y=&quot;270&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0.2&lt;/text&gt;
+      &lt;text x=&quot;62&quot; y=&quot;206&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0.4&lt;/text&gt;
+      &lt;text x=&quot;62&quot; y=&quot;142&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0.6&lt;/text&gt;
+      &lt;text x=&quot;62&quot; y=&quot;366&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;−0.1&lt;/text&gt;
+
+      &lt;rect x=&quot;94&quot; y=&quot;222.5&quot; width=&quot;22&quot; height=&quot;107.5&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;118&quot; y=&quot;164.9&quot; width=&quot;22&quot; height=&quot;165.1&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;117&quot; y=&quot;386&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;Ne&lt;/text&gt;
+      &lt;text x=&quot;105&quot; y=&quot;215&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.336&lt;/text&gt;
+      &lt;text x=&quot;129&quot; y=&quot;157&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.516&lt;/text&gt;
+
+      &lt;rect x=&quot;161&quot; y=&quot;330&quot; width=&quot;22&quot; height=&quot;61.8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;185&quot; y=&quot;118.2&quot; width=&quot;22&quot; height=&quot;211.8&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;184&quot; y=&quot;386&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;Te&lt;/text&gt;
+      &lt;text x=&quot;172&quot; y=&quot;410&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;−.193&lt;/text&gt;
+      &lt;text x=&quot;196&quot; y=&quot;111&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.662&lt;/text&gt;
+
+      &lt;rect x=&quot;228&quot; y=&quot;287.4&quot; width=&quot;22&quot; height=&quot;42.6&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;252&quot; y=&quot;173.8&quot; width=&quot;22&quot; height=&quot;156.2&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;251&quot; y=&quot;386&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;Ti&lt;/text&gt;
+      &lt;text x=&quot;239&quot; y=&quot;280&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.133&lt;/text&gt;
+      &lt;text x=&quot;263&quot; y=&quot;166&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.488&lt;/text&gt;
+
+      &lt;rect x=&quot;295&quot; y=&quot;330&quot; width=&quot;22&quot; height=&quot;37.8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;319&quot; y=&quot;125.8&quot; width=&quot;22&quot; height=&quot;204.2&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;318&quot; y=&quot;386&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;phi&lt;/text&gt;
+      &lt;text x=&quot;306&quot; y=&quot;410&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;−.118&lt;/text&gt;
+      &lt;text x=&quot;330&quot; y=&quot;118&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.638&lt;/text&gt;
+
+      &lt;rect x=&quot;362&quot; y=&quot;232.1&quot; width=&quot;22&quot; height=&quot;97.9&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;386&quot; y=&quot;175.8&quot; width=&quot;22&quot; height=&quot;154.2&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;385&quot; y=&quot;386&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;Vi&lt;/text&gt;
+      &lt;text x=&quot;373&quot; y=&quot;225&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.306&lt;/text&gt;
+      &lt;text x=&quot;397&quot; y=&quot;168&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.482&lt;/text&gt;
+
+      &lt;rect x=&quot;86&quot; y=&quot;421&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;106&quot; y=&quot;433&quot; class=&quot;text-small&quot;&gt;fixed grid&lt;/text&gt;
+      &lt;rect x=&quot;196&quot; y=&quot;421&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;216&quot; y=&quot;433&quot; class=&quot;text-small&quot;&gt;single shared truth-assisted shift&lt;/text&gt;
+
+      &lt;text x=&quot;500&quot; y=&quot;84&quot; class=&quot;strong&quot;&gt;B. First 1/e crossing (frames)&lt;/text&gt;
+      &lt;text x=&quot;500&quot; y=&quot;107&quot; class=&quot;muted text-small&quot;&gt;full mean-removed pattern&lt;/text&gt;
+      &lt;line x1=&quot;570&quot; y1=&quot;125&quot; x2=&quot;570&quot; y2=&quot;360&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;570&quot; y1=&quot;360&quot; x2=&quot;884&quot; y2=&quot;360&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;585.7&quot; y1=&quot;125&quot; x2=&quot;585.7&quot; y2=&quot;360&quot; class=&quot;target-line&quot;&gt;&lt;/line&gt;
+      &lt;text x=&quot;585.7&quot; y=&quot;382&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;1 frame&lt;/text&gt;
+      &lt;text x=&quot;570&quot; y=&quot;382&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;0&lt;/text&gt;
+      &lt;text x=&quot;727&quot; y=&quot;382&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;10&lt;/text&gt;
+      &lt;text x=&quot;884&quot; y=&quot;382&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;20&lt;/text&gt;
+
+      &lt;text x=&quot;558&quot; y=&quot;150&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;Ne&lt;/text&gt;
+      &lt;rect x=&quot;570&quot; y=&quot;136&quot; width=&quot;299&quot; height=&quot;18&quot; class=&quot;series-3-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;875&quot; y=&quot;151&quot; class=&quot;text-small&quot;&gt;19.04&lt;/text&gt;
+      &lt;text x=&quot;558&quot; y=&quot;194&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;Te&lt;/text&gt;
+      &lt;rect x=&quot;570&quot; y=&quot;180&quot; width=&quot;12.9&quot; height=&quot;18&quot; class=&quot;series-3-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;589&quot; y=&quot;195&quot; class=&quot;text-small&quot;&gt;0.82&lt;/text&gt;
+      &lt;text x=&quot;558&quot; y=&quot;238&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;Ti&lt;/text&gt;
+      &lt;rect x=&quot;570&quot; y=&quot;224&quot; width=&quot;35.2&quot; height=&quot;18&quot; class=&quot;series-3-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;611&quot; y=&quot;239&quot; class=&quot;text-small&quot;&gt;2.24&lt;/text&gt;
+      &lt;text x=&quot;558&quot; y=&quot;282&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;phi&lt;/text&gt;
+      &lt;rect x=&quot;570&quot; y=&quot;268&quot; width=&quot;160.5&quot; height=&quot;18&quot; class=&quot;series-3-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;737&quot; y=&quot;283&quot; class=&quot;text-small&quot;&gt;10.22&lt;/text&gt;
+      &lt;text x=&quot;558&quot; y=&quot;326&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;Vi&lt;/text&gt;
+      &lt;rect x=&quot;570&quot; y=&quot;312&quot; width=&quot;26.4&quot; height=&quot;18&quot; class=&quot;series-3-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;603&quot; y=&quot;327&quot; class=&quot;text-small&quot;&gt;1.68&lt;/text&gt;
+
+      &lt;text x=&quot;500&quot; y=&quot;421&quot; class=&quot;text-small&quot;&gt;Toroidal residual crossings:&lt;/text&gt;
+      &lt;text x=&quot;680&quot; y=&quot;421&quot; class=&quot;strong text-small&quot;&gt;0.53–0.95 frames for every field&lt;/text&gt;
+      &lt;text x=&quot;500&quot; y=&quot;443&quot; class=&quot;muted text-small&quot;&gt;Useful band: strongest coherence near k=4–5 → n=20–25; weaker, still material checks at n=30–35.&lt;/text&gt;
+    &lt;/svg&gt;
+    &lt;figcaption id=&quot;p0-fig2-caption&quot;&gt;&lt;span class=&quot;strong&quot;&gt;Figure 2.&lt;/span&gt; Fixed-grid decorrelation is not complete physical incoherence: a common toroidal shift recovers substantial one-step structure. The record also drifts, so random window shuffling cannot create an independent stationary dataset.&lt;/figcaption&gt;
+    &lt;div class=&quot;source-line text-small&quot;&gt;Source: PHASE1_READOUT.md, job 6890606. Oracle shifts use future truth and are diagnostic only.&lt;/div&gt;
+  &lt;/figure&gt;
+
+  &lt;figure aria-labelledby=&quot;p0-fig3-caption&quot;&gt;
+    &lt;svg class=&quot;plot&quot; viewBox=&quot;0 0 920 390&quot; role=&quot;img&quot; aria-labelledby=&quot;p0-fig3-title p0-fig3-desc&quot;&gt;
+      &lt;title id=&quot;p0-fig3-title&quot;&gt;Representation findings from codec reconstruction&lt;/title&gt;
+      &lt;desc id=&quot;p0-fig3-desc&quot;&gt;Historical f8 and z44 codec field errors and ranges of local versus integrated transport reconstruction error, together with the accepted matched C5P DCAE-L10 result.&lt;/desc&gt;
+      &lt;text x=&quot;20&quot; y=&quot;24&quot; class=&quot;strong&quot;&gt;Compression was measured before dynamics&lt;/text&gt;
+      &lt;text x=&quot;20&quot; y=&quot;48&quot; class=&quot;muted text-small&quot;&gt;Historical f8 versus z44 is descriptive; the later matched C5P DCAE-L10 passes complete O1 at all three seeds.&lt;/text&gt;
+
+      &lt;text x=&quot;60&quot; y=&quot;90&quot; class=&quot;strong&quot;&gt;A. Five-field standardized RMSE&lt;/text&gt;
+      &lt;line x1=&quot;90&quot; y1=&quot;315&quot; x2=&quot;385&quot; y2=&quot;315&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;90&quot; y1=&quot;115&quot; x2=&quot;90&quot; y2=&quot;315&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;90&quot; y1=&quot;215&quot; x2=&quot;385&quot; y2=&quot;215&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;90&quot; y1=&quot;115&quot; x2=&quot;385&quot; y2=&quot;115&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;text x=&quot;80&quot; y=&quot;319&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0.00&lt;/text&gt;
+      &lt;text x=&quot;80&quot; y=&quot;219&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0.02&lt;/text&gt;
+      &lt;text x=&quot;80&quot; y=&quot;119&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0.04&lt;/text&gt;
+      &lt;rect x=&quot;140&quot; y=&quot;190.4&quot; width=&quot;78&quot; height=&quot;124.6&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;270&quot; y=&quot;151.1&quot; width=&quot;78&quot; height=&quot;163.9&quot; class=&quot;series-3-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;179&quot; y=&quot;180&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;0.02492&lt;/text&gt;
+      &lt;text x=&quot;309&quot; y=&quot;141&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;0.03279&lt;/text&gt;
+      &lt;text x=&quot;179&quot; y=&quot;343&quot; text-anchor=&quot;middle&quot;&gt;historical f8&lt;/text&gt;
+      &lt;text x=&quot;309&quot; y=&quot;343&quot; text-anchor=&quot;middle&quot;&gt;historical z44&lt;/text&gt;
+
+      &lt;text x=&quot;475&quot; y=&quot;90&quot; class=&quot;strong&quot;&gt;B. Geometry-aware transport reconstruction&lt;/text&gt;
+      &lt;text x=&quot;475&quot; y=&quot;114&quot; class=&quot;muted text-small&quot;&gt;relative L2 range across particle + three internal-energy quantities&lt;/text&gt;
+      &lt;line x1=&quot;635&quot; y1=&quot;152&quot; x2=&quot;635&quot; y2=&quot;326&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;635&quot; y1=&quot;326&quot; x2=&quot;890&quot; y2=&quot;326&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;720&quot; y1=&quot;152&quot; x2=&quot;720&quot; y2=&quot;326&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;805&quot; y1=&quot;152&quot; x2=&quot;805&quot; y2=&quot;326&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;890&quot; y1=&quot;152&quot; x2=&quot;890&quot; y2=&quot;326&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;text x=&quot;635&quot; y=&quot;348&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;0%&lt;/text&gt;
+      &lt;text x=&quot;720&quot; y=&quot;348&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;10%&lt;/text&gt;
+      &lt;text x=&quot;805&quot; y=&quot;348&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;20%&lt;/text&gt;
+      &lt;text x=&quot;890&quot; y=&quot;348&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;30%&lt;/text&gt;
+
+      &lt;text x=&quot;620&quot; y=&quot;177&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;f8 local faces&lt;/text&gt;
+      &lt;line x1=&quot;879.9&quot; y1=&quot;173&quot; x2=&quot;894.2&quot; y2=&quot;173&quot; class=&quot;series-1-stroke&quot;&gt;&lt;/line&gt;
+      &lt;circle cx=&quot;879.9&quot; cy=&quot;173&quot; r=&quot;5&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;894.2&quot; cy=&quot;173&quot; r=&quot;5&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;872&quot; y=&quot;177&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;28.8–30.5%&lt;/text&gt;
+
+      &lt;text x=&quot;620&quot; y=&quot;217&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;f8 separatrix&lt;/text&gt;
+      &lt;line x1=&quot;657.8&quot; y1=&quot;213&quot; x2=&quot;680.3&quot; y2=&quot;213&quot; class=&quot;series-2-stroke&quot;&gt;&lt;/line&gt;
+      &lt;circle cx=&quot;657.8&quot; cy=&quot;213&quot; r=&quot;5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;680.3&quot; cy=&quot;213&quot; r=&quot;5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;688&quot; y=&quot;217&quot; class=&quot;text-small&quot;&gt;2.7–5.3%&lt;/text&gt;
+
+      &lt;text x=&quot;620&quot; y=&quot;257&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;z44 local faces&lt;/text&gt;
+      &lt;line x1=&quot;806.6&quot; y1=&quot;253&quot; x2=&quot;824.7&quot; y2=&quot;253&quot; class=&quot;series-3-stroke&quot;&gt;&lt;/line&gt;
+      &lt;circle cx=&quot;806.6&quot; cy=&quot;253&quot; r=&quot;5&quot; class=&quot;series-3-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;824.7&quot; cy=&quot;253&quot; r=&quot;5&quot; class=&quot;series-3-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;798&quot; y=&quot;257&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;20.2–22.3%&lt;/text&gt;
+
+      &lt;text x=&quot;620&quot; y=&quot;297&quot; text-anchor=&quot;end&quot; class=&quot;text-small&quot;&gt;z44 separatrix&lt;/text&gt;
+      &lt;line x1=&quot;668.9&quot; y1=&quot;293&quot; x2=&quot;707.8&quot; y2=&quot;293&quot; class=&quot;series-4-stroke&quot;&gt;&lt;/line&gt;
+      &lt;circle cx=&quot;668.9&quot; cy=&quot;293&quot; r=&quot;5&quot; class=&quot;series-4-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;707.8&quot; cy=&quot;293&quot; r=&quot;5&quot; class=&quot;series-4-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;716&quot; y=&quot;297&quot; class=&quot;text-small&quot;&gt;3.9–8.6%&lt;/text&gt;
+
+      &lt;text x=&quot;20&quot; y=&quot;378&quot; class=&quot;muted text-small&quot;&gt;Interpretation: more latent capacity alone was not a controlled or uniformly better repair; local transport is a stricter representation test than the signed net integral.&lt;/text&gt;
+    &lt;/svg&gt;
+    &lt;figcaption id=&quot;p0-fig3-caption&quot;&gt;&lt;span class=&quot;strong&quot;&gt;Figure 3.&lt;/span&gt; Historical f8 reconstructed fields and net separatrix transport well but lost local transport detail; z44 improved local faces but worsened other frozen criteria. A matched C5P DCAE-L10 representation later cleared O1, moving the dominant failure downstream into the transition.&lt;/figcaption&gt;
+    &lt;div class=&quot;source-line text-small&quot;&gt;Sources: PHASE2_O1_READOUT.md; PHASE2_O1_TRANSPORT_READOUT.md; amendment A014; PHASE2_O2_READOUT.md.&lt;/div&gt;
+  &lt;/figure&gt;
+
+  &lt;figure aria-labelledby=&quot;p0-fig4-caption&quot;&gt;
+    &lt;svg class=&quot;plot&quot; viewBox=&quot;0 0 920 565&quot; role=&quot;img&quot; aria-labelledby=&quot;p0-fig4-title p0-fig4-desc&quot;&gt;
+      &lt;title id=&quot;p0-fig4-title&quot;&gt;One-step stochastic model comparison&lt;/title&gt;
+      &lt;desc id=&quot;p0-fig4-desc&quot;&gt;Four aligned panels compare B3 functional noise, B4 PDE-Refiner, and B5 joint residual diffusion on mean error, fair CRPS, aggregate spread-skill, and passing spectral power versus realization checks.&lt;/desc&gt;
+      &lt;text x=&quot;20&quot; y=&quot;24&quot; class=&quot;strong&quot;&gt;The models improve different marginals; all miss the joint next-state distribution&lt;/text&gt;
+      &lt;text x=&quot;20&quot; y=&quot;48&quot; class=&quot;muted text-small&quot;&gt;Same 126 chronological 85604 targets and M32 for B3–B5. Architectures and losses differ, so this is descriptive, not a one-factor ablation.&lt;/text&gt;
+
+      &lt;text x=&quot;55&quot; y=&quot;88&quot; class=&quot;strong&quot;&gt;A. Ensemble-mean error / H1&lt;/text&gt;
+      &lt;line x1=&quot;65&quot; y1=&quot;255&quot; x2=&quot;430&quot; y2=&quot;255&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;65&quot; y1=&quot;110&quot; x2=&quot;65&quot; y2=&quot;255&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;65&quot; y1=&quot;125&quot; x2=&quot;430&quot; y2=&quot;125&quot; class=&quot;target-line&quot;&gt;&lt;/line&gt;
+      &lt;text x=&quot;58&quot; y=&quot;129&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;1.0&lt;/text&gt;
+      &lt;text x=&quot;58&quot; y=&quot;259&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0.9&lt;/text&gt;
+      &lt;rect x=&quot;100&quot; y=&quot;121.1&quot; width=&quot;28&quot; height=&quot;133.9&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;130&quot; y=&quot;128.9&quot; width=&quot;28&quot; height=&quot;126.1&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;129&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B3&lt;/text&gt;
+      &lt;text x=&quot;114&quot; y=&quot;113&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;1.003&lt;/text&gt;
+      &lt;text x=&quot;144&quot; y=&quot;120&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.997&lt;/text&gt;
+      &lt;rect x=&quot;212&quot; y=&quot;197.8&quot; width=&quot;28&quot; height=&quot;57.2&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;242&quot; y=&quot;235.5&quot; width=&quot;28&quot; height=&quot;19.5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;241&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B4&lt;/text&gt;
+      &lt;text x=&quot;226&quot; y=&quot;190&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.944&lt;/text&gt;
+      &lt;text x=&quot;256&quot; y=&quot;228&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.915&lt;/text&gt;
+      &lt;rect x=&quot;324&quot; y=&quot;182.2&quot; width=&quot;28&quot; height=&quot;72.8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;354&quot; y=&quot;201.7&quot; width=&quot;28&quot; height=&quot;53.3&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;353&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B5&lt;/text&gt;
+      &lt;text x=&quot;338&quot; y=&quot;174&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.956&lt;/text&gt;
+      &lt;text x=&quot;368&quot; y=&quot;194&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.941&lt;/text&gt;
+      &lt;rect x=&quot;90&quot; y=&quot;306&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;110&quot; y=&quot;318&quot; class=&quot;text-small&quot;&gt;MAE&lt;/text&gt;
+      &lt;rect x=&quot;170&quot; y=&quot;306&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;190&quot; y=&quot;318&quot; class=&quot;text-small&quot;&gt;RMSE&lt;/text&gt;
+
+      &lt;text x=&quot;505&quot; y=&quot;88&quot; class=&quot;strong&quot;&gt;B. Fair CRPS / H1 MAE&lt;/text&gt;
+      &lt;line x1=&quot;520&quot; y1=&quot;255&quot; x2=&quot;875&quot; y2=&quot;255&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;520&quot; y1=&quot;110&quot; x2=&quot;520&quot; y2=&quot;255&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;rect x=&quot;565&quot; y=&quot;174.3&quot; width=&quot;66&quot; height=&quot;80.7&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;665&quot; y=&quot;149.1&quot; width=&quot;66&quot; height=&quot;105.9&quot; class=&quot;series-3-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;765&quot; y=&quot;184.1&quot; width=&quot;66&quot; height=&quot;70.9&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;598&quot; y=&quot;165&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;0.723&lt;/text&gt;
+      &lt;text x=&quot;698&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;0.808&lt;/text&gt;
+      &lt;text x=&quot;798&quot; y=&quot;175&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;0.687&lt;/text&gt;
+      &lt;text x=&quot;598&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B3&lt;/text&gt;
+      &lt;text x=&quot;698&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B4&lt;/text&gt;
+      &lt;text x=&quot;798&quot; y=&quot;285&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B5&lt;/text&gt;
+      &lt;text x=&quot;520&quot; y=&quot;318&quot; class=&quot;muted text-small&quot;&gt;lower is better; B5 is strongest marginal proper score&lt;/text&gt;
+
+      &lt;text x=&quot;55&quot; y=&quot;366&quot; class=&quot;strong&quot;&gt;C. Aggregate pixel spread–skill&lt;/text&gt;
+      &lt;line x1=&quot;65&quot; y1=&quot;520&quot; x2=&quot;430&quot; y2=&quot;520&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;65&quot; y1=&quot;390&quot; x2=&quot;65&quot; y2=&quot;520&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;65&quot; y1=&quot;412&quot; x2=&quot;430&quot; y2=&quot;412&quot; class=&quot;target-line&quot;&gt;&lt;/line&gt;
+      &lt;text x=&quot;58&quot; y=&quot;416&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;1.0&lt;/text&gt;
+      &lt;rect x=&quot;110&quot; y=&quot;434.7&quot; width=&quot;62&quot; height=&quot;85.3&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;220&quot; y=&quot;496.6&quot; width=&quot;62&quot; height=&quot;23.4&quot; class=&quot;series-3-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;330&quot; y=&quot;433.4&quot; width=&quot;62&quot; height=&quot;86.6&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;141&quot; y=&quot;426&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;0.790&lt;/text&gt;
+      &lt;text x=&quot;251&quot; y=&quot;488&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;0.217&lt;/text&gt;
+      &lt;text x=&quot;361&quot; y=&quot;425&quot; text-anchor=&quot;middle&quot; class=&quot;strong&quot;&gt;0.802&lt;/text&gt;
+      &lt;text x=&quot;141&quot; y=&quot;548&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B3&lt;/text&gt;
+      &lt;text x=&quot;251&quot; y=&quot;548&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B4&lt;/text&gt;
+      &lt;text x=&quot;361&quot; y=&quot;548&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B5&lt;/text&gt;
+
+      &lt;text x=&quot;505&quot; y=&quot;366&quot; class=&quot;strong&quot;&gt;D. Material band checks passed (of 15)&lt;/text&gt;
+      &lt;line x1=&quot;520&quot; y1=&quot;520&quot; x2=&quot;875&quot; y2=&quot;520&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;520&quot; y1=&quot;390&quot; x2=&quot;520&quot; y2=&quot;520&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;520&quot; y1=&quot;390&quot; x2=&quot;875&quot; y2=&quot;390&quot; class=&quot;target-line&quot;&gt;&lt;/line&gt;
+      &lt;rect x=&quot;555&quot; y=&quot;424.7&quot; width=&quot;26&quot; height=&quot;95.3&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;583&quot; y=&quot;485.3&quot; width=&quot;26&quot; height=&quot;34.7&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;582&quot; y=&quot;548&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B3&lt;/text&gt;
+      &lt;text x=&quot;568&quot; y=&quot;416&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;11&lt;/text&gt;
+      &lt;text x=&quot;596&quot; y=&quot;477&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;4&lt;/text&gt;
+      &lt;rect x=&quot;665&quot; y=&quot;442&quot; width=&quot;26&quot; height=&quot;78&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;693&quot; y=&quot;485.3&quot; width=&quot;26&quot; height=&quot;34.7&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;692&quot; y=&quot;548&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B4&lt;/text&gt;
+      &lt;text x=&quot;678&quot; y=&quot;434&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;9&lt;/text&gt;
+      &lt;text x=&quot;706&quot; y=&quot;477&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;4&lt;/text&gt;
+      &lt;rect x=&quot;775&quot; y=&quot;407.3&quot; width=&quot;26&quot; height=&quot;112.7&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;803&quot; y=&quot;485.3&quot; width=&quot;26&quot; height=&quot;34.7&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;802&quot; y=&quot;548&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;B5&lt;/text&gt;
+      &lt;text x=&quot;788&quot; y=&quot;399&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;13&lt;/text&gt;
+      &lt;text x=&quot;816&quot; y=&quot;477&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;4&lt;/text&gt;
+      &lt;rect x=&quot;530&quot; y=&quot;306&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;550&quot; y=&quot;318&quot; class=&quot;text-small&quot;&gt;expected member power&lt;/text&gt;
+      &lt;rect x=&quot;710&quot; y=&quot;306&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;730&quot; y=&quot;318&quot; class=&quot;text-small&quot;&gt;correct next-frame realization&lt;/text&gt;
+    &lt;/svg&gt;
+    &lt;figcaption id=&quot;p0-fig4-caption&quot;&gt;&lt;span class=&quot;strong&quot;&gt;Figure 4.&lt;/span&gt; B4 gives the best deterministic mean but almost no ensemble spread. B5 gives the best marginal score and expected power, yet all three stochastic branches reach the same 4-of-15 realization ceiling. B2 showed the same basic distinction in a three-seed latent-diffusion baseline.&lt;/figcaption&gt;
+    &lt;div class=&quot;source-line text-small&quot;&gt;Sources: PHASE3_B2_READOUT.md; PHASE3_B3_READOUT.md; PHASE3_B4_READOUT.md; PHASE3_B5_READOUT.md.&lt;/div&gt;
+  &lt;/figure&gt;
+
+  &lt;figure aria-labelledby=&quot;p0-fig5-caption&quot;&gt;
+    &lt;svg class=&quot;plot&quot; viewBox=&quot;0 0 920 430&quot; role=&quot;img&quot; aria-labelledby=&quot;p0-fig5-title p0-fig5-desc&quot;&gt;
+      &lt;title id=&quot;p0-fig5-title&quot;&gt;B5 transport spread at local and integrated scales&lt;/title&gt;
+      &lt;desc id=&quot;p0-fig5-desc&quot;&gt;Paired bars show approximately unit local transport spread-skill but much lower integrated separatrix spread-skill for four transport quantities. A second set shows the excessive local spread that scalar inflation would cause.&lt;/desc&gt;
+      &lt;text x=&quot;20&quot; y=&quot;24&quot; class=&quot;strong&quot;&gt;B5 has local variance; it lacks the covariance that survives spatial integration&lt;/text&gt;
+      &lt;text x=&quot;20&quot; y=&quot;48&quot; class=&quot;muted text-small&quot;&gt;Every nonlinear diagnostic is computed member-wise before ensemble reduction.&lt;/text&gt;
+
+      &lt;line x1=&quot;92&quot; y1=&quot;330&quot; x2=&quot;875&quot; y2=&quot;330&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;92&quot; y1=&quot;88&quot; x2=&quot;92&quot; y2=&quot;330&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;92&quot; y1=&quot;233.2&quot; x2=&quot;875&quot; y2=&quot;233.2&quot; class=&quot;target-line&quot;&gt;&lt;/line&gt;
+      &lt;text x=&quot;82&quot; y=&quot;334&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0&lt;/text&gt;
+      &lt;text x=&quot;82&quot; y=&quot;237&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;1&lt;/text&gt;
+      &lt;text x=&quot;82&quot; y=&quot;140&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;2&lt;/text&gt;
+      &lt;text x=&quot;82&quot; y=&quot;92&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;2.5&lt;/text&gt;
+
+      &lt;text x=&quot;190&quot; y=&quot;365&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;particle&lt;/text&gt;
+      &lt;rect x=&quot;140&quot; y=&quot;233.2&quot; width=&quot;30&quot; height=&quot;96.8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;174&quot; y=&quot;283.1&quot; width=&quot;30&quot; height=&quot;46.9&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;208&quot; y=&quot;130.4&quot; width=&quot;30&quot; height=&quot;199.6&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;155&quot; y=&quot;224&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;1.000&lt;/text&gt;
+      &lt;text x=&quot;189&quot; y=&quot;275&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.485&lt;/text&gt;
+      &lt;text x=&quot;223&quot; y=&quot;122&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;2.062&lt;/text&gt;
+
+      &lt;text x=&quot;390&quot; y=&quot;365&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;electron energy&lt;/text&gt;
+      &lt;rect x=&quot;340&quot; y=&quot;233.0&quot; width=&quot;30&quot; height=&quot;97.0&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;374&quot; y=&quot;290.0&quot; width=&quot;30&quot; height=&quot;40.0&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;408&quot; y=&quot;95.0&quot; width=&quot;30&quot; height=&quot;235.0&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;355&quot; y=&quot;224&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;1.002&lt;/text&gt;
+      &lt;text x=&quot;389&quot; y=&quot;282&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.413&lt;/text&gt;
+      &lt;text x=&quot;423&quot; y=&quot;87&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;2.427&lt;/text&gt;
+
+      &lt;text x=&quot;590&quot; y=&quot;365&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;ion energy&lt;/text&gt;
+      &lt;rect x=&quot;540&quot; y=&quot;233.6&quot; width=&quot;30&quot; height=&quot;96.4&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;574&quot; y=&quot;285.5&quot; width=&quot;30&quot; height=&quot;44.5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;608&quot; y=&quot;120.3&quot; width=&quot;30&quot; height=&quot;209.7&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;555&quot; y=&quot;225&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.996&lt;/text&gt;
+      &lt;text x=&quot;589&quot; y=&quot;277&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.460&lt;/text&gt;
+      &lt;text x=&quot;623&quot; y=&quot;112&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;2.166&lt;/text&gt;
+
+      &lt;text x=&quot;790&quot; y=&quot;365&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;total energy&lt;/text&gt;
+      &lt;rect x=&quot;740&quot; y=&quot;233.3&quot; width=&quot;30&quot; height=&quot;96.7&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;774&quot; y=&quot;287.5&quot; width=&quot;30&quot; height=&quot;42.5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;808&quot; y=&quot;109.9&quot; width=&quot;30&quot; height=&quot;220.1&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;755&quot; y=&quot;225&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.999&lt;/text&gt;
+      &lt;text x=&quot;789&quot; y=&quot;279&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;.439&lt;/text&gt;
+      &lt;text x=&quot;823&quot; y=&quot;102&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;2.274&lt;/text&gt;
+
+      &lt;rect x=&quot;130&quot; y=&quot;399&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-1-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;150&quot; y=&quot;411&quot; class=&quot;text-small&quot;&gt;local spread–skill&lt;/text&gt;
+      &lt;rect x=&quot;315&quot; y=&quot;399&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-2-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;335&quot; y=&quot;411&quot; class=&quot;text-small&quot;&gt;integrated separatrix spread–skill&lt;/text&gt;
+      &lt;rect x=&quot;620&quot; y=&quot;399&quot; width=&quot;14&quot; height=&quot;14&quot; class=&quot;series-4-fill&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;640&quot; y=&quot;411&quot; class=&quot;text-small&quot;&gt;local spread after scalar inflation fixes integral&lt;/text&gt;
+    &lt;/svg&gt;
+    &lt;figcaption id=&quot;p0-fig5-caption&quot;&gt;&lt;span class=&quot;strong&quot;&gt;Figure 5.&lt;/span&gt; B5 is not simply “too narrow everywhere.” Local face-flux spread is already calibrated, while the integrated separatrix ensemble is too narrow. A global noise multiplier would fix the integral only by overdispersing local transport by roughly 2.1–2.4×.&lt;/figcaption&gt;
+    &lt;div class=&quot;source-line text-small&quot;&gt;Source: PHASE3_B5_COVARIANCE_LOCALIZATION_READOUT.md, job 6901914.&lt;/div&gt;
+  &lt;/figure&gt;
+
+  &lt;figure aria-labelledby=&quot;p0-fig6-caption&quot;&gt;
+    &lt;svg class=&quot;plot&quot; viewBox=&quot;0 0 920 610&quot; role=&quot;img&quot; aria-labelledby=&quot;p0-fig6-title p0-fig6-desc&quot;&gt;
+      &lt;title id=&quot;p0-fig6-title&quot;&gt;Phase 3.5 cause localization&lt;/title&gt;
+      &lt;desc id=&quot;p0-fig6-desc&quot;&gt;A categorical evidence matrix ranks eight explanations. A line chart compares later-block residual variance captured by global PCA and a toroidal Fourier KL representation. Three diagnostic values separate truth motion from H1 residual failure.&lt;/desc&gt;
+      &lt;text x=&quot;20&quot; y=&quot;24&quot; class=&quot;strong&quot;&gt;The residual law changes with state and coordinate choice&lt;/text&gt;
+      &lt;text x=&quot;20&quot; y=&quot;48&quot; class=&quot;muted text-small&quot;&gt;Narrow K4 statement: one fixed, global, condition-independent linear residual distribution does not transfer within 85604.&lt;/text&gt;
+
+      &lt;text x=&quot;40&quot; y=&quot;86&quot; class=&quot;strong&quot;&gt;A. Ranked mechanism evidence&lt;/text&gt;
+      &lt;text x=&quot;660&quot; y=&quot;86&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;strong&lt;/text&gt;
+      &lt;text x=&quot;755&quot; y=&quot;86&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;moderate&lt;/text&gt;
+      &lt;text x=&quot;850&quot; y=&quot;86&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;none&lt;/text&gt;
+      &lt;line x1=&quot;610&quot; y1=&quot;98&quot; x2=&quot;890&quot; y2=&quot;98&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+
+      &lt;text x=&quot;56&quot; y=&quot;130&quot; class=&quot;text-small&quot;&gt;1 · codec / predictor non-equivariance&lt;/text&gt;
+      &lt;circle cx=&quot;660&quot; cy=&quot;125&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;56&quot; y=&quot;164&quot; class=&quot;text-small&quot;&gt;2 · nonstationary development interval&lt;/text&gt;
+      &lt;circle cx=&quot;660&quot; cy=&quot;159&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;56&quot; y=&quot;198&quot; class=&quot;text-small&quot;&gt;3 · forecast-state-dependent covariance&lt;/text&gt;
+      &lt;circle cx=&quot;660&quot; cy=&quot;193&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;56&quot; y=&quot;232&quot; class=&quot;text-small&quot;&gt;4 · history-dependent hidden state&lt;/text&gt;
+      &lt;circle cx=&quot;660&quot; cy=&quot;227&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;56&quot; y=&quot;266&quot; class=&quot;text-small&quot;&gt;5 · incomplete / incorrect retained state&lt;/text&gt;
+      &lt;circle cx=&quot;660&quot; cy=&quot;261&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;56&quot; y=&quot;300&quot; class=&quot;text-small&quot;&gt;6 · coherent transport in Eulerian coordinates&lt;/text&gt;
+      &lt;circle cx=&quot;755&quot; cy=&quot;295&quot; r=&quot;8&quot; class=&quot;series-4-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;56&quot; y=&quot;334&quot; class=&quot;text-small&quot;&gt;7 · insufficient effective sample size&lt;/text&gt;
+      &lt;circle cx=&quot;850&quot; cy=&quot;329&quot; r=&quot;8&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;56&quot; y=&quot;368&quot; class=&quot;text-small&quot;&gt;8 · unexplained failure&lt;/text&gt;
+      &lt;circle cx=&quot;850&quot; cy=&quot;363&quot; r=&quot;8&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+
+      &lt;text x=&quot;40&quot; y=&quot;416&quot; class=&quot;strong&quot;&gt;B. Chronological residual variance captured&lt;/text&gt;
+      &lt;line x1=&quot;95&quot; y1=&quot;565&quot; x2=&quot;520&quot; y2=&quot;565&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;95&quot; y1=&quot;435&quot; x2=&quot;95&quot; y2=&quot;565&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;95&quot; y1=&quot;513&quot; x2=&quot;520&quot; y2=&quot;513&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;line x1=&quot;95&quot; y1=&quot;461&quot; x2=&quot;520&quot; y2=&quot;461&quot; class=&quot;gridline&quot;&gt;&lt;/line&gt;
+      &lt;text x=&quot;85&quot; y=&quot;569&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;0%&lt;/text&gt;
+      &lt;text x=&quot;85&quot; y=&quot;517&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;20%&lt;/text&gt;
+      &lt;text x=&quot;85&quot; y=&quot;465&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;40%&lt;/text&gt;
+      &lt;polyline points=&quot;115,551.6 190,543.6 285,532.7 400,519.2 500,508.0&quot; class=&quot;series-3-stroke&quot;&gt;&lt;/polyline&gt;
+      &lt;polyline points=&quot;115,542.9 190,526.8 285,506.8 400,482.6 500,462.6&quot; class=&quot;series-2-stroke&quot;&gt;&lt;/polyline&gt;
+      &lt;circle cx=&quot;115&quot; cy=&quot;551.6&quot; r=&quot;5&quot; class=&quot;series-3-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;190&quot; cy=&quot;543.6&quot; r=&quot;5&quot; class=&quot;series-3-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;285&quot; cy=&quot;532.7&quot; r=&quot;5&quot; class=&quot;series-3-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;400&quot; cy=&quot;519.2&quot; r=&quot;5&quot; class=&quot;series-3-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;500&quot; cy=&quot;508.0&quot; r=&quot;5&quot; class=&quot;series-3-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;115&quot; cy=&quot;542.9&quot; r=&quot;5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;190&quot; cy=&quot;526.8&quot; r=&quot;5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;285&quot; cy=&quot;506.8&quot; r=&quot;5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;400&quot; cy=&quot;482.6&quot; r=&quot;5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;500&quot; cy=&quot;462.6&quot; r=&quot;5&quot; class=&quot;series-2-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;115&quot; y=&quot;589&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;32&lt;/text&gt;
+      &lt;text x=&quot;190&quot; y=&quot;589&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;64&lt;/text&gt;
+      &lt;text x=&quot;285&quot; y=&quot;589&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;128&lt;/text&gt;
+      &lt;text x=&quot;400&quot; y=&quot;589&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;256&lt;/text&gt;
+      &lt;text x=&quot;500&quot; y=&quot;589&quot; text-anchor=&quot;middle&quot; class=&quot;muted text-small&quot;&gt;416 coeff.&lt;/text&gt;
+      &lt;text x=&quot;505&quot; y=&quot;456&quot; class=&quot;strong text-small&quot;&gt;Fourier KL 39.4%&lt;/text&gt;
+      &lt;text x=&quot;505&quot; y=&quot;506&quot; class=&quot;strong text-small&quot;&gt;global PCA 21.9%&lt;/text&gt;
+
+      &lt;text x=&quot;595&quot; y=&quot;416&quot; class=&quot;strong&quot;&gt;C. Translation separates two errors&lt;/text&gt;
+      &lt;text x=&quot;595&quot; y=&quot;456&quot; class=&quot;muted text-small&quot;&gt;median truth displacement&lt;/text&gt;
+      &lt;text x=&quot;895&quot; y=&quot;456&quot; text-anchor=&quot;end&quot; class=&quot;strong&quot;&gt;11 / 88 cells&lt;/text&gt;
+      &lt;text x=&quot;595&quot; y=&quot;500&quot; class=&quot;muted text-small&quot;&gt;oracle-shifted persistence MSE gain&lt;/text&gt;
+      &lt;text x=&quot;895&quot; y=&quot;500&quot; text-anchor=&quot;end&quot; class=&quot;strong&quot;&gt;67.1%&lt;/text&gt;
+      &lt;text x=&quot;595&quot; y=&quot;544&quot; class=&quot;muted text-small&quot;&gt;median H1 residual energy gain after shift&lt;/text&gt;
+      &lt;text x=&quot;895&quot; y=&quot;544&quot; text-anchor=&quot;end&quot; class=&quot;strong&quot;&gt;0.0%&lt;/text&gt;
+      &lt;text x=&quot;595&quot; y=&quot;580&quot; class=&quot;muted text-small&quot;&gt;Motion is real; bulk alignment does not explain H1&#x27;s residual failure.&lt;/text&gt;
+    &lt;/svg&gt;
+    &lt;figcaption id=&quot;p0-fig6-caption&quot;&gt;&lt;span class=&quot;strong&quot;&gt;Figure 6.&lt;/span&gt; The strongest evidence points to symmetry defects, chronological drift, state-dependent covariance, missing state, and memory. Toroidal coordinates improve linear variance transfer, but no fixed linear representation preserves every transport-relevant dependency.&lt;/figcaption&gt;
+    &lt;div class=&quot;source-line text-small&quot;&gt;Source: phase3_5/PHASE3_5_DECISION_MEMO.md and results/phase3_5_cause_localization_6907468.json.&lt;/div&gt;
+  &lt;/figure&gt;
+
+  &lt;figure aria-labelledby=&quot;p0-fig7-caption&quot;&gt;
+    &lt;svg class=&quot;plot&quot; viewBox=&quot;0 0 920 575&quot; role=&quot;img&quot; aria-labelledby=&quot;p0-fig7-title p0-fig7-desc&quot;&gt;
+      &lt;title id=&quot;p0-fig7-title&quot;&gt;ECRD controlled model ladder and active evaluation&lt;/title&gt;
+      &lt;desc id=&quot;p0-fig7-desc&quot;&gt;A feature matrix compares B5, B5-Context, ECRD, and ECRD-History. A 12-task status strip shows eight completed, two running, and two pending evaluations. Seven scientific acceptance families remain pending.&lt;/desc&gt;
+      &lt;text x=&quot;20&quot; y=&quot;24&quot; class=&quot;strong&quot;&gt;Current repair: condition the joint innovation deeply and respect toroidal symmetry&lt;/text&gt;
+      &lt;text x=&quot;20&quot; y=&quot;48&quot; class=&quot;muted text-small&quot;&gt;All 12 runs completed 100 epochs and 10,800 updates. Training objectives differ for mean-head arms and are not a scientific ranking.&lt;/text&gt;
+
+      &lt;text x=&quot;30&quot; y=&quot;92&quot; class=&quot;strong&quot;&gt;Arm&lt;/text&gt;
+      &lt;text x=&quot;205&quot; y=&quot;92&quot; text-anchor=&quot;middle&quot; class=&quot;strong text-small&quot;&gt;deep context&lt;/text&gt;
+      &lt;text x=&quot;335&quot; y=&quot;92&quot; text-anchor=&quot;middle&quot; class=&quot;strong text-small&quot;&gt;no z stride&lt;/text&gt;
+      &lt;text x=&quot;470&quot; y=&quot;92&quot; text-anchor=&quot;middle&quot; class=&quot;strong text-small&quot;&gt;sym H1 + mean head&lt;/text&gt;
+      &lt;text x=&quot;630&quot; y=&quot;92&quot; text-anchor=&quot;middle&quot; class=&quot;strong text-small&quot;&gt;multiscale joint noise&lt;/text&gt;
+      &lt;text x=&quot;790&quot; y=&quot;92&quot; text-anchor=&quot;middle&quot; class=&quot;strong text-small&quot;&gt;history&lt;/text&gt;
+      &lt;line x1=&quot;20&quot; y1=&quot;106&quot; x2=&quot;895&quot; y2=&quot;106&quot; class=&quot;axis&quot;&gt;&lt;/line&gt;
+
+      &lt;text x=&quot;30&quot; y=&quot;142&quot; class=&quot;strong&quot;&gt;B5&lt;/text&gt;
+      &lt;circle cx=&quot;205&quot; cy=&quot;137&quot; r=&quot;7&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;335&quot; cy=&quot;137&quot; r=&quot;7&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;470&quot; cy=&quot;137&quot; r=&quot;7&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;630&quot; cy=&quot;137&quot; r=&quot;7&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;790&quot; y=&quot;142&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;1 frame&lt;/text&gt;
+
+      &lt;text x=&quot;30&quot; y=&quot;190&quot; class=&quot;strong&quot;&gt;B5-Context&lt;/text&gt;
+      &lt;circle cx=&quot;205&quot; cy=&quot;185&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;335&quot; cy=&quot;185&quot; r=&quot;7&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;470&quot; cy=&quot;185&quot; r=&quot;7&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;630&quot; cy=&quot;185&quot; r=&quot;7&quot; class=&quot;none-dot&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;790&quot; y=&quot;190&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;1 frame&lt;/text&gt;
+
+      &lt;text x=&quot;30&quot; y=&quot;238&quot; class=&quot;strong&quot;&gt;ECRD&lt;/text&gt;
+      &lt;circle cx=&quot;205&quot; cy=&quot;233&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;335&quot; cy=&quot;233&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;470&quot; cy=&quot;233&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;630&quot; cy=&quot;233&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;790&quot; y=&quot;238&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;1 frame&lt;/text&gt;
+
+      &lt;text x=&quot;30&quot; y=&quot;286&quot; class=&quot;strong&quot;&gt;ECRD-History&lt;/text&gt;
+      &lt;circle cx=&quot;205&quot; cy=&quot;281&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;335&quot; cy=&quot;281&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;470&quot; cy=&quot;281&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;circle cx=&quot;630&quot; cy=&quot;281&quot; r=&quot;8&quot; class=&quot;series-1-fill&quot;&gt;&lt;/circle&gt;
+      &lt;text x=&quot;790&quot; y=&quot;286&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;2 frames&lt;/text&gt;
+
+      &lt;text x=&quot;20&quot; y=&quot;338&quot; class=&quot;strong&quot;&gt;M32 evaluation array 6913512&lt;/text&gt;
+      &lt;text x=&quot;895&quot; y=&quot;338&quot; text-anchor=&quot;end&quot; class=&quot;muted text-small&quot;&gt;H100 · 126 targets · 35 denoiser evaluations/member&lt;/text&gt;
+      &lt;rect x=&quot;20&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;90&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;160&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;230&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;300&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;370&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;440&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;510&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;pass-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;580&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;active-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;650&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;active-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;720&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;closed-node&quot;&gt;&lt;/rect&gt;
+      &lt;rect x=&quot;790&quot; y=&quot;356&quot; width=&quot;64&quot; height=&quot;34&quot; rx=&quot;6&quot; class=&quot;closed-node&quot;&gt;&lt;/rect&gt;
+      &lt;text x=&quot;52&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;0 ✓&lt;/text&gt;
+      &lt;text x=&quot;122&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;1 ✓&lt;/text&gt;
+      &lt;text x=&quot;192&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;2 ✓&lt;/text&gt;
+      &lt;text x=&quot;262&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;3 ✓&lt;/text&gt;
+      &lt;text x=&quot;332&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;4 ✓&lt;/text&gt;
+      &lt;text x=&quot;402&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;5 ✓&lt;/text&gt;
+      &lt;text x=&quot;472&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;6 ✓&lt;/text&gt;
+      &lt;text x=&quot;542&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;7 ✓&lt;/text&gt;
+      &lt;text x=&quot;612&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;8 run&lt;/text&gt;
+      &lt;text x=&quot;682&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;9 run&lt;/text&gt;
+      &lt;text x=&quot;752&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;10 wait&lt;/text&gt;
+      &lt;text x=&quot;822&quot; y=&quot;378&quot; text-anchor=&quot;middle&quot; class=&quot;text-small&quot;&gt;11 wait&lt;/text&gt;
+      &lt;text x=&quot;20&quot; y=&quot;416&quot; class=&quot;muted text-small&quot;&gt;tasks 0–2 B5 · 3–5 B5-Context · 6–8 ECRD · 9–11 ECRD-History&lt;/text&gt;
+
+      &lt;text x=&quot;20&quot; y=&quot;460&quot; class=&quot;strong&quot;&gt;Frozen seven-family decision&lt;/text&gt;
+      &lt;text x=&quot;40&quot; y=&quot;493&quot; class=&quot;text-small&quot;&gt;1 · fair CRPS + field spread–skill&lt;/text&gt;
+      &lt;text x=&quot;40&quot; y=&quot;521&quot; class=&quot;text-small&quot;&gt;2 · spectral retention&lt;/text&gt;
+      &lt;text x=&quot;40&quot; y=&quot;549&quot; class=&quot;text-small&quot;&gt;3 · Ne–phi cross-spectrum/coherence&lt;/text&gt;
+      &lt;text x=&quot;475&quot; y=&quot;493&quot; class=&quot;text-small&quot;&gt;4 · spatial transport covariance&lt;/text&gt;
+      &lt;text x=&quot;475&quot; y=&quot;521&quot; class=&quot;text-small&quot;&gt;5 · integrated transport spread without local overdispersion&lt;/text&gt;
+      &lt;text x=&quot;475&quot; y=&quot;549&quot; class=&quot;text-small&quot;&gt;6–7 · three-block and multi-seed robustness&lt;/text&gt;
+    &lt;/svg&gt;
+    &lt;figcaption id=&quot;p0-fig7-caption&quot;&gt;&lt;span class=&quot;strong&quot;&gt;Figure 7.&lt;/span&gt; The active test changes only the mechanisms implicated by the evidence: deep raw-field conditioning, toroidal symmetry, a deterministic mean correction, joint multiscale innovation, and minimal history. The answer is not available until the complete three-seed reduction runs.&lt;/figcaption&gt;
+    &lt;div class=&quot;source-line text-small&quot;&gt;Sources: ECRD_MODEL_DEVELOPMENT_PROTOCOL.md; ecrd_pipeline_recovery_6922551.json; live SLURM snapshot.&lt;/div&gt;
+  &lt;/figure&gt;
+
+  &lt;div class=&quot;claims&quot; aria-label=&quot;Supported and unsupported Paper 0 claims&quot;&gt;
+    &lt;section&gt;
+      &lt;h2&gt;Supported now&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;85604 contains coherent toroidal motion superposed on slower profile and amplitude drift.&lt;/li&gt;
+        &lt;li&gt;A matched C5P codec can preserve the evaluated representation; the dominant failure occurs in one-step dynamics.&lt;/li&gt;
+        &lt;li&gt;Low field error, plausible power, and good mean cross-phase do not guarantee the correct realization or nonlinear transport covariance.&lt;/li&gt;
+        &lt;li&gt;B5 has useful local spread but organizes it incorrectly across space, modes, and fields.&lt;/li&gt;
+        &lt;li&gt;The failure is more consistent with symmetry, conditioning, retained-state, and memory defects than with simply too few adjacent samples.&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/section&gt;
+    &lt;section&gt;
+      &lt;h2&gt;Not supported yet&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;No model has passed the complete 85604 one-step transport-faithful probabilistic gate.&lt;/li&gt;
+        &lt;li&gt;No autonomous rollout has been accepted under the Paper 0 protocol.&lt;/li&gt;
+        &lt;li&gt;85606 has not been opened, so cross-simulation generalization is unknown.&lt;/li&gt;
+        &lt;li&gt;No ensemble is authorized yet for ETKF/EnKF, diagnostic ranking, or control.&lt;/li&gt;
+        &lt;li&gt;ECRD training completion alone is not a scientific result; the M32 gate is the next decision.&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/section&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;evidence-index text-small&quot; aria-label=&quot;Primary evidence index&quot;&gt;
+    &lt;span class=&quot;strong&quot;&gt;Primary evidence index&lt;/span&gt;
+    &lt;span&gt;&lt;code&gt;paper0/PHASE1_READOUT.md&lt;/code&gt; · data, cadence, mode mapping, drift, translation&lt;/span&gt;
+    &lt;span&gt;&lt;code&gt;paper0/PHASE2_O1_READOUT.md&lt;/code&gt; and &lt;code&gt;PHASE2_O1_TRANSPORT_READOUT.md&lt;/code&gt; · codec reconstruction&lt;/span&gt;
+    &lt;span&gt;&lt;code&gt;paper0/PHASE2_O2_READOUT.md&lt;/code&gt; · deterministic one-step failure&lt;/span&gt;
+    &lt;span&gt;&lt;code&gt;paper0/PHASE3_B2_READOUT.md&lt;/code&gt; through &lt;code&gt;PHASE3_B5_READOUT.md&lt;/code&gt; · stochastic baselines&lt;/span&gt;
+    &lt;span&gt;&lt;code&gt;paper0/PHASE3_B5_COVARIANCE_LOCALIZATION_READOUT.md&lt;/code&gt; · local versus integrated covariance&lt;/span&gt;
+    &lt;span&gt;&lt;code&gt;paper0/phase3_5/PHASE3_5_DECISION_MEMO.md&lt;/code&gt; · cause localization&lt;/span&gt;
+    &lt;span&gt;&lt;code&gt;paper0/protocol/ECRD_MODEL_DEVELOPMENT_PROTOCOL.md&lt;/code&gt; · current controlled repair&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script src=&quot;https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set([&quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;left&quot;]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =&gt;
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest(&quot;[data-tooltip]&quot;)
+      : null;
+  const containsTarget = (trigger, target) =&gt;
+    target?.nodeType != null &amp;&amp; trigger.contains(target);
+  const getContent = (trigger) =&gt;
+    trigger.getAttribute(&quot;data-tooltip&quot;)?.trim() ?? &quot;&quot;;
+  const getPlacement = (trigger) =&gt; {
+    const placement = trigger.getAttribute(&quot;data-tooltip-placement&quot;);
+    return tooltipPlacements.has(placement) ? placement : &quot;top&quot;;
+  };
+  const getTooltip = () =&gt; {
+    if (tooltip == null) {
+      tooltip = document.createElement(&quot;div&quot;);
+      tooltip.id = tooltipId;
+      tooltip.className = &quot;tooltip&quot;;
+      tooltip.setAttribute(&quot;role&quot;, &quot;tooltip&quot;);
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) =&gt; {
+    const ids = new Set(
+      (trigger.getAttribute(&quot;aria-describedby&quot;) ?? &quot;&quot;)
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute(&quot;aria-describedby&quot;);
+    } else {
+      trigger.setAttribute(&quot;aria-describedby&quot;, [...ids].join(&quot; &quot;));
+    }
+  };
+  const clearOpenTimeout = () =&gt; {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) =&gt; {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) =&gt; {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-width&quot;,
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              &quot;--tooltip-available-height&quot;,
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: &quot;fixed&quot;,
+    })
+      .then(({ x, y }) =&gt; {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = &quot;visible&quot;;
+      })
+      .catch(() =&gt; {
+        if (activeTrigger === trigger &amp;&amp; request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) =&gt; {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = &quot;hidden&quot;;
+    floating.style.transform = &quot;translate(0, 0)&quot;;
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () =&gt; {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) =&gt; {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() &lt; skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() =&gt; {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) =&gt; {
+    if (event.pointerType === &quot;touch&quot;) {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(&quot;:focus-visible&quot;)) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Escape&quot;) {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) =&gt; {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () =&gt; {
+    closeTooltip(false);
+    document.removeEventListener(&quot;pointerover&quot;, handlePointerOpen);
+    document.removeEventListener(&quot;pointerout&quot;, handleLeave);
+    document.removeEventListener(&quot;focusin&quot;, handleFocusIn);
+    document.removeEventListener(&quot;focusout&quot;, handleLeave);
+    document.removeEventListener(&quot;keydown&quot;, handleKeyDown);
+    document.removeEventListener(&quot;contextmenu&quot;, handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener(&quot;pointerover&quot;, handlePointerOpen);
+  document.addEventListener(&quot;pointerout&quot;, handleLeave);
+  document.addEventListener(&quot;focusin&quot;, handleFocusIn);
+  document.addEventListener(&quot;focusout&quot;, handleLeave);
+  document.addEventListener(&quot;keydown&quot;, handleKeyDown);
+  document.addEventListener(&quot;contextmenu&quot;, handleContextMenu);
+  window.addEventListener(&quot;pagehide&quot;, destroy, { once: true });
+})();
+&lt;/script&gt;
+&lt;script id=&quot;codex-visualization-lucide&quot; async src=&quot;https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+(() =&gt; {
+  const initialize = () =&gt; {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById(&quot;codex-visualization-lucide&quot;)
+    ?.addEventListener(&quot;load&quot;, initialize, { once: true });
+})();
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+"></iframe>
+</body>
+</html>
