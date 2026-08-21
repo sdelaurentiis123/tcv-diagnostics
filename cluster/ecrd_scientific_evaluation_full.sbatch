@@ -8,9 +8,9 @@
 #SBATCH --constraint=h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=160G
-#SBATCH --time=12:00:00
+#SBATCH --cpus-per-task=12
+#SBATCH --mem=64G
+#SBATCH --time=04:00:00
 #SBATCH --array=0-11%2
 #SBATCH --no-requeue
 #SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/ecrd_evaluation_%A_%a.log

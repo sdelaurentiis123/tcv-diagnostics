@@ -16,7 +16,9 @@ def test_launcher_requests_matched_h100_array() -> None:
     assert "#SBATCH --constraint=h100" in source
     assert "#SBATCH --gres=gpu:1" in source
     assert "#SBATCH --array=0-11%2" in source
-    assert "#SBATCH --time=12:00:00" in source
+    assert "#SBATCH --cpus-per-task=12" in source
+    assert "#SBATCH --mem=64G" in source
+    assert "#SBATCH --time=04:00:00" in source
     assert "ECRD_EVALUATION_FREEZE_JOB_ID" in source
 
 
