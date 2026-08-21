@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "scope": "ECRD_completed_training_metadata_recovery_and_pipeline_release_85604",
+  "captured_at": "2026-08-21T09:17:41-04:00",
+  "status": "recovery_finalization_and_freeze_completed_M32_evaluation_running",
+  "code": {
+    "recovery_commit": "da5489b3a7a931142c20eca10590f0a66e853236",
+    "resource_right_sizing_commit": "47cd5e7c32705a6020a686be3cf7021a46bb0111",
+    "remote_branch": "main",
+    "rocky9_checkout": "/mnt/home/sdelaurentiis/tcv-diagnostics-recovery-47cd5e7"
+  },
+  "source_failure": {
+    "array_job_id": "6913340",
+    "array_task_id": 8,
+    "slurm_job_id": "6913340_8",
+    "arm": "ECRD-History",
+    "seed": 1701,
+    "slurm_state": "FAILED",
+    "failure_stage": "post_training_remote_WandB_completion_verification",
+    "cause": "the W&B read API temporarily reported a non-finished state immediately after run.finish",
+    "training_completed_epochs": 100,
+    "training_completed_optimizer_steps": 10800,
+    "candidate_checkpoint_count": 20,
+    "selected_epoch": 75,
+    "checkpoint_reload_bitwise_exact": true,
+    "remote_wandb_state_at_recovery": "finished",
+    "training_result_sha256": "4f2d45e0e5ed110e336420e4d3da5e4e9a966b306f47330ebe83ec5a3bdec79d",
+    "selected_checkpoint_sha256": "fac3e3a5954ef71141877e335b7e8687920a4954020e72306f09b71057a80771"
+  },
+  "recovery": {
+    "job_id": "6922551",
+    "dependency": null,
+    "state": "COMPLETED",
+    "elapsed": "00:01:44",
+    "exit_code": "0:0",
+    "requested_resources": {
+      "partition": "gen",
+      "cpus": 4,
+      "memory_GiB": 16,
+      "time_limit": "01:00:00",
+      "gpu_count": 0
+    },
+    "observed_max_rss_KiB": 1536328,
+    "training_rerun": false,
+    "checkpoint_bytes_modified": false,
+    "training_data_loaded": false,
+    "validation_data_loaded": false,
+    "scientific_forecast_generated": false,
+    "result": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/ecrd_training_metadata_recovery/job_6922551/recovery/result.json",
+      "sha256": "ea55e51bf7707323c0a6de8e0e5b47be311f7037dc468c33832e0b00867eb8eb"
+    },
+    "artifact_index": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/ecrd_training_metadata_recovery/job_6922551/recovery/artifact_sha256.txt",
+      "sha256": "fe60ea3292b9d8d59c426d7984d594ee26c6f3da20cf31e55e3967da4a648566"
+    }
+  },
+  "training_finalizer": {
+    "job_id": "6913439",
+    "dependency_before_recovery": "afterok:6913340_*",
+    "dependency_after_recovery": "afterok:6922551",
+    "state": "COMPLETED",
+    "elapsed": "00:02:34",
+    "exit_code": "0:0",
+    "observed_max_rss_KiB": 9789400,
+    "verified_new_training_runs": 11,
+    "verified_total_ladder_runs": 12,
+    "all_training_artifact_indices_verified": true,
+    "all_wandb_runs_finished": true,
+    "paired_training_order_verified": true,
+    "paired_validation_seed_bank_verified": true,
+    "result": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/ecrd_full_training_finalization/job_6913439/finalization/result.json",
+      "sha256": "22d77380cc3375706d2299b6027c461e099bbee36632d6d3b1d0c2d833d245d8"
+    },
+    "artifact_index": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/ecrd_full_training_finalization/job_6913439/finalization/artifact_sha256.txt",
+      "sha256": "ce16df91bfc09bac661a8203badadb2a4921e5083ba3c1cda0fa77889bdb9925"
+    }
+  },
+  "evaluation_freeze": {
+    "job_id": "6913511",
+    "dependency": "afterok:6913439",
+    "state": "COMPLETED",
+    "elapsed": "00:02:38",
+    "exit_code": "0:0",
+    "observed_max_rss_KiB": 15078084,
+    "resource_note": "The live 16-GiB request passed but was too tight for a future default; retain at least 24-32 GiB for this full artifact audit.",
+    "result": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/ecrd_evaluation_freeze/job_6913511/freeze/result.json",
+      "sha256": "6f3a5f6ff68d7059bc9af6e5e66b48d2004099ec0d618d3e4b9dd42bc5e5eb7a"
+    },
+    "manifest": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/ecrd_evaluation_freeze/job_6913511/freeze/ecrd_scientific_evaluation_85604.json",
+      "sha256": "8ceb5604e34ec8f8970eb4b6ca5aac943fa03a0192ad1ae7b3e275a64aa8ff01"
+    },
+    "artifact_index": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/ecrd_evaluation_freeze/job_6913511/freeze/artifact_sha256.txt",
+      "sha256": "ab3dbe777c8ba3ed4b92b6fd73e0fe19658896fbaf89f168bbf48debeddeed2d"
+    }
+  },
+  "scientific_evaluation_snapshot": {
+    "array_job_id": "6913512",
+    "dependency": "afterok:6913511",
+    "array": "0-11%2",
+    "requested_per_task": {
+      "partition": "gpupreempt",
+      "rocky_release": 9,
+      "constraint": "h100",
+      "cpus": 12,
+      "memory_GiB": 64,
+      "time_limit": "04:00:00",
+      "gpu_count": 1
+    },
+    "right_sizing_basis": {
+      "historical_job_id": "6901587",
+      "historical_elapsed": "00:48:06",
+      "historical_max_rss_KiB": 39546660,
+      "historical_request_memory_GiB": 160
+    },
+    "running_tasks": [
+      {
+        "array_task_id": 0,
+        "arm": "B5",
+        "seed": 1701,
+        "node": "workergpu217"
+      },
+      {
+        "array_task_id": 1,
+        "arm": "B5",
+        "seed": 1702,
+        "node": "workergpu217"
+      }
+    ],
+    "pending_task_ids": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "pending_reason": "JobArrayTaskLimit",
+    "finalizer_job_id": "6913520",
+    "finalizer_dependency": "afterok:6913512_*"
+  },
+  "scope_guards": {
+    "development_run": "85604",
+    "held_out_85606_read": false,
+    "physics_metric_used_for_training": false,
+    "training_rerun_during_recovery": false,
+    "assimilation_performed": false,
+    "diagnostic_ranking_performed": false,
+    "steering_performed": false,
+    "scientific_conclusion_available_at_capture": false
+  }
+}
