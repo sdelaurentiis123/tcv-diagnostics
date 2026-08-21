@@ -6,9 +6,54 @@ W&B is required only as a live and remotely verified monitoring mirror.
 
 from __future__ import annotations
 
-from typing import Any, Mapping
+import time
+from typing import Any, Callable, Mapping, Sequence
 
 from .wandb_tracking import OnlineWandbTracker
+
+
+def verify_ecrd_remote_finished_run(
+    *,
+    module: Any,
+    remote_path: str,
+    expected_run_id: str,
+    retry_delays_seconds: Sequence[float] = (2.0, 4.0, 8.0, 16.0, 30.0),
+    sleep: Callable[[float], None] = time.sleep,
+) -> Any:
+    """Boundedly wait for W&B's read API to reflect ECRD completion."""
+
+    delays = tuple(float(delay) for delay in retry_delays_seconds)
+    if any(delay < 0 for delay in delays):
+        raise ValueError("ECRD W&B verification delays must be nonnegative")
+    last_state: str | None = None
+    last_error: Exception | None = None
+    for attempt in range(len(delays) + 1):
+        if attempt:
+            sleep(delays[attempt - 1])
+        try:
+            remote = module.Api(timeout=30).run(remote_path)
+        except Exception as error:  # The read API can lag the completed upload.
+            last_error = error
+            continue
+        remote_id = str(remote.id)
+        if remote_id != expected_run_id:
+            raise RuntimeError(
+                f"remote ECRD W&B identity {remote_id!r} differs from "
+                f"required {expected_run_id!r}"
+            )
+        last_state = str(remote.state)
+        last_error = None
+        if last_state == "finished":
+            return remote
+    if last_error is not None:
+        raise RuntimeError(
+            "remote ECRD W&B completion verification exhausted bounded retries; "
+            f"last API error: {last_error!r}"
+        ) from last_error
+    raise RuntimeError(
+        "remote ECRD W&B completion verification exhausted bounded retries; "
+        f"last state was {last_state!r}, not 'finished'"
+    )
 
 
 def ecrd_epoch_metrics(record: Mapping[str, Any]) -> dict[str, int | float]:
@@ -156,9 +201,11 @@ class ECRDOnlineWandbTracker(OnlineWandbTracker):
         self._run.finish(exit_code=0)
         self._finished = True
         remote_path = f"{self.spec.entity}/{self.spec.project}/{self.spec.run_id}"
-        remote = self._module.Api(timeout=30).run(remote_path)
-        if str(remote.id) != self.spec.run_id or str(remote.state) != "finished":
-            raise RuntimeError("remote ECRD W&B completion verification failed")
+        remote = verify_ecrd_remote_finished_run(
+            module=self._module,
+            remote_path=remote_path,
+            expected_run_id=self.spec.run_id,
+        )
         return {
             "schema_version": 1,
             "required": True,
@@ -169,7 +216,7 @@ class ECRDOnlineWandbTracker(OnlineWandbTracker):
             "run_url": run_url,
             "remote_path": remote_path,
             "remote_presence_verified_after_finish": True,
-            "remote_state_after_finish": "finished",
+            "remote_state_after_finish": str(remote.state),
             "checkpoints_uploaded": False,
             "samples_uploaded": False,
             "local_artifacts_are_scientific_authority": True,

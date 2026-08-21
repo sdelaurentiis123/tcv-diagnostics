@@ -5,7 +5,12 @@ from __future__ import annotations
 from tcv_diagnostics.ecrd_wandb_tracking import (
     ecrd_epoch_metrics,
     ecrd_result_summary,
+    verify_ecrd_remote_finished_run,
 )
+
+from types import SimpleNamespace
+
+import pytest
 
 
 def test_epoch_mapping_preserves_validation_blocks() -> None:
@@ -65,3 +70,49 @@ def test_result_summary_keeps_scope_and_selected_hash() -> None:
     assert summary["final/selected_validation_objective"] == 2.0
     assert summary["provenance/selected_checkpoint_sha256"] == "d" * 64
     assert summary["scope/held_out_85606_read"] is False
+
+
+def test_ecrd_remote_completion_retries_read_api_propagation() -> None:
+    states = iter(("running", "running", "finished"))
+    sleeps: list[float] = []
+
+    class SequencedWandb:
+        @staticmethod
+        def Api(*, timeout: int):
+            return SimpleNamespace(
+                run=lambda path: SimpleNamespace(
+                    id="expected",
+                    state=next(states),
+                )
+            )
+
+    remote = verify_ecrd_remote_finished_run(
+        module=SequencedWandb,
+        remote_path="entity/project/expected",
+        expected_run_id="expected",
+        retry_delays_seconds=(0.1, 0.2),
+        sleep=sleeps.append,
+    )
+    assert remote.state == "finished"
+    assert sleeps == [0.1, 0.2]
+
+
+def test_ecrd_remote_identity_mismatch_fails_without_retry() -> None:
+    sleeps: list[float] = []
+
+    class WrongRunWandb:
+        @staticmethod
+        def Api(*, timeout: int):
+            return SimpleNamespace(
+                run=lambda path: SimpleNamespace(id="wrong", state="finished")
+            )
+
+    with pytest.raises(RuntimeError, match="identity"):
+        verify_ecrd_remote_finished_run(
+            module=WrongRunWandb,
+            remote_path="entity/project/expected",
+            expected_run_id="expected",
+            retry_delays_seconds=(0.1,),
+            sleep=sleeps.append,
+        )
+    assert sleeps == []
