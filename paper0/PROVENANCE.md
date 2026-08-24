@@ -1003,3 +1003,42 @@ predeclared labels, transport covariance values, and figure labels.
 This completion does not release any downstream stage. Training, additional
 seeds, O3, assimilation, diagnostic ranking, steering, and 85606 access
 remain unauthorized pending a separately committed prospective protocol.
+
+## Post-ECRD codec-free state-operator implementation gate (2026-08-24)
+
+The prospective state/data-scaling protocol was frozen at commit `49d662a`.
+The known 85604 sources contain one 624-frame restart continuation; no path to
+Ben's larger dataset was staged or silently inferred. Simulation 85606 remained
+unopened.
+
+Commits `8d13108` through `c1946dc` added the shared codec-free C5P/E6B data
+interface, mixed-boundary direct state-derivative operator, bounded Rusty GPU
+launcher, and numerical equivariance gate. Failed jobs `6933527` and `6933538`
+were retained as engineering evidence and prompted two dated amendments. They
+localized an approximately `1e-3` toroidal-roll discrepancy to cuDNN TF32
+rounding rather than to toroidal striding or padding. The frozen numerical
+thresholds were not relaxed again.
+
+Rusty job `6933543` completed at clean commit
+`c1946dc8e568084f0a06dc89d3f79f81d6d2b5aa`. With TF32 disabled, the normalized
+maximum/RMS toroidal equivariance errors were `1.58744e-6`/`2.03258e-7` for
+C5P, `1.09972e-6`/`2.51639e-7` for E6B volumes, and
+`5.96046e-8`/`1.48647e-8` for the retained Bphi boundary. All 35 focused tests
+passed, checkpoint reloads were bitwise exact, and W&B run
+`p0stateop-6933543-s1701` finished online.
+
+The compact tracked result is
+`paper0/results/post_ecrd_state_operator_smoke_6933543.json`. Its immutable
+Rusty `result.json` has SHA-256
+`618aa3af8f3d93f79cc0d5628c888641b424a7258aa4a1664d97a1e82a903419`;
+the W&B record has SHA-256
+`e34a1a6afe5fe896935c2a74ff629edec52ce13545d3073c2195ec2d04b2579d`.
+The run and job artifact-index hashes are respectively
+`76e538543f8a0ba578fbac8e50d3b02d068ac1a53faa1c5044601537512e9ebc` and
+`c796096f52e6160f57b4172cd30c0191bfb627958ee5f8aa7b67b2e14d3e359b`.
+
+This is an implementation result only. The two-update C5P and E6B losses are
+not comparable scientific measurements. Scientific training remains closed
+until a dated amendment inventories the new 85604 material, distinguishes
+independent trajectories from continuations, and freezes attainable data
+budgets and blind splits.

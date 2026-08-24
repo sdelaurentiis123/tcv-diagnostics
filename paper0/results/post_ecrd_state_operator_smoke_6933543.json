@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "scope": "bounded_non_scientific_codec_free_operator_smoke",
+  "job_id": 6933543,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 29,
+  "maximum_host_rss_KiB": 1266396,
+  "paper0_commit": "c1946dc8e568084f0a06dc89d3f79f81d6d2b5aa",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "scientific_result": false,
+  "scientific_training_authorized": false,
+  "optimizer_steps_completed": 4,
+  "focused_tests": {"passed": 35, "failed": 0},
+  "compute": {
+    "allocated_gpu": "NVIDIA A100-SXM4-80GB MIG 2g.20gb",
+    "peak_cuda_memory_GiB": 0.17147207260131836,
+    "model_smoke_wall_seconds": 2.46572601099615,
+    "requested_cpus": 4,
+    "requested_host_memory_GiB": 16,
+    "requested_wall_minutes": 10
+  },
+  "numeric_precision": {
+    "cudnn_allow_tf32": false,
+    "matmul_allow_tf32": false,
+    "float32_matmul_precision": "highest"
+  },
+  "mechanical_gates": {
+    "c5p": {
+      "passed": true,
+      "parameter_count": 33845,
+      "optimizer_steps": 2,
+      "checkpoint_reload_bitwise_exact": true,
+      "no_toroidal_stride": true,
+      "volume_equivariance_normalized_maximum_absolute_error": 0.0000015874354621210981,
+      "volume_equivariance_normalized_root_mean_square_error": 0.0000002032583396779765,
+      "validation_state_derivative_mse_non_scientific": 0.07741634547710419
+    },
+    "e6b": {
+      "passed": true,
+      "parameter_count": 35640,
+      "optimizer_steps": 2,
+      "checkpoint_reload_bitwise_exact": true,
+      "no_toroidal_stride": true,
+      "volume_equivariance_normalized_maximum_absolute_error": 0.0000010997160670579364,
+      "volume_equivariance_normalized_root_mean_square_error": 0.0000002516391278429145,
+      "boundary_equivariance_normalized_maximum_absolute_error": 0.00000005960464477539063,
+      "boundary_equivariance_normalized_root_mean_square_error": 0.00000001486473688810353,
+      "validation_state_derivative_mse_non_scientific": 0.9628504514694214
+    }
+  },
+  "wandb": {
+    "mode": "online",
+    "run_id": "p0stateop-6933543-s1701",
+    "url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0stateop-6933543-s1701",
+    "remote_state_after_finish": "finished"
+  },
+  "artifacts": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_state_operator_smoke/job_6933543",
+    "result": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_state_operator_smoke/job_6933543/run/result.json",
+      "sha256": "618aa3af8f3d93f79cc0d5628c888641b424a7258aa4a1664d97a1e82a903419"
+    },
+    "wandb_record": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_state_operator_smoke/job_6933543/run/wandb.json",
+      "sha256": "e34a1a6afe5fe896935c2a74ff629edec52ce13545d3073c2195ec2d04b2579d"
+    },
+    "run_artifact_index_sha256": "76e538543f8a0ba578fbac8e50d3b02d068ac1a53faa1c5044601537512e9ebc",
+    "job_artifact_index_sha256": "c796096f52e6160f57b4172cd30c0191bfb627958ee5f8aa7b67b2e14d3e359b"
+  },
+  "interpretation": "implementation mechanics passed; C5P and E6B smoke losses are not a scientific comparison",
+  "next_gate": "dated inventory amendment for the larger 85604 dataset before scientific training"
+}
