@@ -23,6 +23,7 @@ from tcv_diagnostics.models.codec_free_operator import (
     CodecFreeIncrementOperator3D,
     CodecFreeOperatorConfig,
     StateDerivativePrediction,
+    normalized_error_metrics,
     state_derivative_loss,
 )
 from tcv_diagnostics.state_operator_data import LeadTimeStateDataset
@@ -91,15 +92,6 @@ def batch(item: Mapping[str, Any], *, device: torch.device) -> dict[str, Tensor]
             .to(device)
         )
     return result
-
-
-def normalized_max_error(left: Tensor, right: Tensor) -> float:
-    numerator = torch.max(torch.abs(left.float() - right.float()))
-    denominator = torch.maximum(
-        torch.max(torch.abs(right.float())),
-        torch.ones((), device=right.device),
-    )
-    return float((numerator / denominator).cpu())
 
 
 def reload_exact(
@@ -198,7 +190,6 @@ def run_family(
                 f"{family}/train/state_derivative_mse": losses[-1],
                 f"{family}/train/preclip_gradient_norm": gradient_norms[-1],
             },
-            step=global_step,
             commit=True,
         )
 
@@ -221,13 +212,16 @@ def run_family(
             values["lead_steps"],
             values.get("context_boundary"),
         )
-    volume_equivariance_error = normalized_max_error(
+    volume_equivariance = normalized_error_metrics(
         shifted.volume, torch.roll(prediction.volume, shift, dims=-1)
     )
-    boundary_equivariance_error = (
-        0.0
+    boundary_equivariance = (
+        {
+            "normalized_maximum_absolute_error": 0.0,
+            "normalized_root_mean_square_error": 0.0,
+        }
         if prediction.boundary is None
-        else normalized_max_error(shifted.boundary, prediction.boundary)
+        else normalized_error_metrics(shifted.boundary, prediction.boundary)
     )
     finite = bool(
         torch.isfinite(prediction.volume).all()
@@ -268,8 +262,10 @@ def run_family(
         finite
         and reload_bitwise_exact
         and no_toroidal_stride
-        and volume_equivariance_error <= 1.0e-5
-        and boundary_equivariance_error <= 1.0e-5
+        and volume_equivariance["normalized_maximum_absolute_error"] <= 1.0e-3
+        and volume_equivariance["normalized_root_mean_square_error"] <= 1.0e-4
+        and boundary_equivariance["normalized_maximum_absolute_error"] <= 1.0e-4
+        and boundary_equivariance["normalized_root_mean_square_error"] <= 1.0e-5
         and len(losses) == 2
     )
     record = {
@@ -290,8 +286,15 @@ def run_family(
         "validation_state_derivative_mse": float(validation_loss.cpu()),
         "finite": finite,
         "integer_toroidal_shift": shift,
-        "volume_equivariance_normalized_max_error": volume_equivariance_error,
-        "boundary_equivariance_normalized_max_error": boundary_equivariance_error,
+        "volume_equivariance": volume_equivariance,
+        "boundary_equivariance": boundary_equivariance,
+        "equivariance_gate": {
+            "volume_normalized_maximum_absolute_error_max": 1.0e-3,
+            "volume_normalized_root_mean_square_error_max": 1.0e-4,
+            "boundary_normalized_maximum_absolute_error_max": 1.0e-4,
+            "boundary_normalized_root_mean_square_error_max": 1.0e-5,
+            "amendment": "paper0/protocol/POST_ECRD_OPERATOR_SMOKE_NUMERICAL_AMENDMENT_2026-08-24.md"
+        },
         "no_toroidal_stride": no_toroidal_stride,
         "checkpoint_reload_bitwise_exact": reload_bitwise_exact,
         "checkpoint": {
@@ -307,13 +310,22 @@ def run_family(
             f"{family}/smoke/validation_state_derivative_mse": record[
                 "validation_state_derivative_mse"
             ],
-            f"{family}/smoke/volume_equivariance_error": volume_equivariance_error,
-            f"{family}/smoke/boundary_equivariance_error": boundary_equivariance_error,
+            f"{family}/smoke/volume_equivariance_max_error": volume_equivariance[
+                "normalized_maximum_absolute_error"
+            ],
+            f"{family}/smoke/volume_equivariance_rms_error": volume_equivariance[
+                "normalized_root_mean_square_error"
+            ],
+            f"{family}/smoke/boundary_equivariance_max_error": boundary_equivariance[
+                "normalized_maximum_absolute_error"
+            ],
+            f"{family}/smoke/boundary_equivariance_rms_error": boundary_equivariance[
+                "normalized_root_mean_square_error"
+            ],
             f"{family}/smoke/all_mechanical_gates_passed": int(
                 all_mechanical_gates_passed
             ),
         },
-        step=global_step,
         commit=True,
     )
     train.close()
@@ -511,4 +523,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

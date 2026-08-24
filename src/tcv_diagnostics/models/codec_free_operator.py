@@ -298,6 +298,33 @@ class StateForecast(NamedTuple):
     boundary: Tensor | None
 
 
+def normalized_error_metrics(candidate: Tensor, reference: Tensor) -> dict[str, float]:
+    """Return unit-clamped maximum and RMS discrepancies in float64."""
+
+    if candidate.shape != reference.shape or candidate.numel() == 0:
+        raise ValueError("normalized error inputs must have the same nonempty shape")
+    if not torch.isfinite(candidate).all() or not torch.isfinite(reference).all():
+        raise ValueError("normalized error inputs must be finite")
+    difference = candidate.to(torch.float64) - reference.to(torch.float64)
+    reference64 = reference.to(torch.float64)
+    maximum_scale = torch.maximum(
+        torch.max(torch.abs(reference64)),
+        torch.ones((), dtype=torch.float64, device=reference.device),
+    )
+    rms_scale = torch.maximum(
+        torch.sqrt(torch.mean(reference64 * reference64)),
+        torch.ones((), dtype=torch.float64, device=reference.device),
+    )
+    return {
+        "normalized_maximum_absolute_error": float(
+            (torch.max(torch.abs(difference)) / maximum_scale).cpu()
+        ),
+        "normalized_root_mean_square_error": float(
+            (torch.sqrt(torch.mean(difference * difference)) / rms_scale).cpu()
+        ),
+    }
+
+
 class CodecFreeIncrementOperator3D(nn.Module):
     """U-shaped full-field operator with x/y-only multiresolution processing."""
 

@@ -14,6 +14,7 @@ from tcv_diagnostics.models.codec_free_operator import (
     CodecFreeIncrementOperator3D,
     CodecFreeOperatorConfig,
     StateDerivativePrediction,
+    normalized_error_metrics,
     spatialize_boundary,
     state_derivative_loss,
     xy_upsample,
@@ -230,6 +231,18 @@ def test_state_loss_uses_only_direct_state_targets() -> None:
     loss.backward()
     assert volume.grad is not None
     assert boundary.grad is not None
+
+
+def test_normalized_error_metrics_have_known_maximum_and_rms() -> None:
+    reference = torch.zeros(4, dtype=torch.float32)
+    candidate = torch.tensor([0.0, 0.0, 0.0, 2.0], dtype=torch.float32)
+    metrics = normalized_error_metrics(candidate, reference)
+    assert metrics["normalized_maximum_absolute_error"] == 2.0
+    assert metrics["normalized_root_mean_square_error"] == 1.0
+    assert normalized_error_metrics(reference, reference) == {
+        "normalized_maximum_absolute_error": 0.0,
+        "normalized_root_mean_square_error": 0.0,
+    }
 
 
 def test_family_boundary_contracts_fail_closed() -> None:

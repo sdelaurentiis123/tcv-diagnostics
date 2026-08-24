@@ -8,8 +8,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=48G
-#SBATCH --time=00:30:00
+#SBATCH --mem=16G
+#SBATCH --time=00:10:00
 #SBATCH --no-requeue
 #SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/stateop_smoke_%j.log
 
@@ -142,4 +142,3 @@ sha256sum \
 
 echo "Codec-free operator smoke completed at $(date --iso-8601=seconds)"
 echo "Results: ${JOB_ROOT}"
-

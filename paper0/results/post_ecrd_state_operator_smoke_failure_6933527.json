@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "scope": "bounded_non_scientific_codec_free_operator_smoke",
+  "job_id": 6933527,
+  "state": "FAILED",
+  "exit_code": "1:0",
+  "elapsed_seconds": 69,
+  "maximum_host_rss_KiB": 2352424,
+  "paper0_commit": "5fac1ed133da21d6cf8e4616b4566edc0d25fb16",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "scientific_result": false,
+  "optimizer_steps_completed": 4,
+  "wandb": {
+    "mode": "online",
+    "run_id": "p0stateop-6933527-s1701",
+    "url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0stateop-6933527-s1701",
+    "terminal_state": "failed_after_mechanical_gate"
+  },
+  "mechanical_observations": {
+    "c5p": {
+      "last_training_state_derivative_mse": 0.10555,
+      "validation_state_derivative_mse": 0.07741241157054901,
+      "volume_equivariance_normalized_max_error": 0.0007830187096260488,
+      "boundary_equivariance_normalized_max_error": 0.0
+    },
+    "e6b": {
+      "last_training_state_derivative_mse": 0.7352,
+      "validation_state_derivative_mse": 0.9628493189811707,
+      "volume_equivariance_normalized_max_error": 0.0006242321687750518,
+      "boundary_equivariance_normalized_max_error": 0.000004757195711135864
+    }
+  },
+  "failure_reason": "initial full-volume CUDA normalized-maximum equivariance tolerance 1e-5 was exceeded",
+  "interpretation": "engineering tolerance failure only; losses are not scientifically comparable across state views",
+  "artifact_root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_state_operator_smoke/job_6933527"
+}
