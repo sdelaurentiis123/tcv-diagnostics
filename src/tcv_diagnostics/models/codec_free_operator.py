@@ -125,6 +125,7 @@ class CodecFreeOperatorConfig:
     group_norm_maximum_groups: int = 8
     kernel_size: int = 3
     predict_boundary: bool = True
+    zero_initialize_output: bool = False
 
     def __post_init__(self) -> None:
         if self.state_family not in STATE_CHANNELS:
@@ -400,6 +401,18 @@ class CodecFreeIncrementOperator3D(nn.Module):
         self.boundary_head = (
             _BoundaryDerivativeHead(levels[0]) if config.predict_boundary else None
         )
+        if config.zero_initialize_output:
+            nn.init.zeros_(self.output_projection.weight)
+            if self.output_projection.bias is not None:
+                nn.init.zeros_(self.output_projection.bias)
+            if self.boundary_head is not None:
+                for head in self.boundary_head.heads:
+                    final = head[-1]
+                    if not isinstance(final, nn.Conv1d):
+                        raise AssertionError("boundary output layer differs")
+                    nn.init.zeros_(final.weight)
+                    if final.bias is not None:
+                        nn.init.zeros_(final.bias)
 
     def _condition(
         self,
@@ -560,6 +573,75 @@ def component_balanced_state_derivative_loss(
         )
         component_losses.extend(value for value in boundary_by_side)
         records["boundary_mean"] = torch.mean(boundary_by_side)
+    loss = torch.mean(torch.stack(component_losses))
+    records["total"] = loss
+    return loss, records
+
+
+def persistence_normalized_state_derivative_loss(
+    prediction: StateDerivativePrediction,
+    target_volume_derivative: Tensor,
+    volume_derivative_rms: Tensor,
+    target_boundary_derivative: Tensor | None = None,
+    boundary_derivative_rms: Tensor | None = None,
+) -> tuple[Tensor, dict[str, Tensor]]:
+    """Average each component's MSE in train-split persistence units.
+
+    The fixed RMS scales must be estimated from training derivatives only.
+    This remains a direct field loss: it contains no flux, spectrum,
+    cross-phase, PDE, or conservation quantity.  Dividing by each component's
+    training RMS prevents a rapidly changing evolved variable from dominating
+    all other state channels solely through its numerical target variance.
+    """
+
+    if prediction.volume.shape != target_volume_derivative.shape:
+        raise ValueError("volume derivative target shape differs")
+    if prediction.volume.ndim != 5:
+        raise ValueError("volume derivatives must be [batch,channel,x,y,z]")
+    volume_scale = torch.as_tensor(
+        volume_derivative_rms,
+        dtype=prediction.volume.dtype,
+        device=prediction.volume.device,
+    )
+    if volume_scale.ndim != 1 or volume_scale.numel() != prediction.volume.shape[1]:
+        raise ValueError("volume derivative RMS must contain one value per field")
+    if not torch.isfinite(volume_scale).all() or not torch.all(volume_scale > 0):
+        raise ValueError("volume derivative RMS must be finite and positive")
+    volume_error = (
+        prediction.volume - target_volume_derivative
+    ) / volume_scale.reshape(1, -1, 1, 1, 1)
+    volume_by_field = torch.mean(volume_error**2, dim=(0, 2, 3, 4))
+    component_losses = [value for value in volume_by_field]
+    records: dict[str, Tensor] = {"volume_mean": torch.mean(volume_by_field)}
+
+    if prediction.boundary is None:
+        if target_boundary_derivative is not None or boundary_derivative_rms is not None:
+            raise ValueError("boundary target or RMS supplied to a boundary-free model")
+    else:
+        if target_boundary_derivative is None or boundary_derivative_rms is None:
+            raise ValueError("E6B boundary derivative target and RMS are required")
+        if prediction.boundary.shape != target_boundary_derivative.shape:
+            raise ValueError("boundary derivative target shape differs")
+        if prediction.boundary.ndim != 3 or prediction.boundary.shape[1] != 2:
+            raise ValueError("boundary derivatives must be [batch,side=2,y]")
+        boundary_scale = torch.as_tensor(
+            boundary_derivative_rms,
+            dtype=prediction.boundary.dtype,
+            device=prediction.boundary.device,
+        )
+        if boundary_scale.ndim != 1 or boundary_scale.numel() != 2:
+            raise ValueError("boundary derivative RMS must contain two sides")
+        if not torch.isfinite(boundary_scale).all() or not torch.all(
+            boundary_scale > 0
+        ):
+            raise ValueError("boundary derivative RMS must be finite and positive")
+        boundary_error = (
+            prediction.boundary - target_boundary_derivative
+        ) / boundary_scale.reshape(1, 2, 1)
+        boundary_by_side = torch.mean(boundary_error**2, dim=(0, 2))
+        component_losses.extend(value for value in boundary_by_side)
+        records["boundary_mean"] = torch.mean(boundary_by_side)
+
     loss = torch.mean(torch.stack(component_losses))
     records["total"] = loss
     return loss, records

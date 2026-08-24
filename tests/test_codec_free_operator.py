@@ -16,11 +16,16 @@ from tcv_diagnostics.models.codec_free_operator import (
     StateDerivativePrediction,
     component_balanced_state_derivative_loss,
     normalized_error_metrics,
+    persistence_normalized_state_derivative_loss,
     spatialize_boundary,
     state_derivative_loss,
     xy_upsample,
 )
-from tcv_diagnostics.state_operator_data import LeadTimeStateDataset, plan_lead_pairs
+from tcv_diagnostics.state_operator_data import (
+    LeadTimeStateDataset,
+    fit_training_derivative_rms,
+    plan_lead_pairs,
+)
 
 
 def tiny_config(*, family: str = "e6b", history: int = 1):
@@ -271,6 +276,108 @@ def test_component_balanced_c5p_loss_rejects_boundary_target() -> None:
             torch.ones_like(prediction.volume),
             torch.ones(1, 2, 2),
         )
+
+
+def test_persistence_normalized_loss_equalizes_component_target_rms() -> None:
+    volume = torch.zeros(1, 2, 2, 1, 1, requires_grad=True)
+    boundary = torch.zeros(1, 2, 3, requires_grad=True)
+    target_volume = torch.stack(
+        (torch.ones(1, 2, 1, 1), torch.full((1, 2, 1, 1), 2.0)), dim=1
+    )
+    target_boundary = torch.stack(
+        (torch.full((1, 3), 3.0), torch.full((1, 3), 4.0)), dim=1
+    )
+    loss, records = persistence_normalized_state_derivative_loss(
+        StateDerivativePrediction(volume=volume, boundary=boundary),
+        target_volume,
+        torch.tensor([1.0, 2.0]),
+        target_boundary,
+        torch.tensor([3.0, 4.0]),
+    )
+    torch.testing.assert_close(loss, torch.tensor(1.0))
+    torch.testing.assert_close(records["volume_mean"], torch.tensor(1.0))
+    torch.testing.assert_close(records["boundary_mean"], torch.tensor(1.0))
+    loss.backward()
+    assert volume.grad is not None and boundary.grad is not None
+
+
+def test_zero_initialized_operator_starts_at_persistence() -> None:
+    config = CodecFreeOperatorConfig(
+        state_family="e6b",
+        history_frames=1,
+        base_channels=4,
+        channel_multipliers=(1, 2),
+        blocks_per_level=1,
+        lead_embedding_channels=8,
+        group_norm_maximum_groups=2,
+        predict_boundary=True,
+        zero_initialize_output=True,
+    )
+    model = CodecFreeIncrementOperator3D(config).eval()
+    context = torch.randn(2, 1, 6, 8, 6, 12)
+    boundary = torch.randn(2, 1, 2, 6)
+    with torch.inference_mode():
+        derivative = model(context, torch.tensor([1.0, 4.0]), boundary)
+        forecast = model.forecast(context, torch.tensor([1.0, 4.0]), boundary)
+    torch.testing.assert_close(derivative.volume, torch.zeros_like(derivative.volume))
+    assert derivative.boundary is not None
+    torch.testing.assert_close(
+        derivative.boundary, torch.zeros_like(derivative.boundary)
+    )
+    torch.testing.assert_close(forecast.volume, context[:, -1])
+    assert forecast.boundary is not None
+    torch.testing.assert_close(forecast.boundary, boundary[:, -1])
+
+
+def test_training_derivative_rms_is_fit_from_direct_state_targets(tmp_path) -> None:
+    path = tmp_path / "development_85604_state_rms.h5"
+    fields = ("Ne", "Pe", "Pi", "NVe", "NVi", "Vort")
+    increments = np.arange(1, 7, dtype=np.float32)
+    with h5py.File(path, "x") as handle:
+        coordinates = handle.create_group("coordinates")
+        coordinates.create_dataset("frame_index", data=np.arange(6))
+        volume = handle.create_group("fields")
+        for channel, field in enumerate(fields):
+            volume.create_dataset(
+                field,
+                data=np.stack(
+                    [
+                        np.full((2, 2, 3), frame * increments[channel], dtype=np.float32)
+                        for frame in range(6)
+                    ]
+                ),
+            )
+        boundary = handle.create_group("boundary")
+        boundary.create_dataset(
+            "Bphi",
+            data=np.stack(
+                [
+                    np.stack(
+                        (
+                            np.full(2, 7.0 * frame, dtype=np.float32),
+                            np.full(2, 8.0 * frame, dtype=np.float32),
+                        )
+                    )
+                    for frame in range(6)
+                ]
+            ),
+        )
+    dataset = LeadTimeStateDataset(
+        _TinyCatalog(path),
+        family="e6b",
+        split="train",
+        lead_steps=(1,),
+        history_frames=1,
+        augment=False,
+        seed=1701,
+        current_interval=(1, 4),
+    )
+    fitted = fit_training_derivative_rms(dataset)
+    np.testing.assert_allclose(fitted.volume, increments)
+    np.testing.assert_allclose(fitted.boundary, [7.0, 8.0])
+    assert fitted.pair_count == 3
+    assert fitted.to_record()["fit_split"] == "train"
+    dataset.close()
 
 
 def test_normalized_error_metrics_have_known_maximum_and_rms() -> None:

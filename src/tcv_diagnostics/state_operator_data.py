@@ -42,6 +42,49 @@ class LeadPair:
             raise ValueError("lead pair target-current differs from lead")
 
 
+@dataclass(frozen=True)
+class StateDerivativeRMS:
+    """Training-only component RMS values for persistence-normalized loss."""
+
+    family: str
+    fields: tuple[str, ...]
+    volume: tuple[float, ...]
+    boundary: tuple[float, ...] | None
+    pair_count: int
+
+    def __post_init__(self) -> None:
+        if self.family not in FAMILY_FIELDS or self.fields != FAMILY_FIELDS[self.family]:
+            raise ValueError("derivative RMS family or fields differ")
+        if len(self.volume) != len(self.fields):
+            raise ValueError("derivative RMS volume length differs")
+        values = self.volume + (() if self.boundary is None else self.boundary)
+        if not values or any(not np.isfinite(value) or value <= 0 for value in values):
+            raise ValueError("derivative RMS values must be finite and positive")
+        if (self.boundary is None) != (self.family != "e6b"):
+            raise ValueError("only E6B has boundary derivative RMS values")
+        if self.boundary is not None and len(self.boundary) != 2:
+            raise ValueError("boundary derivative RMS must contain two sides")
+        if self.pair_count <= 0:
+            raise ValueError("derivative RMS pair count must be positive")
+
+    def to_record(self) -> dict[str, Any]:
+        return {
+            "family": self.family,
+            "fields": list(self.fields),
+            "volume": {
+                field: value for field, value in zip(self.fields, self.volume)
+            },
+            "boundary": (
+                None
+                if self.boundary is None
+                else {side: value for side, value in zip(("inner", "outer"), self.boundary)}
+            ),
+            "pair_count": self.pair_count,
+            "fit_split": "train",
+            "physics_derived_quantity": False,
+        }
+
+
 def plan_lead_pairs(
     *,
     split: str,
@@ -304,3 +347,54 @@ class LeadTimeStateDataset:
         if hasattr(self, "_handles"):
             self.close()
 
+
+def fit_training_derivative_rms(dataset: LeadTimeStateDataset) -> StateDerivativeRMS:
+    """Fit per-component RMS from an unaugmented training dataset only."""
+
+    if dataset.split != "train":
+        raise ValueError("derivative RMS may be fit only on the training split")
+    if dataset.augment:
+        raise ValueError("fit derivative RMS with augmentation disabled")
+    fields = FAMILY_FIELDS[dataset.family]
+    volume_sum_squares = np.zeros(len(fields), dtype=np.float64)
+    volume_count = np.zeros(len(fields), dtype=np.int64)
+    boundary_sum_squares = np.zeros(2, dtype=np.float64)
+    boundary_count = np.zeros(2, dtype=np.int64)
+    for index in range(len(dataset)):
+        item = dataset[index]
+        volume = np.asarray(item["target_derivative"], dtype=np.float64)
+        if volume.ndim != 4 or volume.shape[0] != len(fields):
+            raise ValueError("training derivative volume shape differs")
+        if not np.isfinite(volume).all():
+            raise ValueError("training derivative volume is non-finite")
+        volume_sum_squares += np.sum(volume * volume, axis=(1, 2, 3))
+        volume_count += volume.shape[1] * volume.shape[2] * volume.shape[3]
+        if dataset.family == "e6b":
+            boundary = np.asarray(
+                item["target_boundary_derivative"], dtype=np.float64
+            )
+            if boundary.ndim != 2 or boundary.shape[0] != 2:
+                raise ValueError("training derivative boundary shape differs")
+            if not np.isfinite(boundary).all():
+                raise ValueError("training derivative boundary is non-finite")
+            boundary_sum_squares += np.sum(boundary * boundary, axis=1)
+            boundary_count += boundary.shape[1]
+    if np.any(volume_count <= 0):
+        raise AssertionError("no volume derivative elements were counted")
+    volume_rms = np.sqrt(volume_sum_squares / volume_count)
+    boundary_rms = None
+    if dataset.family == "e6b":
+        if np.any(boundary_count <= 0):
+            raise AssertionError("no boundary derivative elements were counted")
+        boundary_rms = np.sqrt(boundary_sum_squares / boundary_count)
+    return StateDerivativeRMS(
+        family=dataset.family,
+        fields=fields,
+        volume=tuple(float(value) for value in volume_rms),
+        boundary=(
+            None
+            if boundary_rms is None
+            else tuple(float(value) for value in boundary_rms)
+        ),
+        pair_count=len(dataset),
+    )
