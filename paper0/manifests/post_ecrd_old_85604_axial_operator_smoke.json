@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "scope": "bounded_non_scientific_old_85604_axial_operator_smoke",
+  "protocol": "paper0/protocol/POST_ECRD_OLD_85604_AXIAL_OPERATOR_SMOKE_PROTOCOL_2026-08-24.md",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "held_out_85606_access_allowed": false,
+  "guard_frames_read_allowed": false,
+  "engineering_smoke_authorized": true,
+  "scientific_training_authorized": false,
+  "scientific_model_selection_authorized": false,
+  "assimilation_allowed": false,
+  "diagnostic_ranking_allowed": false,
+  "state": {
+    "predicted_volume_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+    "predicted_boundary": "Bphi",
+    "auxiliary_context_fields": ["phi"],
+    "future_auxiliary_context_allowed": false
+  },
+  "data": {
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "training_current_interval": [2, 4],
+    "validation_current_interval": [496, 497],
+    "lead_steps": [1],
+    "history_frames": 1,
+    "training_pair_count": 2,
+    "validation_pair_count": 1
+  },
+  "architecture": {
+    "name": "mixed_boundary_full_resolution_axial_operator_transformer",
+    "official_GAOT_reproduction": false,
+    "width": 104,
+    "blocks": 4,
+    "attention_heads": 4,
+    "feedforward_expansion": 2,
+    "lead_embedding_channels": 128,
+    "group_norm_maximum_groups": 8,
+    "kernel_size": 3,
+    "zero_initialize_output": true,
+    "toroidal_downsampling": false,
+    "absolute_z_coordinate": false
+  },
+  "optimization": {
+    "seed": 1701,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0002,
+    "weight_decay": 0.0001,
+    "gradient_clip_norm": 1.0,
+    "optimizer_steps": 2,
+    "autocast": "bfloat16",
+    "tf32": false
+  },
+  "loss": {
+    "name": "equal_component_standardized_direct_state_derivative_mse",
+    "physics_derived_quantities_used": false
+  },
+  "wandb_required": true
+}
