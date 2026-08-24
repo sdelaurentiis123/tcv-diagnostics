@@ -126,6 +126,7 @@ class CodecFreeOperatorConfig:
     kernel_size: int = 3
     predict_boundary: bool = True
     zero_initialize_output: bool = False
+    auxiliary_context_channels: int = 0
 
     def __post_init__(self) -> None:
         if self.state_family not in STATE_CHANNELS:
@@ -149,6 +150,8 @@ class CodecFreeOperatorConfig:
             int(value) <= 0 for value in self.channel_multipliers
         ):
             raise ValueError("channel multipliers must be positive")
+        if int(self.auxiliary_context_channels) < 0:
+            raise ValueError("auxiliary context channels must be nonnegative")
         if self.predict_boundary != (self.state_family == "e6b"):
             raise ValueError("only E6B predicts the retained Bphi state")
 
@@ -163,7 +166,8 @@ class CodecFreeOperatorConfig:
     @property
     def input_channels(self) -> int:
         return (
-            self.volume_channels * self.history_frames
+            (self.volume_channels + self.auxiliary_context_channels)
+            * self.history_frames
             + self.boundary_input_channels
             + 2
         )
@@ -182,6 +186,7 @@ class CodecFreeOperatorConfig:
             {
                 "family": "codec_free_mixed_boundary_3d_increment_operator",
                 "volume_channels": self.volume_channels,
+                "auxiliary_context_channels": self.auxiliary_context_channels,
                 "input_channels": self.input_channels,
                 "prediction": "standardized_state_derivative",
                 "padding_xyz": ["zeros", "zeros", "circular"],
@@ -418,6 +423,7 @@ class CodecFreeIncrementOperator3D(nn.Module):
         self,
         context: Tensor,
         context_boundary: Tensor | None,
+        auxiliary_context: Tensor | None,
     ) -> Tensor:
         if context.ndim != 6:
             raise ValueError("context must be [batch,history,channel,x,y,z]")
@@ -428,6 +434,33 @@ class CodecFreeIncrementOperator3D(nn.Module):
             raise ValueError("context field count differs from configuration")
         flattened = context.reshape(batch, history * channels, n_x, n_y, n_z)
         pieces = [flattened]
+        auxiliary_channels = int(self.config.auxiliary_context_channels)
+        if auxiliary_channels:
+            if auxiliary_context is None:
+                raise ValueError("configured auxiliary context is required")
+            expected_auxiliary = (
+                batch,
+                history,
+                auxiliary_channels,
+                n_x,
+                n_y,
+                n_z,
+            )
+            if tuple(auxiliary_context.shape) != expected_auxiliary:
+                raise ValueError(
+                    f"auxiliary context shape must be {expected_auxiliary}"
+                )
+            pieces.append(
+                auxiliary_context.reshape(
+                    batch,
+                    history * auxiliary_channels,
+                    n_x,
+                    n_y,
+                    n_z,
+                )
+            )
+        elif auxiliary_context is not None:
+            raise ValueError("operator is not configured for auxiliary context")
         if self.config.predict_boundary:
             if context_boundary is None:
                 raise ValueError("E6B operator requires Bphi history")
@@ -445,8 +478,13 @@ class CodecFreeIncrementOperator3D(nn.Module):
         context: Tensor,
         lead_steps: Tensor,
         context_boundary: Tensor | None = None,
+        auxiliary_context: Tensor | None = None,
     ) -> StateDerivativePrediction:
-        condition = self._condition(context, context_boundary)
+        condition = self._condition(
+            context,
+            context_boundary,
+            auxiliary_context,
+        )
         embedding = self.lead_embedding(lead_steps).to(
             device=context.device, dtype=context.dtype
         )
@@ -483,8 +521,14 @@ class CodecFreeIncrementOperator3D(nn.Module):
         context: Tensor,
         lead_steps: Tensor,
         context_boundary: Tensor | None = None,
+        auxiliary_context: Tensor | None = None,
     ) -> StateForecast:
-        derivative = self(context, lead_steps, context_boundary)
+        derivative = self(
+            context,
+            lead_steps,
+            context_boundary,
+            auxiliary_context,
+        )
         lead = torch.as_tensor(
             lead_steps, dtype=context.dtype, device=context.device
         ).reshape(-1, 1, 1, 1, 1)

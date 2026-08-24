@@ -163,6 +163,7 @@ class LeadTimeStateDataset:
         seed: int,
         current_interval: Sequence[int] | None = None,
         return_physical: bool = False,
+        auxiliary_context_fields: Sequence[str] = (),
     ) -> None:
         if family not in FAMILY_FIELDS:
             raise ValueError(f"unsupported state family {family!r}")
@@ -182,6 +183,16 @@ class LeadTimeStateDataset:
         self.augment = bool(augment)
         self.seed = int(seed)
         self.return_physical = bool(return_physical)
+        self.auxiliary_context_fields = tuple(auxiliary_context_fields)
+        available_fields = set().union(*map(set, FAMILY_FIELDS.values()))
+        if len(set(self.auxiliary_context_fields)) != len(
+            self.auxiliary_context_fields
+        ):
+            raise ValueError("auxiliary context fields must be unique")
+        if not set(self.auxiliary_context_fields).issubset(available_fields):
+            raise ValueError("auxiliary context contains an unavailable field")
+        if set(self.auxiliary_context_fields) & set(self.fields):
+            raise ValueError("auxiliary context must not duplicate target fields")
         self.epoch = 0
         self._handles: dict[Path, h5py.File] = {}
         consumed = sorted(
@@ -220,7 +231,9 @@ class LeadTimeStateDataset:
     ) -> tuple[np.ndarray, np.ndarray | None, np.ndarray | None, np.ndarray | None]:
         shard, local = self.catalog.locate(frame)
         if shard.path not in self.catalog._verified:
-            raise RuntimeError("refusing to read a shard before integrity verification")
+            raise RuntimeError(
+                "refusing to read a shard before integrity verification"
+            )
         handle = self._handle(shard.path)
         if int(handle["coordinates/frame_index"][local]) != frame:
             raise ValueError("stored frame differs from requested frame")
@@ -248,6 +261,15 @@ class LeadTimeStateDataset:
             range(pair.current - self.history_frames + 1, pair.current + 1)
         )
         context_items = [self._frame(frame) for frame in context_indices]
+        auxiliary_context = None
+        if self.auxiliary_context_fields:
+            auxiliary_context = np.stack(
+                [
+                    self._auxiliary_frame(frame)
+                    for frame in context_indices
+                ],
+                axis=0,
+            )
         target_item = self._frame(pair.target)
         context = np.stack([item[0] for item in context_items], axis=0)
         target = target_item[0]
@@ -265,6 +287,10 @@ class LeadTimeStateDataset:
             derivative = np.ascontiguousarray(
                 np.roll(derivative, roll, axis=-1)
             )
+            if auxiliary_context is not None:
+                auxiliary_context = np.ascontiguousarray(
+                    np.roll(auxiliary_context, roll, axis=-1)
+                )
 
         result: dict[str, Any] = {
             "context": np.ascontiguousarray(context, dtype=np.float32),
@@ -278,6 +304,11 @@ class LeadTimeStateDataset:
             "lead_steps": np.float32(pair.lead),
             "toroidal_roll": np.int64(roll),
         }
+        if auxiliary_context is not None:
+            result["auxiliary_context"] = np.ascontiguousarray(
+                auxiliary_context,
+                dtype=np.float32,
+            )
 
         if self.family == "e6b":
             context_boundary = np.stack(
@@ -332,6 +363,24 @@ class LeadTimeStateDataset:
                     target_item[3], dtype=np.float32
                 )
         return result
+
+    def _auxiliary_frame(self, frame: int) -> np.ndarray:
+        """Load current/history-only auxiliary fields without future targets."""
+
+        shard, local = self.catalog.locate(frame)
+        if shard.path not in self.catalog._verified:
+            raise RuntimeError("refusing to read a shard before integrity verification")
+        handle = self._handle(shard.path)
+        if int(handle["coordinates/frame_index"][local]) != frame:
+            raise ValueError("stored frame differs from requested frame")
+        raw = [
+            np.asarray(handle[f"fields/{field}"][local])
+            for field in self.auxiliary_context_fields
+        ]
+        return self.catalog.normalization.encode_volume(
+            self.auxiliary_context_fields,
+            raw,
+        )
 
     def close(self) -> None:
         for handle in self._handles.values():

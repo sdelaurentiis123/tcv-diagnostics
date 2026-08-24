@@ -28,7 +28,9 @@ from tcv_diagnostics.state_operator_data import (
 )
 
 
-def tiny_config(*, family: str = "e6b", history: int = 1):
+def tiny_config(
+    *, family: str = "e6b", history: int = 1, auxiliary_channels: int = 0
+):
     return CodecFreeOperatorConfig(
         state_family=family,
         history_frames=history,
@@ -38,6 +40,7 @@ def tiny_config(*, family: str = "e6b", history: int = 1):
         lead_embedding_channels=8,
         group_norm_maximum_groups=2,
         predict_boundary=family == "e6b",
+        auxiliary_context_channels=auxiliary_channels,
     )
 
 
@@ -143,6 +146,56 @@ def test_e6b_lead_dataset_returns_joint_volume_and_boundary_derivatives(
     dataset.close()
 
 
+def test_auxiliary_context_reads_history_phi_but_not_future_phi(tmp_path) -> None:
+    path = tmp_path / "development_85604_auxiliary_context.h5"
+    fields = ("Ne", "Pe", "Pi", "NVe", "NVi", "Vort", "phi")
+    with h5py.File(path, "x") as handle:
+        coordinates = handle.create_group("coordinates")
+        coordinates.create_dataset("frame_index", data=np.arange(6))
+        volume = handle.create_group("fields")
+        for channel, field in enumerate(fields):
+            volume.create_dataset(
+                field,
+                data=np.stack(
+                    [
+                        np.full((4, 3, 6), 10 * channel + frame, dtype=np.float32)
+                        for frame in range(6)
+                    ]
+                ),
+            )
+        volume["phi"][3] = np.nan
+        boundary = handle.create_group("boundary")
+        boundary.create_dataset(
+            "Bphi",
+            data=np.stack(
+                [np.full((2, 3), frame, dtype=np.float32) for frame in range(6)]
+            ),
+        )
+
+    catalog = _TinyCatalog(path)
+    dataset = LeadTimeStateDataset(
+        catalog,
+        family="e6b",
+        split="train",
+        lead_steps=(1,),
+        history_frames=2,
+        augment=False,
+        seed=1701,
+        current_interval=(2, 3),
+        auxiliary_context_fields=("phi",),
+    )
+    item = dataset[0]
+    assert item["auxiliary_context"].shape == (2, 1, 4, 3, 6)
+    np.testing.assert_allclose(
+        item["auxiliary_context"][:, 0, 0, 0, 0],
+        [61.0, 62.0],
+    )
+    assert np.isfinite(item["auxiliary_context"]).all()
+    assert int(item["target_frame_index"]) == 3
+    assert catalog.verified_frames == (1, 2, 3)
+    dataset.close()
+
+
 def test_boundary_spatialization_places_values_only_at_radial_sides() -> None:
     boundary = torch.tensor([[[[2.0, 3.0, 4.0], [5.0, 6.0, 7.0]]]])
     fields = spatialize_boundary(boundary, n_x=4, n_z=5)
@@ -174,6 +227,50 @@ def test_e6b_operator_is_equivariant_to_integer_toroidal_rolls(shift: int) -> No
     torch.testing.assert_close(
         shifted.boundary, reference.boundary, atol=3e-6, rtol=3e-6
     )
+
+
+def test_auxiliary_phi_context_preserves_toroidal_equivariance() -> None:
+    torch.manual_seed(12)
+    model = CodecFreeIncrementOperator3D(
+        tiny_config(auxiliary_channels=1)
+    ).eval()
+    context = torch.randn(2, 1, 6, 8, 6, 12)
+    auxiliary = torch.randn(2, 1, 1, 8, 6, 12)
+    boundary = torch.randn(2, 1, 2, 6)
+    leads = torch.tensor([1.0, 4.0])
+    shift = 5
+    with torch.inference_mode():
+        reference = model(context, leads, boundary, auxiliary)
+        shifted = model(
+            torch.roll(context, shift, -1),
+            leads,
+            boundary,
+            torch.roll(auxiliary, shift, -1),
+        )
+    torch.testing.assert_close(
+        shifted.volume,
+        torch.roll(reference.volume, shift, -1),
+        atol=3e-6,
+        rtol=3e-6,
+    )
+    torch.testing.assert_close(shifted.boundary, reference.boundary)
+
+
+def test_auxiliary_context_contract_fails_closed() -> None:
+    model = CodecFreeIncrementOperator3D(
+        tiny_config(auxiliary_channels=1)
+    )
+    context = torch.randn(1, 1, 6, 8, 6, 12)
+    boundary = torch.randn(1, 1, 2, 6)
+    with pytest.raises(ValueError, match="auxiliary context is required"):
+        model(context, torch.ones(1), boundary)
+    with pytest.raises(ValueError, match="auxiliary context shape"):
+        model(
+            context,
+            torch.ones(1),
+            boundary,
+            torch.randn(1, 1, 2, 8, 6, 12),
+        )
 
 
 def test_c5p_and_e6b_share_processor_contracts() -> None:
