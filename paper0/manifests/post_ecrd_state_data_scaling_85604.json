@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "phase": "post_ecrd_state_data_scaling_and_codec_free_operator",
+  "protocol": "paper0/protocol/POST_ECRD_STATE_DATA_SCALING_PROTOCOL.md",
+  "protocol_frozen_date": "2026-08-24",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "held_out_85606_access_allowed": false,
+  "assimilation_allowed": false,
+  "training_authorized": false,
+  "engineering_smoke_authorized": true,
+  "known_inventory": {
+    "physical_trajectories": 1,
+    "mpi_spatial_shards": 256,
+    "frames": 624,
+    "normalized_time_first": 285000.0,
+    "normalized_time_last": 471900.0,
+    "normalized_cadence": 300.0,
+    "physical_cadence_microseconds": 3.131905426352636,
+    "run_id": "0385667a-1757-49a1-a163-c941978d657a",
+    "restart_parent": "f8b4d12f-2627-4686-93a3-df784107667e",
+    "zperiod": 5,
+    "mode_mapping": "n=5*k",
+    "native_shape": [64, 32, 81],
+    "engineering_shape": [64, 32, 88],
+    "evolved_volume_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+    "retained_boundary_field": "Bphi"
+  },
+  "existing_split": {
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "normalization_fit_frames": [0, 432]
+  },
+  "new_data": {
+    "path": null,
+    "inventory_complete": false,
+    "scientific_scaling_runs_allowed": false,
+    "required_next_record": "dated dataset amendment with paths, hashes, identities, chronology, split, and attainable budgets"
+  },
+  "state_views": {
+    "c5p": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "e6b_volumes": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+    "e6b_boundary": "Bphi"
+  },
+  "nominal_lead_steps": [1, 2, 4, 8, 16],
+  "physics_quantities_in_training_loss": false,
+  "wandb_required_for_cluster_training": true
+}
