@@ -12,6 +12,10 @@ PROTOCOL = (
     ROOT
     / "paper0/protocol/POST_ECRD_OLD_85604_STAGE1_FULL_PROTOCOL_2026-08-24.md"
 )
+BLOCK_AMENDMENT = (
+    ROOT
+    / "paper0/protocol/POST_ECRD_OLD_85604_STAGE1_BLOCK_EVALUATION_AMENDMENT_2026-08-24.md"
+)
 TRAINER = ROOT / "paper0/tools/train_codec_free_stage1_full.py"
 SUMMARIZER = ROOT / "paper0/tools/summarize_codec_free_stage1_seed.py"
 LAUNCHER = ROOT / "cluster/post_ecrd_old_85604_stage1_full.sbatch"
@@ -40,6 +44,12 @@ def test_full_protocol_records_direct_field_scaling_and_decision_rule() -> None:
     assert "10%" in protocol
     assert "No flux, spectrum, cross-phase" in protocol
     assert "85606" in protocol and "unopened and prohibited" in protocol
+    amendment = BLOCK_AMENDMENT.read_text(encoding="utf-8")
+    assert "V00 = [498,540)" in amendment
+    assert "V01 = [540,582)" in amendment
+    assert "V02 = [582,624)" in amendment
+    assert "before any" in amendment and "chronological block" in amendment
+    assert "85606" in amendment and "unopened and prohibited" in amendment
 
 
 def test_full_launcher_requests_one_gpu_at_a_time_and_both_families() -> None:
