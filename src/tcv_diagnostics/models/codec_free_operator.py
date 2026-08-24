@@ -518,3 +518,48 @@ def state_derivative_loss(
     if prediction.boundary.shape != target_boundary_derivative.shape:
         raise ValueError("boundary derivative target shape differs")
     return loss + F.mse_loss(prediction.boundary, target_boundary_derivative)
+
+
+def component_balanced_state_derivative_loss(
+    prediction: StateDerivativePrediction,
+    target_volume_derivative: Tensor,
+    target_boundary_derivative: Tensor | None = None,
+) -> tuple[Tensor, dict[str, Tensor]]:
+    """Average standardized MSE equally over fields and boundary sides.
+
+    This is a data-only loss.  It avoids giving the two retained boundary
+    profiles either negligible element-count weight or the one-half total
+    weight implied by summing two separately averaged tensors.
+    """
+
+    if prediction.volume.shape != target_volume_derivative.shape:
+        raise ValueError("volume derivative target shape differs")
+    if prediction.volume.ndim != 5:
+        raise ValueError("volume derivatives must be [batch,channel,x,y,z]")
+    volume_by_field = torch.mean(
+        (prediction.volume - target_volume_derivative) ** 2,
+        dim=(0, 2, 3, 4),
+    )
+    component_losses = [value for value in volume_by_field]
+    records: dict[str, Tensor] = {
+        "volume_mean": torch.mean(volume_by_field),
+    }
+    if prediction.boundary is None:
+        if target_boundary_derivative is not None:
+            raise ValueError("boundary target supplied to a boundary-free model")
+    else:
+        if target_boundary_derivative is None:
+            raise ValueError("E6B boundary derivative target is required")
+        if prediction.boundary.shape != target_boundary_derivative.shape:
+            raise ValueError("boundary derivative target shape differs")
+        if prediction.boundary.ndim != 3 or prediction.boundary.shape[1] != 2:
+            raise ValueError("boundary derivatives must be [batch,side=2,y]")
+        boundary_by_side = torch.mean(
+            (prediction.boundary - target_boundary_derivative) ** 2,
+            dim=(0, 2),
+        )
+        component_losses.extend(value for value in boundary_by_side)
+        records["boundary_mean"] = torch.mean(boundary_by_side)
+    loss = torch.mean(torch.stack(component_losses))
+    records["total"] = loss
+    return loss, records

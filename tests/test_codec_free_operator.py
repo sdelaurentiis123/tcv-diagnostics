@@ -14,6 +14,7 @@ from tcv_diagnostics.models.codec_free_operator import (
     CodecFreeIncrementOperator3D,
     CodecFreeOperatorConfig,
     StateDerivativePrediction,
+    component_balanced_state_derivative_loss,
     normalized_error_metrics,
     spatialize_boundary,
     state_derivative_loss,
@@ -231,6 +232,45 @@ def test_state_loss_uses_only_direct_state_targets() -> None:
     loss.backward()
     assert volume.grad is not None
     assert boundary.grad is not None
+
+
+def test_component_balanced_loss_weights_each_field_and_side_equally() -> None:
+    volume = torch.zeros(1, 2, 2, 1, 1, requires_grad=True)
+    boundary = torch.zeros(1, 2, 3, requires_grad=True)
+    target_volume = torch.stack(
+        (torch.ones(1, 2, 1, 1), torch.full((1, 2, 1, 1), 2.0)), dim=1
+    )
+    target_boundary = torch.stack(
+        (torch.full((1, 3), 3.0), torch.full((1, 3), 4.0)), dim=1
+    )
+    loss, records = component_balanced_state_derivative_loss(
+        StateDerivativePrediction(volume=volume, boundary=boundary),
+        target_volume,
+        target_boundary,
+    )
+    torch.testing.assert_close(loss, torch.tensor((1.0 + 4.0 + 9.0 + 16.0) / 4.0))
+    torch.testing.assert_close(records["volume_mean"], torch.tensor(2.5))
+    torch.testing.assert_close(records["boundary_mean"], torch.tensor(12.5))
+    loss.backward()
+    assert volume.grad is not None
+    assert boundary.grad is not None
+
+
+def test_component_balanced_c5p_loss_rejects_boundary_target() -> None:
+    prediction = StateDerivativePrediction(
+        volume=torch.zeros(1, 5, 2, 2, 2), boundary=None
+    )
+    loss, records = component_balanced_state_derivative_loss(
+        prediction, torch.ones_like(prediction.volume)
+    )
+    torch.testing.assert_close(loss, torch.tensor(1.0))
+    torch.testing.assert_close(records["total"], loss)
+    with pytest.raises(ValueError, match="boundary target"):
+        component_balanced_state_derivative_loss(
+            prediction,
+            torch.ones_like(prediction.volume),
+            torch.ones(1, 2, 2),
+        )
 
 
 def test_normalized_error_metrics_have_known_maximum_and_rms() -> None:

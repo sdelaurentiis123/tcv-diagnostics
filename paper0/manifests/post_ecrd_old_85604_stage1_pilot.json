@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_stage1_codec_free_pilot",
+  "protocol": "paper0/protocol/POST_ECRD_OLD_85604_STAGE1_PILOT_PROTOCOL_2026-08-24.md",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "held_out_85606_access_allowed": false,
+  "guard_frames_read_allowed": false,
+  "pilot_training_authorized": true,
+  "full_training_authorized": false,
+  "assimilation_allowed": false,
+  "state_views": {
+    "c5p": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "e6b_volumes": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+    "e6b_boundary": "Bphi",
+    "shared_selection_fields": ["Ne", "Pe", "Pi"]
+  },
+  "split": {
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "training_pair_count": 431,
+    "validation_pair_count": 127,
+    "lead_steps": [1],
+    "history_frames": 1
+  },
+  "architecture": {
+    "base_channels": 24,
+    "channel_multipliers": [1, 2, 4],
+    "blocks_per_level": 2,
+    "lead_embedding_channels": 128,
+    "group_norm_maximum_groups": 8,
+    "kernel_size": 3,
+    "toroidal_stride": 1,
+    "latent_codec": false
+  },
+  "optimization": {
+    "seed": 1701,
+    "epochs": 2,
+    "sample_batch_size": 1,
+    "gradient_accumulation_samples": 4,
+    "optimizer": "AdamW",
+    "peak_learning_rate": 0.0002,
+    "minimum_learning_rate": 0.00002,
+    "weight_decay": 0.0001,
+    "warmup_fraction": 0.05,
+    "gradient_clip_norm": 1.0,
+    "autocast": "bfloat16",
+    "cudnn_tf32": false,
+    "matmul_tf32": false
+  },
+  "loss": {
+    "name": "component_balanced_standardized_state_derivative_mse",
+    "physics_derived_quantities_used": false
+  },
+  "wandb_required": true
+}
