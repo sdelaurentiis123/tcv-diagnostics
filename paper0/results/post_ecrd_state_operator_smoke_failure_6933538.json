@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "scope": "bounded_non_scientific_codec_free_operator_smoke",
+  "job_id": 6933538,
+  "state": "FAILED",
+  "exit_code": "1:0",
+  "elapsed_seconds": 47,
+  "maximum_host_rss_KiB": 1488892,
+  "paper0_commit": "45869dfab1c6b34d03e762f4c181d67012501b70",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "scientific_result": false,
+  "optimizer_steps_completed": 4,
+  "wandb": {
+    "mode": "online",
+    "run_id": "p0stateop-6933538-s1701",
+    "url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0stateop-6933538-s1701",
+    "terminal_state": "failed_after_mechanical_gate"
+  },
+  "numeric_environment": {
+    "cudnn_allow_tf32_default": true,
+    "matmul_allow_tf32_default": false
+  },
+  "mechanical_observations": {
+    "c5p": {
+      "validation_state_derivative_mse": 0.07741241157054901,
+      "volume_equivariance_normalized_maximum_absolute_error": 0.0007830187337758394,
+      "volume_equivariance_normalized_root_mean_square_error": 0.00010047757920116145
+    },
+    "e6b": {
+      "validation_state_derivative_mse": 0.9628493189811708,
+      "volume_equivariance_normalized_maximum_absolute_error": 0.0006242321655732954,
+      "volume_equivariance_normalized_root_mean_square_error": 0.00011208192918510292,
+      "boundary_equivariance_normalized_maximum_absolute_error": 0.000004757195711135864,
+      "boundary_equivariance_normalized_root_mean_square_error": 0.0000012980831041432788
+    }
+  },
+  "failure_reason": "full-volume RMS roll discrepancy exceeded 1e-4 with cuDNN TF32 enabled",
+  "interpretation": "engineering precision-policy failure only; losses are not scientifically comparable across state views",
+  "artifact_root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_state_operator_smoke/job_6933538"
+}

@@ -379,7 +379,9 @@ def main() -> None:
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
     torch.backends.cudnn.benchmark = False
-    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = False
+    torch.backends.cuda.matmul.allow_tf32 = False
+    torch.set_float32_matmul_precision("highest")
     torch.cuda.reset_peak_memory_stats(device)
 
     try:
@@ -421,6 +423,9 @@ def main() -> None:
             "optimizer_steps_per_family": 2,
             "physics_derived_loss_used": False,
             "held_out_85606_read": False,
+            "cudnn_allow_tf32": False,
+            "matmul_allow_tf32": False,
+            "float32_matmul_precision": "highest",
         },
         mode="online",
         dir=str(tracking_directory),
@@ -474,6 +479,11 @@ def main() -> None:
             "gpu": torch.cuda.get_device_name(device),
             "torch_version": torch.__version__,
             "cuda_version": torch.version.cuda,
+            "numeric_precision": {
+                "cudnn_allow_tf32": torch.backends.cudnn.allow_tf32,
+                "matmul_allow_tf32": torch.backends.cuda.matmul.allow_tf32,
+                "float32_matmul_precision": torch.get_float32_matmul_precision(),
+            },
         }
         if result["status"] != "passed":
             raise RuntimeError("one or more codec-free smoke gates failed")
