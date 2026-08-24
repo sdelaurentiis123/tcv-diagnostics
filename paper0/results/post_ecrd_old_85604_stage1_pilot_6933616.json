@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_stage1_codec_free_pilot",
+  "job_id": 6933616,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 370,
+  "maximum_host_rss_KiB": 5028820,
+  "paper0_commit": "2be1c6242f4cf98eda0c9f56d14a78ca934675cf",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "guard_frames_read": false,
+  "physics_derived_loss_used": false,
+  "training_pair_count": 431,
+  "validation_pair_count": 127,
+  "seed": 1701,
+  "epochs": 2,
+  "both_pilot_gates_passed": true,
+  "comparison": {
+    "metric": "mean standardized state-derivative MSE over Ne, Pe, and Pi",
+    "zero_derivative_persistence_mse": 0.038616181,
+    "c5p": {
+      "best_validation_mse": 0.014951728,
+      "persistence_relative_skill": 0.612811850,
+      "training_loss_epoch_1": 0.024859753,
+      "training_loss_epoch_2": 0.014734892,
+      "per_field_epoch_2": {
+        "Ne": {"mse": 0.013507730, "persistence_relative_skill": 0.180444884},
+        "Pe": {"mse": 0.013363802, "persistence_relative_skill": 0.676132618},
+        "Pi": {"mse": 0.017983651, "persistence_relative_skill": 0.690489729},
+        "phi": {"mse": 0.015058931, "persistence_relative_skill": 0.378852393},
+        "Vi": {"mse": 0.021016203, "persistence_relative_skill": 0.028957018}
+      }
+    },
+    "e6b": {
+      "best_validation_mse": 0.027426972,
+      "persistence_relative_skill": 0.289754429,
+      "training_loss_epoch_1": 0.326868601,
+      "training_loss_epoch_2": 0.227243265,
+      "per_field_epoch_2": {
+        "Ne": {"mse": 0.021363736, "persistence_relative_skill": -0.296202916},
+        "Pe": {"mse": 0.027395889, "persistence_relative_skill": 0.336069577},
+        "Pi": {"mse": 0.033521290, "persistence_relative_skill": 0.423076902},
+        "NVe": {"mse": 0.764914808, "persistence_relative_skill": 0.659237874},
+        "NVi": {"mse": 0.035393705, "persistence_relative_skill": -0.209464253},
+        "Vort": {"mse": 0.953773886, "persistence_relative_skill": 0.507606215}
+      }
+    }
+  },
+  "interpretation": {
+    "supported": [
+      "Both production-sized codec-free operators learn finite old-85604 one-step transitions and preserve toroidal equivariance.",
+      "At the two-epoch pilot budget, C5P is substantially better than E6B on the matched Ne/Pe/Pi validation target.",
+      "The E6B target increments have strongly unequal numerical scales: NVe and Vort persistence MSE are approximately two orders of magnitude above Ne."
+    ],
+    "not_supported": [
+      "The pilot does not establish that reduced C5P state is physically sufficient.",
+      "The pilot does not establish that exact evolved state is harmful.",
+      "The pilot does not evaluate autonomous rollout, spectra, cross-phase, transport, stochastic calibration, assimilation, or 85606."
+    ],
+    "next_authorized_action": "Run a separately frozen three-seed Stage-1 comparison with a longer budget and train-split derivative-scale conditioning."
+  },
+  "wandb": {
+    "c5p": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0oldcf-c5p-6933616-s1701",
+    "e6b": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0oldcf-e6b-6933616-s1701"
+  },
+  "artifacts": {
+    "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_pilot/job_6933616",
+    "paired_summary_sha256": "7a68d49cd3ad86b1196c03c8385c5f2dab63e83518959716be229d61392f6960",
+    "c5p_result_sha256": "72fe988773c29b363fd970811a935696d34ec205dc6cf8b93c45215db6505293",
+    "e6b_result_sha256": "478305296cd28401301f138278a7ca2eddedfb0b0ef8432b946134b4161acf0b"
+  }
+}
