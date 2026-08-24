@@ -67,6 +67,8 @@ def test_freeze_authorizes_only_matched_one_seed_screen(tmp_path: Path) -> None:
     assert manifest["three_seed_scaling_authorized"] is False
     assert manifest["parameter_count_relative_gap"] < 0.03
     assert manifest["state"]["future_auxiliary_context_allowed"] is False
+    assert manifest["state"]["validated_elliptic_closure_available"] is True
+    assert manifest["state"]["rollout_requires_external_elliptic_operator"] is True
 
 
 def test_freeze_rejects_failed_axial_smoke(tmp_path: Path) -> None:

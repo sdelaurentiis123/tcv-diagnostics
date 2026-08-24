@@ -106,6 +106,11 @@ def freeze_manifest(
             "auxiliary_context_fields": ["phi"],
             "future_auxiliary_context_allowed": False,
             "current_phi_rollout_ready_without_elliptic_closure": False,
+            "validated_elliptic_closure_available": True,
+            "rollout_requires_external_elliptic_operator": True,
+            "elliptic_closure_reference": (
+                "paper0/PHASE2_POTENTIAL_VORTICITY_ALL_FRAME_READOUT.md"
+            ),
         },
         "split": {
             "training_frames": [0, 432],

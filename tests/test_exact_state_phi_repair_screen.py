@@ -26,6 +26,8 @@ def _manifest() -> dict:
             "predicted_boundary": "Bphi",
             "auxiliary_context_fields": ["phi"],
             "future_auxiliary_context_allowed": False,
+            "validated_elliptic_closure_available": True,
+            "rollout_requires_external_elliptic_operator": True,
         },
         "split": {
             "training_frames": [0, 432],
@@ -93,4 +95,5 @@ def test_trainer_source_freezes_no_future_truth_and_no_physics_loss() -> None:
     assert 'auxiliary_context_fields=("phi",)' in source
     assert '"future_auxiliary_context_read": False' in source
     assert '"physics_derived_loss_used": False' in source
+    assert '"validated_elliptic_closure_available": True' in source
     assert "advance_to_three_seed_scaling" in source

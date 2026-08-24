@@ -30,10 +30,13 @@ receive **current/history-only** `phi` as an auxiliary input. No target or
 future `phi` may be read.
 
 Current truth-derived `phi` is causal in teacher-forced evaluation but is not
-by itself a deployable free-rollout interface. A rollout would have to derive
-the next `phi` from the predicted evolved state with the authoritative Hermes
-elliptic transformation, or introduce and validate a separate closure. This
-screen therefore cannot establish rollout or transport fidelity.
+by itself a deployable free-rollout interface. This repository already has a
+hash-validated compiled Hermes/BOUT++ elliptic operator that reconstructs
+interior `phi` from the E6B state and retained `Bphi`; its all-frame 85604
+closure is documented in `PHASE2_POTENTIAL_VORTICITY_ALL_FRAME_READOUT.md`.
+The screen does not invoke that compiled operator. A later rollout must call it
+after each predicted evolved-state step before constructing the next model
+context. This screen therefore cannot establish rollout or transport fidelity.
 
 ## Matched arms
 

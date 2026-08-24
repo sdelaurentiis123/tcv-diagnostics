@@ -111,6 +111,10 @@ def authorize_manifest(
         raise ValueError("repair-screen auxiliary context differs")
     if state.get("future_auxiliary_context_allowed") is not False:
         raise ValueError("future auxiliary context must be prohibited")
+    if state.get("validated_elliptic_closure_available") is not True:
+        raise ValueError("validated elliptic closure availability differs")
+    if state.get("rollout_requires_external_elliptic_operator") is not True:
+        raise ValueError("repair-screen rollout closure rule differs")
 
 
 def build_model(
@@ -762,6 +766,8 @@ def main() -> None:
                 "auxiliary_context_fields": ["phi"],
                 "future_auxiliary_context_read": False,
                 "current_phi_rollout_ready_without_elliptic_closure": False,
+                "validated_elliptic_closure_available": True,
+                "rollout_requires_external_elliptic_operator": True,
             },
             "architecture": model.to_record(),
             "loss": manifest["loss"],
