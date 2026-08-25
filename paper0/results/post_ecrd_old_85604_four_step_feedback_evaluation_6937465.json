@@ -1,0 +1,116 @@
+{
+  "checkpoint_selection_performed": false,
+  "confirmation_seed_training_authorized": false,
+  "decision": {
+    "advance_to_confirmation_seeds": false,
+    "by_horizon": {
+      "4": {
+        "candidate_mean_separatrix_relative_l2": 0.43931062677716315,
+        "candidate_median_absolute_log_power_ratio_error": 0.7622425841769056,
+        "candidate_over_parent_power_error": 1.0572912437266921,
+        "candidate_over_parent_separatrix_error": 1.1118888233954778,
+        "parent_mean_separatrix_relative_l2": 0.39510301527773223,
+        "parent_median_absolute_log_power_ratio_error": 0.7209390872189461,
+        "power_preservation_passed": true,
+        "separatrix_transport_preservation_passed": false
+      },
+      "8": {
+        "candidate_mean_separatrix_relative_l2": 0.46268237204903045,
+        "candidate_median_absolute_log_power_ratio_error": 0.9272453115451468,
+        "candidate_over_parent_power_error": 1.720175650061313,
+        "candidate_over_parent_separatrix_error": 1.1954908519509742,
+        "parent_mean_separatrix_relative_l2": 0.3870229297814858,
+        "parent_median_absolute_log_power_ratio_error": 0.5390410633426281,
+        "power_preservation_passed": false,
+        "separatrix_transport_preservation_passed": false
+      }
+    },
+    "gates": {
+      "power_preserved_at_both_horizons": false,
+      "separatrix_transport_preserved_at_both_horizons": false,
+      "state_pilot_passed": true
+    }
+  },
+  "development_run": "85604",
+  "example_fields": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_evaluation/job_6937465/run/example_physical_fields_start560.npz",
+    "sha256": "bab94ef5389cd0035c014967f00091f464e0cabe486b314c3b2b124c7a3cede2",
+    "start_frame": 560
+  },
+  "forecast": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_evaluation/job_6937465/run/terminal_forecast_deltas.h5",
+    "sha256": "0470231453e01156a518691f047f1f0fc6321dcb718affb49c12429d1d6f08c6",
+    "stored_value": "standardized_terminal_state_delta_from_current"
+  },
+  "gpu": "NVIDIA A100-SXM4-80GB MIG 2g.20gb",
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "manifest": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/manifests/post_ecrd_old_85604_four_step_feedback_evaluation.json",
+  "manifest_sha256": "6c433ead612f0abc65da2d0f7b23b8570855671d1b1dc4eaae1ecf8d047ff74d",
+  "models": {
+    "four_step_feedback_finetuned": {
+      "checkpoint": {
+        "epoch": 6,
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_006.pt",
+        "selection_metric": 0.42644835900132133,
+        "sha256": "affe2589f4ce6639879ca1ed4a100af764aa48a475a653987faa18d4ce844117"
+      },
+      "checkpoint_config_validation": {
+        "inserted_legacy_defaults": [],
+        "legacy_default_values": {
+          "auxiliary_context_channels": 0
+        },
+        "stored_config_matches_after_explicit_legacy_default": true
+      },
+      "checkpoint_reload_bitwise": true,
+      "parameter_count": 2174021
+    },
+    "pre_feedback_parent": {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_004.pt",
+        "sha256": "b9007f818eb35d82a1e4c21771dfc1ad870591feb777f5087f3b2a49847cd50d"
+      },
+      "checkpoint_config_validation": {
+        "inserted_legacy_defaults": [],
+        "legacy_default_values": {
+          "auxiliary_context_channels": 0
+        },
+        "stored_config_matches_after_explicit_legacy_default": true
+      },
+      "checkpoint_epoch": 4,
+      "checkpoint_optimizer_updates": 2132,
+      "checkpoint_paper0_commit": "50ed12bd3defdb2685603e6a69f1972587d5564d",
+      "checkpoint_reload_bitwise": true,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_stage2_multilead_seed1702_6936642.json",
+        "sha256": "9ba99fc02ac8620dd1a1e917a7f5973f08925ada3389a3a65b913f941d410881"
+      }
+    }
+  },
+  "new_nersc_data_read": false,
+  "paper0_commit": "566318e8b92dd0ac135e3aab30d68b14c8aace9e",
+  "per_target_state_rmse": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_evaluation/job_6937465/run/per_target_state_rmse.csv",
+    "row_count": 2440,
+    "sha256": "03c25810759d3f2098b39462f0998f4c04b881d882dd916121bf927a71730011"
+  },
+  "physics_derived_loss_used": false,
+  "physics_metrics": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_evaluation/job_6937465/run/physics_metrics.json",
+    "sha256": "0c2fa7351c700ce60bc763e48b6986ed51854c42f9d632d38689bcb48716027a"
+  },
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_four_step_feedback_evaluation",
+  "slurm_job_id": "6937465",
+  "state_metrics": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_evaluation/job_6937465/run/state_metrics.json",
+    "sha256": "1d70e2daa7eada73c5154e048afd7ba22aa4d3c5a31de2e587f402b169065c49"
+  },
+  "status": "feedback_pilot_state_and_physics_scored",
+  "training_performed": false,
+  "training_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/result.json",
+    "sha256": "ffcc3d4b5bdbada7c83dacc4eb85fed318a0f971ab28b329ea5ed7c15cd7938f"
+  },
+  "wall_seconds_before_wandb_verification": 552.4000232069957
+}
