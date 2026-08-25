@@ -9,7 +9,7 @@ import json
 import os
 from pathlib import Path
 import time
-from typing import Any, Mapping, Protocol, Sequence
+from typing import Any, Callable, Mapping, Protocol, Sequence
 
 import h5py
 import numpy as np
@@ -500,6 +500,7 @@ def generate_pgl_forecast(
     seed_bank: np.ndarray,
     device: torch.device,
     member_batch_size: int = 8,
+    on_start: Callable[[Mapping[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Generate a complete truth-free M32 four-frame forecast."""
 
@@ -569,6 +570,15 @@ def generate_pgl_forecast(
             sampler_seed_row=rows[position],
             initial_noise_sha256=noise_hashes,
         )
+        if on_start is not None:
+            on_start(
+                {
+                    "position": position,
+                    "completed_starts": position + 1,
+                    "current_frame": current_frame,
+                    "inference_seconds": float(elapsed),
+                }
+            )
     writer.finalize()
     return {
         "schema_version": 1,
