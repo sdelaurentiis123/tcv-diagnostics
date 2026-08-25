@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_four_step_feedback_pilot",
+  "protocol": "paper0/protocol/POST_ECRD_OLD_85604_FOUR_STEP_FEEDBACK_PILOT_2026-08-25.md",
+  "prospective_evidence_commit": "dd768ba3970c2af46b864b3c92bb3d420e01a074",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "held_out_85606_access_allowed": false,
+  "new_nersc_data_access_allowed": false,
+  "guard_frames_read_allowed": false,
+  "assimilation_allowed": false,
+  "diagnostic_ranking_allowed": false,
+  "steering_allowed": false,
+  "pilot_training_authorized": true,
+  "confirmation_seed_training_authorized": false,
+  "state_family": "c5p",
+  "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+  "split": {
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "history_frames": 1,
+    "training_unroll_horizon": 4,
+    "training_window_count": 428,
+    "full_validation_window_count_by_horizon": {
+      "1": 127,
+      "4": 124,
+      "8": 120
+    },
+    "selection_current_frames": [
+      496, 501, 506, 511, 516, 521, 526, 531,
+      536, 541, 546, 551, 556, 561, 566, 571,
+      576, 581, 586, 591, 596, 601, 606, 611
+    ],
+    "selection_horizons": [1, 4, 8]
+  },
+  "architecture": {
+    "base_channels": 24,
+    "channel_multipliers": [1, 2, 4],
+    "blocks_per_level": 2,
+    "lead_embedding_channels": 128,
+    "group_norm_maximum_groups": 8,
+    "kernel_size": 3,
+    "toroidal_stride": 1,
+    "latent_codec": false,
+    "zero_initialize_output": true,
+    "parameter_count": 2174021
+  },
+  "parent": {
+    "seed": 1702,
+    "result": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_stage2_multilead_seed1702_6936642.json",
+      "sha256": "9ba99fc02ac8620dd1a1e917a7f5973f08925ada3389a3a65b913f941d410881"
+    },
+    "checkpoint": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_004.pt",
+      "sha256": "b9007f818eb35d82a1e4c21771dfc1ad870591feb777f5087f3b2a49847cd50d"
+    }
+  },
+  "derivative_rms": {
+    "family": "c5p",
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "volume": {
+      "Ne": 0.06121914365413737,
+      "Pe": 0.09879372371621804,
+      "Pi": 0.1191229071171432,
+      "phi": 0.07938504691825216,
+      "Vi": 0.07914129068074754
+    },
+    "fit_split": "train",
+    "source_pair_count": 2129,
+    "physics_derived_quantity": false
+  },
+  "loss": {
+    "name": "detached_four_step_pushforward_plus_retained_one_step_state_mse",
+    "feedback_uses_predicted_intermediate_states": true,
+    "teacher_forcing_after_initial_context": false,
+    "backpropagate_through_previous_predicted_states": false,
+    "direct_one_step_weight": 0.5,
+    "equal_rollout_mean_weight": 0.5,
+    "effective_step_weights": [0.625, 0.125, 0.125, 0.125],
+    "field_scale": "frozen_stage2_training_derivative_rms",
+    "physics_derived_quantities_used": false
+  },
+  "optimization": {
+    "seed": 1702,
+    "initialize_from_parent_model_only": true,
+    "restore_parent_optimizer": false,
+    "epochs": 6,
+    "sample_batch_size": 1,
+    "gradient_accumulation_windows": 4,
+    "expected_optimizer_updates": 642,
+    "optimizer": "AdamW",
+    "peak_learning_rate": 0.00002,
+    "minimum_learning_rate": 0.000002,
+    "weight_decay": 0.0001,
+    "warmup_fraction": 0.05,
+    "gradient_clip_norm": 1.0,
+    "autocast": "bfloat16",
+    "cudnn_tf32": false,
+    "matmul_tf32": false
+  },
+  "selection": {
+    "physics_metrics_used": false,
+    "metric": "mean_of_fieldwise_state_mse_over_persistence_mse",
+    "equal_weight_horizons": [1, 4, 8],
+    "equal_weight_fields": ["Ne", "Pe", "Pi", "phi", "Vi"]
+  },
+  "state_gates": {
+    "maximum_one_step_error_ratio_to_parent": 1.05,
+    "maximum_four_step_error_ratio_to_parent": 1.0,
+    "maximum_eight_step_error_ratio_to_parent": 1.0,
+    "minimum_mean_four_eight_improvement_fraction": 0.05
+  },
+  "physics_preservation_gates": {
+    "maximum_absolute_log_power_ratio_error_increase_fraction": 0.10,
+    "maximum_mean_separatrix_relative_l2_increase_fraction": 0.05,
+    "strict_face_transport_is_report_only": true,
+    "cross_field_coherence_change_is_report_only": true
+  },
+  "wandb_required": true
+}
