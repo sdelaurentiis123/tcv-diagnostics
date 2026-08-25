@@ -10,6 +10,7 @@ from paper0.tools.train_codec_free_stage2_multilead import (
     FIELDS,
     LEADS,
     authorize_manifest,
+    parent_specification,
     screen_decision,
     validate_parent_config,
 )
@@ -57,6 +58,29 @@ def _manifest() -> dict:
     }
 
 
+def _scaling_manifest() -> dict:
+    manifest = _manifest()
+    manifest.update(
+        {
+            "scope": "post_ecrd_old_85604_stage2_multilead_scaling",
+            "screen_training_authorized": False,
+            "three_seed_scaling_authorized": True,
+            "seed_confirmation_training_authorized": True,
+            "new_nersc_data_access_allowed": False,
+            "parents": {
+                str(seed): {"family": "c5p", "seed": seed}
+                for seed in (1702, 1703)
+            },
+        }
+    )
+    manifest["optimization"] = {
+        "authorized_seeds": [1702, 1703],
+        "initialize_from_parent_model_only": True,
+        "restore_parent_optimizer": False,
+    }
+    return manifest
+
+
 def _evaluation(*, ratio: float, lead1_mse: float, longer_mse: float) -> dict:
     per_lead = {}
     for lead in LEADS:
@@ -93,6 +117,23 @@ def test_manifest_rejects_scaling_or_another_seed() -> None:
         authorize_manifest(manifest, seed=1701)
     with pytest.raises(ValueError, match="seed"):
         authorize_manifest(_manifest(), seed=1702)
+
+
+def test_scaling_manifest_authorizes_only_two_frozen_parent_seeds() -> None:
+    manifest = _scaling_manifest()
+    authorize_manifest(manifest, seed=1702)
+    authorize_manifest(manifest, seed=1703)
+    assert parent_specification(manifest, seed=1702)["seed"] == 1702
+    with pytest.raises(ValueError, match="seed"):
+        authorize_manifest(manifest, seed=1701)
+    broken = copy.deepcopy(manifest)
+    broken["optimization"]["authorized_seeds"] = [1701, 1702, 1703]
+    with pytest.raises(ValueError, match="seed"):
+        authorize_manifest(broken, seed=1702)
+    nersc = copy.deepcopy(manifest)
+    nersc["new_nersc_data_access_allowed"] = True
+    with pytest.raises(ValueError, match="NERSC"):
+        authorize_manifest(nersc, seed=1702)
 
 
 def test_legacy_config_accepts_only_explicit_zero_auxiliary_default() -> None:

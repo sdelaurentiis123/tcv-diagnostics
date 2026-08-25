@@ -43,6 +43,8 @@ LEADS = (1, 2, 4, 8, 16)
 LONGER_LEADS = (2, 4, 8, 16)
 FAMILY = "c5p"
 FIELDS = FAMILY_FIELDS[FAMILY]
+SCREEN_SCOPE = "post_ecrd_old_85604_stage2_multilead_screen"
+SCALING_SCOPE = "post_ecrd_old_85604_stage2_multilead_scaling"
 
 
 def parse_args() -> argparse.Namespace:
@@ -64,7 +66,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def authorize_manifest(manifest: Mapping[str, Any], *, seed: int) -> None:
-    if manifest.get("scope") != "post_ecrd_old_85604_stage2_multilead_screen":
+    scope = manifest.get("scope")
+    if scope not in (SCREEN_SCOPE, SCALING_SCOPE):
         raise ValueError("Stage-2 scope differs")
     if manifest.get("development_run") != "85604":
         raise ValueError("Stage-2 development run differs")
@@ -74,10 +77,24 @@ def authorize_manifest(manifest: Mapping[str, Any], *, seed: int) -> None:
         raise ValueError("Stage-2 held-out access must be prohibited")
     if manifest.get("guard_frames_read_allowed") is not False:
         raise ValueError("Stage-2 guard reads must be prohibited")
-    if manifest.get("screen_training_authorized") is not True:
-        raise ValueError("Stage-2 screen training is not authorized")
-    if manifest.get("three_seed_scaling_authorized") is not False:
-        raise ValueError("Stage-2 three-seed scaling must remain unauthorized")
+    if scope == SCREEN_SCOPE:
+        if manifest.get("screen_training_authorized") is not True:
+            raise ValueError("Stage-2 screen training is not authorized")
+        if manifest.get("three_seed_scaling_authorized") is not False:
+            raise ValueError(
+                "Stage-2 three-seed scaling must remain unauthorized"
+            )
+    else:
+        if manifest.get("screen_training_authorized") is not False:
+            raise ValueError("Stage-2 scaling cannot reopen screen training")
+        if manifest.get("three_seed_scaling_authorized") is not True:
+            raise ValueError("Stage-2 scaling is not authorized")
+        if manifest.get("seed_confirmation_training_authorized") is not True:
+            raise ValueError("Stage-2 seed confirmation is not authorized")
+        if manifest.get("new_nersc_data_access_allowed") is not False:
+            raise ValueError("Stage-2 scaling cannot access newer NERSC data")
+        if set(manifest.get("parents", {})) != {"1702", "1703"}:
+            raise ValueError("Stage-2 scaling parent set differs")
     if manifest.get("state_family") != FAMILY:
         raise ValueError("Stage-2 state family differs")
     split = manifest.get("split", {})
@@ -107,12 +124,31 @@ def authorize_manifest(manifest: Mapping[str, Any], *, seed: int) -> None:
     if any(split.get(key) != value for key, value in expected_split.items()):
         raise ValueError("Stage-2 split differs")
     optimization = manifest.get("optimization", {})
-    if seed != int(optimization.get("screen_seed", -1)):
-        raise ValueError("seed leaves frozen Stage-2 screen")
+    if scope == SCREEN_SCOPE:
+        if seed != int(optimization.get("screen_seed", -1)):
+            raise ValueError("seed leaves frozen Stage-2 screen")
+    else:
+        authorized_seeds = optimization.get("authorized_seeds")
+        if authorized_seeds != [1702, 1703] or seed not in authorized_seeds:
+            raise ValueError("seed leaves frozen Stage-2 scaling set")
     if optimization.get("initialize_from_parent_model_only") is not True:
         raise ValueError("Stage-2 parent initialization rule differs")
     if optimization.get("restore_parent_optimizer") is not False:
         raise ValueError("Stage-2 parent optimizer must not be restored")
+
+
+def parent_specification(
+    manifest: Mapping[str, Any], *, seed: int
+) -> Mapping[str, Any]:
+    """Return the immutable parent record for one authorized seed."""
+
+    if manifest.get("scope") == SCREEN_SCOPE:
+        parent = manifest.get("parent", {})
+    else:
+        parent = manifest.get("parents", {}).get(str(seed), {})
+    if int(parent.get("seed", -1)) != seed or parent.get("family") != FAMILY:
+        raise ValueError("Stage-2 parent specification differs")
+    return parent
 
 
 def load_locked_json(record: Mapping[str, Any], *, name: str) -> dict[str, Any]:
@@ -124,7 +160,9 @@ def load_locked_json(record: Mapping[str, Any], *, name: str) -> dict[str, Any]:
     return load_strict_json(path)
 
 
-def verify_prerequisites(manifest: Mapping[str, Any]) -> dict[str, Any]:
+def verify_prerequisites(
+    manifest: Mapping[str, Any], *, seed: int = 1701
+) -> dict[str, Any]:
     records = manifest.get("prerequisites", {})
     reduction_lock = records.get("stage1_reduction", {})
     reduction = load_locked_json(reduction_lock, name="Stage-1 reduction")
@@ -137,7 +175,35 @@ def verify_prerequisites(manifest: Mapping[str, Any]) -> dict[str, Any]:
     ):
         raise ValueError("Stage-1 reduction does not authorize C5P Stage 2")
 
-    parent_result_lock = records.get("parent_result", {})
+    completed_screen_lock: dict[str, Any] | None = None
+    if manifest.get("scope") == SCALING_SCOPE:
+        completed_screen_lock = records.get("seed1701_screen_result", {})
+        completed_screen = load_locked_json(
+            completed_screen_lock, name="seed-1701 screen result"
+        )
+        if completed_screen.get("scope") != SCREEN_SCOPE:
+            raise ValueError("seed-1701 screen scope differs")
+        if completed_screen.get("development_run") != "85604":
+            raise ValueError("seed-1701 screen development run differs")
+        if completed_screen.get("held_out_85606_read") is not False:
+            raise ValueError("seed-1701 screen held-out flag differs")
+        if completed_screen.get("advance_to_three_seed_scaling") is not True:
+            raise ValueError("seed-1701 screen did not authorize scaling")
+        if completed_screen.get("screen_gates") != {
+            "at_least_three_longer_leads_improve": True,
+            "every_c5p_field_positive_skill_at_every_lead": True,
+            "lead1_shared_mse_at_most_five_percent_above_parent": True,
+            "mean_multilead_ratio_improves_at_least_ten_percent": True,
+            "training_gate_passed": True,
+        }:
+            raise ValueError("seed-1701 screen gates differ")
+
+    parent = parent_specification(manifest, seed=seed)
+    parent_result_lock = (
+        records.get("parent_result", {})
+        if manifest.get("scope") == SCREEN_SCOPE
+        else parent.get("result", {})
+    )
     parent_result = load_locked_json(parent_result_lock, name="parent result")
     if parent_result.get("scope") != "post_ecrd_old_85604_stage1_codec_free_full":
         raise ValueError("parent result scope differs")
@@ -147,14 +213,16 @@ def verify_prerequisites(manifest: Mapping[str, Any]) -> dict[str, Any]:
         raise ValueError("parent result held-out flag differs")
     if parent_result.get("physics_derived_loss_used") is not False:
         raise ValueError("parent result physics-loss flag differs")
-    if parent_result.get("family") != FAMILY or int(parent_result.get("seed", -1)) != 1701:
+    if (
+        parent_result.get("family") != FAMILY
+        or int(parent_result.get("seed", -1)) != seed
+    ):
         raise ValueError("parent result identity differs")
     if parent_result.get("status") != "passed":
         raise ValueError("parent result did not pass")
     if parent_result.get("training_gate", {}).get("passed") is not True:
         raise ValueError("parent training gate did not pass")
 
-    parent = manifest.get("parent", {})
     result_metric = float(parent_result["best_checkpoint"]["selection_metric"])
     if result_metric != float(parent.get("one_step_selection_metric", float("nan"))):
         raise ValueError("parent one-step metric differs")
@@ -168,12 +236,15 @@ def verify_prerequisites(manifest: Mapping[str, Any]) -> dict[str, Any]:
         raise ValueError("parent checkpoint hash differs from result")
     if not checkpoint_sha or sha256_path(checkpoint_path) != checkpoint_sha:
         raise ValueError("parent checkpoint SHA-256 differs")
-    return {
+    record = {
         "stage1_reduction": dict(reduction_lock),
         "parent_result": dict(parent_result_lock),
         "parent_checkpoint": dict(checkpoint_lock),
         "parent_one_step_selection_metric": result_metric,
     }
+    if completed_screen_lock is not None:
+        record["seed1701_screen_result"] = dict(completed_screen_lock)
+    return record
 
 
 def build_model(architecture: Mapping[str, Any]) -> tuple[
@@ -224,18 +295,20 @@ def validate_parent_config(
 def load_parent_model(
     *,
     manifest: Mapping[str, Any],
+    seed: int,
     device: torch.device,
 ) -> tuple[CodecFreeIncrementOperator3D, CodecFreeOperatorConfig, dict[str, Any]]:
     model, config = build_model(manifest["architecture"])
-    checkpoint_path = Path(manifest["parent"]["checkpoint"]["path"])
+    parent = parent_specification(manifest, seed=seed)
+    checkpoint_path = Path(parent["checkpoint"]["path"])
     payload = torch.load(checkpoint_path, map_location=device, weights_only=True)
-    if payload.get("family") != FAMILY or int(payload.get("seed", -1)) != 1701:
+    if payload.get("family") != FAMILY or int(payload.get("seed", -1)) != seed:
         raise ValueError("parent checkpoint identity differs")
     config_validation = validate_parent_config(
         payload.get("config", {}), config.to_record()
     )
     if float(payload.get("selection_metric", float("nan"))) != float(
-        manifest["parent"]["one_step_selection_metric"]
+        parent["one_step_selection_metric"]
     ):
         raise ValueError("parent checkpoint selection metric differs")
     model = model.to(device)
@@ -248,7 +321,7 @@ def load_parent_model(
         raise AssertionError("parent state dictionary did not load bitwise")
     return model, config, {
         "checkpoint_reload_bitwise": True,
-        "checkpoint": dict(manifest["parent"]["checkpoint"]),
+        "checkpoint": dict(parent["checkpoint"]),
         "checkpoint_paper0_commit": payload.get("paper0_commit"),
         "checkpoint_epoch": int(payload["epoch"]),
         "checkpoint_optimizer_updates": int(payload["optimizer_updates"]),
@@ -409,7 +482,7 @@ def main() -> None:
         raise ValueError("Stage-2 manifest SHA-256 differs")
     manifest = load_strict_json(args.manifest)
     authorize_manifest(manifest, seed=args.seed)
-    prerequisites = verify_prerequisites(manifest)
+    prerequisites = verify_prerequisites(manifest, seed=args.seed)
     if repository_commit(args.paper0_root) != args.paper0_commit:
         raise ValueError("Paper 0 commit differs from launch lock")
     args.output.mkdir(parents=True)
@@ -471,7 +544,12 @@ def main() -> None:
         if len(dataset) != int(split["validation_pairs_by_lead"][str(lead)]):
             raise ValueError(f"Stage-2 validation pair count differs at lead {lead}")
 
-    model, config, parent_load = load_parent_model(manifest=manifest, device=device)
+    parent_spec = parent_specification(manifest, seed=args.seed)
+    model, config, parent_load = load_parent_model(
+        manifest=manifest,
+        seed=args.seed,
+        device=device,
+    )
     parent_evaluation = evaluate_by_lead(model, validations, device=device)
     parent_record = {
         **parent_load,
@@ -502,13 +580,18 @@ def main() -> None:
         import wandb
     except ImportError as error:
         raise RuntimeError("online W&B is required") from error
+    scaling = manifest["scope"] == SCALING_SCOPE
     spec = WandbRunSpec(
         entity=args.wandb_entity,
         project=args.wandb_project,
         group=args.wandb_group,
         run_id=args.wandb_run_id,
         run_name=args.wandb_run_name,
-        job_type="old-85604-stage2-multilead-screen",
+        job_type=(
+            "old-85604-stage2-multilead-scaling"
+            if scaling
+            else "old-85604-stage2-multilead-screen"
+        ),
         tags=(
             "paper0",
             "85604",
@@ -517,7 +600,7 @@ def main() -> None:
             "c5p",
             "multilead",
             "finetune",
-            "screen",
+            "scaling" if scaling else "screen",
         ),
     )
     api = wandb.Api(timeout=30)
@@ -545,7 +628,7 @@ def main() -> None:
             "lead_steps": list(LEADS),
             "seed": args.seed,
             "paper0_commit": args.paper0_commit,
-            "parent_checkpoint": manifest["parent"]["checkpoint"],
+            "parent_checkpoint": parent_spec["checkpoint"],
             "parent_multilead_selection_metric": parent_evaluation[
                 "mean_shared_persistence_normalized_mse_ratio"
             ],
@@ -641,7 +724,7 @@ def main() -> None:
                 epoch=epoch + 1,
                 optimizer_updates=optimizer_updates,
                 selection_metric=selection_metric,
-                parent_checkpoint=manifest["parent"]["checkpoint"],
+                parent_checkpoint=parent_spec["checkpoint"],
                 paper0_commit=args.paper0_commit,
             )
             if selection_metric < best_metric:
@@ -723,11 +806,19 @@ def main() -> None:
             ],
         )
         best_validation = best_record["validation"]
+        decision_gates = dict(manifest["screen_gates"])
+        maximum_by_seed = decision_gates.pop(
+            "maximum_lead1_shared_mse_by_seed", None
+        )
+        if maximum_by_seed is not None:
+            decision_gates["maximum_lead1_shared_mse"] = maximum_by_seed[
+                str(args.seed)
+            ]
         decision = screen_decision(
             parent_evaluation=parent_evaluation,
             best_validation=best_validation,
             training_gate=training_gate,
-            frozen_gates=manifest["screen_gates"],
+            frozen_gates=decision_gates,
         )
         result = {
             "schema_version": 1,
@@ -782,9 +873,19 @@ def main() -> None:
                 "passed": training_gate,
             },
             "screen_gates": decision["screen_gates"],
-            "advance_to_three_seed_scaling": decision[
+            "prospective_gate_passed": decision[
                 "advance_to_three_seed_scaling"
             ],
+            "advance_to_three_seed_scaling": (
+                decision["advance_to_three_seed_scaling"]
+                if not scaling
+                else None
+            ),
+            "seed_confirmation_passed": (
+                decision["advance_to_three_seed_scaling"]
+                if scaling
+                else None
+            ),
             "peak_cuda_memory_GiB": torch.cuda.max_memory_allocated(device) / 2**30,
             "wall_seconds": time.perf_counter() - started,
             "gpu": torch.cuda.get_device_name(device),
@@ -803,9 +904,19 @@ def main() -> None:
                 ],
                 "final/lead1_shared_mse": decision["lead1_shared_mse"],
                 "final/training_gate_passed": training_gate,
-                "final/advance_to_three_seed_scaling": decision[
+                "final/prospective_gate_passed": decision[
                     "advance_to_three_seed_scaling"
                 ],
+                "final/advance_to_three_seed_scaling": (
+                    decision["advance_to_three_seed_scaling"]
+                    if not scaling
+                    else None
+                ),
+                "final/seed_confirmation_passed": (
+                    decision["advance_to_three_seed_scaling"]
+                    if scaling
+                    else None
+                ),
                 "compute/peak_cuda_memory_GiB": result["peak_cuda_memory_GiB"],
                 "compute/wall_seconds": result["wall_seconds"],
                 "scope/held_out_85606_read": False,
