@@ -543,3 +543,45 @@ training, a long free rollout, 85606, newer NERSC data, stochastic claims,
 assimilation, diagnostic ranking, or steering. See
 `POST_ECRD_OLD_85604_STAGE2_MULTILEAD_THREE_SEED_READOUT.md` and the tracked
 three-seed reduction for the complete evidence and provenance.
+
+## A025 - Train the small-step map against four steps of its own feedback
+
+**Status:** frozen after bounded state job `6937051` and physics-scoring job
+`6937203` completed, and before any new optimizer update.
+
+The bounded 85604 comparison found a reproducible metric reversal. At horizon
+eight, two repeated four-frame steps have the best median five-field state
+skill (`0.428809`), while eight repeated one-frame steps preserve the most
+toroidal power and give the lowest separatrix transport error. Direct and
+repeated four-frame paths retain only approximately 11–17 percent mean
+truth-relative evaluated band power and have separatrix relative-L2 error near
+`0.9`, roughly twice persistence. The repeated one-frame path improves every
+eight-frame separatrix quantity for every seed, but accumulates pressure-field
+error, loses high-mode realization coherence, and retains strict-face
+relative-L2 error near `1.38`.
+
+This amendment authorizes one seed-1702 pilot initialized from the immutable
+Stage-2 checkpoint SHA-256
+`b9007f818eb35d82a1e4c21771dfc1ad870591feb777f5087f3b2a49847cd50d`.
+The pilot must roll the lead-one transition autonomously for four steps during
+training, use predicted intermediate states without teacher-forcing, supervise
+all four future states through the existing channel-normalized field loss, and
+retain a direct one-step field term. No physics-derived quantity may enter the
+loss or checkpoint selection.
+
+The train/guard/validation boundaries remain `[0,432)`, `[432,496)`, and
+`[496,624)`. Only old simulation 85604 may be read. The pilot must use the same
+five C5P fields, normalization, one-frame context, operator, precision policy,
+and toroidal periodicity as Stage 2. Checkpoint selection is state-only on the
+chronological validation interval. The exact schedule, weights, comparison
+gates, seed, and artifact paths must be frozen in a separate prospective
+protocol and manifest before submission.
+
+After selection, inference must repeat the frozen four/eight-frame state,
+spectral, cross-field, and transport evaluation. Advancement requires improved
+four/eight-frame repeated-one-step state stability without material regression
+in one-step accuracy, evaluated toroidal power, or separatrix transport. Only a
+passing pilot may authorize two confirmation seeds. The pilot does not open
+85606, newer NERSC data, assimilation, diagnostic ranking, steering, stochastic
+claims, or any physics loss. See
+`POST_ECRD_OLD_85604_BOUNDED_ROLLOUT_READOUT.md` for the complete evidence.

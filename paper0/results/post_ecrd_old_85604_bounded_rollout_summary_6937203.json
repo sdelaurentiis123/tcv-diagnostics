@@ -1,0 +1,231 @@
+{
+  "cadence_microseconds": 3.131905426352636,
+  "development_run": "85604",
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "horizons": {
+    "4": {
+      "autoregressive_lead1": {
+        "state_skill_seed_median": 0.5101308454446605,
+        "state_skill_seed_range": [
+          0.47875595067835,
+          0.5323569555307586
+        ],
+        "transport": {
+          "electron_internal_energy": {
+            "separatrix_correlation_median": 0.6849434666925898,
+            "separatrix_relative_l2_median": 0.2835778138313114,
+            "strict_face_relative_l2_median": 1.031226575987171
+          },
+          "ion_internal_energy": {
+            "separatrix_correlation_median": 0.6154812218697918,
+            "separatrix_relative_l2_median": 0.2981825264785736,
+            "strict_face_relative_l2_median": 1.033115567150754
+          },
+          "particle": {
+            "separatrix_correlation_median": 0.5293926813516439,
+            "separatrix_relative_l2_median": 0.3435129679803226,
+            "strict_face_relative_l2_median": 1.0342421646382316
+          },
+          "total_internal_energy": {
+            "separatrix_correlation_median": 0.6707254947857979,
+            "separatrix_relative_l2_median": 0.28034096528571084,
+            "strict_face_relative_l2_median": 1.0318964653200466
+          }
+        }
+      },
+      "autoregressive_lead2": {
+        "state_skill_seed_median": 0.5020950343158679,
+        "state_skill_seed_range": [
+          0.4921812259803855,
+          0.5127916098589078
+        ],
+        "transport": {
+          "electron_internal_energy": {
+            "separatrix_correlation_median": 0.5454294088594381,
+            "separatrix_relative_l2_median": 0.6275437609550345,
+            "strict_face_relative_l2_median": 1.0434852622457806
+          },
+          "ion_internal_energy": {
+            "separatrix_correlation_median": 0.4763072085325939,
+            "separatrix_relative_l2_median": 0.608557980405581,
+            "strict_face_relative_l2_median": 1.0369591443938813
+          },
+          "particle": {
+            "separatrix_correlation_median": 0.4012331700591819,
+            "separatrix_relative_l2_median": 0.6387630377642064,
+            "strict_face_relative_l2_median": 1.0323430774492037
+          },
+          "total_internal_energy": {
+            "separatrix_correlation_median": 0.5303538947833822,
+            "separatrix_relative_l2_median": 0.6161056757500759,
+            "strict_face_relative_l2_median": 1.0399601899086994
+          }
+        }
+      },
+      "direct": {
+        "state_skill_seed_median": 0.44140197586985075,
+        "state_skill_seed_range": [
+          0.43974602881214775,
+          0.4434623993438588
+        ],
+        "transport": {
+          "electron_internal_energy": {
+            "separatrix_correlation_median": 0.022811923710362572,
+            "separatrix_relative_l2_median": 0.8420720557660398,
+            "strict_face_relative_l2_median": 1.087587938406568
+          },
+          "ion_internal_energy": {
+            "separatrix_correlation_median": 0.03776127353781973,
+            "separatrix_relative_l2_median": 0.8110404168517045,
+            "strict_face_relative_l2_median": 1.0770496463404888
+          },
+          "particle": {
+            "separatrix_correlation_median": -0.0028086031794170474,
+            "separatrix_relative_l2_median": 0.827918443473891,
+            "strict_face_relative_l2_median": 1.0718026579171267
+          },
+          "total_internal_energy": {
+            "separatrix_correlation_median": 0.03205081951339473,
+            "separatrix_relative_l2_median": 0.8271129229795755,
+            "strict_face_relative_l2_median": 1.0820650053809155
+          }
+        }
+      }
+    },
+    "8": {
+      "autoregressive_lead1": {
+        "state_skill_seed_median": 0.25371881951768116,
+        "state_skill_seed_range": [
+          0.15811190707841938,
+          0.3015067312895158
+        ],
+        "transport": {
+          "electron_internal_energy": {
+            "separatrix_correlation_median": 0.38332124761184405,
+            "separatrix_relative_l2_median": 0.3946813327440696,
+            "strict_face_relative_l2_median": 1.3718585448182496
+          },
+          "ion_internal_energy": {
+            "separatrix_correlation_median": 0.350331634043326,
+            "separatrix_relative_l2_median": 0.37804556589596355,
+            "strict_face_relative_l2_median": 1.3828309100265714
+          },
+          "particle": {
+            "separatrix_correlation_median": 0.3579434954997159,
+            "separatrix_relative_l2_median": 0.3950658531165681,
+            "strict_face_relative_l2_median": 1.3837112883108613
+          },
+          "total_internal_energy": {
+            "separatrix_correlation_median": 0.383911738011287,
+            "separatrix_relative_l2_median": 0.3802989652620369,
+            "strict_face_relative_l2_median": 1.377590163480287
+          }
+        }
+      },
+      "autoregressive_lead2": {
+        "state_skill_seed_median": 0.34311672415965366,
+        "state_skill_seed_range": [
+          0.30090382791050074,
+          0.3552235255774121
+        ],
+        "transport": {
+          "electron_internal_energy": {
+            "separatrix_correlation_median": 0.35899203058804724,
+            "separatrix_relative_l2_median": 0.5295942573702856,
+            "strict_face_relative_l2_median": 1.2968521720869721
+          },
+          "ion_internal_energy": {
+            "separatrix_correlation_median": 0.24238559356719958,
+            "separatrix_relative_l2_median": 0.5275211450734624,
+            "strict_face_relative_l2_median": 1.3051068945101176
+          },
+          "particle": {
+            "separatrix_correlation_median": 0.24127308420289445,
+            "separatrix_relative_l2_median": 0.5616654381555022,
+            "strict_face_relative_l2_median": 1.3079383363709052
+          },
+          "total_internal_energy": {
+            "separatrix_correlation_median": 0.29992676389043893,
+            "separatrix_relative_l2_median": 0.5246761729910863,
+            "strict_face_relative_l2_median": 1.3015287215339566
+          }
+        }
+      },
+      "autoregressive_lead4": {
+        "state_skill_seed_median": 0.4288089287018053,
+        "state_skill_seed_range": [
+          0.4241059926365134,
+          0.42973816059899783
+        ],
+        "transport": {
+          "electron_internal_energy": {
+            "separatrix_correlation_median": -0.019227215499457995,
+            "separatrix_relative_l2_median": 0.9438471828734846,
+            "strict_face_relative_l2_median": 1.0993508601625674
+          },
+          "ion_internal_energy": {
+            "separatrix_correlation_median": 0.07060553576281553,
+            "separatrix_relative_l2_median": 0.907303499475118,
+            "strict_face_relative_l2_median": 1.0892272564618561
+          },
+          "particle": {
+            "separatrix_correlation_median": 0.13682219983650803,
+            "separatrix_relative_l2_median": 0.9011034559639184,
+            "strict_face_relative_l2_median": 1.0829993965728084
+          },
+          "total_internal_energy": {
+            "separatrix_correlation_median": 0.026434931685638003,
+            "separatrix_relative_l2_median": 0.9288722851067661,
+            "strict_face_relative_l2_median": 1.0941088272657633
+          }
+        }
+      },
+      "direct": {
+        "state_skill_seed_median": 0.4057534634257475,
+        "state_skill_seed_range": [
+          0.3969569409809728,
+          0.41829021904185737
+        ],
+        "transport": {
+          "electron_internal_energy": {
+            "separatrix_correlation_median": -0.1404200888232926,
+            "separatrix_relative_l2_median": 0.9432568347765173,
+            "strict_face_relative_l2_median": 1.1330663678097097
+          },
+          "ion_internal_energy": {
+            "separatrix_correlation_median": -0.15862037253244607,
+            "separatrix_relative_l2_median": 0.9153869357156653,
+            "strict_face_relative_l2_median": 1.1203168220948063
+          },
+          "particle": {
+            "separatrix_correlation_median": -0.2558402539781979,
+            "separatrix_relative_l2_median": 0.899338794890996,
+            "strict_face_relative_l2_median": 1.1150455540358493
+          },
+          "total_internal_energy": {
+            "separatrix_correlation_median": -0.18102286598593345,
+            "separatrix_relative_l2_median": 0.9303251414832627,
+            "strict_face_relative_l2_median": 1.1254914803034837
+          }
+        }
+      }
+    }
+  },
+  "mode_mapping": "n=5k",
+  "new_nersc_data_read": false,
+  "next_experiment": "field_only_four_step_autoregressive_finetune_of_the_codec_free_one_frame_operator",
+  "physics_derived_loss_used": false,
+  "representative_decorrelation_frames": 2.244,
+  "schema_version": 1,
+  "scientific_conclusion": "Coarse/direct steps minimize terminal field error but strongly deplete toroidal power and integrated transport. Repeated one-frame steps preserve the evaluated statistics and separatrix transport best, yet still lose high-mode realization coherence and local transport fidelity.",
+  "scope": "post_ecrd_old_85604_bounded_rollout_evidence_summary",
+  "seed_interpretation": "three_independent_training_initializations_not_a_probabilistic_forecast_ensemble",
+  "source_sha256": {
+    "example_fields": "5b6beba2c326373be3c313ccbaf942764eb08eec870a1deca2d08ddaa937297d",
+    "per_target_state_rmse": "1d9d1d466e29c6e0d94236112dbdbeca887a3e97187f9e02ec1976243752bc67",
+    "physics_metrics": "0215347da9b75ac8b8c2538844a6b8e4e78bffd1f6c6fe35937f7146129d40fc",
+    "state_metrics": "ddca83ca524c412d14a9db96bfdd2f09085b92f9998f865c331ba0932f4b3fe3"
+  },
+  "zperiod": 5
+}
