@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Train one old-85604 exact-state plus current-phi repair screen arm."""
+"""Train one old-85604 exact-state derived-coordinate repair screen arm."""
 
 from __future__ import annotations
 
@@ -44,7 +44,23 @@ from tcv_diagnostics.state_operator_data import (
 from tcv_diagnostics.wandb_tracking import WandbRunSpec
 
 
-ARCHITECTURES = ("local_current_phi", "axial_current_phi")
+ARCHITECTURES = (
+    "local_current_phi",
+    "axial_current_phi",
+    "local_current_phi_vi",
+)
+ARCHITECTURE_SCOPES = {
+    "local_current_phi": "post_ecrd_old_85604_exact_state_phi_repair_screen",
+    "axial_current_phi": "post_ecrd_old_85604_exact_state_phi_repair_screen",
+    "local_current_phi_vi": (
+        "post_ecrd_old_85604_exact_state_derived_coordinate_screen"
+    ),
+}
+ARCHITECTURE_AUXILIARY_FIELDS = {
+    "local_current_phi": ("phi",),
+    "axial_current_phi": ("phi",),
+    "local_current_phi_vi": ("phi", "Vi"),
+}
 E6B_FIELDS = FAMILY_FIELDS["e6b"]
 SHARED_FIELDS = ("Ne", "Pe", "Pi")
 
@@ -71,7 +87,7 @@ def parse_args() -> argparse.Namespace:
 def authorize_manifest(
     manifest: Mapping[str, Any], *, architecture: str, seed: int
 ) -> None:
-    if manifest.get("scope") != "post_ecrd_old_85604_exact_state_phi_repair_screen":
+    if manifest.get("scope") != ARCHITECTURE_SCOPES[architecture]:
         raise ValueError("repair-screen scope differs")
     if manifest.get("development_run") != "85604":
         raise ValueError("repair-screen development run differs")
@@ -107,7 +123,9 @@ def authorize_manifest(
         raise ValueError("repair-screen evolved fields differ")
     if state.get("predicted_boundary") != "Bphi":
         raise ValueError("repair-screen boundary state differs")
-    if state.get("auxiliary_context_fields") != ["phi"]:
+    if state.get("auxiliary_context_fields") != list(
+        ARCHITECTURE_AUXILIARY_FIELDS[architecture]
+    ):
         raise ValueError("repair-screen auxiliary context differs")
     if state.get("future_auxiliary_context_allowed") is not False:
         raise ValueError("future auxiliary context must be prohibited")
@@ -120,7 +138,7 @@ def authorize_manifest(
 def build_model(
     architecture: str, record: Mapping[str, Any]
 ) -> tuple[nn.Module, CodecFreeOperatorConfig | AxialOperatorConfig]:
-    if architecture == "local_current_phi":
+    if architecture in {"local_current_phi", "local_current_phi_vi"}:
         allowed = {field.name for field in dataclass_fields(CodecFreeOperatorConfig)}
         locked = {
             "state_family",
@@ -138,7 +156,9 @@ def build_model(
         config = CodecFreeOperatorConfig(
             state_family="e6b",
             history_frames=1,
-            auxiliary_context_channels=1,
+            auxiliary_context_channels=len(
+                ARCHITECTURE_AUXILIARY_FIELDS[architecture]
+            ),
             predict_boundary=True,
             **values,
         )
@@ -178,7 +198,89 @@ def load_locked_json(record: Mapping[str, Any], *, name: str) -> dict[str, Any]:
     return load_strict_json(path)
 
 
+def verify_derived_coordinate_prerequisites(
+    manifest: Mapping[str, Any],
+) -> dict[str, Any]:
+    prerequisites = manifest.get("prerequisites", {})
+    reduction_lock = prerequisites.get("stage1_reduction", {})
+    reduction = load_locked_json(reduction_lock, name="Stage-1 reduction")
+    if reduction.get("development_run") != "85604":
+        raise ValueError("Stage-1 reduction development run differs")
+    if reduction.get("held_out_85606_read") is not False:
+        raise ValueError("Stage-1 reduction held-out flag differs")
+    if reduction.get("decision") != (
+        "retain_c5p_control_and_e6b_as_unresolved_exact_state_ablation"
+    ):
+        raise ValueError("Stage-1 reduction does not authorize exact-state repair")
+
+    baseline_lock = prerequisites.get("baseline_e6b_seed1701", {})
+    baseline = load_locked_json(baseline_lock, name="baseline E6B seed 1701")
+    if baseline.get("scope") != "post_ecrd_old_85604_stage1_codec_free_full":
+        raise ValueError("baseline E6B scope differs")
+    if baseline.get("development_run") != "85604":
+        raise ValueError("baseline E6B development run differs")
+    if baseline.get("held_out_85606_read") is not False:
+        raise ValueError("baseline E6B held-out flag differs")
+    if baseline.get("family") != "e6b" or int(baseline.get("seed", -1)) != 1701:
+        raise ValueError("baseline E6B identity differs")
+    baseline_metric = float(baseline["best_checkpoint"]["selection_metric"])
+    expected_baseline = float(baseline_lock.get("selection_metric", float("nan")))
+    if not math.isfinite(expected_baseline) or baseline_metric != expected_baseline:
+        raise ValueError("baseline E6B selection metric differs")
+
+    repair_results: dict[str, dict[str, Any]] = {}
+    for lock_name, architecture in (
+        ("local_current_phi_seed1701", "local_current_phi"),
+        ("axial_current_phi_seed1701", "axial_current_phi"),
+    ):
+        result_lock = prerequisites.get(lock_name, {})
+        result = load_locked_json(result_lock, name=lock_name)
+        if result.get("scope") != (
+            "post_ecrd_old_85604_exact_state_phi_repair_screen"
+        ):
+            raise ValueError(f"{lock_name} scope differs")
+        if result.get("development_run") != "85604":
+            raise ValueError(f"{lock_name} development run differs")
+        if result.get("held_out_85606_read") is not False:
+            raise ValueError(f"{lock_name} held-out flag differs")
+        if result.get("physics_derived_loss_used") is not False:
+            raise ValueError(f"{lock_name} physics-loss flag differs")
+        if result.get("architecture_kind") != architecture:
+            raise ValueError(f"{lock_name} architecture differs")
+        if int(result.get("seed", -1)) != 1701 or result.get("status") != "passed":
+            raise ValueError(f"{lock_name} execution identity differs")
+        if result.get("training_gate", {}).get("passed") is not True:
+            raise ValueError(f"{lock_name} training gate did not pass")
+        if result.get("advance_to_three_seed_scaling") is not False:
+            raise ValueError(f"{lock_name} unexpectedly advanced")
+        if result.get("screen_gates", {}).get(
+            "at_least_15_percent_shared_mse_improvement_over_seed1701_e6b"
+        ) is not False:
+            raise ValueError(f"{lock_name} repair gate unexpectedly passed")
+        metric = float(result["best_checkpoint"]["selection_metric"])
+        expected_metric = float(result_lock.get("selection_metric", float("nan")))
+        if not math.isfinite(expected_metric) or metric != expected_metric:
+            raise ValueError(f"{lock_name} selection metric differs")
+        repair_results[lock_name] = {
+            **dict(result_lock),
+            "selection_metric": metric,
+        }
+
+    return {
+        "stage1_reduction": dict(reduction_lock),
+        "baseline_e6b_seed1701": {
+            **dict(baseline_lock),
+            "selection_metric": baseline_metric,
+        },
+        **repair_results,
+    }
+
+
 def verify_prerequisites(manifest: Mapping[str, Any]) -> dict[str, Any]:
+    if manifest.get("scope") == (
+        "post_ecrd_old_85604_exact_state_derived_coordinate_screen"
+    ):
+        return verify_derived_coordinate_prerequisites(manifest)
     prerequisites = manifest.get("prerequisites", {})
     reduction_lock = prerequisites.get("stage1_reduction", {})
     reduction = load_locked_json(reduction_lock, name="Stage-1 reduction")
@@ -228,14 +330,17 @@ def verify_prerequisites(manifest: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def repair_tensor_batch(
-    item: Mapping[str, Any], device: torch.device
+    item: Mapping[str, Any],
+    device: torch.device,
+    *,
+    auxiliary_channels: int = 1,
 ) -> dict[str, torch.Tensor]:
     values = tensor_batch(item, device)
     if "auxiliary_context" not in item:
-        raise ValueError("repair sample lacks current-phi context")
+        raise ValueError("repair sample lacks auxiliary context")
     auxiliary = np.asarray(item["auxiliary_context"])
-    if auxiliary.ndim != 5 or auxiliary.shape[1] != 1:
-        raise ValueError("current-phi context shape differs")
+    if auxiliary.ndim != 5 or auxiliary.shape[1] != auxiliary_channels:
+        raise ValueError("repair auxiliary-context shape differs")
     values["auxiliary_context"] = torch.from_numpy(auxiliary).unsqueeze(0).to(device)
     return values
 
@@ -245,6 +350,7 @@ def evaluate_repair(
     dataset: LeadTimeStateDataset,
     *,
     device: torch.device,
+    auxiliary_channels: int = 1,
 ) -> dict[str, Any]:
     squared_error = np.zeros(len(E6B_FIELDS), dtype=np.float64)
     persistence_error = np.zeros(len(E6B_FIELDS), dtype=np.float64)
@@ -255,7 +361,9 @@ def evaluate_repair(
     model.eval()
     with torch.inference_mode():
         for index in range(len(dataset)):
-            values = repair_tensor_batch(dataset[index], device)
+            values = repair_tensor_batch(
+                dataset[index], device, auxiliary_channels=auxiliary_channels
+            )
             prediction = model(
                 values["context"],
                 values["lead_steps"],
@@ -334,6 +442,7 @@ def save_checkpoint(
     optimizer_updates: int,
     selection_metric: float,
     paper0_commit: str,
+    auxiliary_context_fields: tuple[str, ...] = ("phi",),
 ) -> None:
     if path.exists():
         raise FileExistsError(path)
@@ -345,7 +454,7 @@ def save_checkpoint(
             "derivative_rms": derivative_rms.to_record(),
             "family": "e6b",
             "architecture_kind": architecture,
-            "auxiliary_context_fields": ["phi"],
+            "auxiliary_context_fields": list(auxiliary_context_fields),
             "seed": seed,
             "epoch": epoch,
             "optimizer_updates": optimizer_updates,
@@ -363,6 +472,7 @@ def reload_and_equivariance_gate(
     architecture_record: Mapping[str, Any],
     validation: LeadTimeStateDataset,
     device: torch.device,
+    auxiliary_channels: int = 1,
 ) -> dict[str, Any]:
     payload = torch.load(checkpoint, map_location=device, weights_only=True)
     model, _ = build_model(architecture, architecture_record)
@@ -372,7 +482,9 @@ def reload_and_equivariance_gate(
         torch.equal(payload["model"][name].to(device), model.state_dict()[name])
         for name in payload["model"]
     )
-    values = repair_tensor_batch(validation[0], device)
+    values = repair_tensor_batch(
+        validation[0], device, auxiliary_channels=auxiliary_channels
+    )
     shift = 7
     model.eval()
     with torch.inference_mode():
@@ -431,6 +543,8 @@ def main() -> None:
     manifest = load_strict_json(args.manifest)
     authorize_manifest(manifest, architecture=args.architecture, seed=args.seed)
     prerequisites = verify_prerequisites(manifest)
+    auxiliary_context_fields = ARCHITECTURE_AUXILIARY_FIELDS[args.architecture]
+    auxiliary_channels = len(auxiliary_context_fields)
     if repository_commit(args.paper0_root) != args.paper0_commit:
         raise ValueError("Paper 0 commit differs from launch lock")
     args.output.mkdir(parents=True)
@@ -457,7 +571,7 @@ def main() -> None:
         history_frames=1,
         augment=False,
         seed=args.seed,
-        auxiliary_context_fields=("phi",),
+        auxiliary_context_fields=auxiliary_context_fields,
     )
     try:
         derivative_rms = fit_training_derivative_rms(scale_dataset)
@@ -473,7 +587,7 @@ def main() -> None:
         history_frames=1,
         augment=True,
         seed=args.seed,
-        auxiliary_context_fields=("phi",),
+        auxiliary_context_fields=auxiliary_context_fields,
     )
     validation = LeadTimeStateDataset(
         catalog,
@@ -483,7 +597,7 @@ def main() -> None:
         history_frames=1,
         augment=False,
         seed=args.seed,
-        auxiliary_context_fields=("phi",),
+        auxiliary_context_fields=auxiliary_context_fields,
     )
     split = manifest["split"]
     if len(train) != int(split["training_pair_count"]):
@@ -522,13 +636,14 @@ def main() -> None:
         group=args.wandb_group,
         run_id=args.wandb_run_id,
         run_name=args.wandb_run_name,
-        job_type="old-85604-exact-state-phi-repair-screen",
+        job_type=manifest["scope"],
         tags=(
             "paper0",
             "85604",
             "old-data",
             "exact-state",
-            "current-phi",
+            "derived-coordinate",
+            *(f"current-{field}" for field in auxiliary_context_fields),
             args.architecture,
             "screen",
         ),
@@ -556,7 +671,7 @@ def main() -> None:
             "scope": manifest["scope"],
             "architecture_kind": args.architecture,
             "state_family": "e6b",
-            "auxiliary_context_fields": ["phi"],
+            "auxiliary_context_fields": list(auxiliary_context_fields),
             "seed": args.seed,
             "paper0_commit": args.paper0_commit,
             "held_out_85606_read": False,
@@ -590,7 +705,11 @@ def main() -> None:
                 group = order[group_start : group_start + accumulation]
                 optimizer.zero_grad(set_to_none=True)
                 for index in group:
-                    values = repair_tensor_batch(train[int(index)], device)
+                    values = repair_tensor_batch(
+                        train[int(index)],
+                        device,
+                        auxiliary_channels=auxiliary_channels,
+                    )
                     with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
                         prediction = model(
                             values["context"],
@@ -640,7 +759,12 @@ def main() -> None:
                         step=optimizer_updates,
                     )
 
-            validation_record = evaluate_repair(model, validation, device=device)
+            validation_record = evaluate_repair(
+                model,
+                validation,
+                device=device,
+                auxiliary_channels=auxiliary_channels,
+            )
             selection_metric = float(
                 validation_record["shared_field_mean_model_derivative_mse"]
             )
@@ -657,6 +781,7 @@ def main() -> None:
                 optimizer_updates=optimizer_updates,
                 selection_metric=selection_metric,
                 paper0_commit=args.paper0_commit,
+                auxiliary_context_fields=auxiliary_context_fields,
             )
             if selection_metric < best_metric:
                 best_metric = selection_metric
@@ -702,6 +827,7 @@ def main() -> None:
             architecture_record=architecture_record,
             validation=validation,
             device=device,
+            auxiliary_channels=auxiliary_channels,
         )
         exact_updates = optimizer_updates == total_updates
         loss_decreased = (
@@ -763,11 +889,19 @@ def main() -> None:
             "state": {
                 "predicted_volume_fields": list(E6B_FIELDS),
                 "predicted_boundary": "Bphi",
-                "auxiliary_context_fields": ["phi"],
+                "auxiliary_context_fields": list(auxiliary_context_fields),
                 "future_auxiliary_context_read": False,
                 "current_phi_rollout_ready_without_elliptic_closure": False,
                 "validated_elliptic_closure_available": True,
                 "rollout_requires_external_elliptic_operator": True,
+                "current_vi_rollout_ready_from_predicted_e6b": (
+                    "Vi" in auxiliary_context_fields
+                ),
+                "vi_reconstruction": {
+                    "formula": "NVi / (2 * softFloor(Ne, 1e-7))",
+                    "source_fields": ["NVi", "Ne"],
+                    "future_truth_required": False,
+                },
             },
             "architecture": model.to_record(),
             "loss": manifest["loss"],

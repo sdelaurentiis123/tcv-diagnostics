@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from paper0.tools.train_exact_state_phi_repair_screen import (
+    ARCHITECTURE_AUXILIARY_FIELDS,
     ARCHITECTURES,
     E6B_FIELDS,
     authorize_manifest,
@@ -92,7 +93,7 @@ def test_trainer_source_freezes_no_future_truth_and_no_physics_loss() -> None:
     source = Path("paper0/tools/train_exact_state_phi_repair_screen.py").read_text(
         encoding="utf-8"
     )
-    assert 'auxiliary_context_fields=("phi",)' in source
+    assert ARCHITECTURE_AUXILIARY_FIELDS["local_current_phi"] == ("phi",)
     assert '"future_auxiliary_context_read": False' in source
     assert '"physics_derived_loss_used": False' in source
     assert '"validated_elliptic_closure_available": True' in source

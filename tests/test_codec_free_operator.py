@@ -196,6 +196,59 @@ def test_auxiliary_context_reads_history_phi_but_not_future_phi(tmp_path) -> Non
     dataset.close()
 
 
+def test_auxiliary_context_reads_history_phi_vi_but_not_future_values(
+    tmp_path,
+) -> None:
+    path = tmp_path / "development_85604_phi_vi_context.h5"
+    fields = ("Ne", "Pe", "Pi", "NVe", "NVi", "Vort", "phi", "Vi")
+    with h5py.File(path, "x") as handle:
+        coordinates = handle.create_group("coordinates")
+        coordinates.create_dataset("frame_index", data=np.arange(6))
+        volume = handle.create_group("fields")
+        for channel, field in enumerate(fields):
+            volume.create_dataset(
+                field,
+                data=np.stack(
+                    [
+                        np.full((4, 3, 6), 10 * channel + frame, dtype=np.float32)
+                        for frame in range(6)
+                    ]
+                ),
+            )
+        volume["phi"][3] = np.nan
+        volume["Vi"][3] = np.nan
+        boundary = handle.create_group("boundary")
+        boundary.create_dataset(
+            "Bphi",
+            data=np.stack(
+                [np.full((2, 3), frame, dtype=np.float32) for frame in range(6)]
+            ),
+        )
+
+    catalog = _TinyCatalog(path)
+    dataset = LeadTimeStateDataset(
+        catalog,
+        family="e6b",
+        split="train",
+        lead_steps=(1,),
+        history_frames=2,
+        augment=False,
+        seed=1701,
+        current_interval=(2, 3),
+        auxiliary_context_fields=("phi", "Vi"),
+    )
+    item = dataset[0]
+    assert item["auxiliary_context"].shape == (2, 2, 4, 3, 6)
+    np.testing.assert_allclose(
+        item["auxiliary_context"][:, :, 0, 0, 0],
+        [[61.0, 71.0], [62.0, 72.0]],
+    )
+    assert np.isfinite(item["auxiliary_context"]).all()
+    assert int(item["target_frame_index"]) == 3
+    assert catalog.verified_frames == (1, 2, 3)
+    dataset.close()
+
+
 def test_boundary_spatialization_places_values_only_at_radial_sides() -> None:
     boundary = torch.tensor([[[[2.0, 3.0, 4.0], [5.0, 6.0, 7.0]]]])
     fields = spatialize_boundary(boundary, n_x=4, n_z=5)
