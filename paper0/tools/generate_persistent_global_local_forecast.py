@@ -46,6 +46,7 @@ from tcv_diagnostics.persistent_global_local_forecast import (
     PGL_SCIENTIFIC_SEED_BANK_SHA256,
     PGLForecastSchema,
     PGLForecastWriter,
+    SelectedContextDatasetAdapter,
     generate_pgl_forecast,
 )
 from tcv_diagnostics.wandb_tracking import WandbRunSpec
@@ -220,10 +221,15 @@ def main() -> int:
         device=device,
     )
     catalog = load_official_catalog(args.artifact_root)
-    dataset = OneStepContextDataset(
+    selected_targets = tuple(value + 1 for value in PGL_EVALUATION_STARTS)
+    contiguous_dataset = OneStepContextDataset(
         catalog,
-        target_frames=tuple(value + 1 for value in PGL_EVALUATION_STARTS),
+        target_frames=tuple(range(selected_targets[0], selected_targets[-1] + 1)),
         context_frames=1,
+    )
+    dataset = SelectedContextDatasetAdapter(
+        contiguous_dataset,
+        target_frames=selected_targets,
     )
     seed_bank = load_scientific_sampler_seed_bank(
         paths["scientific_seed_bank"], PGL_SCIENTIFIC_SEED_BANK_SHA256
@@ -353,7 +359,7 @@ def main() -> int:
         run.finish(exit_code=1)
         raise
     finally:
-        dataset.close()
+        contiguous_dataset.close()
     remote_path = f"{spec.entity}/{spec.project}/{spec.run_id}"
     remote_state = verify_finished_wandb_run(
         module=wandb, remote_path=remote_path, expected_id=spec.run_id

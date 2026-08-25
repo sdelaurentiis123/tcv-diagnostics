@@ -68,6 +68,45 @@ class _ContextDataset(Protocol):
     def __getitem__(self, index: int) -> Mapping[str, Any]: ...
 
 
+class SelectedContextDatasetAdapter:
+    """Expose preregistered sparse targets from an immutable contiguous loader."""
+
+    def __init__(
+        self,
+        base: _ContextDataset,
+        *,
+        target_frames: Sequence[int],
+    ) -> None:
+        selected = tuple(int(value) for value in target_frames)
+        available = tuple(int(value) for value in base.target_frames)
+        if (
+            not selected
+            or selected != tuple(sorted(set(selected)))
+            or not available
+            or available != tuple(range(available[0], available[-1] + 1))
+            or selected[0] < available[0]
+            or selected[-1] > available[-1]
+        ):
+            raise ValueError("persistent selected-context coordinates differ")
+        if base.target_truth_read is not False:
+            raise ValueError("persistent context base may not expose target truth")
+        self.base = base
+        self.target_frames = selected
+        self.context_frames = int(base.context_frames)
+        self.target_truth_read = False
+        self._indices = tuple(value - available[0] for value in selected)
+
+    def __len__(self) -> int:
+        return len(self.target_frames)
+
+    def __getitem__(self, index: int) -> Mapping[str, Any]:
+        position = int(index)
+        item = self.base[self._indices[position]]
+        if int(item["target_frame_index"]) != self.target_frames[position]:
+            raise RuntimeError("persistent selected context target differs")
+        return item
+
+
 class _MeanOperator(Protocol):
     def forecast(self, history: Tensor, lead_frames: Tensor) -> Any: ...
 

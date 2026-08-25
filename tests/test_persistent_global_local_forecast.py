@@ -18,10 +18,26 @@ from tcv_diagnostics.persistent_global_local_forecast import (
     PGLForecastArtifact,
     PGLForecastSchema,
     PGLForecastWriter,
+    SelectedContextDatasetAdapter,
     evaluation_seed_rows,
     initial_noise_from_uint64,
     tensor_sha256,
 )
+
+
+class _ContextBase:
+    target_frames = tuple(range(498, 621))
+    context_frames = 1
+    target_truth_read = False
+
+    def __getitem__(self, index):
+        target = self.target_frames[int(index)]
+        return {
+            "target_frame_index": np.int64(target),
+            "context_frame_indices": np.asarray([target - 1], dtype=np.int64),
+            "context": np.zeros((1, 5, 1, 1, 1), dtype=np.float32),
+            "target_truth_read": False,
+        }
 
 
 def _tiny_config() -> PersistentGlobalLocalConfig:
@@ -50,6 +66,17 @@ def test_seed_rows_use_the_one_frame_target_index() -> None:
     np.testing.assert_array_equal(rows[0], bank[0])
     np.testing.assert_array_equal(rows[1], bank[4])
     np.testing.assert_array_equal(rows[2], bank[122])
+
+
+def test_selected_context_adapter_maps_sparse_targets_without_changing_loader():
+    selected = tuple(value + 1 for value in (497, 501, 619))
+    adapter = SelectedContextDatasetAdapter(_ContextBase(), target_frames=selected)
+    assert adapter.target_frames == selected
+    assert adapter.target_truth_read is False
+    assert len(adapter) == 3
+    assert [int(adapter[index]["target_frame_index"]) for index in range(3)] == list(
+        selected
+    )
 
 
 def test_structured_noise_expansion_is_seed_stable() -> None:
