@@ -109,36 +109,6 @@ def test_memberwise_spectra_recover_identical_multimode_truth_and_n_equals_5k():
     _assert_json_finite_or_none(result)
 
 
-def test_spectral_sparse_target_extension_is_explicit_and_opt_in():
-    shape = (4, 4, 16)
-    targets = (498, 500)
-    truth = _multi_mode_truth(len(targets), shape)
-    forecast = np.repeat(truth[:, None], 32, axis=1)
-    with pytest.raises(ValueError, match="contiguous"):
-        B2SpectralAccumulator(
-            model_seed=1702,
-            target_frames=targets,
-            eligible_xy_mask=np.ones(shape[:2], dtype=bool),
-            volume_shape=shape,
-        )
-    scorer = B2SpectralAccumulator(
-        model_seed=1702,
-        target_frames=targets,
-        eligible_xy_mask=np.ones(shape[:2], dtype=bool),
-        volume_shape=shape,
-        allow_sparse_targets=True,
-    )
-    for index, target in enumerate(targets):
-        scorer.update(
-            target_frame=target,
-            physical_forecast=forecast[index],
-            physical_truth=truth[index],
-        )
-    result = scorer.finalize()
-    assert result["target_frames"] == [498, 500]
-    assert result["target_frames_are_explicit_indices"] is True
-
-
 def test_spectra_are_invariant_to_independent_phi_gauge_offsets():
     shape = (4, 4, 16)
     truth = _multi_mode_truth(1, shape)[0]

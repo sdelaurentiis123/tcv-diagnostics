@@ -297,19 +297,14 @@ class B2FieldScoreAccumulator:
         region_masks: Mapping[str, np.ndarray],
         volume_shape: tuple[int, int, int] = (64, 32, 88),
         validation_blocks: Sequence[Sequence[int]] | None = None,
-        allow_sparse_targets: bool = False,
     ) -> None:
         if int(model_seed) not in (1701, 1702, 1703):
             raise ValueError("B2 field scorer model seed differs")
         targets = tuple(int(item) for item in target_frames)
-        if not targets or targets != tuple(sorted(set(targets))):
-            raise ValueError("B2 field scorer targets must be strictly increasing")
-        contiguous = targets == tuple(range(targets[0], targets[-1] + 1))
-        if not contiguous and not bool(allow_sparse_targets):
+        if not targets or targets != tuple(range(targets[0], targets[-1] + 1)):
             raise ValueError("B2 field scorer targets must be contiguous")
         self.model_seed = int(model_seed)
         self.target_frames = targets
-        self.sparse_targets = not contiguous
         self.volume_shape = tuple(int(item) for item in volume_shape)
         if len(self.volume_shape) != 3 or any(item <= 0 for item in self.volume_shape):
             raise ValueError("B2 field scorer volume shape differs")
@@ -544,16 +539,7 @@ class B2FieldScoreAccumulator:
             }
             blocks.append(
                 {
-                    "target_frames": (
-                        list(block_targets)
-                        if self.sparse_targets
-                        else [block_targets[0], block_targets[-1] + 1]
-                    ),
-                    **(
-                        {"target_frames_are_explicit_indices": True}
-                        if self.sparse_targets
-                        else {}
-                    ),
+                    "target_frames": [block_targets[0], block_targets[-1] + 1],
                     "fields": field_records,
                     "aggregate": _aggregate_region_records(field_records),
                 }
@@ -579,15 +565,11 @@ class B2FieldScoreAccumulator:
                 "equal_channel_corrected_spread_skill_ratio",
             )
         }
-        result = {
+        return {
             "schema_version": 1,
             "scope": "B2_gauge_aware_field_and_marginal_calibration_85604",
             "model_seed": self.model_seed,
-            "target_frames": (
-                list(self.target_frames)
-                if self.sparse_targets
-                else [self.target_frames[0], self.target_frames[-1] + 1]
-            ),
+            "target_frames": [self.target_frames[0], self.target_frames[-1] + 1],
             "target_count": len(self.target_frames),
             "fields": list(B2_FIELDS),
             "potential_policy": (
@@ -606,6 +588,3 @@ class B2FieldScoreAccumulator:
             "held_out_85606_read": False,
             "physics_derived_training_loss_used": False,
         }
-        if self.sparse_targets:
-            result["target_frames_are_explicit_indices"] = True
-        return result

@@ -8,14 +8,12 @@ from typing import Any, Mapping, Sequence
 import numpy as np
 
 from .b2_field_metrics import B2_FIELDS, b2_region_masks
-from .b2_field_scoring import B2FieldScoreAccumulator
 from .b2_scoring import (
     decode_b2_member_forecasts,
     validate_b2_spectral_materiality,
     validate_b2_transport_event_thresholds,
 )
-from .b2_spectral_metrics import B2SpectralAccumulator
-from .b2_transport_metrics import B2TransportAccumulator, memberwise_transport_outputs
+from .b2_transport_metrics import memberwise_transport_outputs
 from .b5_covariance_localization import TransportCovarianceAccumulator
 from .codec_transport import TRANSPORT_QUANTITIES, CodecTransportGeometry
 from .ecrd_scoring import (
@@ -31,6 +29,11 @@ from .persistent_global_local_forecast import (
     PGLForecastArtifact,
 )
 from .persistent_global_local_gates import evaluate_pgl_physics_gates
+from .persistent_global_local_sparse_metrics import (
+    PersistentSparseFieldAccumulator,
+    PersistentSparseSpectralAccumulator,
+    PersistentSparseTransportAccumulator,
+)
 
 
 PGL_EVALUATION_HORIZONS = (1, 2, 3, 4)
@@ -79,36 +82,33 @@ def _replicate_mean(mean: np.ndarray) -> np.ndarray:
 
 def _field_accumulator(
     *, horizon: int, region_masks: Mapping[str, np.ndarray]
-) -> B2FieldScoreAccumulator:
-    return B2FieldScoreAccumulator(
+) -> PersistentSparseFieldAccumulator:
+    return PersistentSparseFieldAccumulator(
         model_seed=1702,
         target_frames=_targets(horizon),
         region_masks=region_masks,
         validation_blocks=_target_blocks(horizon),
-        allow_sparse_targets=True,
     )
 
 
 def _spectral_accumulator(
     *, horizon: int, eligible_xy: np.ndarray
-) -> B2SpectralAccumulator:
-    return B2SpectralAccumulator(
+) -> PersistentSparseSpectralAccumulator:
+    return PersistentSparseSpectralAccumulator(
         model_seed=1702,
         target_frames=_targets(horizon),
         eligible_xy_mask=eligible_xy,
-        allow_sparse_targets=True,
     )
 
 
 def _transport_accumulator(
     *, horizon: int, thresholds: Mapping[str, float], detailed: bool
-) -> B2TransportAccumulator:
-    return B2TransportAccumulator(
+) -> PersistentSparseTransportAccumulator:
+    return PersistentSparseTransportAccumulator(
         model_seed=1702,
         target_frames=_targets(horizon),
         event_thresholds=thresholds,
         detailed=detailed,
-        allow_sparse_targets=True,
     )
 
 
@@ -321,16 +321,15 @@ def score_persistent_global_local_forecast(
         truth_dataset = OneStepWindowDataset(
             catalog,
             split="validation",
-            target_frames=targets,
+            target_frames=tuple(range(targets[0], targets[-1] + 1)),
             context_frames=1,
             augment=False,
             seed=1702,
             return_physical=True,
-            allow_sparse_targets=True,
         )
         try:
             for position, target in enumerate(targets):
-                item = truth_dataset[position]
+                item = truth_dataset[target - targets[0]]
                 if int(item["target_frame_index"]) != target:
                     raise RuntimeError("persistent truth target order differs")
                 truth_standardized = np.asarray(item["target"], dtype=np.float32)

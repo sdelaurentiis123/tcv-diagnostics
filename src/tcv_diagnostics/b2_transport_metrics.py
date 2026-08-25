@@ -184,19 +184,11 @@ class B2TransportAccumulator:
         target_frames: Sequence[int],
         event_thresholds: Mapping[str, float],
         detailed: bool,
-        allow_sparse_targets: bool = False,
     ) -> None:
         if int(model_seed) not in (1701, 1702, 1703):
             raise ValueError("B2 transport model seed differs")
         targets = tuple(int(item) for item in target_frames)
-        contiguous = bool(targets) and targets == tuple(
-            range(targets[0], targets[-1] + 1)
-        )
-        if (
-            not targets
-            or targets != tuple(sorted(set(targets)))
-            or (not contiguous and not bool(allow_sparse_targets))
-        ):
+        if not targets or targets != tuple(range(targets[0], targets[-1] + 1)):
             raise ValueError("B2 transport targets must be contiguous")
         if tuple(event_thresholds) != TRANSPORT_QUANTITIES:
             raise ValueError("B2 transport event-threshold quantities differ")
@@ -208,7 +200,6 @@ class B2TransportAccumulator:
             raise ValueError("B2 transport event thresholds must be finite/nonnegative")
         self.model_seed = int(model_seed)
         self.target_frames = targets
-        self.sparse_targets = not contiguous
         self.event_thresholds = thresholds
         self.detailed = bool(detailed)
         self.probabilistic = {
@@ -531,11 +522,10 @@ class B2TransportAccumulator:
                 "schema_version": 1,
                 "scope": "B2_memberwise_authoritative_transport_85604",
                 "model_seed": self.model_seed,
-                "target_frames": (
-                    list(self.target_frames)
-                    if self.sparse_targets
-                    else [self.target_frames[0], self.target_frames[-1] + 1]
-                ),
+                "target_frames": [
+                    self.target_frames[0],
+                    self.target_frames[-1] + 1,
+                ],
                 "target_count": len(self.target_frames),
                 "detailed": self.detailed,
                 "quantities": quantities,
@@ -548,10 +538,5 @@ class B2TransportAccumulator:
                 "complete_experimental_heat_flux_claimed": False,
                 "held_out_85606_read": False,
                 "physics_derived_training_loss_used": False,
-                **(
-                    {"target_frames_are_explicit_indices": True}
-                    if self.sparse_targets
-                    else {}
-                ),
             }
         )

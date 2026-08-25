@@ -348,15 +348,6 @@ class TestModelTrainingData(unittest.TestCase):
             strict_o2_targets([496], split="validation", context_frames=2)
         with self.assertRaisesRegex(ValueError, "contiguous"):
             strict_o2_targets([2, 4], split="train", context_frames=2)
-        self.assertEqual(
-            strict_o2_targets(
-                [2, 4],
-                split="train",
-                context_frames=2,
-                allow_sparse_targets=True,
-            ),
-            (2, 4),
-        )
         with self.assertRaisesRegex(ValueError, "one or two"):
             strict_o2_targets([2], split="train", context_frames=3)
 
