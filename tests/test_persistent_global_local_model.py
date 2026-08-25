@@ -112,7 +112,9 @@ def test_denoiser_shape_gradients_and_nontrivial_shift_equivariance() -> None:
     model.eval()
     with torch.no_grad():
         reference = model(noisy, current, mean, sigma)
-        for shift in (1, 3, 7):
+        # The synthetic protocol requires every possible integer shift on the
+        # reduced grid; the allocated-GPU production gate checks all 88.
+        for shift in range(noisy.shape[-1]):
             shifted = model(
                 torch.roll(noisy, shift, -1),
                 torch.roll(current, shift, -1),

@@ -185,37 +185,15 @@ def test_smoke_validation_is_state_only_and_chronological() -> None:
     assert state["horizons"]["4"]["mean_field_mse"] == pytest.approx(0.16)
 
 
-def test_every_integer_shift_equivariance_gate_on_full_toroidal_axis() -> None:
-    config = PersistentGlobalLocalConfig(
-        base_channels=4,
-        channel_multipliers=(1,),
-        global_channels=4,
-        global_pool_xy=(2, 2),
-        low_mode_maximum=2,
-        noise_embedding_features=16,
-        group_norm_maximum_groups=4,
-    )
-    edm = PersistentGlobalLocalEDM(
-        config,
-        residual_scales=torch.ones((4, 5)),
-        noise_config=PersistentNoiseConfig(
-            global_pool_xy=(2, 2), low_mode_maximum=2
-        ),
-    )
-    torch.manual_seed(55)
-    with torch.no_grad():
-        edm.backbone.global_stream.output_projection.weight.normal_(0.0, 0.01)
-        edm.backbone.local_stream.output_projection.weight.normal_(0.0, 0.01)
+def test_production_equivariance_gate_requires_full_toroidal_axis() -> None:
+    edm = _tiny_edm()
     current = torch.randn((1, 5, 4, 4, 88))
-    mean = torch.randn((1, 4, 5, 4, 4, 88))
+    mean = torch.randn((1, 4, 5, 4, 4, 12))
     clean = torch.randn_like(mean)
-    gate = toroidal_equivariance_gate(
-        edm=edm,
-        current=current,
-        mean=mean,
-        clean_reference=clean,
-        tolerance=1.0e-4,
-    )
-    assert gate["all_integer_shifts_checked"] == list(range(88))
-    assert gate["passed"] is True
-    assert gate["nonperiodic_axis_shifted"] is False
+    with pytest.raises(ValueError, match="all 88"):
+        toroidal_equivariance_gate(
+            edm=edm,
+            current=current[..., :12],
+            mean=mean,
+            clean_reference=clean,
+        )
