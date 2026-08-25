@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_persistent_global_local_physics_evaluation",
+  "status": "frozen_after_seed1702_state_gate_before_forecast",
+  "frozen_at": "2026-08-25",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "held_out_85606_access_allowed": false,
+  "new_nersc_data_read": false,
+  "new_nersc_data_access_allowed": false,
+  "guard_frames_read_allowed": false,
+  "training_allowed": false,
+  "checkpoint_selection_allowed": false,
+  "physics_derived_loss_used": false,
+  "assimilation_allowed": false,
+  "diagnostic_ranking_allowed": false,
+  "steering_allowed": false,
+  "confirmation_seed_training_allowed": false,
+  "wandb_required": true,
+  "zperiod": 5,
+  "mode_mapping": "n=5k",
+  "protocol": {
+    "path": "paper0/protocol/POST_ECRD_OLD_85604_PERSISTENT_GLOBAL_LOCAL_PHYSICS_EVALUATION_2026-08-25.md",
+    "sha256": "1079a8f6f42385f64ffd171b88a681eb8b4feb82eaa8d22a48c3237a77604896"
+  },
+  "forecast_population": {
+    "current_frame_blocks": {
+      "V00": [497, 501, 504, 508, 511, 515, 518, 522, 525, 529, 532, 536],
+      "V01": [537, 541, 544, 548, 552, 555, 559, 562, 566, 570, 573, 577],
+      "V02": [578, 582, 585, 589, 593, 597, 600, 604, 608, 612, 615, 619]
+    },
+    "current_frames": [497, 501, 504, 508, 511, 515, 518, 522, 525, 529, 532, 536, 537, 541, 544, 548, 552, 555, 559, 562, 566, 570, 573, 577, 578, 582, 585, 589, 593, 597, 600, 604, 608, 612, 615, 619],
+    "start_count": 36,
+    "ensemble_members": 32,
+    "future_frames": 4,
+    "primary_horizons": [1, 4],
+    "fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+    "forecast_axes": ["start", "ensemble_member", "future_time", "channel", "x", "y", "stored_toroidal_z"],
+    "target_truth_read_during_generation": false
+  },
+  "sampler": {
+    "seed_bank_sha256": "013a5cbd11525f41d9ec44a5f7bab30a6fd52aa8e4541757cf1e30ded0e63e14",
+    "seed_row": "one_frame_target_t_plus_1_minus_498",
+    "initial_noise": "persistent_global_local_structured_noise",
+    "steps": 18,
+    "network_evaluations_per_member": 35,
+    "member_batch_size": 8,
+    "posthoc_spread_multiplier": false,
+    "member_interaction": false
+  },
+  "physics_gates": {
+    "field": {
+      "fair_CRPS_strictly_below_selected_mean_MAE_at_horizons": [1, 4],
+      "maximum_per_field_corrected_spread_skill": 1.5
+    },
+    "spectral": {
+      "bands": ["k1_3", "k4_5", "k6_7"],
+      "maximum_candidate_over_parent_median_abs_log_power_error": 1.1,
+      "primary_horizon": 4
+    },
+    "cross_field": {
+      "pair": "Ne-phi",
+      "stored_k": [1, 7],
+      "complex_cross_spectrum_error_strictly_improves": true,
+      "maximum_phase_error_increase_degrees": 2.0,
+      "primary_horizon": 4
+    },
+    "spatial_transport_covariance": {
+      "maximum_median_relative_frobenius_error": 0.9,
+      "primary_horizon": 4
+    },
+    "local_transport": {
+      "calibrated_interval": [0.8, 1.25],
+      "minimum_quantities_in_interval": 3,
+      "maximum_any_ratio": 1.4,
+      "primary_horizon": 4
+    },
+    "integrated_transport": {
+      "minimum_median_corrected_spread_skill": 0.6,
+      "maximum_candidate_over_parent_median_relative_L2": 1.05,
+      "primary_horizon": 4
+    },
+    "all_families_required": true
+  },
+  "bootstrap": {
+    "method": "paired_non_circular_selected_start_block_bootstrap",
+    "block_length_selected_starts": 3,
+    "replicates": 2000,
+    "seed": 85604405,
+    "resample_each_chronological_block_separately": true,
+    "conditional_on_single_85604_run": true,
+    "used_as_pass_fail_gate": false
+  },
+  "evidence_locks": {
+    "training_manifest": {
+      "path": "paper0/manifests/post_ecrd_old_85604_persistent_global_local_pilot.json",
+      "sha256": "0d8b482b764a3fcfcf4c6432fe2abb5257b88326a604a9bc4916b37ec604720e"
+    },
+    "training_result": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_persistent_global_local_pilot/job_6937586_seed1702/run/result.json",
+      "sha256": "0f3b9e71d32b16269ec93e1601af1d569827b7d67ed20884c38fe7015abe10b6"
+    },
+    "selected_checkpoint": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_persistent_global_local_pilot/job_6937586_seed1702/run/training/selected.pt",
+      "sha256": "4430eb1af96ee48faac80420227be42db363f5703712726b86d02836d42937eb"
+    },
+    "residual_scales": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_persistent_global_local_smoke/job_6937573_seed1702/run/residual_scales.json",
+      "sha256": "497a655bc6914c30d78831b04b157ad4c07e17a7de6c5887e378a36a53d475bd"
+    },
+    "scientific_seed_bank": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b5_residual_edm_evaluation_full/job_6901587/b5_joint_field_residual_edm_seed_1701/scientific_sampler_seeds_M32.npy",
+      "sha256": "013a5cbd11525f41d9ec44a5f7bab30a6fd52aa8e4541757cf1e30ded0e63e14"
+    },
+    "native_truth_result": {
+      "path": "paper0/results/phase2_potential_vorticity_all_frame_6893033.json",
+      "sha256": "cc6b00b72605c6457ae3a3b24db7e90dac16989c852df92036a57272f62eddae"
+    },
+    "geometry_manifest": {
+      "path": "paper0/manifests/phase2_85604_geometry_units.json",
+      "sha256": "76426ca83f711aaf9dec79c6df4c4503c2c8eece847b78027633e93e4b2cd460"
+    },
+    "geometry": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv-fresh-proj/85604/tcv_85604_adjusted.nc",
+      "sha256": "0eeffe4c550d71eacd4c2d09874280bf85f394c2e08558712e15dca0495e8bf8"
+    },
+    "event_threshold_result": {
+      "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/phase3_b2_transport_event_thresholds/job_6897493/thresholds/result.json",
+      "sha256": "14c977ee0ce5ebac0ec3ed05682b71f7d2a517448ed8d563974def62498f1fcb"
+    },
+    "model_dataset": {
+      "root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+      "manifest_sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18",
+      "normalization_sha256": "f751b73601b625d4d32088d3c49b72afa106d2b680016ff4faf60ded0c71dbd7",
+      "artifact_index_sha256": "6e33bd22615d556714334fff4f06abb53ef49e8711f0712d7332d363ad25cd01"
+    }
+  },
+  "evaluation_code": {
+    "paper0/tools/generate_persistent_global_local_forecast.py": {"sha256": "dac730a436988e79885bf80c25fec1d8063f6d667141eec87b016fb5e98ce872"},
+    "paper0/tools/score_persistent_global_local_physics.py": {"sha256": "149271317b69146f780b9f77d072a3218f8b7b9318aebdb89a67b34c00ac694e"},
+    "paper0/tools/train_persistent_global_local_pilot.py": {"sha256": "2aba263e0bc6ea49fd0ae14f34cab93bbac7253a7ad833104bc7e52a3e4434ba"},
+    "src/tcv_diagnostics/persistent_global_local_authority.py": {"sha256": "734b4fc57514e7ac28bb6afd0abb72c40ddc97a3b0416267cafd9e6aeb7ea568"},
+    "src/tcv_diagnostics/persistent_global_local_forecast.py": {"sha256": "b4722973da2dea47b1a890258c61fbd1424536050ac1fc4b98f2fed3ec202422"},
+    "src/tcv_diagnostics/persistent_global_local_physics.py": {"sha256": "18ebc3c4a0af13c463f70d6d5e713849b1f504fc9bbd9bf945712cf07897def0"},
+    "src/tcv_diagnostics/persistent_global_local_gates.py": {"sha256": "4c234d092a68655498d33ed82a5f62d8f248c458aba0c70c825ed032d0e82f98"},
+    "src/tcv_diagnostics/persistent_global_local_sparse_metrics.py": {"sha256": "10f0d05c327134df25f9c8b3e4b939c5c7dd7f96882da1787cea2d2095be8f73"},
+    "src/tcv_diagnostics/models/persistent_global_local.py": {"sha256": "67585f1f5500b826165f3026ec060dacb97768aa0797b5e2e933f07fca03e88c"},
+    "src/tcv_diagnostics/persistent_global_local_training.py": {"sha256": "02624b6a9333e5bd0ffd71c5d0eb56df3a689d733934e2bc4b97b732fad14d70"},
+    "src/tcv_diagnostics/b2_field_scoring.py": {"sha256": "9bc110067a7124de015202e7eac40030fccda655322f8386dc1d1adca20b9112"},
+    "src/tcv_diagnostics/b2_spectral_metrics.py": {"sha256": "382fc683519d01185d0e5314196cd0c62f5e39e60f5e1aa06478e74acda8761e"},
+    "src/tcv_diagnostics/b2_transport_metrics.py": {"sha256": "b78ea33f641fe6409ca5a55503f3729013f2da3cc78f93671f63c6fadafcb02e"},
+    "src/tcv_diagnostics/b2_scoring.py": {"sha256": "2dfdf6f7b620302826971c9fec4ed8233f46fa1950c8461ed9d79194411178fe"},
+    "src/tcv_diagnostics/ecrd_scoring.py": {"sha256": "f941ab30bd16a9a9be362b10f6b10905e212240617b4e7fc9415216803faca5b"},
+    "src/tcv_diagnostics/b5_covariance_localization.py": {"sha256": "f521de9a886f360b9b494c4506895dd32134fc82faf0c753ecbd9dabc730eba1"},
+    "src/tcv_diagnostics/o2_training_data.py": {"sha256": "755bf1ef51b80eb178d4ed535b8da9131c37350aee4bc905655036ebbd49667a"},
+    "src/tcv_diagnostics/o2_context_data.py": {"sha256": "f3b815fe3141f61a91bec06be3ede42b67ab876b4a6efd90f1e63fddb8117ede"},
+    "cluster/post_ecrd_old_85604_persistent_global_local_forecast.sbatch": {"sha256": "a3077dfd7af4f73b86d80d6cfdc5bc41888e3a8c57134905c753e204efe43419"},
+    "cluster/post_ecrd_old_85604_persistent_global_local_score.sbatch": {"sha256": "ef79022f029005c70657acaaa8d20fc970373f0c656944ad808e006970cd99ac"}
+  },
+  "decision": {
+    "pass": "authorize a dated amendment for matched confirmation seeds 1701 and 1703",
+    "fail": "stop scaling this old-data persistent stochastic mechanism",
+    "85606_opened_by_this_evaluation": false
+  }
+}
