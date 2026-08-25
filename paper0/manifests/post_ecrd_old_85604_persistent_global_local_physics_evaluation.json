@@ -20,8 +20,8 @@
   "zperiod": 5,
   "mode_mapping": "n=5k",
   "protocol": {
-    "path": "paper0/protocol/POST_ECRD_OLD_85604_PERSISTENT_GLOBAL_LOCAL_PHYSICS_EVALUATION_2026-08-25.md",
-    "sha256": "1079a8f6f42385f64ffd171b88a681eb8b4feb82eaa8d22a48c3237a77604896"
+    "path": "paper0/protocol/POST_ECRD_OLD_85604_PERSISTENT_GLOBAL_LOCAL_PHYSICS_EVALUATION_AMENDMENT_2026-08-25.md",
+    "sha256": "a459d9d455e757cdc516a4de965580860badcb4cfaa8a61e2f40360497b924ea"
   },
   "forecast_population": {
     "current_frame_blocks": {
@@ -136,7 +136,7 @@
     }
   },
   "evaluation_code": {
-    "paper0/tools/generate_persistent_global_local_forecast.py": {"sha256": "dac730a436988e79885bf80c25fec1d8063f6d667141eec87b016fb5e98ce872"},
+    "paper0/tools/generate_persistent_global_local_forecast.py": {"sha256": "0d6e0424fe50812615c9349b111979aa59a9eb2d6351147c378e2e0ff8b48f2f"},
     "paper0/tools/score_persistent_global_local_physics.py": {"sha256": "149271317b69146f780b9f77d072a3218f8b7b9318aebdb89a67b34c00ac694e"},
     "paper0/tools/train_persistent_global_local_pilot.py": {"sha256": "2aba263e0bc6ea49fd0ae14f34cab93bbac7253a7ad833104bc7e52a3e4434ba"},
     "src/tcv_diagnostics/persistent_global_local_authority.py": {"sha256": "734b4fc57514e7ac28bb6afd0abb72c40ddc97a3b0416267cafd9e6aeb7ea568"},

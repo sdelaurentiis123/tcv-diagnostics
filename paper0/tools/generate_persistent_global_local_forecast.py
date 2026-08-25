@@ -120,8 +120,11 @@ def load_selected_models(
         artifact_root=artifact_root,
     )
     result = load_authorized_training_result(paths["training_result"])
+    result_checkpoint = Path(
+        str(result["selected_checkpoint"]["path"])
+    ).resolve(strict=True)
     if (
-        Path(str(result["selected_checkpoint"]["path"])) != paths["selected_checkpoint"]
+        result_checkpoint != paths["selected_checkpoint"]
         or result["selected_checkpoint"]["sha256"] != PGL_SELECTED_CHECKPOINT_SHA256
     ):
         raise ValueError("persistent selected result/checkpoint identity differs")
@@ -377,4 +380,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FORECAST = ROOT / "cluster/post_ecrd_old_85604_persistent_global_local_forecast.sbatch"
 SCORE = ROOT / "cluster/post_ecrd_old_85604_persistent_global_local_score.sbatch"
 MANIFEST = ROOT / "paper0/manifests/post_ecrd_old_85604_persistent_global_local_physics_evaluation.json"
+GENERATOR = ROOT / "paper0/tools/generate_persistent_global_local_forecast.py"
 
 
 def _sha256(path: Path) -> str:
@@ -58,3 +59,10 @@ def test_frozen_evaluation_manifest_locks_all_local_sources_before_sampling():
     for record in manifest["evidence_locks"].values():
         if "path" in record and not Path(record["path"]).is_absolute():
             assert _sha256(ROOT / record["path"]) == record["sha256"]
+
+
+def test_checkpoint_identity_uses_canonical_path_and_frozen_sha256():
+    source = GENERATOR.read_text(encoding="utf-8")
+    assert "result_checkpoint" in source
+    assert ").resolve(strict=True)" in source
+    assert "PGL_SELECTED_CHECKPOINT_SHA256" in source
