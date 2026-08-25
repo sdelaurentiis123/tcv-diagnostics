@@ -1,0 +1,977 @@
+{
+  "advance_to_three_seed_scaling": false,
+  "architecture": {
+    "architecture": {
+      "absolute_z_coordinate": false,
+      "auxiliary_context_channels": 2,
+      "base_channels": 24,
+      "blocks_per_level": 2,
+      "channel_multipliers": [
+        1,
+        2,
+        4
+      ],
+      "downsample_stride_xyz": [
+        2,
+        2,
+        1
+      ],
+      "family": "codec_free_mixed_boundary_3d_increment_operator",
+      "group_norm_maximum_groups": 8,
+      "history_frames": 1,
+      "input_channels": 14,
+      "kernel_size": 3,
+      "latent_codec": false,
+      "lead_embedding_channels": 128,
+      "padding_xyz": [
+        "zeros",
+        "zeros",
+        "circular"
+      ],
+      "physics_derived_loss": false,
+      "predict_boundary": true,
+      "prediction": "standardized_state_derivative",
+      "state_family": "e6b",
+      "volume_channels": 6,
+      "zero_initialize_output": true
+    },
+    "parameter_count": 2183000,
+    "physics_derived_loss_used": false,
+    "trainable_parameter_count": 2183000
+  },
+  "architecture_kind": "local_current_phi_vi",
+  "baseline_e6b_seed1701_shared_mse": 0.007772147896373167,
+  "best_checkpoint": {
+    "epoch": 12,
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_012.pt",
+    "selection_metric": 0.007607179289215706,
+    "sha256": "c8d8e690bdac216d0da31a436b637f6e5e2541b247f334dda9df4f51de7d526c"
+  },
+  "derivative_rms": {
+    "boundary": {
+      "inner": 0.07615409262103039,
+      "outer": 0.05995949463538787
+    },
+    "family": "e6b",
+    "fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "NVe",
+      "NVi",
+      "Vort"
+    ],
+    "fit_split": "train",
+    "pair_count": 431,
+    "physics_derived_quantity": false,
+    "volume": {
+      "NVe": 1.5004602745172688,
+      "NVi": 0.15795945458606786,
+      "Ne": 0.11394114518979337,
+      "Pe": 0.20157431506746934,
+      "Pi": 0.2416909555396937,
+      "Vort": 1.3847650047292386
+    }
+  },
+  "development_run": "85604",
+  "epochs": 12,
+  "expected_optimizer_updates": 1296,
+  "family": "e6b",
+  "gpu": "NVIDIA A100-SXM4-80GB MIG 2g.20gb",
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "history": [
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_001.pt",
+        "sha256": "e54bc7c228a55ec7c4bb72f03b6501cde5e03dfae5735b3317636d5c7c0c89f1"
+      },
+      "epoch": 1,
+      "optimizer_updates_cumulative": 108,
+      "preclip_gradient_norm_maximum": 7.577403545379639,
+      "training_persistence_normalized_loss_first_quarter": 0.9975071070350219,
+      "training_persistence_normalized_loss_last_quarter": 0.6660151790792697,
+      "training_persistence_normalized_loss_mean": 0.8075791010308985,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.021044189039357446,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.008547417879540943,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 1.360894023646776,
+            "persistence_relative_skill": 0.39373491520653847,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.021345885303844788,
+            "persistence_relative_skill": 0.27057410713154484,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.012442519174956729,
+            "persistence_relative_skill": 0.24507447299857843,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.01347445848590575,
+            "persistence_relative_skill": 0.6734508956215123,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.017829684109967697,
+            "persistence_relative_skill": 0.6931395973409024,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 1.4151622612474641,
+            "persistence_relative_skill": 0.26941058791243455,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.014582220590276723,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.6223805625896616,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_002.pt",
+        "sha256": "c1dcfee1f5087bcea1b3859beeaafe97b86e835c7254f57e77351608f64848ee"
+      },
+      "epoch": 2,
+      "optimizer_updates_cumulative": 216,
+      "preclip_gradient_norm_maximum": 5.961536407470703,
+      "training_persistence_normalized_loss_first_quarter": 0.6326231594397643,
+      "training_persistence_normalized_loss_last_quarter": 0.6023972566439727,
+      "training_persistence_normalized_loss_mean": 0.6109013274623181,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.02096905516516454,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.008491512429125892,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.9698395350189318,
+            "persistence_relative_skill": 0.5679458960671313,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.017048491587703708,
+            "persistence_relative_skill": 0.4174234977182586,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.010350221102695937,
+            "persistence_relative_skill": 0.37202056828968977,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.01014469393829661,
+            "persistence_relative_skill": 0.7541466528536378,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.013055260373851445,
+            "persistence_relative_skill": 0.7753105197808985,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 1.1279741483837173,
+            "persistence_relative_skill": 0.4176738650512053,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.011183391804947998,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7103962256242544,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_003.pt",
+        "sha256": "4bb60c0725ba9de0a9d48ccb583862dbe9c9089dcdfcb264636bcf4654341292"
+      },
+      "epoch": 3,
+      "optimizer_updates_cumulative": 324,
+      "preclip_gradient_norm_maximum": 24.19090461730957,
+      "training_persistence_normalized_loss_first_quarter": 0.5774903439472769,
+      "training_persistence_normalized_loss_last_quarter": 0.5280796464915588,
+      "training_persistence_normalized_loss_mean": 0.5485044522102913,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.020819489485730865,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.007811343424462422,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.8628722868737103,
+            "persistence_relative_skill": 0.6155987673708839,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.015747654135088964,
+            "persistence_relative_skill": 0.46187536780206007,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.009739589396765511,
+            "persistence_relative_skill": 0.40906945332023315,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.009401312627234286,
+            "persistence_relative_skill": 0.7721622563447188,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.01286124812443084,
+            "persistence_relative_skill": 0.7786495961554889,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 1.065491856211155,
+            "persistence_relative_skill": 0.449930873561308,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.010667383382810211,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7237587179045175,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_004.pt",
+        "sha256": "d10e7f480bd76ff5af9f012f6226694746120e609246629514646e9cef6b6efc"
+      },
+      "epoch": 4,
+      "optimizer_updates_cumulative": 432,
+      "preclip_gradient_norm_maximum": 17.071348190307617,
+      "training_persistence_normalized_loss_first_quarter": 0.5308776795864105,
+      "training_persistence_normalized_loss_last_quarter": 0.4415597520141958,
+      "training_persistence_normalized_loss_mean": 0.48249152465237266,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.020076921692083215,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.0043303403693666555,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.8536001528341939,
+            "persistence_relative_skill": 0.6197294131316906,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.014245301613060167,
+            "persistence_relative_skill": 0.5132133570297379,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.009208019860168825,
+            "persistence_relative_skill": 0.4413213957854575,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.009094994752511179,
+            "persistence_relative_skill": 0.7795857700800263,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.011873068099970808,
+            "persistence_relative_skill": 0.795656813912979,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 1.0398401360726817,
+            "persistence_relative_skill": 0.46317378969057366,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.010058694237550271,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7395212590873126,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_005.pt",
+        "sha256": "5b8999e3c0d00915afc9d0e199e9a7573023dc975d939233f7f096c82107e9d5"
+      },
+      "epoch": 5,
+      "optimizer_updates_cumulative": 540,
+      "preclip_gradient_norm_maximum": 26.679874420166016,
+      "training_persistence_normalized_loss_first_quarter": 0.4411924319846608,
+      "training_persistence_normalized_loss_last_quarter": 0.4128428626561833,
+      "training_persistence_normalized_loss_mean": 0.42028293753444734,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.019824749124181404,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.003409997137304896,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.8167675150746351,
+            "persistence_relative_skill": 0.6361379959209863,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.01389064388076322,
+            "persistence_relative_skill": 0.5253326263578086,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.008887172067963233,
+            "persistence_relative_skill": 0.46078820835067835,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.008709719827239993,
+            "persistence_relative_skill": 0.7889227821698548,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.011317932160948547,
+            "persistence_relative_skill": 0.8052110626999036,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 1.0102441650505312,
+            "persistence_relative_skill": 0.478452958490746,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.009638274685383925,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7504083934426398,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_006.pt",
+        "sha256": "6ca0b21e839f0d766bb775cca75294b7e994161b21022151179f19d4ec81f0e7"
+      },
+      "epoch": 6,
+      "optimizer_updates_cumulative": 648,
+      "preclip_gradient_norm_maximum": 11.220030784606934,
+      "training_persistence_normalized_loss_first_quarter": 0.395500929277634,
+      "training_persistence_normalized_loss_last_quarter": 0.37740229696870964,
+      "training_persistence_normalized_loss_mean": 0.37496015101048896,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.01813573240074256,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.0042728333260523025,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.7855300080716482,
+            "persistence_relative_skill": 0.6500540022395045,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.013262854231709484,
+            "persistence_relative_skill": 0.546785286614168,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.00849473417210596,
+            "persistence_relative_skill": 0.4845986105031356,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.00788609742979621,
+            "persistence_relative_skill": 0.808883002204868,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.010238003031048677,
+            "persistence_relative_skill": 0.8237973419407737,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 0.9799037512149141,
+            "persistence_relative_skill": 0.49411645215055944,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.008872944877650283,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7702272824548143,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_007.pt",
+        "sha256": "983ac4ef826991d690cc94c0095af4945e3ffd63b47e55f0a4adfaa0ababf1fb"
+      },
+      "epoch": 7,
+      "optimizer_updates_cumulative": 756,
+      "preclip_gradient_norm_maximum": 13.55049991607666,
+      "training_persistence_normalized_loss_first_quarter": 0.3445068212034546,
+      "training_persistence_normalized_loss_last_quarter": 0.33419181629319056,
+      "training_persistence_normalized_loss_mean": 0.3336457305192394,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.017884929947221403,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.002198525171622787,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.780974186396889,
+            "persistence_relative_skill": 0.6520835765972126,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.012692116360922072,
+            "persistence_relative_skill": 0.5662883887374593,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.008292484804507913,
+            "persistence_relative_skill": 0.49686969550391,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.007685647121415278,
+            "persistence_relative_skill": 0.8137408500169083,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.009934166402328672,
+            "persistence_relative_skill": 0.8290265669599359,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 0.9680797417162142,
+            "persistence_relative_skill": 0.5002206964374005,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.008637432776083954,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7763260756218924,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_008.pt",
+        "sha256": "507ff1162b4e821f2f36adab93d02d0331e9100a4cfab3e1b0fece2e1554c5c2"
+      },
+      "epoch": 8,
+      "optimizer_updates_cumulative": 864,
+      "preclip_gradient_norm_maximum": 8.706884384155273,
+      "training_persistence_normalized_loss_first_quarter": 0.3124925739297243,
+      "training_persistence_normalized_loss_last_quarter": 0.2958953331842601,
+      "training_persistence_normalized_loss_mean": 0.3066966531586481,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.016722979982645714,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.002096948414307874,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.7622977750337201,
+            "persistence_relative_skill": 0.660403736669918,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.012255966428696639,
+            "persistence_relative_skill": 0.5811923877616061,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.008034960224787167,
+            "persistence_relative_skill": 0.5124944959424579,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.007172043182611807,
+            "persistence_relative_skill": 0.8261878738729667,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.009241876591719638,
+            "persistence_relative_skill": 0.8409413226409699,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 0.9502824494560531,
+            "persistence_relative_skill": 0.5094086981564684,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.008149626666372872,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7889582441982785,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_009.pt",
+        "sha256": "525ee6c1f4d13a88a3053413a8d864bb88f0fff2228ffa5de686e6e7d217eb08"
+      },
+      "epoch": 9,
+      "optimizer_updates_cumulative": 972,
+      "preclip_gradient_norm_maximum": 6.486414432525635,
+      "training_persistence_normalized_loss_first_quarter": 0.28245493922835196,
+      "training_persistence_normalized_loss_last_quarter": 0.2773689130477816,
+      "training_persistence_normalized_loss_mean": 0.28562412360842987,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.0160368341115197,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.002586166556513461,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.7534381928577027,
+            "persistence_relative_skill": 0.6643505945779162,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.01203810517478177,
+            "persistence_relative_skill": 0.5886370843575197,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.007874074022024977,
+            "persistence_relative_skill": 0.5222559517778615,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.006934724862799955,
+            "persistence_relative_skill": 0.8319392059111506,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.008974883089384695,
+            "persistence_relative_skill": 0.8455364536106802,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 0.9390978236324717,
+            "persistence_relative_skill": 0.5151828552468833,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.00792789399140321,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7947002069850274,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_010.pt",
+        "sha256": "35fb4e1ee8eabf8c77031497a64d456f1949abc2638f7bb40f44027f5116e83d"
+      },
+      "epoch": 10,
+      "optimizer_updates_cumulative": 1080,
+      "preclip_gradient_norm_maximum": 6.560214996337891,
+      "training_persistence_normalized_loss_first_quarter": 0.2731746749900212,
+      "training_persistence_normalized_loss_last_quarter": 0.2663056535698543,
+      "training_persistence_normalized_loss_mean": 0.27193310455767017,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.015997650271935174,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.0023836037725855058,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.7463513338830357,
+            "persistence_relative_skill": 0.6675077214978232,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.011737673904056112,
+            "persistence_relative_skill": 0.598903341520215,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.007747258836338157,
+            "persistence_relative_skill": 0.5299502152578083,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.006796160786170659,
+            "persistence_relative_skill": 0.8352972610915986,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.008729390240005706,
+            "persistence_relative_skill": 0.8497615444280913,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 0.9306939595412935,
+            "persistence_relative_skill": 0.5195214207200931,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.007757603287504841,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.7991100346518226,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_011.pt",
+        "sha256": "ebc6a9135bb05a83f7ab0d8c510b746cd2c576a625edda353c79a177c843e58e"
+      },
+      "epoch": 11,
+      "optimizer_updates_cumulative": 1188,
+      "preclip_gradient_norm_maximum": 7.345247268676758,
+      "training_persistence_normalized_loss_first_quarter": 0.2631834603358652,
+      "training_persistence_normalized_loss_last_quarter": 0.26227419886076564,
+      "training_persistence_normalized_loss_mean": 0.26422779455677264,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.01562743808213194,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.0023106436552967984,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.7424900553955209,
+            "persistence_relative_skill": 0.6692278836037389,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.011673463573819326,
+            "persistence_relative_skill": 0.6010975197797557,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.007687450239252174,
+            "persistence_relative_skill": 0.5335789849658934,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.00664085963355616,
+            "persistence_relative_skill": 0.8390609338468531,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.008599365851391871,
+            "persistence_relative_skill": 0.851999348306133,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 0.9263283457172369,
+            "persistence_relative_skill": 0.5217752055506095,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.007642558574733401,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.8020892187510367,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/job_6936156_local_current_phi_vi_seed1701/run/checkpoint_epoch_012.pt",
+        "sha256": "c8d8e690bdac216d0da31a436b637f6e5e2541b247f334dda9df4f51de7d526c"
+      },
+      "epoch": 12,
+      "optimizer_updates_cumulative": 1296,
+      "preclip_gradient_norm_maximum": 4.918771743774414,
+      "training_persistence_normalized_loss_first_quarter": 0.2652896695604948,
+      "training_persistence_normalized_loss_last_quarter": 0.25273784841889535,
+      "training_persistence_normalized_loss_mean": 0.25728189782725686,
+      "training_sample_count": 431,
+      "validation": {
+        "boundary_by_side": {
+          "inner": {
+            "model_derivative_mse": 0.015518690891633559,
+            "zero_derivative_persistence_mse": 0.02115335141003359
+          },
+          "outer": {
+            "model_derivative_mse": 0.002041992962719138,
+            "zero_derivative_persistence_mse": 0.008560333226821567
+          }
+        },
+        "pair_count": 127,
+        "per_field": {
+          "NVe": {
+            "model_derivative_mse": 0.7403880885949541,
+            "persistence_relative_skill": 0.6701642894211175,
+            "zero_derivative_persistence_mse": 2.244717793884496
+          },
+          "NVi": {
+            "model_derivative_mse": 0.011600940795608649,
+            "persistence_relative_skill": 0.6035757487918874,
+            "zero_derivative_persistence_mse": 0.029263953353647003
+          },
+          "Ne": {
+            "model_derivative_mse": 0.007617957407372631,
+            "persistence_relative_skill": 0.5377953266883218,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.006631049354885336,
+            "persistence_relative_skill": 0.8392986827491198,
+            "zero_derivative_persistence_mse": 0.04126319228941488
+          },
+          "Pi": {
+            "model_derivative_mse": 0.008572531105389148,
+            "persistence_relative_skill": 0.8524611916519187,
+            "zero_derivative_persistence_mse": 0.05810356747063041
+          },
+          "Vort": {
+            "model_derivative_mse": 0.924153628311758,
+            "persistence_relative_skill": 0.5228979216901177,
+            "zero_derivative_persistence_mse": 1.9370144678169092
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.007607179289215706,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618112213599,
+        "shared_field_persistence_relative_skill": 0.8030053964902543,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    }
+  ],
+  "loss": {
+    "name": "train_derivative_rms_persistence_normalized_direct_state_mse",
+    "physics_derived_quantities_used": false,
+    "scale_fit_split": "train"
+  },
+  "manifest": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_exact_state_derived_coordinate_screen/freeze_deb6e14_20260825/manifest.json",
+  "manifest_sha256": "9b757b828a3508e5fff8c8e7374a14d9977cc6992da54bbd85b965e50f4c83a0",
+  "numeric_precision": {
+    "cudnn_allow_tf32": false,
+    "float32_matmul_precision": "highest",
+    "matmul_allow_tf32": false
+  },
+  "numerical_gate": {
+    "boundary": {
+      "normalized_maximum_absolute_error": 2.9802322387695312e-08,
+      "normalized_root_mean_square_error": 7.261274468072783e-09
+    },
+    "checkpoint_reload_exact": true,
+    "integer_toroidal_shift": 7,
+    "no_toroidal_stride": true,
+    "passed": true,
+    "volume": {
+      "normalized_maximum_absolute_error": 3.908588435174732e-07,
+      "normalized_root_mean_square_error": 4.450835427480792e-07
+    }
+  },
+  "optimizer_updates": 1296,
+  "paper0_commit": "deb6e141459548ac5e784a35b2ceffad51498af2",
+  "peak_cuda_memory_GiB": 0.900181770324707,
+  "physics_derived_loss_used": false,
+  "prerequisites": {
+    "axial_current_phi_seed1701": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_axial_current_phi_6935835.json",
+      "selection_metric": 0.009164299673672594,
+      "sha256": "b178803893490f3633dc220af277483732895b3b07e3dd6d0deb1678b1d077da"
+    },
+    "baseline_e6b_seed1701": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_full/array_6933635/task_0_seed_1701_job_6933636/e6b/result.json",
+      "selection_metric": 0.007772147896373167,
+      "sha256": "2e51fa018117567093a1205036aa4147e65ad8da76f40108bad8789c8beaf3dd"
+    },
+    "local_current_phi_seed1701": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_local_current_phi_6935836.json",
+      "selection_metric": 0.007762225671440001,
+      "sha256": "4246a6000d77aa5498cccd87da1bb2458602e03ef97f994d0d67c25bc0ec7525"
+    },
+    "stage1_reduction": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_block_evaluation/job_6935811/summary.json",
+      "sha256": "39146e50666a4b000134dc3741d67f1c04b008510970417c92ac21d9505cc23c"
+    }
+  },
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_exact_state_derived_coordinate_screen",
+  "screen_gates": {
+    "at_least_15_percent_shared_mse_improvement_over_seed1701_e6b": false,
+    "every_e6b_field_positive_persistence_skill": true,
+    "training_gate_passed": true
+  },
+  "seed": 1701,
+  "shared_mse_improvement_fraction": 0.021225613479954886,
+  "slurm_job_id": "6936156",
+  "state": {
+    "auxiliary_context_fields": [
+      "phi",
+      "Vi"
+    ],
+    "current_phi_rollout_ready_without_elliptic_closure": false,
+    "current_vi_rollout_ready_from_predicted_e6b": true,
+    "future_auxiliary_context_read": false,
+    "predicted_boundary": "Bphi",
+    "predicted_volume_fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "NVe",
+      "NVi",
+      "Vort"
+    ],
+    "rollout_requires_external_elliptic_operator": true,
+    "validated_elliptic_closure_available": true,
+    "vi_reconstruction": {
+      "formula": "NVi / (2 * softFloor(Ne, 1e-7))",
+      "future_truth_required": false,
+      "source_fields": [
+        "NVi",
+        "Ne"
+      ]
+    }
+  },
+  "status": "passed",
+  "training_gate": {
+    "epoch_mean_training_loss_decreased": true,
+    "exact_optimizer_update_count": true,
+    "finite_validation_metrics": true,
+    "numerical_gate_passed": true,
+    "passed": true
+  },
+  "training_pair_count": 431,
+  "validation_pair_count": 127,
+  "wall_seconds": 892.2547045620013
+}
