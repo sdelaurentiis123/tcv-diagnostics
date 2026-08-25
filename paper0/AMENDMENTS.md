@@ -488,3 +488,37 @@ remain field-only.
 Simulation 85606, the guard, assimilation, diagnostic ranking, and steering
 remain closed. A successful three-seed 85604 gate may only create a separate
 explicit held-out release record; it does not silently open 85606.
+
+## A022 - Test multi-lead fine-tuning before changing the operator
+
+**Status:** frozen after the old-85604 state-view and derived-coordinate
+screens and before any Stage-1 parent checkpoint was evaluated beyond its
+trained one-frame lead.
+
+The passing C5P Stage-1 operator already predicted finite-difference state
+derivatives and conditioned every block on lead time, but it had been trained
+only at lead one. A one-seed prospective screen therefore retained its
+architecture and weights, evaluated the bitwise parent at leads
+`1,2,4,8,16`, and fine-tuned it over the corresponding 2,129 training pairs.
+No physics quantity entered the loss. Exact rules and advancement gates are
+in
+`protocol/POST_ECRD_OLD_85604_STAGE2_MULTILEAD_PROTOCOL_2026-08-25.md`.
+
+## A023 - Confirm the passing multi-lead mechanism before bounded rollouts
+
+**Status:** frozen after seed-1701 job `6936393` passed every prospective
+screen gate and before seed-1702/1703 multi-lead training or bounded rollout
+evaluation.
+
+The selected seed-1701 model preserved its one-frame transition, beat
+persistence for every C5P field at all five direct leads, and improved all
+four longer leads. The result authorizes exactly two matched confirmation
+runs initialized from the frozen Stage-1 seed-1702/1703 parents. All three
+seeds must pass individually; seed aggregation cannot rescue a failure.
+
+Only after that confirmation may inference compare direct lead-4/8 forecasts
+with truth-free autoregressive compositions using leads one, two, and four on
+the same chronological validation starts. This does not authorize long free
+rollouts, stochastic training, assimilation, diagnostic ranking, 85606, or
+the newer NERSC data. Exact rules are in
+`protocol/POST_ECRD_OLD_85604_STAGE2_SCALING_ROLLOUT_AMENDMENT_2026-08-25.md`.
