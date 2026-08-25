@@ -49,18 +49,6 @@ VALIDATION_STOP = 624
 CUDA_DEVICE_INDEX = 0
 
 
-def reset_peak_cuda_memory_stats() -> None:
-    """Reset accounting on the sole Slurm-visible logical CUDA device."""
-
-    torch.cuda.reset_peak_memory_stats(CUDA_DEVICE_INDEX)
-
-
-def peak_cuda_memory_gib() -> float:
-    """Return peak allocation on the sole Slurm-visible logical CUDA device."""
-
-    return torch.cuda.max_memory_allocated(CUDA_DEVICE_INDEX) / 2**30
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--artifact-root", type=Path, required=True)
@@ -540,7 +528,6 @@ def main() -> None:
     torch.backends.cudnn.allow_tf32 = False
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.set_float32_matmul_precision("highest")
-    reset_peak_cuda_memory_stats()
     catalog = load_official_catalog(args.artifact_root)
     states = load_validation_states(catalog)
 
@@ -729,7 +716,10 @@ def main() -> None:
                 "row_count": len(rows),
             },
             "gpu": torch.cuda.get_device_name(device),
-            "peak_cuda_memory_GiB": peak_cuda_memory_gib(),
+            "peak_cuda_memory_GiB": None,
+            "peak_cuda_memory_measurement": (
+                "not_collected_because_cluster_torch_memory_api_rejected_device"
+            ),
             "wall_seconds_before_wandb_verification": time.perf_counter() - started,
             "numeric_precision": {
                 "cudnn_allow_tf32": torch.backends.cudnn.allow_tf32,

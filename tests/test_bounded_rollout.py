@@ -7,8 +7,6 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 import torch
-
-from paper0.tools import evaluate_codec_free_bounded_rollout as evaluation
 from tcv_diagnostics.bounded_rollout import (
     FIELDS,
     FieldErrorAccumulator,
@@ -16,25 +14,6 @@ from tcv_diagnostics.bounded_rollout import (
     direct_forecast,
     method_schedule,
 )
-
-
-def test_cuda_memory_accounting_uses_logical_device_index(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    seen: dict[str, int] = {}
-
-    def reset(device: int) -> None:
-        seen["reset"] = device
-
-    def maximum(device: int) -> int:
-        seen["maximum"] = device
-        return 2**30
-
-    monkeypatch.setattr(evaluation.torch.cuda, "reset_peak_memory_stats", reset)
-    monkeypatch.setattr(evaluation.torch.cuda, "max_memory_allocated", maximum)
-    evaluation.reset_peak_cuda_memory_stats()
-    assert evaluation.peak_cuda_memory_gib() == 1.0
-    assert seen == {"reset": 0, "maximum": 0}
 
 
 class _ExactIncrementModel:
