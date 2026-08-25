@@ -1,0 +1,1724 @@
+{
+  "architecture": {
+    "architecture": {
+      "absolute_z_coordinate": false,
+      "auxiliary_context_channels": 0,
+      "base_channels": 24,
+      "blocks_per_level": 2,
+      "channel_multipliers": [
+        1,
+        2,
+        4
+      ],
+      "downsample_stride_xyz": [
+        2,
+        2,
+        1
+      ],
+      "family": "codec_free_mixed_boundary_3d_increment_operator",
+      "group_norm_maximum_groups": 8,
+      "history_frames": 1,
+      "input_channels": 7,
+      "kernel_size": 3,
+      "latent_codec": false,
+      "lead_embedding_channels": 128,
+      "padding_xyz": [
+        "zeros",
+        "zeros",
+        "circular"
+      ],
+      "physics_derived_loss": false,
+      "predict_boundary": false,
+      "prediction": "standardized_state_derivative",
+      "state_family": "c5p",
+      "volume_channels": 5,
+      "zero_initialize_output": true
+    },
+    "parameter_count": 2174021,
+    "physics_derived_loss_used": false,
+    "trainable_parameter_count": 2174021
+  },
+  "best_checkpoint": {
+    "epoch": 6,
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_006.pt",
+    "selection_metric": 0.42644835900132133,
+    "sha256": "affe2589f4ce6639879ca1ed4a100af764aa48a475a653987faa18d4ce844117"
+  },
+  "best_selection_validation": {
+    "current_frames": [
+      496,
+      501,
+      506,
+      511,
+      516,
+      521,
+      526,
+      531,
+      536,
+      541,
+      546,
+      551,
+      556,
+      561,
+      566,
+      571,
+      576,
+      581,
+      586,
+      591,
+      596,
+      601,
+      606,
+      611
+    ],
+    "future_truth_used_as_context": false,
+    "horizons": {
+      "1": {
+        "mean_field_model_over_persistence_mse": 0.2131515145845809,
+        "mean_field_model_state_mse": 0.00549686997564453,
+        "mean_field_persistence_relative_skill": 0.7868484854154191,
+        "mean_field_persistence_state_mse": 0.03164933687922629,
+        "per_field": {
+          "Ne": {
+            "model_over_persistence_mse": 0.31526549113577645,
+            "model_state_mse": 0.0052111237803756285,
+            "persistence_relative_skill": 0.6847345088642236,
+            "persistence_state_mse": 0.016529318707233124
+          },
+          "Pe": {
+            "model_over_persistence_mse": 0.10426919954036513,
+            "model_state_mse": 0.004110253599444122,
+            "persistence_relative_skill": 0.8957308004596348,
+            "persistence_state_mse": 0.039419633195255745
+          },
+          "Pi": {
+            "model_over_persistence_mse": 0.10574264001752175,
+            "model_state_mse": 0.00597146341125622,
+            "persistence_relative_skill": 0.8942573599824782,
+            "persistence_state_mse": 0.056471669425566993
+          },
+          "Vi": {
+            "model_over_persistence_mse": 0.35898121153455637,
+            "model_state_mse": 0.007835926869037476,
+            "persistence_relative_skill": 0.6410187884654437,
+            "persistence_state_mse": 0.021828236735679886
+          },
+          "phi": {
+            "model_over_persistence_mse": 0.18149903069468482,
+            "model_state_mse": 0.004355582218109207,
+            "persistence_relative_skill": 0.8185009693053151,
+            "persistence_state_mse": 0.023997826332395725
+          }
+        },
+        "window_count": 24
+      },
+      "4": {
+        "mean_field_model_over_persistence_mse": 0.42202419743122166,
+        "mean_field_model_state_mse": 0.01309838660738685,
+        "mean_field_persistence_relative_skill": 0.5779758025687783,
+        "mean_field_persistence_state_mse": 0.03149891442083048,
+        "per_field": {
+          "Ne": {
+            "model_over_persistence_mse": 0.46010747296140664,
+            "model_state_mse": 0.009347814840800835,
+            "persistence_relative_skill": 0.5398925270385934,
+            "persistence_state_mse": 0.020316589905908615
+          },
+          "Pe": {
+            "model_over_persistence_mse": 0.4166657965960044,
+            "model_state_mse": 0.010522637742035316,
+            "persistence_relative_skill": 0.5833342034039957,
+            "persistence_state_mse": 0.02525438331632
+          },
+          "Pi": {
+            "model_over_persistence_mse": 0.40825413913602765,
+            "model_state_mse": 0.016021397952554806,
+            "persistence_relative_skill": 0.5917458608639723,
+            "persistence_state_mse": 0.03924368773445939
+          },
+          "Vi": {
+            "model_over_persistence_mse": 0.46130134810631956,
+            "model_state_mse": 0.014948056530997608,
+            "persistence_relative_skill": 0.5386986518936805,
+            "persistence_state_mse": 0.032404103288144775
+          },
+          "phi": {
+            "model_over_persistence_mse": 0.36379223035634967,
+            "model_state_mse": 0.014652025970545683,
+            "persistence_relative_skill": 0.6362077696436503,
+            "persistence_state_mse": 0.040275807859319626
+          }
+        },
+        "window_count": 24
+      },
+      "8": {
+        "mean_field_model_over_persistence_mse": 0.6441693649881615,
+        "mean_field_model_state_mse": 0.02613966727459972,
+        "mean_field_persistence_relative_skill": 0.35583063501183854,
+        "mean_field_persistence_state_mse": 0.04278214376306895,
+        "per_field": {
+          "Ne": {
+            "model_over_persistence_mse": 0.6274799673524243,
+            "model_state_mse": 0.015958105411493416,
+            "persistence_relative_skill": 0.3725200326475757,
+            "persistence_state_mse": 0.025432055590279175
+          },
+          "Pe": {
+            "model_over_persistence_mse": 0.7714431200354679,
+            "model_state_mse": 0.023644391080421028,
+            "persistence_relative_skill": 0.2285568799645321,
+            "persistence_state_mse": 0.030649558556350796
+          },
+          "Pi": {
+            "model_over_persistence_mse": 0.7601863174656097,
+            "model_state_mse": 0.03463735408855207,
+            "persistence_relative_skill": 0.23981368253439028,
+            "persistence_state_mse": 0.04556429561114672
+          },
+          "Vi": {
+            "model_over_persistence_mse": 0.6055569439059467,
+            "model_state_mse": 0.02126460669167114,
+            "persistence_relative_skill": 0.3944430560940533,
+            "persistence_state_mse": 0.035115783751913994
+          },
+          "phi": {
+            "model_over_persistence_mse": 0.45618047618135876,
+            "model_state_mse": 0.03519387910086097,
+            "persistence_relative_skill": 0.5438195238186412,
+            "persistence_state_mse": 0.07714902530565407
+          }
+        },
+        "window_count": 24
+      }
+    },
+    "physics_derived_metric": false,
+    "selection_metric": 0.42644835900132133,
+    "selection_metric_definition": "unweighted_mean_of_fieldwise_state_mse_over_persistence_mse"
+  },
+  "confirmation_seed_training_authorized": false,
+  "development_run": "85604",
+  "epochs": 6,
+  "expected_optimizer_updates": 642,
+  "family": "c5p",
+  "full_validation": {
+    "future_truth_used_as_context": false,
+    "horizons": {
+      "1": {
+        "mean_field_model_over_persistence_mse": 0.21179786821623964,
+        "mean_field_model_state_mse": 0.005496124216837378,
+        "mean_field_persistence_relative_skill": 0.7882021317837604,
+        "mean_field_persistence_state_mse": 0.032347036493874146,
+        "per_field": {
+          "Ne": {
+            "model_over_persistence_mse": 0.3118522319193555,
+            "model_state_mse": 0.005139881003656042,
+            "persistence_relative_skill": 0.6881477680806445,
+            "persistence_state_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_over_persistence_mse": 0.09920933335116054,
+            "model_state_mse": 0.004093693741300572,
+            "persistence_relative_skill": 0.9007906666488394,
+            "persistence_state_mse": 0.04126319170808826
+          },
+          "Pi": {
+            "model_over_persistence_mse": 0.10292008731606064,
+            "model_state_mse": 0.0059800241715838075,
+            "persistence_relative_skill": 0.8970799126839394,
+            "persistence_state_mse": 0.058103566830637804
+          },
+          "Vi": {
+            "model_over_persistence_mse": 0.3637308181718795,
+            "model_state_mse": 0.007872195849055125,
+            "persistence_relative_skill": 0.6362691818281205,
+            "persistence_state_mse": 0.021642916837844493
+          },
+          "phi": {
+            "model_over_persistence_mse": 0.181276870322742,
+            "model_state_mse": 0.004394826318591343,
+            "persistence_relative_skill": 0.818723129677258,
+            "persistence_state_mse": 0.024243723486437486
+          }
+        },
+        "window_count": 127
+      },
+      "4": {
+        "mean_field_model_over_persistence_mse": 0.4281078816466645,
+        "mean_field_model_state_mse": 0.013647953413230236,
+        "mean_field_persistence_relative_skill": 0.5718921183533354,
+        "mean_field_persistence_state_mse": 0.032549198263507786,
+        "per_field": {
+          "Ne": {
+            "model_over_persistence_mse": 0.47519215218577143,
+            "model_state_mse": 0.009527700076486009,
+            "persistence_relative_skill": 0.5248078478142286,
+            "persistence_state_mse": 0.020050205022664712
+          },
+          "Pe": {
+            "model_over_persistence_mse": 0.4229560884773228,
+            "model_state_mse": 0.011421404003310414,
+            "persistence_relative_skill": 0.5770439115226772,
+            "persistence_state_mse": 0.027003758343870688
+          },
+          "Pi": {
+            "model_over_persistence_mse": 0.41783252920429653,
+            "model_state_mse": 0.017156053733222647,
+            "persistence_relative_skill": 0.5821674707957034,
+            "persistence_state_mse": 0.04105964120575759
+          },
+          "Vi": {
+            "model_over_persistence_mse": 0.4715396308233163,
+            "model_state_mse": 0.015070561898593678,
+            "persistence_relative_skill": 0.5284603691766837,
+            "persistence_state_mse": 0.03196032934131161
+          },
+          "phi": {
+            "model_over_persistence_mse": 0.3530190075426157,
+            "model_state_mse": 0.01506404735453842,
+            "persistence_relative_skill": 0.6469809924573843,
+            "persistence_state_mse": 0.042672057403934316
+          }
+        },
+        "window_count": 124
+      },
+      "8": {
+        "mean_field_model_over_persistence_mse": 0.637453477376879,
+        "mean_field_model_state_mse": 0.026480005744731788,
+        "mean_field_persistence_relative_skill": 0.36254652262312104,
+        "mean_field_persistence_state_mse": 0.04409096677646492,
+        "per_field": {
+          "Ne": {
+            "model_over_persistence_mse": 0.6323776106530464,
+            "model_state_mse": 0.016034008963315777,
+            "persistence_relative_skill": 0.36762238934695357,
+            "persistence_state_mse": 0.025355118038979444
+          },
+          "Pe": {
+            "model_over_persistence_mse": 0.7579223582143253,
+            "model_state_mse": 0.023712815214512926,
+            "persistence_relative_skill": 0.2420776417856747,
+            "persistence_state_mse": 0.0312866020609032
+          },
+          "Pi": {
+            "model_over_persistence_mse": 0.743590551176154,
+            "model_state_mse": 0.03435442795356115,
+            "persistence_relative_skill": 0.256409448823846,
+            "persistence_state_mse": 0.046200732243331995
+          },
+          "Vi": {
+            "model_over_persistence_mse": 0.6041485854489725,
+            "model_state_mse": 0.021308045439196354,
+            "persistence_relative_skill": 0.39585141455102746,
+            "persistence_state_mse": 0.03526954453325633
+          },
+          "phi": {
+            "model_over_persistence_mse": 0.449228281391897,
+            "model_state_mse": 0.036990731153072734,
+            "persistence_relative_skill": 0.5507717186081029,
+            "persistence_state_mse": 0.08234283700585365
+          }
+        },
+        "window_count": 120
+      }
+    },
+    "physics_derived_metric": false
+  },
+  "full_validation_window_count_by_horizon": {
+    "1": 127,
+    "4": 124,
+    "8": 120
+  },
+  "gpu": "NVIDIA A100-SXM4-80GB MIG 1g.20gb",
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "history": [
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_001.pt",
+        "sha256": "4653c3fa280080efdb7521cb63c426a56874a9bc76389e4488c3de7b5e5de298"
+      },
+      "epoch": 1,
+      "optimizer_updates_cumulative": 107,
+      "preclip_gradient_norm_maximum": 28.271764755249023,
+      "training_step_loss_means": {
+        "1": 0.6218411254687845,
+        "2": 0.9452973687760183,
+        "3": 1.2525110488461557,
+        "4": 1.5628871206089714
+      },
+      "training_weighted_state_loss_first_quarter": 0.8559709486560286,
+      "training_weighted_state_loss_last_quarter": 0.8688888773322105,
+      "training_weighted_state_loss_mean": 0.8587376449570477,
+      "training_window_count": 428,
+      "validation": {
+        "current_frames": [
+          496,
+          501,
+          506,
+          511,
+          516,
+          521,
+          526,
+          531,
+          536,
+          541,
+          546,
+          551,
+          556,
+          561,
+          566,
+          571,
+          576,
+          581,
+          586,
+          591,
+          596,
+          601,
+          606,
+          611
+        ],
+        "future_truth_used_as_context": false,
+        "horizons": {
+          "1": {
+            "mean_field_model_over_persistence_mse": 0.21940214634727914,
+            "mean_field_model_state_mse": 0.005688213794068857,
+            "mean_field_persistence_relative_skill": 0.7805978536527208,
+            "mean_field_persistence_state_mse": 0.03164933687922629,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.3204425943594411,
+                "model_state_mse": 0.0052966977695398255,
+                "persistence_relative_skill": 0.6795574056405589,
+                "persistence_state_mse": 0.016529318707233124
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.10968474472583407,
+                "model_state_mse": 0.004323732404207642,
+                "persistence_relative_skill": 0.8903152552741659,
+                "persistence_state_mse": 0.039419633195255745
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.11105442408049089,
+                "model_state_mse": 0.006271428724920208,
+                "persistence_relative_skill": 0.8889455759195091,
+                "persistence_state_mse": 0.056471669425566993
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.3638830992695829,
+                "model_state_mse": 0.00794292643496936,
+                "persistence_relative_skill": 0.636116900730417,
+                "persistence_state_mse": 0.021828236735679886
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.19194586930104673,
+                "model_state_mse": 0.004606283636707248,
+                "persistence_relative_skill": 0.8080541306989533,
+                "persistence_state_mse": 0.023997826332395725
+              }
+            },
+            "window_count": 24
+          },
+          "4": {
+            "mean_field_model_over_persistence_mse": 0.4742107164286127,
+            "mean_field_model_state_mse": 0.01486901334966674,
+            "mean_field_persistence_relative_skill": 0.5257892835713873,
+            "mean_field_persistence_state_mse": 0.03149891442083048,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.49228705442450205,
+                "model_state_mse": 0.010001594200730324,
+                "persistence_relative_skill": 0.507712945575498,
+                "persistence_state_mse": 0.020316589905908615
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.471181720303326,
+                "model_state_mse": 0.011899403776183273,
+                "persistence_relative_skill": 0.528818279696674,
+                "persistence_state_mse": 0.02525438331632
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.4627755555977965,
+                "model_state_mse": 0.018161019395020874,
+                "persistence_relative_skill": 0.5372244444022035,
+                "persistence_state_mse": 0.03924368773445939
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.4789186991737933,
+                "model_state_mse": 0.015518930994651535,
+                "persistence_relative_skill": 0.5210813008262067,
+                "persistence_state_mse": 0.032404103288144775
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.46589055264364526,
+                "model_state_mse": 0.018764118381747692,
+                "persistence_relative_skill": 0.5341094473563548,
+                "persistence_state_mse": 0.040275807859319626
+              }
+            },
+            "window_count": 24
+          },
+          "8": {
+            "mean_field_model_over_persistence_mse": 0.7546739731620494,
+            "mean_field_model_state_mse": 0.03122539000416344,
+            "mean_field_persistence_relative_skill": 0.24532602683795057,
+            "mean_field_persistence_state_mse": 0.04278214376306895,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.7015480677177283,
+                "model_state_mse": 0.017841809457450203,
+                "persistence_relative_skill": 0.29845193228227174,
+                "persistence_state_mse": 0.025432055590279175
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.9325677450409441,
+                "model_state_mse": 0.028582789709396435,
+                "persistence_relative_skill": 0.06743225495905592,
+                "persistence_state_mse": 0.030649558556350796
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.9009415776559241,
+                "model_state_mse": 0.041050768372687424,
+                "persistence_relative_skill": 0.09905842234407591,
+                "persistence_state_mse": 0.04556429561114672
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.6395656634036363,
+                "model_state_mse": 0.022458849531231506,
+                "persistence_relative_skill": 0.3604343365963637,
+                "persistence_state_mse": 0.035115783751913994
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.5987468119920145,
+                "model_state_mse": 0.04619273295005163,
+                "persistence_relative_skill": 0.4012531880079855,
+                "persistence_state_mse": 0.07714902530565407
+              }
+            },
+            "window_count": 24
+          }
+        },
+        "physics_derived_metric": false,
+        "selection_metric": 0.4827622786459804,
+        "selection_metric_definition": "unweighted_mean_of_fieldwise_state_mse_over_persistence_mse"
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_002.pt",
+        "sha256": "9e96858c458a9457660490cb424c3bb5ff95402b34431270c39d292d3622f085"
+      },
+      "epoch": 2,
+      "optimizer_updates_cumulative": 214,
+      "preclip_gradient_norm_maximum": 19.51811408996582,
+      "training_step_loss_means": {
+        "1": 0.6156741954455865,
+        "2": 0.9326386802664427,
+        "3": 1.2284980845228535,
+        "4": 1.5267957712166778
+      },
+      "training_weighted_state_loss_first_quarter": 0.8432871918672713,
+      "training_weighted_state_loss_last_quarter": 0.8264033158666619,
+      "training_weighted_state_loss_mean": 0.8457879390149752,
+      "training_window_count": 428,
+      "validation": {
+        "current_frames": [
+          496,
+          501,
+          506,
+          511,
+          516,
+          521,
+          526,
+          531,
+          536,
+          541,
+          546,
+          551,
+          556,
+          561,
+          566,
+          571,
+          576,
+          581,
+          586,
+          591,
+          596,
+          601,
+          606,
+          611
+        ],
+        "future_truth_used_as_context": false,
+        "horizons": {
+          "1": {
+            "mean_field_model_over_persistence_mse": 0.2178133305353021,
+            "mean_field_model_state_mse": 0.005649223733185367,
+            "mean_field_persistence_relative_skill": 0.782186669464698,
+            "mean_field_persistence_state_mse": 0.03164933687922629,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.3183746487080659,
+                "model_state_mse": 0.005262516036799008,
+                "persistence_relative_skill": 0.6816253512919341,
+                "persistence_state_mse": 0.016529318707233124
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.10925921692893781,
+                "model_state_mse": 0.004306958254539605,
+                "persistence_relative_skill": 0.8907407830710622,
+                "persistence_state_mse": 0.039419633195255745
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.11067588153886677,
+                "model_state_mse": 0.006250051795646097,
+                "persistence_relative_skill": 0.8893241184611332,
+                "persistence_state_mse": 0.056471669425566993
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.3642974652101606,
+                "model_state_mse": 0.007951971312815493,
+                "persistence_relative_skill": 0.6357025347898394,
+                "persistence_state_mse": 0.021828236735679886
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.1864594402904793,
+                "model_state_mse": 0.004474621266126633,
+                "persistence_relative_skill": 0.8135405597095207,
+                "persistence_state_mse": 0.023997826332395725
+              }
+            },
+            "window_count": 24
+          },
+          "4": {
+            "mean_field_model_over_persistence_mse": 0.454801292190922,
+            "mean_field_model_state_mse": 0.014180498654869469,
+            "mean_field_persistence_relative_skill": 0.545198707809078,
+            "mean_field_persistence_state_mse": 0.03149891442083048,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.478656329914311,
+                "model_state_mse": 0.009724664360736355,
+                "persistence_relative_skill": 0.521343670085689,
+                "persistence_state_mse": 0.020316589905908615
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.45985172849355266,
+                "model_state_mse": 0.01161327182004849,
+                "persistence_relative_skill": 0.5401482715064474,
+                "persistence_state_mse": 0.02525438331632
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.4475644840509031,
+                "model_state_mse": 0.01756408085312807,
+                "persistence_relative_skill": 0.5524355159490969,
+                "persistence_state_mse": 0.03924368773445939
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.477886284814608,
+                "model_state_mse": 0.015485476533120329,
+                "persistence_relative_skill": 0.5221137151853921,
+                "persistence_state_mse": 0.032404103288144775
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.41004763368123504,
+                "model_state_mse": 0.016514999707314102,
+                "persistence_relative_skill": 0.5899523663187649,
+                "persistence_state_mse": 0.040275807859319626
+              }
+            },
+            "window_count": 24
+          },
+          "8": {
+            "mean_field_model_over_persistence_mse": 0.7410594259239944,
+            "mean_field_model_state_mse": 0.030163687958636064,
+            "mean_field_persistence_relative_skill": 0.25894057407600557,
+            "mean_field_persistence_state_mse": 0.04278214376306895,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.6814131570507649,
+                "model_state_mse": 0.017329737290062687,
+                "persistence_relative_skill": 0.3185868429492351,
+                "persistence_state_mse": 0.025432055590279175
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.9516653610651922,
+                "model_state_mse": 0.02916812321001833,
+                "persistence_relative_skill": 0.04833463893480783,
+                "persistence_state_mse": 0.030649558556350796
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.91469431872945,
+                "model_state_mse": 0.04167740233242512,
+                "persistence_relative_skill": 0.08530568127055005,
+                "persistence_state_mse": 0.04556429561114672
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.6342288391062233,
+                "model_state_mse": 0.02227144276328159,
+                "persistence_relative_skill": 0.3657711608937767,
+                "persistence_state_mse": 0.035115783751913994
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.5232954536683415,
+                "model_state_mse": 0.04037173419739261,
+                "persistence_relative_skill": 0.4767045463316585,
+                "persistence_state_mse": 0.07714902530565407
+              }
+            },
+            "window_count": 24
+          }
+        },
+        "physics_derived_metric": false,
+        "selection_metric": 0.4712246828834062,
+        "selection_metric_definition": "unweighted_mean_of_fieldwise_state_mse_over_persistence_mse"
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_003.pt",
+        "sha256": "a6e6930483954f8c341270361deeb9d6e31d5a7ccf902eb37ed869b9e7758d32"
+      },
+      "epoch": 3,
+      "optimizer_updates_cumulative": 321,
+      "preclip_gradient_norm_maximum": 20.771291732788086,
+      "training_step_loss_means": {
+        "1": 0.6082351759911697,
+        "2": 0.9127703355015996,
+        "3": 1.1871174402604594,
+        "4": 1.455988730504134
+      },
+      "training_weighted_state_loss_first_quarter": 0.8281012861249603,
+      "training_weighted_state_loss_last_quarter": 0.8278344655148336,
+      "training_weighted_state_loss_mean": 0.8246315477468144,
+      "training_window_count": 428,
+      "validation": {
+        "current_frames": [
+          496,
+          501,
+          506,
+          511,
+          516,
+          521,
+          526,
+          531,
+          536,
+          541,
+          546,
+          551,
+          556,
+          561,
+          566,
+          571,
+          576,
+          581,
+          586,
+          591,
+          596,
+          601,
+          606,
+          611
+        ],
+        "future_truth_used_as_context": false,
+        "horizons": {
+          "1": {
+            "mean_field_model_over_persistence_mse": 0.21539062876520002,
+            "mean_field_model_state_mse": 0.005568618354190027,
+            "mean_field_persistence_relative_skill": 0.7846093712348,
+            "mean_field_persistence_state_mse": 0.03164933687922629,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.31701034294198066,
+                "model_state_mse": 0.005239964991977269,
+                "persistence_relative_skill": 0.6829896570580194,
+                "persistence_state_mse": 0.016529318707233124
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.10698847541916405,
+                "model_state_mse": 0.004217446457143083,
+                "persistence_relative_skill": 0.893011524580836,
+                "persistence_state_mse": 0.039419633195255745
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.10768674534334237,
+                "model_state_mse": 0.006081250284544446,
+                "persistence_relative_skill": 0.8923132546566577,
+                "persistence_state_mse": 0.056471669425566993
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.3598867990233385,
+                "model_state_mse": 0.007855694247127482,
+                "persistence_relative_skill": 0.6401132009766615,
+                "persistence_state_mse": 0.021828236735679886
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.1853807810981745,
+                "model_state_mse": 0.00444873579015786,
+                "persistence_relative_skill": 0.8146192189018255,
+                "persistence_state_mse": 0.023997826332395725
+              }
+            },
+            "window_count": 24
+          },
+          "4": {
+            "mean_field_model_over_persistence_mse": 0.4351199555957234,
+            "mean_field_model_state_mse": 0.013563792204315011,
+            "mean_field_persistence_relative_skill": 0.5648800444042765,
+            "mean_field_persistence_state_mse": 0.03149891442083048,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.46342792240175146,
+                "model_state_mse": 0.009415275050383625,
+                "persistence_relative_skill": 0.5365720775982485,
+                "persistence_state_mse": 0.020316589905908615
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.4311174611363182,
+                "model_state_mse": 0.010887605617895271,
+                "persistence_relative_skill": 0.5688825388636818,
+                "persistence_state_mse": 0.02525438331632
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.41884202040951507,
+                "model_state_mse": 0.016436905459021076,
+                "persistence_relative_skill": 0.5811579795904849,
+                "persistence_state_mse": 0.03924368773445939
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.4633208707402326,
+                "model_state_mse": 0.015013497351019672,
+                "persistence_relative_skill": 0.5366791292597675,
+                "persistence_state_mse": 0.032404103288144775
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.39889150329079986,
+                "model_state_mse": 0.016065677543255417,
+                "persistence_relative_skill": 0.6011084967092002,
+                "persistence_state_mse": 0.040275807859319626
+              }
+            },
+            "window_count": 24
+          },
+          "8": {
+            "mean_field_model_over_persistence_mse": 0.6449667596853411,
+            "mean_field_model_state_mse": 0.0267356815663251,
+            "mean_field_persistence_relative_skill": 0.3550332403146589,
+            "mean_field_persistence_state_mse": 0.04278214376306895,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.617036987508347,
+                "model_state_mse": 0.01569251896757068,
+                "persistence_relative_skill": 0.382963012491653,
+                "persistence_state_mse": 0.025432055590279175
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.7523836966595233,
+                "model_state_mse": 0.023060228167609734,
+                "persistence_relative_skill": 0.24761630334047668,
+                "persistence_state_mse": 0.030649558556350796
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.7280273669304078,
+                "model_state_mse": 0.033172054159821884,
+                "persistence_relative_skill": 0.2719726330695922,
+                "persistence_state_mse": 0.04556429561114672
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.6000751805211897,
+                "model_state_mse": 0.02107211027407285,
+                "persistence_relative_skill": 0.3999248194788103,
+                "persistence_state_mse": 0.035115783751913994
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.5273105668072374,
+                "model_state_mse": 0.040681496262550354,
+                "persistence_relative_skill": 0.4726894331927626,
+                "persistence_state_mse": 0.07714902530565407
+              }
+            },
+            "window_count": 24
+          }
+        },
+        "physics_derived_metric": false,
+        "selection_metric": 0.4318257813487549,
+        "selection_metric_definition": "unweighted_mean_of_fieldwise_state_mse_over_persistence_mse"
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_004.pt",
+        "sha256": "b046ba70d286f097c13c24e1998cc64f85269b25b2a76c87e01783a79741b7ae"
+      },
+      "epoch": 4,
+      "optimizer_updates_cumulative": 428,
+      "preclip_gradient_norm_maximum": 22.7093563079834,
+      "training_step_loss_means": {
+        "1": 0.6003709724434069,
+        "2": 0.8967764653335107,
+        "3": 1.1620824497158282,
+        "4": 1.4185205720295415
+      },
+      "training_weighted_state_loss_first_quarter": 0.8188843752875506,
+      "training_weighted_state_loss_last_quarter": 0.7874372496365387,
+      "training_weighted_state_loss_mean": 0.809904293392167,
+      "training_window_count": 428,
+      "validation": {
+        "current_frames": [
+          496,
+          501,
+          506,
+          511,
+          516,
+          521,
+          526,
+          531,
+          536,
+          541,
+          546,
+          551,
+          556,
+          561,
+          566,
+          571,
+          576,
+          581,
+          586,
+          591,
+          596,
+          601,
+          606,
+          611
+        ],
+        "future_truth_used_as_context": false,
+        "horizons": {
+          "1": {
+            "mean_field_model_over_persistence_mse": 0.21454346893291235,
+            "mean_field_model_state_mse": 0.0055480002764273775,
+            "mean_field_persistence_relative_skill": 0.7854565310670877,
+            "mean_field_persistence_state_mse": 0.03164933687922629,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.3162519361501105,
+                "model_state_mse": 0.0052274290444047165,
+                "persistence_relative_skill": 0.6837480638498895,
+                "persistence_state_mse": 0.016529318707233124
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.10610373544026559,
+                "model_state_mse": 0.004182570331701727,
+                "persistence_relative_skill": 0.8938962645597344,
+                "persistence_state_mse": 0.039419633195255745
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.10784283900024617,
+                "model_state_mse": 0.006090065153936545,
+                "persistence_relative_skill": 0.8921571609997538,
+                "persistence_state_mse": 0.056471669425566993
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.3592089081022564,
+                "model_state_mse": 0.007840897083621134,
+                "persistence_relative_skill": 0.6407910918977435,
+                "persistence_state_mse": 0.021828236735679886
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.183309925971683,
+                "model_state_mse": 0.004399039768472765,
+                "persistence_relative_skill": 0.816690074028317,
+                "persistence_state_mse": 0.023997826332395725
+              }
+            },
+            "window_count": 24
+          },
+          "4": {
+            "mean_field_model_over_persistence_mse": 0.43175414783425686,
+            "mean_field_model_state_mse": 0.013412331400269812,
+            "mean_field_persistence_relative_skill": 0.5682458521657432,
+            "mean_field_persistence_state_mse": 0.03149891442083048,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.46863961877509286,
+                "model_state_mse": 0.009521158948314913,
+                "persistence_relative_skill": 0.5313603812249071,
+                "persistence_state_mse": 0.020316589905908615
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.4300665148617514,
+                "model_state_mse": 0.010861064617832502,
+                "persistence_relative_skill": 0.5699334851382486,
+                "persistence_state_mse": 0.02525438331632
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.4200042268170452,
+                "model_state_mse": 0.016482514724361175,
+                "persistence_relative_skill": 0.5799957731829548,
+                "persistence_state_mse": 0.03924368773445939
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.46205896826051157,
+                "model_state_mse": 0.014972606532727226,
+                "persistence_relative_skill": 0.5379410317394884,
+                "persistence_state_mse": 0.032404103288144775
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.3780014104568833,
+                "model_state_mse": 0.015224312178113243,
+                "persistence_relative_skill": 0.6219985895431167,
+                "persistence_state_mse": 0.040275807859319626
+              }
+            },
+            "window_count": 24
+          },
+          "8": {
+            "mean_field_model_over_persistence_mse": 0.6769058136479629,
+            "mean_field_model_state_mse": 0.027406265372128195,
+            "mean_field_persistence_relative_skill": 0.3230941863520371,
+            "mean_field_persistence_state_mse": 0.04278214376306895,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.6476436025470041,
+                "model_state_mse": 0.01647090810266408,
+                "persistence_relative_skill": 0.35235639745299585,
+                "persistence_state_mse": 0.025432055590279175
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.8407129148496407,
+                "model_state_mse": 0.025767479712764423,
+                "persistence_relative_skill": 0.15928708515035928,
+                "persistence_state_mse": 0.030649558556350796
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.8158929788241532,
+                "model_state_mse": 0.03717558887420279,
+                "persistence_relative_skill": 0.18410702117584676,
+                "persistence_state_mse": 0.04556429561114672
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.6120195568304326,
+                "model_state_mse": 0.02149154640959971,
+                "persistence_relative_skill": 0.38798044316956737,
+                "persistence_state_mse": 0.035115783751913994
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.4682600151885835,
+                "model_state_mse": 0.03612580376140999,
+                "persistence_relative_skill": 0.5317399848114165,
+                "persistence_state_mse": 0.07714902530565407
+              }
+            },
+            "window_count": 24
+          }
+        },
+        "physics_derived_metric": false,
+        "selection_metric": 0.44106781013837737,
+        "selection_metric_definition": "unweighted_mean_of_fieldwise_state_mse_over_persistence_mse"
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_005.pt",
+        "sha256": "e45a630f3a1f60c1a3c02f2e8ad27dba36bb79b4e2339cb206af981d31e7f3fe"
+      },
+      "epoch": 5,
+      "optimizer_updates_cumulative": 535,
+      "preclip_gradient_norm_maximum": 24.246694564819336,
+      "training_step_loss_means": {
+        "1": 0.5938438791259427,
+        "2": 0.8791712987645764,
+        "3": 1.132228730855701,
+        "4": 1.3816555228745826
+      },
+      "training_weighted_state_loss_first_quarter": 0.7855502596803915,
+      "training_weighted_state_loss_last_quarter": 0.7727125057968024,
+      "training_weighted_state_loss_mean": 0.7952843680455585,
+      "training_window_count": 428,
+      "validation": {
+        "current_frames": [
+          496,
+          501,
+          506,
+          511,
+          516,
+          521,
+          526,
+          531,
+          536,
+          541,
+          546,
+          551,
+          556,
+          561,
+          566,
+          571,
+          576,
+          581,
+          586,
+          591,
+          596,
+          601,
+          606,
+          611
+        ],
+        "future_truth_used_as_context": false,
+        "horizons": {
+          "1": {
+            "mean_field_model_over_persistence_mse": 0.2132931879902039,
+            "mean_field_model_state_mse": 0.005505138953131708,
+            "mean_field_persistence_relative_skill": 0.7867068120097961,
+            "mean_field_persistence_state_mse": 0.03164933687922629,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.31527730836808576,
+                "model_state_mse": 0.0052113191111747064,
+                "persistence_relative_skill": 0.6847226916319142,
+                "persistence_state_mse": 0.016529318707233124
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.10448436915949154,
+                "model_state_mse": 0.004118735506904848,
+                "persistence_relative_skill": 0.8955156308405084,
+                "persistence_state_mse": 0.039419633195255745
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.10641119357560494,
+                "model_state_mse": 0.00600921774678158,
+                "persistence_relative_skill": 0.8935888064243951,
+                "persistence_state_mse": 0.056471669425566993
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.35925542562979157,
+                "model_state_mse": 0.00784191247922453,
+                "persistence_relative_skill": 0.6407445743702085,
+                "persistence_state_mse": 0.021828236735679886
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.18103764321804558,
+                "model_state_mse": 0.004344509921572877,
+                "persistence_relative_skill": 0.8189623567819544,
+                "persistence_state_mse": 0.023997826332395725
+              }
+            },
+            "window_count": 24
+          },
+          "4": {
+            "mean_field_model_over_persistence_mse": 0.4343267727869094,
+            "mean_field_model_state_mse": 0.013492339866405184,
+            "mean_field_persistence_relative_skill": 0.5656732272130907,
+            "mean_field_persistence_state_mse": 0.03149891442083048,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.464882156598566,
+                "model_state_mse": 0.009444820130187454,
+                "persistence_relative_skill": 0.535117843401434,
+                "persistence_state_mse": 0.020316589905908615
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.44081010158151623,
+                "model_state_mse": 0.011132387275045568,
+                "persistence_relative_skill": 0.5591898984184838,
+                "persistence_state_mse": 0.02525438331632
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.43301443463529576,
+                "model_state_mse": 0.016993083257341023,
+                "persistence_relative_skill": 0.5669855653647042,
+                "persistence_state_mse": 0.03924368773445939
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.464372868963607,
+                "model_state_mse": 0.015047586410108841,
+                "persistence_relative_skill": 0.5356271310363929,
+                "persistence_state_mse": 0.032404103288144775
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.3685543021555617,
+                "model_state_mse": 0.014843822259343031,
+                "persistence_relative_skill": 0.6314456978444383,
+                "persistence_state_mse": 0.040275807859319626
+              }
+            },
+            "window_count": 24
+          },
+          "8": {
+            "mean_field_model_over_persistence_mse": 0.6855384927385878,
+            "mean_field_model_state_mse": 0.027654276720502156,
+            "mean_field_persistence_relative_skill": 0.3144615072614122,
+            "mean_field_persistence_state_mse": 0.04278214376306895,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.6456781013605031,
+                "model_state_mse": 0.016420921367226227,
+                "persistence_relative_skill": 0.3543218986394969,
+                "persistence_state_mse": 0.025432055590279175
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.8668355352981606,
+                "model_state_mse": 0.02656812649784666,
+                "persistence_relative_skill": 0.1331644647018394,
+                "persistence_state_mse": 0.030649558556350796
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.8548401705297572,
+                "model_state_mse": 0.038950190230300934,
+                "persistence_relative_skill": 0.14515982947024275,
+                "persistence_state_mse": 0.04556429561114672
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.6059953359420805,
+                "model_state_mse": 0.021280001171610573,
+                "persistence_relative_skill": 0.39400466405791945,
+                "persistence_state_mse": 0.035115783751913994
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.4543433205624377,
+                "model_state_mse": 0.035052144335526406,
+                "persistence_relative_skill": 0.5456566794375624,
+                "persistence_state_mse": 0.07714902530565407
+              }
+            },
+            "window_count": 24
+          }
+        },
+        "physics_derived_metric": false,
+        "selection_metric": 0.44438615117190033,
+        "selection_metric_definition": "unweighted_mean_of_fieldwise_state_mse_over_persistence_mse"
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_006.pt",
+        "sha256": "affe2589f4ce6639879ca1ed4a100af764aa48a475a653987faa18d4ce844117"
+      },
+      "epoch": 6,
+      "optimizer_updates_cumulative": 642,
+      "preclip_gradient_norm_maximum": 18.522491455078125,
+      "training_step_loss_means": {
+        "1": 0.590291968851446,
+        "2": 0.86978404140361,
+        "3": 1.1127911090293778,
+        "4": 1.343762664594383
+      },
+      "training_weighted_state_loss_first_quarter": 0.7733961020674661,
+      "training_weighted_state_loss_last_quarter": 0.7833129947430619,
+      "training_weighted_state_loss_mean": 0.7847247064705486,
+      "training_window_count": 428,
+      "validation": {
+        "current_frames": [
+          496,
+          501,
+          506,
+          511,
+          516,
+          521,
+          526,
+          531,
+          536,
+          541,
+          546,
+          551,
+          556,
+          561,
+          566,
+          571,
+          576,
+          581,
+          586,
+          591,
+          596,
+          601,
+          606,
+          611
+        ],
+        "future_truth_used_as_context": false,
+        "horizons": {
+          "1": {
+            "mean_field_model_over_persistence_mse": 0.2131515145845809,
+            "mean_field_model_state_mse": 0.00549686997564453,
+            "mean_field_persistence_relative_skill": 0.7868484854154191,
+            "mean_field_persistence_state_mse": 0.03164933687922629,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.31526549113577645,
+                "model_state_mse": 0.0052111237803756285,
+                "persistence_relative_skill": 0.6847345088642236,
+                "persistence_state_mse": 0.016529318707233124
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.10426919954036513,
+                "model_state_mse": 0.004110253599444122,
+                "persistence_relative_skill": 0.8957308004596348,
+                "persistence_state_mse": 0.039419633195255745
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.10574264001752175,
+                "model_state_mse": 0.00597146341125622,
+                "persistence_relative_skill": 0.8942573599824782,
+                "persistence_state_mse": 0.056471669425566993
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.35898121153455637,
+                "model_state_mse": 0.007835926869037476,
+                "persistence_relative_skill": 0.6410187884654437,
+                "persistence_state_mse": 0.021828236735679886
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.18149903069468482,
+                "model_state_mse": 0.004355582218109207,
+                "persistence_relative_skill": 0.8185009693053151,
+                "persistence_state_mse": 0.023997826332395725
+              }
+            },
+            "window_count": 24
+          },
+          "4": {
+            "mean_field_model_over_persistence_mse": 0.42202419743122166,
+            "mean_field_model_state_mse": 0.01309838660738685,
+            "mean_field_persistence_relative_skill": 0.5779758025687783,
+            "mean_field_persistence_state_mse": 0.03149891442083048,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.46010747296140664,
+                "model_state_mse": 0.009347814840800835,
+                "persistence_relative_skill": 0.5398925270385934,
+                "persistence_state_mse": 0.020316589905908615
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.4166657965960044,
+                "model_state_mse": 0.010522637742035316,
+                "persistence_relative_skill": 0.5833342034039957,
+                "persistence_state_mse": 0.02525438331632
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.40825413913602765,
+                "model_state_mse": 0.016021397952554806,
+                "persistence_relative_skill": 0.5917458608639723,
+                "persistence_state_mse": 0.03924368773445939
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.46130134810631956,
+                "model_state_mse": 0.014948056530997608,
+                "persistence_relative_skill": 0.5386986518936805,
+                "persistence_state_mse": 0.032404103288144775
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.36379223035634967,
+                "model_state_mse": 0.014652025970545683,
+                "persistence_relative_skill": 0.6362077696436503,
+                "persistence_state_mse": 0.040275807859319626
+              }
+            },
+            "window_count": 24
+          },
+          "8": {
+            "mean_field_model_over_persistence_mse": 0.6441693649881615,
+            "mean_field_model_state_mse": 0.02613966727459972,
+            "mean_field_persistence_relative_skill": 0.35583063501183854,
+            "mean_field_persistence_state_mse": 0.04278214376306895,
+            "per_field": {
+              "Ne": {
+                "model_over_persistence_mse": 0.6274799673524243,
+                "model_state_mse": 0.015958105411493416,
+                "persistence_relative_skill": 0.3725200326475757,
+                "persistence_state_mse": 0.025432055590279175
+              },
+              "Pe": {
+                "model_over_persistence_mse": 0.7714431200354679,
+                "model_state_mse": 0.023644391080421028,
+                "persistence_relative_skill": 0.2285568799645321,
+                "persistence_state_mse": 0.030649558556350796
+              },
+              "Pi": {
+                "model_over_persistence_mse": 0.7601863174656097,
+                "model_state_mse": 0.03463735408855207,
+                "persistence_relative_skill": 0.23981368253439028,
+                "persistence_state_mse": 0.04556429561114672
+              },
+              "Vi": {
+                "model_over_persistence_mse": 0.6055569439059467,
+                "model_state_mse": 0.02126460669167114,
+                "persistence_relative_skill": 0.3944430560940533,
+                "persistence_state_mse": 0.035115783751913994
+              },
+              "phi": {
+                "model_over_persistence_mse": 0.45618047618135876,
+                "model_state_mse": 0.03519387910086097,
+                "persistence_relative_skill": 0.5438195238186412,
+                "persistence_state_mse": 0.07714902530565407
+              }
+            },
+            "window_count": 24
+          }
+        },
+        "physics_derived_metric": false,
+        "selection_metric": 0.42644835900132133,
+        "selection_metric_definition": "unweighted_mean_of_fieldwise_state_mse_over_persistence_mse"
+      }
+    }
+  ],
+  "loss": {
+    "backpropagate_through_previous_predicted_states": false,
+    "direct_one_step_weight": 0.5,
+    "effective_step_weights": [
+      0.625,
+      0.125,
+      0.125,
+      0.125
+    ],
+    "equal_rollout_mean_weight": 0.5,
+    "feedback_uses_predicted_intermediate_states": true,
+    "field_scale": "frozen_stage2_training_derivative_rms",
+    "name": "detached_four_step_pushforward_plus_retained_one_step_state_mse",
+    "physics_derived_quantities_used": false,
+    "teacher_forcing_after_initial_context": false
+  },
+  "manifest": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/manifests/post_ecrd_old_85604_four_step_feedback_pilot.json",
+  "manifest_sha256": "7405ba5fbd9f1d02be901df3f7b83cfea2fb490e75afde3da0ba4a3cd6a970ee",
+  "mechanical_gate": {
+    "checkpoint_reload_and_equivariance_passed": true,
+    "epoch_mean_training_loss_decreased": true,
+    "exact_optimizer_update_count": true,
+    "finite_validation_metrics": true,
+    "passed": true
+  },
+  "new_nersc_data_read": false,
+  "numeric_precision": {
+    "cudnn_allow_tf32": false,
+    "float32_matmul_precision": "highest",
+    "matmul_allow_tf32": false
+  },
+  "numerical_gate": {
+    "boundary": null,
+    "checkpoint_reload_exact": true,
+    "integer_toroidal_shift": 7,
+    "passed": true,
+    "volume": {
+      "normalized_maximum_absolute_error": 1.2168623491948022e-06,
+      "normalized_root_mean_square_error": 1.5486026989233653e-07
+    }
+  },
+  "optimizer_updates": 642,
+  "paper0_commit": "9c75ca5b6e9efcf2d413e351fb73a1c1d384d358",
+  "parent": {
+    "checkpoint": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_004.pt",
+      "sha256": "b9007f818eb35d82a1e4c21771dfc1ad870591feb777f5087f3b2a49847cd50d"
+    },
+    "checkpoint_config_validation": {
+      "inserted_legacy_defaults": [],
+      "legacy_default_values": {
+        "auxiliary_context_channels": 0
+      },
+      "stored_config_matches_after_explicit_legacy_default": true
+    },
+    "checkpoint_epoch": 4,
+    "checkpoint_optimizer_updates": 2132,
+    "checkpoint_paper0_commit": "50ed12bd3defdb2685603e6a69f1972587d5564d",
+    "checkpoint_reload_bitwise": true,
+    "evaluation_before_optimizer_construction": true,
+    "full_validation": {
+      "future_truth_used_as_context": false,
+      "horizons": {
+        "1": {
+          "mean_field_model_over_persistence_mse": 0.21802916389108407,
+          "mean_field_model_state_mse": 0.005678575795007844,
+          "mean_field_persistence_relative_skill": 0.7819708361089159,
+          "mean_field_persistence_state_mse": 0.032347036493874146,
+          "per_field": {
+            "Ne": {
+              "model_over_persistence_mse": 0.31917873305897987,
+              "model_state_mse": 0.0052606348100311005,
+              "persistence_relative_skill": 0.6808212669410201,
+              "persistence_state_mse": 0.016481783606362668
+            },
+            "Pe": {
+              "model_over_persistence_mse": 0.1046185735070006,
+              "model_state_mse": 0.004316896254846089,
+              "persistence_relative_skill": 0.8953814264929993,
+              "persistence_state_mse": 0.04126319170808826
+            },
+            "Pi": {
+              "model_over_persistence_mse": 0.10703619790227573,
+              "model_state_mse": 0.006219184878112251,
+              "persistence_relative_skill": 0.8929638020977243,
+              "persistence_state_mse": 0.058103566830637804
+            },
+            "Vi": {
+              "model_over_persistence_mse": 0.3705196907196368,
+              "model_state_mse": 0.008019126853028961,
+              "persistence_relative_skill": 0.6294803092803631,
+              "persistence_state_mse": 0.021642916837844493
+            },
+            "phi": {
+              "model_over_persistence_mse": 0.1887926242675273,
+              "model_state_mse": 0.0045770361790208195,
+              "persistence_relative_skill": 0.8112073757324727,
+              "persistence_state_mse": 0.024243723486437486
+            }
+          },
+          "window_count": 127
+        },
+        "4": {
+          "mean_field_model_over_persistence_mse": 0.47633245162723536,
+          "mean_field_model_state_mse": 0.015221406057302206,
+          "mean_field_persistence_relative_skill": 0.5236675483727646,
+          "mean_field_persistence_state_mse": 0.032549198263507786,
+          "per_field": {
+            "Ne": {
+              "model_over_persistence_mse": 0.5238068552935026,
+              "model_state_mse": 0.010502434840911994,
+              "persistence_relative_skill": 0.47619314470649743,
+              "persistence_state_mse": 0.020050205022664712
+            },
+            "Pe": {
+              "model_over_persistence_mse": 0.4730322296786429,
+              "model_state_mse": 0.01277364801910441,
+              "persistence_relative_skill": 0.5269677703213571,
+              "persistence_state_mse": 0.027003758343870688
+            },
+            "Pi": {
+              "model_over_persistence_mse": 0.465966149934872,
+              "model_state_mse": 0.019132402930354092,
+              "persistence_relative_skill": 0.534033850065128,
+              "persistence_state_mse": 0.04105964120575759
+            },
+            "Vi": {
+              "model_over_persistence_mse": 0.5144804939860494,
+              "model_state_mse": 0.016442966027474824,
+              "persistence_relative_skill": 0.48551950601395055,
+              "persistence_state_mse": 0.03196032934131161
+            },
+            "phi": {
+              "model_over_persistence_mse": 0.4043765292431097,
+              "model_state_mse": 0.0172555784686657,
+              "persistence_relative_skill": 0.5956234707568904,
+              "persistence_state_mse": 0.042672057403934316
+            }
+          },
+          "window_count": 124
+        },
+        "8": {
+          "mean_field_model_over_persistence_mse": 0.7435978309335557,
+          "mean_field_model_state_mse": 0.030797242179061428,
+          "mean_field_persistence_relative_skill": 0.2564021690664443,
+          "mean_field_persistence_state_mse": 0.04409096677646492,
+          "per_field": {
+            "Ne": {
+              "model_over_persistence_mse": 0.7671464167669252,
+              "model_state_mse": 0.019451087950305507,
+              "persistence_relative_skill": 0.2328535832330748,
+              "persistence_state_mse": 0.025355118038979444
+            },
+            "Pe": {
+              "model_over_persistence_mse": 0.8567786888806107,
+              "model_state_mse": 0.02680569389327006,
+              "persistence_relative_skill": 0.1432213111193893,
+              "persistence_state_mse": 0.0312866020609032
+            },
+            "Pi": {
+              "model_over_persistence_mse": 0.8394847020770139,
+              "model_state_mse": 0.03878480794303345,
+              "persistence_relative_skill": 0.16051529792298613,
+              "persistence_state_mse": 0.046200732243331995
+            },
+            "Vi": {
+              "model_over_persistence_mse": 0.7299468501711652,
+              "model_state_mse": 0.025744892939022095,
+              "persistence_relative_skill": 0.27005314982883477,
+              "persistence_state_mse": 0.03526954453325633
+            },
+            "phi": {
+              "model_over_persistence_mse": 0.524632496772063,
+              "model_state_mse": 0.04319972816967603,
+              "persistence_relative_skill": 0.47536750322793697,
+              "persistence_state_mse": 0.08234283700585365
+            }
+          },
+          "window_count": 120
+        }
+      },
+      "physics_derived_metric": false
+    },
+    "result": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_stage2_multilead_seed1702_6936642.json",
+      "sha256": "9ba99fc02ac8620dd1a1e917a7f5973f08925ada3389a3a65b913f941d410881"
+    },
+    "selection": {
+      "current_frames": [
+        496,
+        501,
+        506,
+        511,
+        516,
+        521,
+        526,
+        531,
+        536,
+        541,
+        546,
+        551,
+        556,
+        561,
+        566,
+        571,
+        576,
+        581,
+        586,
+        591,
+        596,
+        601,
+        606,
+        611
+      ],
+      "future_truth_used_as_context": false,
+      "horizons": {
+        "1": {
+          "mean_field_model_over_persistence_mse": 0.2191263321438149,
+          "mean_field_model_state_mse": 0.005671009469325795,
+          "mean_field_persistence_relative_skill": 0.7808736678561851,
+          "mean_field_persistence_state_mse": 0.03164933687922629,
+          "per_field": {
+            "Ne": {
+              "model_over_persistence_mse": 0.32214657138992064,
+              "model_state_mse": 0.005324863348946426,
+              "persistence_relative_skill": 0.6778534286100794,
+              "persistence_state_mse": 0.016529318707233124
+            },
+            "Pe": {
+              "model_over_persistence_mse": 0.10985981589793753,
+              "model_state_mse": 0.004330633645595023,
+              "persistence_relative_skill": 0.8901401841020624,
+              "persistence_state_mse": 0.039419633195255745
+            },
+            "Pi": {
+              "model_over_persistence_mse": 0.10983392562247431,
+              "model_state_mse": 0.006202505139464682,
+              "persistence_relative_skill": 0.8901660743775257,
+              "persistence_state_mse": 0.056471669425566993
+            },
+            "Vi": {
+              "model_over_persistence_mse": 0.3653886327970504,
+              "model_state_mse": 0.007975789577220425,
+              "persistence_relative_skill": 0.6346113672029496,
+              "persistence_state_mse": 0.021828236735679886
+            },
+            "phi": {
+              "model_over_persistence_mse": 0.18840271501169156,
+              "model_state_mse": 0.004521255635402419,
+              "persistence_relative_skill": 0.8115972849883084,
+              "persistence_state_mse": 0.023997826332395725
+            }
+          },
+          "window_count": 24
+        },
+        "4": {
+          "mean_field_model_over_persistence_mse": 0.47557985439457784,
+          "mean_field_model_state_mse": 0.014798527385926607,
+          "mean_field_persistence_relative_skill": 0.5244201456054222,
+          "mean_field_persistence_state_mse": 0.03149891442083048,
+          "per_field": {
+            "Ne": {
+              "model_over_persistence_mse": 0.5108338777262756,
+              "model_state_mse": 0.010378402403809807,
+              "persistence_relative_skill": 0.48916612227372436,
+              "persistence_state_mse": 0.020316589905908615
+            },
+            "Pe": {
+              "model_over_persistence_mse": 0.4746953589825188,
+              "model_state_mse": 0.011988138554222656,
+              "persistence_relative_skill": 0.5253046410174812,
+              "persistence_state_mse": 0.02525438331632
+            },
+            "Pi": {
+              "model_over_persistence_mse": 0.4634629487709855,
+              "model_state_mse": 0.018187995238060303,
+              "persistence_relative_skill": 0.5365370512290145,
+              "persistence_state_mse": 0.03924368773445939
+            },
+            "Vi": {
+              "model_over_persistence_mse": 0.5048947868000874,
+              "model_state_mse": 0.016360662821115868,
+              "persistence_relative_skill": 0.49510521319991263,
+              "persistence_state_mse": 0.032404103288144775
+            },
+            "phi": {
+              "model_over_persistence_mse": 0.424012299693022,
+              "model_state_mse": 0.017077437912424404,
+              "persistence_relative_skill": 0.575987700306978,
+              "persistence_state_mse": 0.040275807859319626
+            }
+          },
+          "window_count": 24
+        },
+        "8": {
+          "mean_field_model_over_persistence_mse": 0.7629429234224858,
+          "mean_field_model_state_mse": 0.030900826293862226,
+          "mean_field_persistence_relative_skill": 0.23705707657751418,
+          "mean_field_persistence_state_mse": 0.04278214376306895,
+          "per_field": {
+            "Ne": {
+              "model_over_persistence_mse": 0.7717417270070209,
+              "model_state_mse": 0.019626978502580612,
+              "persistence_relative_skill": 0.22825827299297907,
+              "persistence_state_mse": 0.025432055590279175
+            },
+            "Pe": {
+              "model_over_persistence_mse": 0.8873444570604736,
+              "model_state_mse": 0.02719671589632829,
+              "persistence_relative_skill": 0.1126555429395264,
+              "persistence_state_mse": 0.030649558556350796
+            },
+            "Pi": {
+              "model_over_persistence_mse": 0.8722129576429287,
+              "model_state_mse": 0.039741769037915,
+              "persistence_relative_skill": 0.12778704235707128,
+              "persistence_state_mse": 0.04556429561114672
+            },
+            "Vi": {
+              "model_over_persistence_mse": 0.7393097417252394,
+              "model_state_mse": 0.025961441016106895,
+              "persistence_relative_skill": 0.26069025827476056,
+              "persistence_state_mse": 0.035115783751913994
+            },
+            "phi": {
+              "model_over_persistence_mse": 0.5441057336767666,
+              "model_state_mse": 0.04197722701638034,
+              "persistence_relative_skill": 0.4558942663232334,
+              "persistence_state_mse": 0.07714902530565407
+            }
+          },
+          "window_count": 24
+        }
+      },
+      "physics_derived_metric": false,
+      "selection_metric": 0.4858830366536262,
+      "selection_metric_definition": "unweighted_mean_of_fieldwise_state_mse_over_persistence_mse"
+    }
+  },
+  "peak_cuda_memory_GiB": 0.9012141227722168,
+  "physics_derived_loss_used": false,
+  "physics_diagnostics_scored": false,
+  "physics_evaluation_authorized": true,
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_four_step_feedback_pilot",
+  "seed": 1702,
+  "selection_window_count": 24,
+  "slurm_job_id": "6937357",
+  "state_gate": {
+    "candidate_over_parent_mean_field_mse": {
+      "1": 0.9678701870404084,
+      "4": 0.8966289554231336,
+      "8": 0.8598174340017736
+    },
+    "gates": {
+      "eight_step_error_nonincreasing": true,
+      "four_step_error_nonincreasing": true,
+      "mean_four_eight_improves_at_least_five_percent": true,
+      "one_step_error_retained": true
+    },
+    "mean_four_eight_improvement_fraction": 0.1280065648201032,
+    "passed": true
+  },
+  "state_pilot_passed": true,
+  "status": "completed",
+  "training_performed": true,
+  "training_window_count": 428,
+  "wall_seconds": 2562.6280256140017
+}

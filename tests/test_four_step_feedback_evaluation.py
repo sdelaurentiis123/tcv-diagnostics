@@ -24,6 +24,10 @@ from tcv_diagnostics.codec_training import sha256_path
 
 ROOT = Path(__file__).resolve().parents[1]
 LAUNCHER = ROOT / "cluster/post_ecrd_old_85604_four_step_feedback_evaluation.sbatch"
+FROZEN_MANIFEST = (
+    ROOT
+    / "paper0/manifests/post_ecrd_old_85604_four_step_feedback_evaluation.json"
+)
 
 
 def _manifest() -> dict:
@@ -70,6 +74,21 @@ def test_evaluation_manifest_is_hash_and_scope_locked(tmp_path: Path) -> None:
         authorize_evaluation_manifest(
             broken, manifest_path=path, manifest_sha256=sha256_path(path)
         )
+
+
+def test_tracked_evaluation_manifest_passes_frozen_scope_contract() -> None:
+    manifest = json.loads(FROZEN_MANIFEST.read_text(encoding="utf-8"))
+    authorize_evaluation_manifest(
+        manifest,
+        manifest_path=FROZEN_MANIFEST,
+        manifest_sha256=sha256_path(FROZEN_MANIFEST),
+    )
+    assert manifest["training_allowed"] is False
+    assert manifest["checkpoint_selection_allowed"] is False
+    assert manifest["state_gate_evidence"]["state_pilot_passed"] is True
+    assert manifest["state_gate_evidence"][
+        "confirmation_seed_training_authorized"
+    ] is False
 
 
 def test_evaluation_launcher_is_one_gpu_and_evaluation_only() -> None:

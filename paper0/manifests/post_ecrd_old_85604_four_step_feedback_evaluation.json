@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_four_step_feedback_evaluation",
+  "status": "frozen_after_training_before_physics_evaluation",
+  "protocol": "paper0/protocol/POST_ECRD_OLD_85604_FOUR_STEP_FEEDBACK_EVALUATION_AMENDMENT_2026-08-25.md",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "held_out_85606_access_allowed": false,
+  "new_nersc_data_access_allowed": false,
+  "guard_frames_read_allowed": false,
+  "training_allowed": false,
+  "checkpoint_selection_allowed": false,
+  "assimilation_allowed": false,
+  "diagnostic_ranking_allowed": false,
+  "steering_allowed": false,
+  "physics_derived_loss_used": false,
+  "zperiod": 5,
+  "mode_mapping": "n=5k",
+  "fields": [
+    "Ne",
+    "Pe",
+    "Pi",
+    "phi",
+    "Vi"
+  ],
+  "horizons": [
+    4,
+    8
+  ],
+  "methods": [
+    "pre_feedback_parent",
+    "four_step_feedback_finetuned"
+  ],
+  "inference_batch_size": 4,
+  "training_manifest": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/manifests/post_ecrd_old_85604_four_step_feedback_pilot.json",
+    "sha256": "7405ba5fbd9f1d02be901df3f7b83cfea2fb490e75afde3da0ba4a3cd6a970ee"
+  },
+  "training_result": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/result.json",
+    "sha256": "ffcc3d4b5bdbada7c83dacc4eb85fed318a0f971ab28b329ea5ed7c15cd7938f"
+  },
+  "selected_feedback_checkpoint": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_006.pt",
+    "sha256": "affe2589f4ce6639879ca1ed4a100af764aa48a475a653987faa18d4ce844117",
+    "epoch": 6,
+    "selection_metric": 0.42644835900132133
+  },
+  "bounded_evidence_manifest": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_bounded_rollout/input_refreeze_commit_039c4d4/manifest.json",
+    "sha256": "f0169c19a780d8bc6fdcab9de6425d2126c7f9ca02be137b4334dc3134e94669"
+  },
+  "state_gate_evidence": {
+    "state_pilot_passed": true,
+    "candidate_over_parent_mean_field_mse": {
+      "1": 0.9678701870404084,
+      "4": 0.8966289554231336,
+      "8": 0.8598174340017736
+    },
+    "mean_four_eight_improvement_fraction": 0.1280065648201032,
+    "physics_evaluation_authorized": true,
+    "confirmation_seed_training_authorized": false
+  },
+  "evaluation": {
+    "validation_frames": [
+      496,
+      624
+    ],
+    "history_frames": 1,
+    "lead_used_at_each_autonomous_step": 1,
+    "current_frames_by_horizon": {
+      "4": [
+        496,
+        620
+      ],
+      "8": [
+        496,
+        616
+      ]
+    },
+    "pair_count_by_horizon": {
+      "4": 124,
+      "8": 120
+    },
+    "future_truth_used_as_context": false,
+    "complete_predicted_state_fed_back": true,
+    "physics_metrics_are_evaluation_only": true,
+    "example_start_frame": 560
+  },
+  "physics_preservation_gates": {
+    "maximum_absolute_log_power_ratio_error_increase_fraction": 0.10,
+    "maximum_mean_separatrix_relative_l2_increase_fraction": 0.05,
+    "strict_face_transport_is_report_only": true,
+    "cross_field_coherence_change_is_report_only": true
+  },
+  "wandb_required": true,
+  "claims_not_authorized": [
+    "confirmation_seed_training_before_physics_gate",
+    "stochastic_ensemble_calibration",
+    "assimilation",
+    "diagnostic_ranking",
+    "steering",
+    "85606_generalization",
+    "new_nersc_data_use"
+  ]
+}
