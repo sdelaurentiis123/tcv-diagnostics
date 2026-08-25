@@ -154,6 +154,39 @@ def test_b2_field_score_streams_regions_blocks_prefixes_and_gauge_invariance():
     ]["rmse"]
 
 
+def test_b2_field_score_sparse_target_extension_is_explicit_and_opt_in():
+    forecast, truth = _tiny_case()
+    targets = (498, 500)
+    with pytest.raises(ValueError, match="contiguous"):
+        B2FieldScoreAccumulator(
+            model_seed=1702,
+            target_frames=targets,
+            region_masks=_tiny_regions(),
+            volume_shape=(2, 2, 3),
+        )
+    scorer = B2FieldScoreAccumulator(
+        model_seed=1702,
+        target_frames=targets,
+        region_masks=_tiny_regions(),
+        volume_shape=(2, 2, 3),
+        validation_blocks=((498,), (500,)),
+        allow_sparse_targets=True,
+    )
+    for index, target in enumerate(targets):
+        scorer.update(
+            target_frame=target,
+            standardized_forecast=forecast[index],
+            standardized_truth=truth[index],
+        )
+    result = scorer.finalize()
+    assert result["target_frames"] == [498, 500]
+    assert result["target_frames_are_explicit_indices"] is True
+    assert all(
+        block["target_frames_are_explicit_indices"] is True
+        for block in result["chronological_blocks_eligible_union"]
+    )
+
+
 def test_b2_field_score_rejects_target_reordering_and_incomplete_finalize():
     forecast, truth = _tiny_case()
     scorer = B2FieldScoreAccumulator(

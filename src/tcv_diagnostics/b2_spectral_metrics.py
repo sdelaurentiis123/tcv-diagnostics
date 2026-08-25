@@ -252,14 +252,19 @@ class B2SpectralAccumulator:
         eligible_xy_mask: np.ndarray,
         volume_shape: tuple[int, int, int] = (64, 32, 88),
         zperiod: int = 5,
+        allow_sparse_targets: bool = False,
     ) -> None:
         if int(model_seed) not in (1701, 1702, 1703):
             raise ValueError("B2 spectral model seed differs")
         targets = tuple(int(item) for item in target_frames)
-        if not targets or targets != tuple(range(targets[0], targets[-1] + 1)):
+        if not targets or targets != tuple(sorted(set(targets))):
+            raise ValueError("B2 spectral targets must be strictly increasing")
+        contiguous = targets == tuple(range(targets[0], targets[-1] + 1))
+        if not contiguous and not bool(allow_sparse_targets):
             raise ValueError("B2 spectral targets must be contiguous")
         self.model_seed = int(model_seed)
         self.target_frames = targets
+        self.sparse_targets = not contiguous
         self.volume_shape = tuple(int(item) for item in volume_shape)
         if len(self.volume_shape) != 3 or min(self.volume_shape) < 2:
             raise ValueError("B2 spectral volume shape differs")
@@ -738,12 +743,15 @@ class B2SpectralAccumulator:
         stored_k, full_torus_n = toroidal_mode_numbers(
             self.n_z, zperiod=self.zperiod
         )
-        return _json_safe(
-            {
+        result = {
             "schema_version": 1,
             "scope": "B2_memberwise_spectral_and_cross_field_metrics_85604",
             "model_seed": self.model_seed,
-            "target_frames": [self.target_frames[0], self.target_frames[-1] + 1],
+            "target_frames": (
+                list(self.target_frames)
+                if self.sparse_targets
+                else [self.target_frames[0], self.target_frames[-1] + 1]
+            ),
             "target_count": len(self.target_frames),
             "zperiod": self.zperiod,
             "mode_mapping": "n=5k",
@@ -760,5 +768,7 @@ class B2SpectralAccumulator:
             "potential_policy": "full_spatial_mean_removed_per_member_and_truth",
             "held_out_85606_read": False,
             "physics_derived_training_loss_used": False,
-            }
-        )
+        }
+        if self.sparse_targets:
+            result["target_frames_are_explicit_indices"] = True
+        return _json_safe(result)
