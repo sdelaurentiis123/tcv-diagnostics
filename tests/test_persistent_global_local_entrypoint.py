@@ -19,6 +19,10 @@ MANIFEST = (
     ROOT
     / "paper0/manifests/post_ecrd_old_85604_persistent_global_local_smoke.json"
 )
+PILOT_MANIFEST = (
+    ROOT
+    / "paper0/manifests/post_ecrd_old_85604_persistent_global_local_pilot.json"
+)
 PROTOCOL = (
     ROOT
     / "paper0/protocol/POST_ECRD_OLD_85604_PERSISTENT_GLOBAL_LOCAL_PILOT_2026-08-25.md"
@@ -55,6 +59,26 @@ def test_manifest_locks_protocol_and_parent_records_by_sha256() -> None:
     assert manifest["parent"]["checkpoint"]["sha256"] == (
         "affe2589f4ce6639879ca1ed4a100af764aa48a475a653987faa18d4ce844117"
     )
+
+
+def test_pilot_manifest_authorizes_full_budget_and_locks_smoke_scale() -> None:
+    manifest = json.loads(PILOT_MANIFEST.read_text(encoding="utf-8"))
+    authorize_manifest(
+        manifest,
+        mode="pilot",
+        seed=1702,
+        artifact_root=Path(str(manifest["artifact_root"])),
+    )
+    assert manifest["training"]["epochs"] == 20
+    assert manifest["training"]["expected_optimizer_updates"] == 4280
+    assert manifest["residual_scales"]["refit_in_pilot"] is False
+    assert manifest["residual_scales"]["artifact"]["sha256"] == (
+        "497a655bc6914c30d78831b04b157ad4c07e17a7de6c5887e378a36a53d475bd"
+    )
+    execution = ROOT / "paper0/protocol/POST_ECRD_OLD_85604_PERSISTENT_GLOBAL_LOCAL_PILOT_EXECUTION_AMENDMENT_2026-08-25.md"
+    smoke = ROOT / "paper0/results/post_ecrd_old_85604_persistent_global_local_smoke_6937573.json"
+    assert manifest["execution_amendment"]["sha256"] == sha256_path(execution)
+    assert manifest["smoke_result"]["sha256"] == sha256_path(smoke)
 
 
 @pytest.mark.parametrize(

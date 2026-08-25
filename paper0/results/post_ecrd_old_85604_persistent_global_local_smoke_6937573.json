@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_persistent_global_local_smoke",
+  "status": "completed",
+  "decision": "authorize_seed1702_twenty_epoch_pilot",
+  "development_run": "85604",
+  "slurm_job_id": "6937573",
+  "slurm_state": "COMPLETED",
+  "slurm_exit_code": "0:0",
+  "slurm_elapsed": "00:05:00",
+  "paper0_commit": "58cc3d098c2cad1a5ebbcf624c85a8b25ae997fa",
+  "seed": 1702,
+  "gpu": "NVIDIA A100-SXM4-80GB",
+  "parameter_count": {
+    "mean": 2174021,
+    "stochastic": 774234,
+    "total": 2948255
+  },
+  "training": {
+    "mode": "smoke",
+    "epochs": 1,
+    "training_windows": 8,
+    "validation_windows": 4,
+    "optimizer_updates": 4,
+    "physics_derived_loss_used": false
+  },
+  "residual_scales": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_persistent_global_local_smoke/job_6937573_seed1702/run/residual_scales.json",
+    "sha256": "497a655bc6914c30d78831b04b157ad4c07e17a7de6c5887e378a36a53d475bd",
+    "fit_training_windows": 428,
+    "fit_wall_seconds": 223.41478603499127,
+    "fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "phi",
+      "Vi"
+    ],
+    "values_by_future_step_and_field": [
+      [
+        0.05198390781879425,
+        0.057209648191928864,
+        0.06895074248313904,
+        0.05561245605349541,
+        0.08164804428815842
+      ],
+      [
+        0.06571891903877258,
+        0.06693591922521591,
+        0.0831950232386589,
+        0.06918355822563171,
+        0.09608566015958786
+      ],
+      [
+        0.07467830926179886,
+        0.07725954800844193,
+        0.0956069827079773,
+        0.07960861176252365,
+        0.10549893975257874
+      ],
+      [
+        0.08175433427095413,
+        0.08642135560512543,
+        0.10678580403327942,
+        0.08921060711145401,
+        0.11292021721601486
+      ]
+    ],
+    "physics_derived_quantity": false
+  },
+  "mechanical_gate": {
+    "checkpoint_reload_bitwise_exact": true,
+    "exact_optimizer_update_count": true,
+    "finite_training_history": true,
+    "toroidal_equivariance_passed": true,
+    "maximum_all_88_shift_relative_L2_error": 8.322180722331041e-10,
+    "passed": true
+  },
+  "state_gate": {
+    "candidate_over_parent_mean_field_MSE": {
+      "1": 0.9999808452444862,
+      "4": 1.0006087579268348
+    },
+    "threshold_maximum": 1.05,
+    "passed": true
+  },
+  "compute": {
+    "training_and_validation_wall_seconds": 33.07301384099992,
+    "peak_cuda_memory_GiB": 4.84102725982666
+  },
+  "artifacts": {
+    "result": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_persistent_global_local_smoke/job_6937573_seed1702/run/result.json",
+      "sha256": "245cbcb9759f4af3f32f43e68238d890bfa33e2dc95a6f474e19d562c9bd4dd7"
+    },
+    "training_result": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_persistent_global_local_smoke/job_6937573_seed1702/run/training/result.json",
+      "sha256": "870a32165324723b81ed6518f69224b24ee4a77a24314d5b278151026b51f77f"
+    },
+    "wandb": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_persistent_global_local_smoke/job_6937573_seed1702/run/wandb.json",
+      "sha256": "dad6258d03786d06266cc87b027359f569d0c203592f971905372b14bc70b5dc"
+    }
+  },
+  "wandb": {
+    "run_id": "p0oldpglsmoke-j6937573-s1702",
+    "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0oldpglsmoke-j6937573-s1702",
+    "remote_state_after_finish": "finished"
+  },
+  "engineering_or_state_pilot_passed": true,
+  "physics_evaluation_authorized": false,
+  "confirmation_seed_training_authorized": false,
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "new_nersc_data_read": false,
+  "assimilation_performed": false,
+  "diagnostic_ranking_performed": false,
+  "steering_performed": false
+}

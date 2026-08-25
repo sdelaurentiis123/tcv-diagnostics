@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_persistent_global_local_pilot",
+  "mode": "pilot",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "held_out_85606_access_allowed": false,
+  "new_nersc_data_read": false,
+  "new_nersc_data_access_allowed": false,
+  "guard_frames_read_allowed": false,
+  "physics_derived_loss_allowed": false,
+  "assimilation_allowed": false,
+  "diagnostic_ranking_allowed": false,
+  "steering_allowed": false,
+  "wandb_required": true,
+  "engineering_smoke_authorized": false,
+  "pilot_training_authorized": true,
+  "confirmation_seed_training_authorized": false,
+  "protocol": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/protocol/POST_ECRD_OLD_85604_PERSISTENT_GLOBAL_LOCAL_PILOT_2026-08-25.md",
+    "sha256": "255e6839459cb89a7dd366aa76dc7eb526547e7586343e359d4557ddbe8098de"
+  },
+  "execution_amendment": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/protocol/POST_ECRD_OLD_85604_PERSISTENT_GLOBAL_LOCAL_PILOT_EXECUTION_AMENDMENT_2026-08-25.md",
+    "sha256": "9e0c594add565d774ab00c6de242c9d9946b2e458d8d13770d120f7bcdfbdd03"
+  },
+  "smoke_result": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_persistent_global_local_smoke_6937573.json",
+    "sha256": "0e3f0a84df13b083188690279a9bdd33a36581cabdbfbd2e64f5e8ae082d35d2"
+  },
+  "artifact_root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/phase2_model_dataset/job_6893525",
+  "state_family": "c5p",
+  "fields": [
+    "Ne",
+    "Pe",
+    "Pi",
+    "phi",
+    "Vi"
+  ],
+  "split": {
+    "training_frames": [
+      0,
+      432
+    ],
+    "guard_frames": [
+      432,
+      496
+    ],
+    "validation_frames": [
+      496,
+      624
+    ],
+    "horizon_frames": 4,
+    "full_training_window_count": 428,
+    "full_validation_window_count": 124,
+    "smoke_training_current_interval": [
+      0,
+      8
+    ],
+    "smoke_validation_current_interval": [
+      496,
+      500
+    ],
+    "validation_current_blocks": {
+      "V00": [
+        496,
+        537
+      ],
+      "V01": [
+        537,
+        578
+      ],
+      "V02": [
+        578,
+        620
+      ]
+    },
+    "cadence_microseconds": 3.131905426352636,
+    "periodic_axis": "stored_toroidal_z",
+    "zperiod": 5,
+    "physical_mode_mapping": "n=5k"
+  },
+  "parent": {
+    "kind": "selected_seed1702_four_step_detached_feedback_mean",
+    "result": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_four_step_feedback_pilot_6937357.json",
+      "sha256": "ffcc3d4b5bdbada7c83dacc4eb85fed318a0f971ab28b329ea5ed7c15cd7938f"
+    },
+    "checkpoint": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_four_step_feedback_pilot/job_6937357_seed1702/run/checkpoint_epoch_006.pt",
+      "sha256": "affe2589f4ce6639879ca1ed4a100af764aa48a475a653987faa18d4ce844117"
+    },
+    "source_manifest": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/manifests/post_ecrd_old_85604_four_step_feedback_pilot.json",
+      "sha256": "7405ba5fbd9f1d02be901df3f7b83cfea2fb490e75afde3da0ba4a3cd6a970ee"
+    },
+    "seed": 1702,
+    "selected_epoch": 6,
+    "parameter_count": 2174021
+  },
+  "architecture": {
+    "name": "persistent_global_local_joint_residual_EDM",
+    "future_frames": 4,
+    "fields": 5,
+    "base_channels": 16,
+    "channel_multipliers": [
+      1,
+      2,
+      4
+    ],
+    "residual_blocks_per_resolution": 1,
+    "global_channels": 24,
+    "global_pool_xy": [
+      4,
+      4
+    ],
+    "low_mode_maximum": 7,
+    "noise_embedding_features": 128,
+    "group_norm_maximum_groups": 8,
+    "kernel_size": 3,
+    "toroidal_downsampling": false,
+    "global_recurrence": "ConvGRU_over_four_future_frames",
+    "global_noise_shared_across_future_frames": true,
+    "local_noise_independent_across_future_frames": true,
+    "stochastic_parameter_count": 774234,
+    "mean_parameter_count": 2174021,
+    "total_parameter_count": 2948255
+  },
+  "noise": {
+    "global_weight": 1.0,
+    "local_weight": 1.0,
+    "global_pool_xy": [
+      4,
+      4
+    ],
+    "low_mode_maximum": 7,
+    "global_and_local_equal_rms": true,
+    "posthoc_spread_multiplier": false
+  },
+  "residual_scales": {
+    "artifact": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_persistent_global_local_smoke/job_6937573_seed1702/run/residual_scales.json",
+      "sha256": "497a655bc6914c30d78831b04b157ad4c07e17a7de6c5887e378a36a53d475bd"
+    },
+    "fit_training_windows": 428,
+    "fit_parent": "bitwise_selected_seed1702_feedback_mean",
+    "fit_split": "training_only",
+    "shape": [
+      4,
+      5
+    ],
+    "statistic": "RMS_parent_state_residual_by_future_step_and_field",
+    "physics_derived_quantity": false,
+    "refit_in_pilot": false
+  },
+  "training": {
+    "seed": 1702,
+    "epochs": 20,
+    "training_windows": 428,
+    "validation_windows": 124,
+    "gradient_accumulation_windows": 2,
+    "expected_optimizer_updates": 4280,
+    "optimizer": "AdamW",
+    "stochastic_peak_learning_rate": 0.0001,
+    "mean_peak_learning_rate": 0.00001,
+    "stochastic_minimum_learning_rate": 0.000001,
+    "mean_minimum_learning_rate": 0.000001,
+    "betas": [
+      0.9,
+      0.99
+    ],
+    "weight_decay": 0.0001,
+    "warmup_fraction": 0.05,
+    "gradient_clip_norm": 1.0,
+    "ema_decay": 0.999,
+    "validation_probes": 2,
+    "autocast": "bfloat16",
+    "cudnn_tf32": false,
+    "matmul_tf32": false,
+    "mean_step_weights": [
+      0.625,
+      0.125,
+      0.125,
+      0.125
+    ],
+    "mean_feedback_gradient": "detached_between_steps",
+    "diffusion_gradient_to_mean": false,
+    "physics_derived_loss_used": false
+  },
+  "selection": {
+    "metric": "equal_block_mean_of_EDM_loss_plus_weighted_normalized_mean_state_MSE",
+    "validation_blocks": [
+      "V00",
+      "V01",
+      "V02"
+    ],
+    "checkpoint_epochs": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18,
+      20
+    ],
+    "physics_metric_used": false,
+    "validation_truth_used_as_condition": false,
+    "scientific_state_pilot": true
+  }
+}
