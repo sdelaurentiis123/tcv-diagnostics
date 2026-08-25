@@ -455,11 +455,42 @@ class PGLForecastArtifact(AbstractContextManager["PGLForecastArtifact"]):
             raise FloatingPointError("persistent forecast contains non-finite values")
         return np.ascontiguousarray(values, dtype=np.float32)
 
+    def read_forecast_horizon(self, index: int, horizon: int) -> np.ndarray:
+        """Read one horizon without materializing the complete four-frame tensor."""
+
+        if self.handle is None:
+            raise RuntimeError("persistent forecast artifact is closed")
+        step = int(horizon)
+        if step < 1 or step > self.schema.horizon:
+            raise ValueError("persistent forecast horizon leaves the frozen range")
+        values = np.asarray(
+            self.handle["standardized_forecast"][int(index), :, step - 1]
+        )
+        if not np.all(np.isfinite(values)):
+            raise FloatingPointError("persistent forecast contains non-finite values")
+        return np.ascontiguousarray(values, dtype=np.float32)
+
     def read_mean(self, index: int, *, parent: bool) -> np.ndarray:
         if self.handle is None:
             raise RuntimeError("persistent forecast artifact is closed")
         name = "standardized_parent_mean" if parent else "standardized_selected_mean"
         values = np.asarray(self.handle[name][int(index)])
+        if not np.all(np.isfinite(values)):
+            raise FloatingPointError("persistent mean contains non-finite values")
+        return np.ascontiguousarray(values, dtype=np.float32)
+
+    def read_mean_horizon(
+        self, index: int, horizon: int, *, parent: bool
+    ) -> np.ndarray:
+        """Read one deterministic horizon without loading the whole trajectory."""
+
+        if self.handle is None:
+            raise RuntimeError("persistent forecast artifact is closed")
+        step = int(horizon)
+        if step < 1 or step > self.schema.horizon:
+            raise ValueError("persistent mean horizon leaves the frozen range")
+        name = "standardized_parent_mean" if parent else "standardized_selected_mean"
+        values = np.asarray(self.handle[name][int(index), step - 1])
         if not np.all(np.isfinite(values)):
             raise FloatingPointError("persistent mean contains non-finite values")
         return np.ascontiguousarray(values, dtype=np.float32)

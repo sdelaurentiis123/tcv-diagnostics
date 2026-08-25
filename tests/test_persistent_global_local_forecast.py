@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 
 import numpy as np
+import pytest
 import torch
 
 import tcv_diagnostics.persistent_global_local_forecast as forecast_module
@@ -126,4 +127,17 @@ def test_forecast_writer_and_artifact_round_trip(tmp_path, monkeypatch) -> None:
         assert artifact.read_forecast(1).shape == schema.forecast_shape[1:]
         assert artifact.read_mean(0, parent=False).shape == schema.mean_shape[1:]
         assert artifact.read_mean(0, parent=True).shape == schema.mean_shape[1:]
+        assert np.array_equal(
+            artifact.read_forecast_horizon(1, 4), artifact.read_forecast(1)[:, 3]
+        )
+        assert np.array_equal(
+            artifact.read_mean_horizon(0, 2, parent=False),
+            artifact.read_mean(0, parent=False)[1],
+        )
+        assert np.array_equal(
+            artifact.read_mean_horizon(0, 3, parent=True),
+            artifact.read_mean(0, parent=True)[2],
+        )
+        with pytest.raises(ValueError, match="horizon"):
+            artifact.read_forecast_horizon(0, 0)
         assert artifact.timing_record()["start_count"] == 2

@@ -33,13 +33,18 @@ def strict_o2_targets(
     *,
     split: str,
     context_frames: int,
+    allow_sparse_targets: bool = False,
 ) -> tuple[int, ...]:
     """Validate a contiguous subset of the frozen matched O2 target indices."""
 
     if context_frames not in (1, 2):
         raise ValueError("O2 context must contain one or two frames")
     values = tuple(int(target) for target in targets)
-    if not values or values != tuple(range(values[0], values[-1] + 1)):
+    ordered_unique = values == tuple(sorted(set(values)))
+    contiguous = bool(values) and values == tuple(range(values[0], values[-1] + 1))
+    if not values or not ordered_unique or (
+        not contiguous and not bool(allow_sparse_targets)
+    ):
         raise ValueError("O2 targets must be nonempty, unique, ordered, and contiguous")
     if split == "train":
         allowed = O2_TRAIN_TARGET_INTERVAL
@@ -75,6 +80,7 @@ class OneStepWindowDataset:
         augment: bool,
         seed: int,
         return_physical: bool = False,
+        allow_sparse_targets: bool = False,
     ) -> None:
         if split != "train" and augment:
             raise ValueError("validation augmentation is prohibited")
@@ -85,6 +91,7 @@ class OneStepWindowDataset:
             target_frames,
             split=split,
             context_frames=self.context_frames,
+            allow_sparse_targets=allow_sparse_targets,
         )
         self.fields = FAMILY_FIELDS["c5p"]
         self.augment = bool(augment)

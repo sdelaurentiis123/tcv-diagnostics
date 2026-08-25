@@ -167,3 +167,30 @@ def test_transport_accumulator_rejects_reordered_target_and_reduction_schema():
             forecast_outputs=malformed,
             truth_outputs=truth,
         )
+
+
+def test_transport_sparse_targets_require_explicit_authorization():
+    with pytest.raises(ValueError, match="contiguous"):
+        B2TransportAccumulator(
+            model_seed=1701,
+            target_frames=(498, 502),
+            event_thresholds=_thresholds(),
+            detailed=False,
+        )
+    scorer = B2TransportAccumulator(
+        model_seed=1701,
+        target_frames=(498, 502),
+        event_thresholds=_thresholds(),
+        detailed=False,
+        allow_sparse_targets=True,
+    )
+    for index, target in enumerate((498, 502)):
+        forecast, truth = _transport_case(index)
+        scorer.update(
+            target_frame=target,
+            forecast_outputs=forecast,
+            truth_outputs=truth,
+        )
+    result = scorer.finalize()
+    assert result["target_frames"] == [498, 502]
+    assert result["target_frames_are_explicit_indices"] is True
