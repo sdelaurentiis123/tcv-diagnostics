@@ -1,0 +1,1457 @@
+{
+  "advance_to_three_seed_scaling": null,
+  "architecture": {
+    "architecture": {
+      "absolute_z_coordinate": false,
+      "auxiliary_context_channels": 0,
+      "base_channels": 24,
+      "blocks_per_level": 2,
+      "channel_multipliers": [
+        1,
+        2,
+        4
+      ],
+      "downsample_stride_xyz": [
+        2,
+        2,
+        1
+      ],
+      "family": "codec_free_mixed_boundary_3d_increment_operator",
+      "group_norm_maximum_groups": 8,
+      "history_frames": 1,
+      "input_channels": 7,
+      "kernel_size": 3,
+      "latent_codec": false,
+      "lead_embedding_channels": 128,
+      "padding_xyz": [
+        "zeros",
+        "zeros",
+        "circular"
+      ],
+      "physics_derived_loss": false,
+      "predict_boundary": false,
+      "prediction": "standardized_state_derivative",
+      "state_family": "c5p",
+      "volume_channels": 5,
+      "zero_initialize_output": true
+    },
+    "parameter_count": 2174021,
+    "physics_derived_loss_used": false,
+    "trainable_parameter_count": 2174021
+  },
+  "best_checkpoint": {
+    "epoch": 4,
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_004.pt",
+    "selection_metric": 0.48647410263647367,
+    "sha256": "b9007f818eb35d82a1e4c21771dfc1ad870591feb777f5087f3b2a49847cd50d"
+  },
+  "best_validation": {
+    "mean_shared_persistence_normalized_mse_ratio": 0.48647410263647367,
+    "per_lead": {
+      "1": {
+        "pair_count": 127,
+        "per_field": {
+          "Ne": {
+            "model_derivative_mse": 0.005260634787364695,
+            "persistence_relative_skill": 0.68082126831626,
+            "zero_derivative_persistence_mse": 0.016481783606362668
+          },
+          "Pe": {
+            "model_derivative_mse": 0.0043168962655126325,
+            "persistence_relative_skill": 0.8953814262344992,
+            "zero_derivative_persistence_mse": 0.04126319170808826
+          },
+          "Pi": {
+            "model_derivative_mse": 0.006219184870112343,
+            "persistence_relative_skill": 0.8929638022354078,
+            "zero_derivative_persistence_mse": 0.058103566830637804
+          },
+          "Vi": {
+            "model_derivative_mse": 0.008019126815696059,
+            "persistence_relative_skill": 0.6294803110053111,
+            "zero_derivative_persistence_mse": 0.021642916837844493
+          },
+          "phi": {
+            "model_derivative_mse": 0.004577036195020635,
+            "persistence_relative_skill": 0.8112073750725157,
+            "zero_derivative_persistence_mse": 0.024243723486437486
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.00526557197432989,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.03861618071502958,
+        "shared_field_persistence_relative_skill": 0.863643377547161,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      },
+      "16": {
+        "pair_count": 112,
+        "per_field": {
+          "Ne": {
+            "model_derivative_mse": 9.915268527912339e-05,
+            "persistence_relative_skill": 0.2763140148057376,
+            "zero_derivative_persistence_mse": 0.000137010647307903
+          },
+          "Pe": {
+            "model_derivative_mse": 9.358004767405377e-05,
+            "persistence_relative_skill": 0.292699541674724,
+            "zero_derivative_persistence_mse": 0.00013230593388222835
+          },
+          "Pi": {
+            "model_derivative_mse": 0.0001284646582521359,
+            "persistence_relative_skill": 0.3349856570415023,
+            "zero_derivative_persistence_mse": 0.00019317577073695258
+          },
+          "Vi": {
+            "model_derivative_mse": 0.00010163308389246004,
+            "persistence_relative_skill": 0.3534450748037502,
+            "zero_derivative_persistence_mse": 0.00015719172483545958
+          },
+          "phi": {
+            "model_derivative_mse": 0.00042733340103643367,
+            "persistence_relative_skill": 0.26134040716955864,
+            "zero_derivative_persistence_mse": 0.00057852548749682
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.0001070657970684377,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.00015416411730902795,
+        "shared_field_persistence_relative_skill": 0.30550766976584987,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      },
+      "2": {
+        "pair_count": 126,
+        "per_field": {
+          "Ne": {
+            "model_derivative_mse": 0.002564788901503769,
+            "persistence_relative_skill": 0.5565511653684929,
+            "zero_derivative_persistence_mse": 0.005783731292551558
+          },
+          "Pe": {
+            "model_derivative_mse": 0.00233895391290322,
+            "persistence_relative_skill": 0.5668520469722109,
+            "zero_derivative_persistence_mse": 0.005399896032183631
+          },
+          "Pi": {
+            "model_derivative_mse": 0.0035040486472273113,
+            "persistence_relative_skill": 0.5781317583044447,
+            "zero_derivative_persistence_mse": 0.008306026149643276
+          },
+          "Vi": {
+            "model_derivative_mse": 0.003260773207460131,
+            "persistence_relative_skill": 0.5731051463275074,
+            "zero_derivative_persistence_mse": 0.007638352112723635
+          },
+          "phi": {
+            "model_derivative_mse": 0.0025815911198634263,
+            "persistence_relative_skill": 0.637121160818329,
+            "zero_derivative_persistence_mse": 0.007114195817218715
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.0028025971538781,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.006496551158126154,
+        "shared_field_persistence_relative_skill": 0.5686023113398413,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      },
+      "4": {
+        "pair_count": 124,
+        "per_field": {
+          "Ne": {
+            "model_derivative_mse": 0.0007904857158786522,
+            "persistence_relative_skill": 0.36919490649789266,
+            "zero_derivative_persistence_mse": 0.0012531378139165445
+          },
+          "Pe": {
+            "model_derivative_mse": 0.0009567394178043887,
+            "persistence_relative_skill": 0.43312221617681634,
+            "zero_derivative_persistence_mse": 0.001687734896491918
+          },
+          "Pi": {
+            "model_derivative_mse": 0.0014168630569867374,
+            "persistence_relative_skill": 0.4478809788379514,
+            "zero_derivative_persistence_mse": 0.0025662275753598495
+          },
+          "Vi": {
+            "model_derivative_mse": 0.0011408246119569473,
+            "persistence_relative_skill": 0.4288796715333826,
+            "zero_derivative_persistence_mse": 0.0019975205838319754
+          },
+          "phi": {
+            "model_derivative_mse": 0.0013559786797449256,
+            "persistence_relative_skill": 0.4915722326076901,
+            "zero_derivative_persistence_mse": 0.0026670035877458947
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.0010546960635565929,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.0018357000952561042,
+        "shared_field_persistence_relative_skill": 0.4254529559146485,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      },
+      "8": {
+        "pair_count": 120,
+        "per_field": {
+          "Ne": {
+            "model_derivative_mse": 0.0002589059690239303,
+            "persistence_relative_skill": 0.3464837358651678,
+            "zero_derivative_persistence_mse": 0.0003961737193590538
+          },
+          "Pe": {
+            "model_derivative_mse": 0.00028914790512344827,
+            "persistence_relative_skill": 0.4085178731817046,
+            "zero_derivative_persistence_mse": 0.0004888531572016125
+          },
+          "Pi": {
+            "model_derivative_mse": 0.0004089864621743221,
+            "persistence_relative_skill": 0.4334476466455921,
+            "zero_derivative_persistence_mse": 0.0007218864413020624
+          },
+          "Vi": {
+            "model_derivative_mse": 0.00032428446292848975,
+            "persistence_relative_skill": 0.41155447562262093,
+            "zero_derivative_persistence_mse": 0.0005510866333321301
+          },
+          "phi": {
+            "model_derivative_mse": 0.0007959214030327557,
+            "persistence_relative_skill": 0.381379466067277,
+            "zero_derivative_persistence_mse": 0.0012866068282164633
+          }
+        },
+        "shared_field_mean_model_derivative_mse": 0.0003190134454405669,
+        "shared_field_mean_zero_derivative_persistence_mse": 0.0005356377726209097,
+        "shared_field_persistence_relative_skill": 0.40442317225013125,
+        "shared_fields": [
+          "Ne",
+          "Pe",
+          "Pi"
+        ]
+      }
+    },
+    "shared_persistence_normalized_mse_ratio_by_lead": {
+      "1": 0.136356622452839,
+      "16": 0.6944923302341501,
+      "2": 0.43139768866015865,
+      "4": 0.5745470440853515,
+      "8": 0.5955768277498688
+    }
+  },
+  "derivative_rms": {
+    "boundary": null,
+    "family": "c5p",
+    "fields": [
+      "Ne",
+      "Pe",
+      "Pi",
+      "phi",
+      "Vi"
+    ],
+    "fit_split": "train",
+    "pair_count": 2129,
+    "physics_derived_quantity": false,
+    "volume": {
+      "Ne": 0.06121914365413737,
+      "Pe": 0.09879372371621804,
+      "Pi": 0.1191229071171432,
+      "Vi": 0.07914129068074754,
+      "phi": 0.07938504691825216
+    }
+  },
+  "development_run": "85604",
+  "epochs": 4,
+  "expected_optimizer_updates": 2132,
+  "family": "c5p",
+  "gpu": "NVIDIA A100-SXM4-80GB MIG 1g.20gb",
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "history": [
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_001.pt",
+        "sha256": "695663fe56c2fb52a2d3ecf8608706b47228e2f3a6153d1147755f43275d0d5b"
+      },
+      "epoch": 1,
+      "optimizer_updates_cumulative": 533,
+      "preclip_gradient_norm_maximum": 92.75272369384766,
+      "training_persistence_normalized_loss_first_quarter": 0.8995006046769091,
+      "training_persistence_normalized_loss_last_quarter": 0.29411408966372166,
+      "training_persistence_normalized_loss_mean": 0.4799700150556754,
+      "training_sample_count": 2129,
+      "validation": {
+        "mean_shared_persistence_normalized_mse_ratio": 0.5953274730464483,
+        "per_lead": {
+          "1": {
+            "pair_count": 127,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.005756387563052993,
+                "persistence_relative_skill": 0.6507424378007982,
+                "zero_derivative_persistence_mse": 0.016481783606362668
+              },
+              "Pe": {
+                "model_derivative_mse": 0.005377650324924554,
+                "persistence_relative_skill": 0.8696743973910664,
+                "zero_derivative_persistence_mse": 0.04126319170808826
+              },
+              "Pi": {
+                "model_derivative_mse": 0.007529700080262138,
+                "persistence_relative_skill": 0.8704089870728597,
+                "zero_derivative_persistence_mse": 0.058103566830637804
+              },
+              "Vi": {
+                "model_derivative_mse": 0.008518970782789232,
+                "persistence_relative_skill": 0.6063852739158946,
+                "zero_derivative_persistence_mse": 0.021642916837844493
+              },
+              "phi": {
+                "model_derivative_mse": 0.005951555612455032,
+                "persistence_relative_skill": 0.7545114876522794,
+                "zero_derivative_persistence_mse": 0.024243723486437486
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.006221245989413229,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.03861618071502958,
+            "shared_field_persistence_relative_skill": 0.8388953574843849,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "16": {
+            "pair_count": 112,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.00012134509952020734,
+                "persistence_relative_skill": 0.1143381780577285,
+                "zero_derivative_persistence_mse": 0.000137010647307903
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0001352295373428867,
+                "persistence_relative_skill": -0.022097296582787918,
+                "zero_derivative_persistence_mse": 0.00013230593388222835
+              },
+              "Pi": {
+                "model_derivative_mse": 0.00017981068023280905,
+                "persistence_relative_skill": 0.06918616373656283,
+                "zero_derivative_persistence_mse": 0.00019317577073695258
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0001397712248590678,
+                "persistence_relative_skill": 0.1108232637222264,
+                "zero_derivative_persistence_mse": 0.00015719172483545958
+              },
+              "phi": {
+                "model_derivative_mse": 0.0006170267694291066,
+                "persistence_relative_skill": -0.06655070997627943,
+                "zero_derivative_persistence_mse": 0.00057852548749682
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.00014546177236530102,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.00015416411730902795,
+            "shared_field_persistence_relative_skill": 0.05644857633299161,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "2": {
+            "pair_count": 126,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.003060010498360036,
+                "persistence_relative_skill": 0.47092796266299597,
+                "zero_derivative_persistence_mse": 0.005783731292551558
+              },
+              "Pe": {
+                "model_derivative_mse": 0.00314359547379514,
+                "persistence_relative_skill": 0.41784148156572554,
+                "zero_derivative_persistence_mse": 0.005399896032183631
+              },
+              "Pi": {
+                "model_derivative_mse": 0.004689247586628661,
+                "persistence_relative_skill": 0.43544030537033007,
+                "zero_derivative_persistence_mse": 0.008306026149643276
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0036531693435141017,
+                "persistence_relative_skill": 0.5217333150394035,
+                "zero_derivative_persistence_mse": 0.007638352112723635
+              },
+              "phi": {
+                "model_derivative_mse": 0.0034593852494895715,
+                "persistence_relative_skill": 0.5137348846770972,
+                "zero_derivative_persistence_mse": 0.007114195817218715
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0036309511862612793,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.006496551158126154,
+            "shared_field_persistence_relative_skill": 0.4410955755009278,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "4": {
+            "pair_count": 124,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.0008886898850716235,
+                "persistence_relative_skill": 0.2908282910288047,
+                "zero_derivative_persistence_mse": 0.0012531378139165445
+              },
+              "Pe": {
+                "model_derivative_mse": 0.001091920659068939,
+                "persistence_relative_skill": 0.35302596317787993,
+                "zero_derivative_persistence_mse": 0.001687734896491918
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0016250841915634764,
+                "persistence_relative_skill": 0.3667419806539961,
+                "zero_derivative_persistence_mse": 0.0025662275753598495
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0012464215255224985,
+                "persistence_relative_skill": 0.3760156788315012,
+                "zero_derivative_persistence_mse": 0.0019975205838319754
+              },
+              "phi": {
+                "model_derivative_mse": 0.0018250286398876097,
+                "persistence_relative_skill": 0.3157007181118596,
+                "zero_derivative_persistence_mse": 0.0026670035877458947
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0012018982452346796,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.0018357000952561042,
+            "shared_field_persistence_relative_skill": 0.34526437714925373,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "8": {
+            "pair_count": 120,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.00028976560005861704,
+                "persistence_relative_skill": 0.26858954569876115,
+                "zero_derivative_persistence_mse": 0.0003961737193590538
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0003190582434675007,
+                "persistence_relative_skill": 0.34733316381975443,
+                "zero_derivative_persistence_mse": 0.0004888531572016125
+              },
+              "Pi": {
+                "model_derivative_mse": 0.00044907348152870935,
+                "persistence_relative_skill": 0.3779167250755976,
+                "zero_derivative_persistence_mse": 0.0007218864413020624
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0003520091810390692,
+                "persistence_relative_skill": 0.3612452929394143,
+                "zero_derivative_persistence_mse": 0.0005510866333321301
+              },
+              "phi": {
+                "model_derivative_mse": 0.0010363069207717974,
+                "persistence_relative_skill": 0.1945426543333676,
+                "zero_derivative_persistence_mse": 0.0012866068282164633
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0003526324416849424,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.0005356377726209097,
+            "shared_field_persistence_relative_skill": 0.34165874830020027,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          }
+        },
+        "shared_persistence_normalized_mse_ratio_by_lead": {
+          "1": 0.16110464251561507,
+          "16": 0.9435514236670084,
+          "2": 0.5589044244990722,
+          "4": 0.6547356228507463,
+          "8": 0.6583412516997997
+        }
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_002.pt",
+        "sha256": "6e465e96ffd74cc582bb91074f41db0058de67c64b772dabd100240987c07d8b"
+      },
+      "epoch": 2,
+      "optimizer_updates_cumulative": 1066,
+      "preclip_gradient_norm_maximum": 32.66005325317383,
+      "training_persistence_normalized_loss_first_quarter": 0.28039812203496695,
+      "training_persistence_normalized_loss_last_quarter": 0.2595237478914958,
+      "training_persistence_normalized_loss_mean": 0.27275271038841953,
+      "training_sample_count": 2129,
+      "validation": {
+        "mean_shared_persistence_normalized_mse_ratio": 0.5788005985163024,
+        "per_lead": {
+          "1": {
+            "pair_count": 127,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.005494220836958718,
+                "persistence_relative_skill": 0.6666488913956063,
+                "zero_derivative_persistence_mse": 0.016481783606362668
+              },
+              "Pe": {
+                "model_derivative_mse": 0.004606279094537497,
+                "persistence_relative_skill": 0.8883683277065891,
+                "zero_derivative_persistence_mse": 0.04126319170808826
+              },
+              "Pi": {
+                "model_derivative_mse": 0.006722566889666965,
+                "persistence_relative_skill": 0.8843002718015208,
+                "zero_derivative_persistence_mse": 0.058103566830637804
+              },
+              "Vi": {
+                "model_derivative_mse": 0.008297732367887613,
+                "persistence_relative_skill": 0.6166074827133134,
+                "zero_derivative_persistence_mse": 0.021642916837844493
+              },
+              "phi": {
+                "model_derivative_mse": 0.0053715858669816895,
+                "persistence_relative_skill": 0.7784339575566154,
+                "zero_derivative_persistence_mse": 0.024243723486437486
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0056076889403877265,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.03861618071502958,
+            "shared_field_persistence_relative_skill": 0.8547839574874065,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "16": {
+            "pair_count": 112,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.00012437506741768523,
+                "persistence_relative_skill": 0.09222334277292998,
+                "zero_derivative_persistence_mse": 0.000137010647307903
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0001399453243508318,
+                "persistence_relative_skill": -0.05774034651691151,
+                "zero_derivative_persistence_mse": 0.00013230593388222835
+              },
+              "Pi": {
+                "model_derivative_mse": 0.00018966404028318508,
+                "persistence_relative_skill": 0.018178938488871976,
+                "zero_derivative_persistence_mse": 0.00019317577073695258
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0001270128339385408,
+                "persistence_relative_skill": 0.1919877838894415,
+                "zero_derivative_persistence_mse": 0.00015719172483545958
+              },
+              "phi": {
+                "model_derivative_mse": 0.00048551632109545656,
+                "persistence_relative_skill": 0.16076934968552226,
+                "zero_derivative_persistence_mse": 0.00057852548749682
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.00015132814401723404,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.00015416411730902795,
+            "shared_field_persistence_relative_skill": 0.018395806633194067,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "2": {
+            "pair_count": 126,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.002743464486719167,
+                "persistence_relative_skill": 0.525658377274153,
+                "zero_derivative_persistence_mse": 0.005783731292551558
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0027713220926676306,
+                "persistence_relative_skill": 0.48678232392801224,
+                "zero_derivative_persistence_mse": 0.005399896032183631
+              },
+              "Pi": {
+                "model_derivative_mse": 0.004152099091242488,
+                "persistence_relative_skill": 0.5001100386108452,
+                "zero_derivative_persistence_mse": 0.008306026149643276
+              },
+              "Vi": {
+                "model_derivative_mse": 0.003460869803207605,
+                "persistence_relative_skill": 0.5469088420992483,
+                "zero_derivative_persistence_mse": 0.007638352112723635
+              },
+              "phi": {
+                "model_derivative_mse": 0.0031083868413324996,
+                "persistence_relative_skill": 0.56307263376007,
+                "zero_derivative_persistence_mse": 0.007114195817218715
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.003222295223543095,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.006496551158126154,
+            "shared_field_persistence_relative_skill": 0.503999099658822,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "4": {
+            "pair_count": 124,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.0008620091920849646,
+                "persistence_relative_skill": 0.31211939938924227,
+                "zero_derivative_persistence_mse": 0.0012531378139165445
+              },
+              "Pe": {
+                "model_derivative_mse": 0.001030553224813357,
+                "persistence_relative_skill": 0.3893867887928144,
+                "zero_derivative_persistence_mse": 0.001687734896491918
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0015220358610000253,
+                "persistence_relative_skill": 0.40689755046896114,
+                "zero_derivative_persistence_mse": 0.0025662275753598495
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0012164670629891132,
+                "persistence_relative_skill": 0.39101150053959177,
+                "zero_derivative_persistence_mse": 0.0019975205838319754
+              },
+              "phi": {
+                "model_derivative_mse": 0.0015451152808281464,
+                "persistence_relative_skill": 0.4206549672720721,
+                "zero_derivative_persistence_mse": 0.0026670035877458947
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0011381994259661158,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.0018357000952561042,
+            "shared_field_persistence_relative_skill": 0.37996439129272797,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "8": {
+            "pair_count": 120,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.0002825924041892656,
+                "persistence_relative_skill": 0.28669573376433144,
+                "zero_derivative_persistence_mse": 0.0003961737193590538
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0003182112726128914,
+                "persistence_relative_skill": 0.3490657308332471,
+                "zero_derivative_persistence_mse": 0.0004888531572016125
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0004455319004288564,
+                "persistence_relative_skill": 0.38282273369028363,
+                "zero_derivative_persistence_mse": 0.0007218864413020624
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0003424609709658067,
+                "persistence_relative_skill": 0.37857144366734874,
+                "zero_derivative_persistence_mse": 0.0005510866333321301
+              },
+              "phi": {
+                "model_derivative_mse": 0.0008277696520301767,
+                "persistence_relative_skill": 0.35662578973122794,
+                "zero_derivative_persistence_mse": 0.0012866068282164633
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.00034877852574367115,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.0005356377726209097,
+            "shared_field_persistence_relative_skill": 0.3488537523463373,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          }
+        },
+        "shared_persistence_normalized_mse_ratio_by_lead": {
+          "1": 0.14521604251259346,
+          "16": 0.9816041933668059,
+          "2": 0.496000900341178,
+          "4": 0.620035608707272,
+          "8": 0.6511462476536627
+        }
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_003.pt",
+        "sha256": "85fd5e84b75505b21700eab1ad9fbeab4a5918e5ea41ac959cda0aadb5c82976"
+      },
+      "epoch": 3,
+      "optimizer_updates_cumulative": 1599,
+      "preclip_gradient_norm_maximum": 25.393667221069336,
+      "training_persistence_normalized_loss_first_quarter": 0.23819906931349488,
+      "training_persistence_normalized_loss_last_quarter": 0.2552073571771467,
+      "training_persistence_normalized_loss_mean": 0.2486984871586845,
+      "training_sample_count": 2129,
+      "validation": {
+        "mean_shared_persistence_normalized_mse_ratio": 0.498068743437754,
+        "per_lead": {
+          "1": {
+            "pair_count": 127,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.005332311828678731,
+                "persistence_relative_skill": 0.676472403956315,
+                "zero_derivative_persistence_mse": 0.016481783606362668
+              },
+              "Pe": {
+                "model_derivative_mse": 0.004387247478142754,
+                "persistence_relative_skill": 0.8936764875296164,
+                "zero_derivative_persistence_mse": 0.04126319170808826
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0063082494278976385,
+                "persistence_relative_skill": 0.891430943537681,
+                "zero_derivative_persistence_mse": 0.058103566830637804
+              },
+              "Vi": {
+                "model_derivative_mse": 0.008102246487490519,
+                "persistence_relative_skill": 0.6256398087099311,
+                "zero_derivative_persistence_mse": 0.021642916837844493
+              },
+              "phi": {
+                "model_derivative_mse": 0.004918860396904952,
+                "persistence_relative_skill": 0.7971078823903976,
+                "zero_derivative_persistence_mse": 0.024243723486437486
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.005342602911573041,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.03861618071502958,
+            "shared_field_persistence_relative_skill": 0.861648593603829,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "16": {
+            "pair_count": 112,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.0001026282875323154,
+                "persistence_relative_skill": 0.2509466267852919,
+                "zero_derivative_persistence_mse": 0.000137010647307903
+              },
+              "Pe": {
+                "model_derivative_mse": 0.00010108818983630422,
+                "persistence_relative_skill": 0.2359512013551296,
+                "zero_derivative_persistence_mse": 0.00013230593388222835
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0001344793177472107,
+                "persistence_relative_skill": 0.3038499743824956,
+                "zero_derivative_persistence_mse": 0.00019317577073695258
+              },
+              "Vi": {
+                "model_derivative_mse": 0.00010725834939663613,
+                "persistence_relative_skill": 0.3176590592863028,
+                "zero_derivative_persistence_mse": 0.00015719172483545958
+              },
+              "phi": {
+                "model_derivative_mse": 0.0004278220768863722,
+                "persistence_relative_skill": 0.2604957151715397,
+                "zero_derivative_persistence_mse": 0.00057852548749682
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.00011273193170527676,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.00015416411730902795,
+            "shared_field_persistence_relative_skill": 0.2687537562369249,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "2": {
+            "pair_count": 126,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.0026218473862905005,
+                "persistence_relative_skill": 0.5466858237921626,
+                "zero_derivative_persistence_mse": 0.005783731292551558
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0024102541737656227,
+                "persistence_relative_skill": 0.5536480407399706,
+                "zero_derivative_persistence_mse": 0.005399896032183631
+              },
+              "Pi": {
+                "model_derivative_mse": 0.003614089737980913,
+                "persistence_relative_skill": 0.5648834144188037,
+                "zero_derivative_persistence_mse": 0.008306026149643276
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0033075337030778374,
+                "persistence_relative_skill": 0.5669833421834153,
+                "zero_derivative_persistence_mse": 0.007638352112723635
+              },
+              "phi": {
+                "model_derivative_mse": 0.002765170457096929,
+                "persistence_relative_skill": 0.6113165102365754,
+                "zero_derivative_persistence_mse": 0.007114195817218715
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.002882063766012346,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.006496551158126154,
+            "shared_field_persistence_relative_skill": 0.556370188448783,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "4": {
+            "pair_count": 124,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.000803263658928054,
+                "persistence_relative_skill": 0.3589981484817366,
+                "zero_derivative_persistence_mse": 0.0012531378139165445
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0009734158669093138,
+                "persistence_relative_skill": 0.42324125137624946,
+                "zero_derivative_persistence_mse": 0.001687734896491918
+              },
+              "Pi": {
+                "model_derivative_mse": 0.001437149319901538,
+                "persistence_relative_skill": 0.43997588768018225,
+                "zero_derivative_persistence_mse": 0.0025662275753598495
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0011572151907782487,
+                "persistence_relative_skill": 0.42067420974542025,
+                "zero_derivative_persistence_mse": 0.0019975205838319754
+              },
+              "phi": {
+                "model_derivative_mse": 0.001451184055795265,
+                "persistence_relative_skill": 0.4558747268046307,
+                "zero_derivative_persistence_mse": 0.0026670035877458947
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0010712762819129686,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.0018357000952561042,
+            "shared_field_persistence_relative_skill": 0.4164208605308638,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "8": {
+            "pair_count": 120,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.0002614316601962359,
+                "persistence_relative_skill": 0.3401085245654587,
+                "zero_derivative_persistence_mse": 0.0003961737193590538
+              },
+              "Pe": {
+                "model_derivative_mse": 0.00028782642929758314,
+                "persistence_relative_skill": 0.4112210894878645,
+                "zero_derivative_persistence_mse": 0.0004888531572016125
+              },
+              "Pi": {
+                "model_derivative_mse": 0.00040450460686715264,
+                "persistence_relative_skill": 0.4396561789724849,
+                "zero_derivative_persistence_mse": 0.0007218864413020624
+              },
+              "Vi": {
+                "model_derivative_mse": 0.00032495941321196203,
+                "persistence_relative_skill": 0.4103297130487381,
+                "zero_derivative_persistence_mse": 0.0005510866333321301
+              },
+              "phi": {
+                "model_derivative_mse": 0.0008039591368287802,
+                "persistence_relative_skill": 0.37513223216508584,
+                "zero_derivative_persistence_mse": 0.0012866068282164633
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.00031792089878699054,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.0005356377726209097,
+            "shared_field_persistence_relative_skill": 0.4064628839908295,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          }
+        },
+        "shared_persistence_normalized_mse_ratio_by_lead": {
+          "1": 0.13835140639617108,
+          "16": 0.7312462437630751,
+          "2": 0.4436298115512169,
+          "4": 0.5835791394691362,
+          "8": 0.5935371160091705
+        }
+      }
+    },
+    {
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_004.pt",
+        "sha256": "b9007f818eb35d82a1e4c21771dfc1ad870591feb777f5087f3b2a49847cd50d"
+      },
+      "epoch": 4,
+      "optimizer_updates_cumulative": 2132,
+      "preclip_gradient_norm_maximum": 16.030168533325195,
+      "training_persistence_normalized_loss_first_quarter": 0.2333523846017827,
+      "training_persistence_normalized_loss_last_quarter": 0.23007456465323167,
+      "training_persistence_normalized_loss_mean": 0.2321331025175173,
+      "training_sample_count": 2129,
+      "validation": {
+        "mean_shared_persistence_normalized_mse_ratio": 0.48647410263647367,
+        "per_lead": {
+          "1": {
+            "pair_count": 127,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.005260634787364695,
+                "persistence_relative_skill": 0.68082126831626,
+                "zero_derivative_persistence_mse": 0.016481783606362668
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0043168962655126325,
+                "persistence_relative_skill": 0.8953814262344992,
+                "zero_derivative_persistence_mse": 0.04126319170808826
+              },
+              "Pi": {
+                "model_derivative_mse": 0.006219184870112343,
+                "persistence_relative_skill": 0.8929638022354078,
+                "zero_derivative_persistence_mse": 0.058103566830637804
+              },
+              "Vi": {
+                "model_derivative_mse": 0.008019126815696059,
+                "persistence_relative_skill": 0.6294803110053111,
+                "zero_derivative_persistence_mse": 0.021642916837844493
+              },
+              "phi": {
+                "model_derivative_mse": 0.004577036195020635,
+                "persistence_relative_skill": 0.8112073750725157,
+                "zero_derivative_persistence_mse": 0.024243723486437486
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.00526557197432989,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.03861618071502958,
+            "shared_field_persistence_relative_skill": 0.863643377547161,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "16": {
+            "pair_count": 112,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 9.915268527912339e-05,
+                "persistence_relative_skill": 0.2763140148057376,
+                "zero_derivative_persistence_mse": 0.000137010647307903
+              },
+              "Pe": {
+                "model_derivative_mse": 9.358004767405377e-05,
+                "persistence_relative_skill": 0.292699541674724,
+                "zero_derivative_persistence_mse": 0.00013230593388222835
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0001284646582521359,
+                "persistence_relative_skill": 0.3349856570415023,
+                "zero_derivative_persistence_mse": 0.00019317577073695258
+              },
+              "Vi": {
+                "model_derivative_mse": 0.00010163308389246004,
+                "persistence_relative_skill": 0.3534450748037502,
+                "zero_derivative_persistence_mse": 0.00015719172483545958
+              },
+              "phi": {
+                "model_derivative_mse": 0.00042733340103643367,
+                "persistence_relative_skill": 0.26134040716955864,
+                "zero_derivative_persistence_mse": 0.00057852548749682
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0001070657970684377,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.00015416411730902795,
+            "shared_field_persistence_relative_skill": 0.30550766976584987,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "2": {
+            "pair_count": 126,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.002564788901503769,
+                "persistence_relative_skill": 0.5565511653684929,
+                "zero_derivative_persistence_mse": 0.005783731292551558
+              },
+              "Pe": {
+                "model_derivative_mse": 0.00233895391290322,
+                "persistence_relative_skill": 0.5668520469722109,
+                "zero_derivative_persistence_mse": 0.005399896032183631
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0035040486472273113,
+                "persistence_relative_skill": 0.5781317583044447,
+                "zero_derivative_persistence_mse": 0.008306026149643276
+              },
+              "Vi": {
+                "model_derivative_mse": 0.003260773207460131,
+                "persistence_relative_skill": 0.5731051463275074,
+                "zero_derivative_persistence_mse": 0.007638352112723635
+              },
+              "phi": {
+                "model_derivative_mse": 0.0025815911198634263,
+                "persistence_relative_skill": 0.637121160818329,
+                "zero_derivative_persistence_mse": 0.007114195817218715
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0028025971538781,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.006496551158126154,
+            "shared_field_persistence_relative_skill": 0.5686023113398413,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "4": {
+            "pair_count": 124,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.0007904857158786522,
+                "persistence_relative_skill": 0.36919490649789266,
+                "zero_derivative_persistence_mse": 0.0012531378139165445
+              },
+              "Pe": {
+                "model_derivative_mse": 0.0009567394178043887,
+                "persistence_relative_skill": 0.43312221617681634,
+                "zero_derivative_persistence_mse": 0.001687734896491918
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0014168630569867374,
+                "persistence_relative_skill": 0.4478809788379514,
+                "zero_derivative_persistence_mse": 0.0025662275753598495
+              },
+              "Vi": {
+                "model_derivative_mse": 0.0011408246119569473,
+                "persistence_relative_skill": 0.4288796715333826,
+                "zero_derivative_persistence_mse": 0.0019975205838319754
+              },
+              "phi": {
+                "model_derivative_mse": 0.0013559786797449256,
+                "persistence_relative_skill": 0.4915722326076901,
+                "zero_derivative_persistence_mse": 0.0026670035877458947
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0010546960635565929,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.0018357000952561042,
+            "shared_field_persistence_relative_skill": 0.4254529559146485,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          },
+          "8": {
+            "pair_count": 120,
+            "per_field": {
+              "Ne": {
+                "model_derivative_mse": 0.0002589059690239303,
+                "persistence_relative_skill": 0.3464837358651678,
+                "zero_derivative_persistence_mse": 0.0003961737193590538
+              },
+              "Pe": {
+                "model_derivative_mse": 0.00028914790512344827,
+                "persistence_relative_skill": 0.4085178731817046,
+                "zero_derivative_persistence_mse": 0.0004888531572016125
+              },
+              "Pi": {
+                "model_derivative_mse": 0.0004089864621743221,
+                "persistence_relative_skill": 0.4334476466455921,
+                "zero_derivative_persistence_mse": 0.0007218864413020624
+              },
+              "Vi": {
+                "model_derivative_mse": 0.00032428446292848975,
+                "persistence_relative_skill": 0.41155447562262093,
+                "zero_derivative_persistence_mse": 0.0005510866333321301
+              },
+              "phi": {
+                "model_derivative_mse": 0.0007959214030327557,
+                "persistence_relative_skill": 0.381379466067277,
+                "zero_derivative_persistence_mse": 0.0012866068282164633
+              }
+            },
+            "shared_field_mean_model_derivative_mse": 0.0003190134454405669,
+            "shared_field_mean_zero_derivative_persistence_mse": 0.0005356377726209097,
+            "shared_field_persistence_relative_skill": 0.40442317225013125,
+            "shared_fields": [
+              "Ne",
+              "Pe",
+              "Pi"
+            ]
+          }
+        },
+        "shared_persistence_normalized_mse_ratio_by_lead": {
+          "1": 0.136356622452839,
+          "16": 0.6944923302341501,
+          "2": 0.43139768866015865,
+          "4": 0.5745470440853515,
+          "8": 0.5955768277498688
+        }
+      }
+    }
+  ],
+  "lead1_shared_mse": 0.00526557197432989,
+  "lead_steps": [
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "longer_lead_improved_count": 4,
+  "longer_lead_shared_mse_improvements": {
+    "16": 0.029924296447008752,
+    "2": 0.0247951161271806,
+    "4": 0.02564217623303629,
+    "8": 0.02772793234372982
+  },
+  "loss": {
+    "checkpoint_selection": "unweighted_mean_q_l",
+    "name": "train_derivative_rms_persistence_normalized_direct_state_mse",
+    "physics_derived_quantities_used": false,
+    "q_l": "shared_model_derivative_mse/shared_persistence_derivative_mse",
+    "scale_fit_leads": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "scale_fit_split": "train"
+  },
+  "manifest": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/input_freeze_commit_50ed12bd/manifest.json",
+  "manifest_sha256": "321b96a002acfcf0da86690180c829c8a4a859447263a0fbc70e5592163eb63d",
+  "numeric_precision": {
+    "cudnn_allow_tf32": false,
+    "float32_matmul_precision": "highest",
+    "matmul_allow_tf32": false
+  },
+  "numerical_gate": {
+    "boundary": null,
+    "checkpoint_reload_exact": true,
+    "integer_toroidal_shift": 7,
+    "passed": true,
+    "volume": {
+      "normalized_maximum_absolute_error": 1.5307922257979765e-06,
+      "normalized_root_mean_square_error": 1.570038184861925e-07
+    }
+  },
+  "optimizer_updates": 2132,
+  "paper0_commit": "50ed12bd3defdb2685603e6a69f1972587d5564d",
+  "parent": {
+    "checkpoint": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_full/array_6933635/task_1_seed_1702_job_6933637/c5p/checkpoint_epoch_012.pt",
+      "sha256": "59e9927ca88878a9d31a72789c6bbaf03248c507bc87f18ce2ac77e2026ea4a6"
+    },
+    "checkpoint_config_validation": {
+      "inserted_legacy_defaults": [
+        "auxiliary_context_channels"
+      ],
+      "legacy_default_values": {
+        "auxiliary_context_channels": 0
+      },
+      "stored_config_matches_after_explicit_legacy_default": true
+    },
+    "checkpoint_epoch": 12,
+    "checkpoint_optimizer_updates": 1296,
+    "checkpoint_paper0_commit": "388a7f23add609ba896667516a05bfdebc36409a",
+    "checkpoint_reload_bitwise": true,
+    "evaluation": {
+      "mean_shared_persistence_normalized_mse_ratio": 53.21821465238121,
+      "per_lead": {
+        "1": {
+          "pair_count": 127,
+          "per_field": {
+            "Ne": {
+              "model_derivative_mse": 0.005331448941313546,
+              "persistence_relative_skill": 0.6765247579603351,
+              "zero_derivative_persistence_mse": 0.016481783606362668
+            },
+            "Pe": {
+              "model_derivative_mse": 0.004301996134973545,
+              "persistence_relative_skill": 0.8957425260409441,
+              "zero_derivative_persistence_mse": 0.04126319170808826
+            },
+            "Pi": {
+              "model_derivative_mse": 0.006218982219120052,
+              "persistence_relative_skill": 0.8929672899901766,
+              "zero_derivative_persistence_mse": 0.058103566830637804
+            },
+            "Vi": {
+              "model_derivative_mse": 0.008030240836639274,
+              "persistence_relative_skill": 0.628966793302199,
+              "zero_derivative_persistence_mse": 0.021642916837844493
+            },
+            "phi": {
+              "model_derivative_mse": 0.004655374655381389,
+              "persistence_relative_skill": 0.8079760867597043,
+              "zero_derivative_persistence_mse": 0.024243723486437486
+            }
+          },
+          "shared_field_mean_model_derivative_mse": 0.0052841424318023815,
+          "shared_field_mean_zero_derivative_persistence_mse": 0.03861618071502958,
+          "shared_field_persistence_relative_skill": 0.8631624792001822,
+          "shared_fields": [
+            "Ne",
+            "Pe",
+            "Pi"
+          ]
+        },
+        "16": {
+          "pair_count": 112,
+          "per_field": {
+            "Ne": {
+              "model_derivative_mse": 0.009741734205321833,
+              "persistence_relative_skill": -70.10202306707819,
+              "zero_derivative_persistence_mse": 0.000137010647307903
+            },
+            "Pe": {
+              "model_derivative_mse": 0.0330295942590705,
+              "persistence_relative_skill": -248.64560008677822,
+              "zero_derivative_persistence_mse": 0.00013230593388222835
+            },
+            "Pi": {
+              "model_derivative_mse": 0.047322758267839236,
+              "persistence_relative_skill": -243.97253505088187,
+              "zero_derivative_persistence_mse": 0.00019317577073695258
+            },
+            "Vi": {
+              "model_derivative_mse": 0.011513243489838267,
+              "persistence_relative_skill": -72.2433180047471,
+              "zero_derivative_persistence_mse": 0.00015719172483545958
+            },
+            "phi": {
+              "model_derivative_mse": 0.017651332342731103,
+              "persistence_relative_skill": -29.510898351437156,
+              "zero_derivative_persistence_mse": 0.00057852548749682
+            }
+          },
+          "shared_field_mean_model_derivative_mse": 0.03003136224407719,
+          "shared_field_mean_zero_derivative_persistence_mse": 0.00015416411730902795,
+          "shared_field_persistence_relative_skill": -193.80124667323304,
+          "shared_fields": [
+            "Ne",
+            "Pe",
+            "Pi"
+          ]
+        },
+        "2": {
+          "pair_count": 126,
+          "per_field": {
+            "Ne": {
+              "model_derivative_mse": 0.008479416152680075,
+              "persistence_relative_skill": -0.46608058427612153,
+              "zero_derivative_persistence_mse": 0.005783731292551558
+            },
+            "Pe": {
+              "model_derivative_mse": 0.030659719086742677,
+              "persistence_relative_skill": -4.6778350738624095,
+              "zero_derivative_persistence_mse": 0.005399896032183631
+            },
+            "Pi": {
+              "model_derivative_mse": 0.043654004603753356,
+              "persistence_relative_skill": -4.255702765350454,
+              "zero_derivative_persistence_mse": 0.008306026149643276
+            },
+            "Vi": {
+              "model_derivative_mse": 0.008375461800574913,
+              "persistence_relative_skill": -0.09650114016391464,
+              "zero_derivative_persistence_mse": 0.007638352112723635
+            },
+            "phi": {
+              "model_derivative_mse": 0.015033654258472235,
+              "persistence_relative_skill": -1.113190955762815,
+              "zero_derivative_persistence_mse": 0.007114195817218715
+            }
+          },
+          "shared_field_mean_model_derivative_mse": 0.0275977132810587,
+          "shared_field_mean_zero_derivative_persistence_mse": 0.006496551158126154,
+          "shared_field_persistence_relative_skill": -3.2480560237778384,
+          "shared_fields": [
+            "Ne",
+            "Pe",
+            "Pi"
+          ]
+        },
+        "4": {
+          "pair_count": 124,
+          "per_field": {
+            "Ne": {
+              "model_derivative_mse": 0.00902419594386893,
+              "persistence_relative_skill": -6.2012797344809165,
+              "zero_derivative_persistence_mse": 0.0012531378139165445
+            },
+            "Pe": {
+              "model_derivative_mse": 0.02920170321710998,
+              "persistence_relative_skill": -16.302304572719258,
+              "zero_derivative_persistence_mse": 0.001687734896491918
+            },
+            "Pi": {
+              "model_derivative_mse": 0.04186471772879974,
+              "persistence_relative_skill": -15.313719847285661,
+              "zero_derivative_persistence_mse": 0.0025662275753598495
+            },
+            "Vi": {
+              "model_derivative_mse": 0.010430049312320099,
+              "persistence_relative_skill": -4.221497789179948,
+              "zero_derivative_persistence_mse": 0.0019975205838319754
+            },
+            "phi": {
+              "model_derivative_mse": 0.015743303503240307,
+              "persistence_relative_skill": -4.90299299767582,
+              "zero_derivative_persistence_mse": 0.0026670035877458947
+            }
+          },
+          "shared_field_mean_model_derivative_mse": 0.026696872296592882,
+          "shared_field_mean_zero_derivative_persistence_mse": 0.0018357000952561042,
+          "shared_field_persistence_relative_skill": -13.543155696066094,
+          "shared_fields": [
+            "Ne",
+            "Pe",
+            "Pi"
+          ]
+        },
+        "8": {
+          "pair_count": 120,
+          "per_field": {
+            "Ne": {
+              "model_derivative_mse": 0.009191738819759904,
+              "persistence_relative_skill": -22.20128360515856,
+              "zero_derivative_persistence_mse": 0.0003961737193590538
+            },
+            "Pe": {
+              "model_derivative_mse": 0.0307928602578062,
+              "persistence_relative_skill": -61.98999976613964,
+              "zero_derivative_persistence_mse": 0.0004888531572016125
+            },
+            "Pi": {
+              "model_derivative_mse": 0.044156238289945055,
+              "persistence_relative_skill": -60.167845472067185,
+              "zero_derivative_persistence_mse": 0.0007218864413020624
+            },
+            "Vi": {
+              "model_derivative_mse": 0.010717053959767023,
+              "persistence_relative_skill": -18.44713101634611,
+              "zero_derivative_persistence_mse": 0.0005510866333321301
+            },
+            "phi": {
+              "model_derivative_mse": 0.01643578927173759,
+              "persistence_relative_skill": -11.774523585050003,
+              "zero_derivative_persistence_mse": 0.0012866068282164633
+            }
+          },
+          "shared_field_mean_model_derivative_mse": 0.028046945789170385,
+          "shared_field_mean_zero_derivative_persistence_mse": 0.0005356377726209097,
+          "shared_field_persistence_relative_skill": -51.36177734802924,
+          "shared_fields": [
+            "Ne",
+            "Pe",
+            "Pi"
+          ]
+        }
+      },
+      "shared_persistence_normalized_mse_ratio_by_lead": {
+        "1": 0.13683752079981776,
+        "16": 194.80124667323304,
+        "2": 4.248056023777838,
+        "4": 14.543155696066094,
+        "8": 52.36177734802924
+      }
+    },
+    "evaluation_before_optimizer_construction": true
+  },
+  "parent_improvement_fraction": 0.990858879693464,
+  "parent_selection_metric": 53.21821465238121,
+  "peak_cuda_memory_GiB": 0.8875694274902344,
+  "physics_derived_loss_used": false,
+  "prerequisites": {
+    "parent_checkpoint": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_full/array_6933635/task_1_seed_1702_job_6933637/c5p/checkpoint_epoch_012.pt",
+      "sha256": "59e9927ca88878a9d31a72789c6bbaf03248c507bc87f18ce2ac77e2026ea4a6"
+    },
+    "parent_one_step_selection_metric": 0.005284142434913455,
+    "parent_result": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_full/array_6933635/task_1_seed_1702_job_6933637/c5p/result.json",
+      "sha256": "42a2c9f82c6aa0e21a50daf70522b6fe6b80a0875f17a2f185e49332a998add2"
+    },
+    "seed1701_screen_result": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_stage2_multilead_6936393.json",
+      "sha256": "6f4036ff6fd50a7090e60a351242f1a6ad00af6d3762322fe1075d22a9808c2a"
+    },
+    "stage1_reduction": {
+      "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_block_evaluation/job_6935811/summary.json",
+      "sha256": "39146e50666a4b000134dc3741d67f1c04b008510970417c92ac21d9505cc23c"
+    }
+  },
+  "prospective_gate_passed": true,
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_stage2_multilead_scaling",
+  "screen_gates": {
+    "at_least_three_longer_leads_improve": true,
+    "every_c5p_field_positive_skill_at_every_lead": true,
+    "lead1_shared_mse_at_most_five_percent_above_parent": true,
+    "mean_multilead_ratio_improves_at_least_ten_percent": true,
+    "training_gate_passed": true
+  },
+  "seed": 1702,
+  "seed_confirmation_passed": true,
+  "slurm_job_id": "6936642",
+  "status": "passed",
+  "training_gate": {
+    "epoch_mean_training_loss_decreased": true,
+    "exact_optimizer_update_count": true,
+    "finite_validation_metrics": true,
+    "numerical_gate_passed": true,
+    "passed": true
+  },
+  "training_pair_count": 2129,
+  "validation_pair_count": 609,
+  "wall_seconds": 2167.770668968995
+}

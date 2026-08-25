@@ -522,3 +522,24 @@ the same chronological validation starts. This does not authorize long free
 rollouts, stochastic training, assimilation, diagnostic ranking, 85606, or
 the newer NERSC data. Exact rules are in
 `protocol/POST_ECRD_OLD_85604_STAGE2_SCALING_ROLLOUT_AMENDMENT_2026-08-25.md`.
+
+## A024 - Advance the confirmed direct-transition repair to bounded rollout
+
+**Status:** recorded after seed-confirmation array `6936641` completed and
+before any direct-versus-autoregressive forecast was evaluated.
+
+Seeds 1701, 1702, and 1703 each passed every frozen multi-lead gate. The
+three-seed median persistence-normalized direct-transition score over leads
+`1,2,4,8,16` is `0.48813885947672625`; every C5P field has positive skill at
+every lead for every seed. The verified reduction records
+`three_seed_mechanism_confirmed: true` and
+`bounded_rollout_authorized: true`.
+
+This result activates only the inference comparison already frozen in A023:
+matched 85604 validation starts and terminal horizons four and eight,
+comparing persistence, direct prediction, and truth-free compositions of
+leads one, two, and four. It does not authorize checkpoint tuning, further
+training, a long free rollout, 85606, newer NERSC data, stochastic claims,
+assimilation, diagnostic ranking, or steering. See
+`POST_ECRD_OLD_85604_STAGE2_MULTILEAD_THREE_SEED_READOUT.md` and the tracked
+three-seed reduction for the complete evidence and provenance.

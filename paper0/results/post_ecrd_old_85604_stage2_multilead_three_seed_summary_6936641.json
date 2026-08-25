@@ -1,0 +1,315 @@
+{
+  "aggregates": {
+    "lead1_shared_mse": {
+      "maximum": 0.005299497073090922,
+      "median": 0.00526557197432989,
+      "minimum": 0.005263303857864699
+    },
+    "selection_metric": {
+      "maximum": 0.4903675952495443,
+      "median": 0.48813885947672625,
+      "minimum": 0.48647410263647367
+    },
+    "shared_persistence_relative_skill_by_lead": {
+      "1": {
+        "maximum": 0.8637021124200354,
+        "median": 0.863643377547161,
+        "minimum": 0.8627648572447162
+      },
+      "16": {
+        "maximum": 0.30550766976584987,
+        "median": 0.2966838527286948,
+        "minimum": 0.29624548959210617
+      },
+      "2": {
+        "maximum": 0.5731581919046105,
+        "median": 0.5686023113398413,
+        "minimum": 0.5628289221182036
+      },
+      "4": {
+        "maximum": 0.4254529559146485,
+        "median": 0.4208832083174603,
+        "minimum": 0.42087576269350246
+      },
+      "8": {
+        "maximum": 0.4062539555574757,
+        "median": 0.40442317225013125,
+        "minimum": 0.4040713737918422
+      }
+    }
+  },
+  "bounded_rollout_authorized": true,
+  "by_seed": {
+    "1701": {
+      "lead1_shared_mse": 0.005299497073090922,
+      "parent_improvement_fraction": 0.9910796407952237,
+      "per_lead": {
+        "1": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.6743646281125097,
+            "Pe": 0.8975698921223668,
+            "Pi": 0.8914895134478,
+            "Vi": 0.6285684936114485,
+            "phi": 0.8071243599417426
+          },
+          "shared_derivative_mse": 0.005299497073090922,
+          "shared_persistence_relative_skill": 0.8627648572447162
+        },
+        "16": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.281244334774986,
+            "Pe": 0.274954905384297,
+            "Pi": 0.3214670199102464,
+            "Vi": 0.3294398917581751,
+            "phi": 0.3072687200115519
+          },
+          "shared_derivative_mse": 0.00010849369289928007,
+          "shared_persistence_relative_skill": 0.29624548959210617
+        },
+        "2": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.5528294699234506,
+            "Pe": 0.5769475585493118,
+            "Pi": 0.5848501463725091,
+            "Vi": 0.5777807947800025,
+            "phi": 0.6315354575936654
+          },
+          "shared_derivative_mse": 0.002772999642718764,
+          "shared_persistence_relative_skill": 0.5731581919046105
+        },
+        "4": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.36089103406876144,
+            "Pe": 0.4313795223937046,
+            "Pi": 0.44327540263835563,
+            "Vi": 0.41178538455387237,
+            "phi": 0.49963775262389554
+          },
+          "shared_derivative_mse": 0.0010630847496560477,
+          "shared_persistence_relative_skill": 0.4208832083174603
+        },
+        "8": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.35701264086894746,
+            "Pe": 0.40734941462851904,
+            "Pi": 0.4325359232955015,
+            "Vi": 0.413392209374303,
+            "phi": 0.4018564745066603
+          },
+          "shared_derivative_mse": 0.00031803280874766936,
+          "shared_persistence_relative_skill": 0.4062539555574757
+        }
+      },
+      "prospective_gate_passed": true,
+      "selection_metric": 0.48813885947672625
+    },
+    "1702": {
+      "lead1_shared_mse": 0.00526557197432989,
+      "parent_improvement_fraction": 0.990858879693464,
+      "per_lead": {
+        "1": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.68082126831626,
+            "Pe": 0.8953814262344992,
+            "Pi": 0.8929638022354078,
+            "Vi": 0.6294803110053111,
+            "phi": 0.8112073750725157
+          },
+          "shared_derivative_mse": 0.00526557197432989,
+          "shared_persistence_relative_skill": 0.863643377547161
+        },
+        "16": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.2763140148057376,
+            "Pe": 0.292699541674724,
+            "Pi": 0.3349856570415023,
+            "Vi": 0.3534450748037502,
+            "phi": 0.26134040716955864
+          },
+          "shared_derivative_mse": 0.0001070657970684377,
+          "shared_persistence_relative_skill": 0.30550766976584987
+        },
+        "2": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.5565511653684929,
+            "Pe": 0.5668520469722109,
+            "Pi": 0.5781317583044447,
+            "Vi": 0.5731051463275074,
+            "phi": 0.637121160818329
+          },
+          "shared_derivative_mse": 0.0028025971538781,
+          "shared_persistence_relative_skill": 0.5686023113398413
+        },
+        "4": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.36919490649789266,
+            "Pe": 0.43312221617681634,
+            "Pi": 0.4478809788379514,
+            "Vi": 0.4288796715333826,
+            "phi": 0.4915722326076901
+          },
+          "shared_derivative_mse": 0.0010546960635565929,
+          "shared_persistence_relative_skill": 0.4254529559146485
+        },
+        "8": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.3464837358651678,
+            "Pe": 0.4085178731817046,
+            "Pi": 0.4334476466455921,
+            "Vi": 0.41155447562262093,
+            "phi": 0.381379466067277
+          },
+          "shared_derivative_mse": 0.0003190134454405669,
+          "shared_persistence_relative_skill": 0.40442317225013125
+        }
+      },
+      "prospective_gate_passed": true,
+      "selection_metric": 0.48647410263647367
+    },
+    "1703": {
+      "lead1_shared_mse": 0.005263303857864699,
+      "parent_improvement_fraction": 0.9907142581291806,
+      "per_lead": {
+        "1": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.6722371751758256,
+            "Pe": 0.8975700232142825,
+            "Pi": 0.8939616242523166,
+            "Vi": 0.6286052898285579,
+            "phi": 0.8124901359801066
+          },
+          "shared_derivative_mse": 0.005263303857864699,
+          "shared_persistence_relative_skill": 0.8637021124200354
+        },
+        "16": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.2844303379141008,
+            "Pe": 0.2742919473986234,
+            "Pi": 0.3207109029376073,
+            "Vi": 0.36830076353354013,
+            "phi": 0.30454437641845167
+          },
+          "shared_derivative_mse": 0.00010842611303326707,
+          "shared_persistence_relative_skill": 0.2966838527286948
+        },
+        "2": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.5455026930861255,
+            "Pe": 0.5648995883640466,
+            "Pi": 0.5735475099225129,
+            "Vi": 0.5729966313316974,
+            "phi": 0.6388571819560545
+          },
+          "shared_derivative_mse": 0.002840104272312244,
+          "shared_persistence_relative_skill": 0.5628289221182036
+        },
+        "4": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.357342930285815,
+            "Pe": 0.43285325969655386,
+            "Pi": 0.44402279595780236,
+            "Vi": 0.42689169437685304,
+            "phi": 0.49465441162178847
+          },
+          "shared_derivative_mse": 0.0010630984175886563,
+          "shared_persistence_relative_skill": 0.42087576269350246
+        },
+        "8": {
+          "per_field_persistence_relative_skill": {
+            "Ne": 0.3508298210854489,
+            "Pe": 0.40452608483016683,
+            "Pi": 0.4329825928414742,
+            "Vi": 0.43338426220975224,
+            "phi": 0.42958372001379974
+          },
+          "shared_derivative_mse": 0.0003192018819831763,
+          "shared_persistence_relative_skill": 0.4040713737918422
+        }
+      },
+      "prospective_gate_passed": true,
+      "selection_metric": 0.4903675952495443
+    }
+  },
+  "decision": "freeze_bounded_direct_vs_autoregressive_validation",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "manifest": {
+    "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/input_freeze_commit_50ed12bd/manifest.json",
+    "sha256": "321b96a002acfcf0da86690180c829c8a4a859447263a0fbc70e5592163eb63d"
+  },
+  "new_nersc_data_read": false,
+  "new_run_locks": [
+    {
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/result.json",
+        "sha256": "9ba99fc02ac8620dd1a1e917a7f5973f08925ada3389a3a65b913f941d410881"
+      },
+      "run_artifact_index": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/artifact_sha256.txt",
+        "sha256": "1fec8b2c2be7a88c90c73f1bdf304ebb951807bf13ce3d498e6faa716b11fa85"
+      },
+      "seed": 1702,
+      "selected_checkpoint": {
+        "epoch": 4,
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/checkpoint_epoch_004.pt",
+        "selection_metric": 0.48647410263647367,
+        "sha256": "b9007f818eb35d82a1e4c21771dfc1ad870591feb777f5087f3b2a49847cd50d"
+      },
+      "task": 1,
+      "task_artifact_index": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/artifact_sha256.txt",
+        "sha256": "147f7651d102b865c40eaa8a9d76baf2967c8fc3b6fc12839c44e30500c534b9"
+      },
+      "task_root": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642",
+      "wandb": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_1_seed_1702_job_6936642/run/wandb.json",
+        "remote_state_after_finish": "finished",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0oldmultileadscale-s1702-j6936642",
+        "sha256": "e6ed257887d2b43cf7911b8c8f6f51ece9c10f83bc8f4aae4c31d6b8d2474230"
+      }
+    },
+    {
+      "result": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_2_seed_1703_job_6936641/run/result.json",
+        "sha256": "ac17dc508c1fb9a64d9f7e6ef60eae3a54e87f66f437f2c37bbe4d57046e0585"
+      },
+      "run_artifact_index": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_2_seed_1703_job_6936641/run/artifact_sha256.txt",
+        "sha256": "62200e16ee773e04d4755a1f92dec695e5d11f30d890983a47fe7c0b627c5434"
+      },
+      "seed": 1703,
+      "selected_checkpoint": {
+        "epoch": 4,
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_2_seed_1703_job_6936641/run/checkpoint_epoch_004.pt",
+        "selection_metric": 0.4903675952495443,
+        "sha256": "3b81201aa0f8a4a8d73a3b87cfaed1b9b12815768b4f2bcd075815146d2d559b"
+      },
+      "task": 2,
+      "task_artifact_index": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_2_seed_1703_job_6936641/artifact_sha256.txt",
+        "sha256": "79a7269338e90be59ba647856d2d1a0ca1c97fc9d4634885636300d3d48c5d97"
+      },
+      "task_root": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_2_seed_1703_job_6936641",
+      "wandb": {
+        "path": "/mnt/ceph/users/sdelaurentiis/tcv_diagnostics/paper0/post_ecrd_old_85604_stage2_multilead_scaling/array_6936641/task_2_seed_1703_job_6936641/run/wandb.json",
+        "remote_state_after_finish": "finished",
+        "run_url": "https://wandb.ai/sdelaurentiis123-columbia-university/tcv-diagnostics-paper0/runs/p0oldmultileadscale-s1703-j6936641",
+        "sha256": "3175671e20e3d713465f7523b85ad56786c8b398b99c715bc8dbe951aafeb856"
+      }
+    }
+  ],
+  "physics_derived_loss_used": false,
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_stage2_multilead_scaling_reduction",
+  "seed1701_result": {
+    "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_stage2_multilead_6936393.json",
+    "sha256": "6f4036ff6fd50a7090e60a351242f1a6ad00af6d3762322fe1075d22a9808c2a"
+  },
+  "seed_confirmation_passed": {
+    "1701": true,
+    "1702": true,
+    "1703": true
+  },
+  "three_seed_mechanism_confirmed": true,
+  "training_commit": "50ed12bd3defdb2685603e6a69f1972587d5564d"
+}
