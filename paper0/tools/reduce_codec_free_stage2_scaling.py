@@ -109,7 +109,6 @@ def audit_confirmation_task(
         "family": "c5p",
         "seed": seed,
         "paper0_commit": training_commit,
-        "manifest": str(manifest_path),
         "manifest_sha256": manifest_sha256,
         "training_pair_count": 2129,
         "validation_pair_count": 609,
@@ -121,6 +120,15 @@ def audit_confirmation_task(
     for key, expected in required.items():
         if result.get(key) != expected:
             raise ValueError(f"seed {seed} result field {key!r} differs")
+    recorded_manifest = Path(str(result.get("manifest", "")))
+    try:
+        manifest_identity_matches = recorded_manifest.resolve(
+            strict=True
+        ) == manifest_path.resolve(strict=True)
+    except (FileNotFoundError, OSError, RuntimeError):
+        manifest_identity_matches = False
+    if not manifest_identity_matches:
+        raise ValueError(f"seed {seed} result field 'manifest' differs")
     if result.get("training_gate", {}).get("passed") is not True:
         raise ValueError(f"seed {seed} training gate did not pass")
     if result.get("prospective_gate_passed") != result.get(

@@ -104,7 +104,12 @@ def _write_index(path: Path, root: Path, relatives: list[str]) -> None:
     )
 
 
-def _fixture(tmp_path: Path, *, failed_seed: int | None = None) -> dict:
+def _fixture(
+    tmp_path: Path,
+    *,
+    failed_seed: int | None = None,
+    aliased_recorded_manifest: bool = False,
+) -> dict:
     root = tmp_path / "development_85604_reduction"
     root.mkdir()
     commit = "e" * 40
@@ -121,6 +126,10 @@ def _fixture(tmp_path: Path, *, failed_seed: int | None = None) -> dict:
             "paper0_commit_at_freeze": commit,
         },
     )
+    recorded_manifest = manifest.resolve()
+    if aliased_recorded_manifest:
+        recorded_manifest = root / "manifest_alias.json"
+        recorded_manifest.symlink_to(manifest.name)
     screen_checkpoint = root / "seed1701.pt"
     screen_checkpoint.write_bytes(b"seed1701")
     screen = root / "seed1701.json"
@@ -153,7 +162,7 @@ def _fixture(tmp_path: Path, *, failed_seed: int | None = None) -> dict:
             scope="post_ecrd_old_85604_stage2_multilead_scaling",
             checkpoint=selected.resolve(),
             checkpoint_sha=_sha(selected),
-            manifest=manifest.resolve(),
+            manifest=recorded_manifest,
             manifest_sha=manifest_sha,
             commit=commit,
             confirmation=seed != failed_seed,
@@ -217,3 +226,13 @@ def test_reducer_does_not_average_away_one_failed_seed(tmp_path: Path) -> None:
     assert result["three_seed_mechanism_confirmed"] is False
     assert result["bounded_rollout_authorized"] is False
     assert result["decision"] == "stop_multilead_schedule_and_freeze_operator_experiment"
+
+
+def test_reducer_accepts_an_alias_to_the_same_frozen_manifest(
+    tmp_path: Path,
+) -> None:
+    result = reduce_scaling(
+        **_fixture(tmp_path, aliased_recorded_manifest=True)
+    )
+    assert result["three_seed_mechanism_confirmed"] is True
+    assert result["bounded_rollout_authorized"] is True
