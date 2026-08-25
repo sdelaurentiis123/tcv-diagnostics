@@ -46,6 +46,19 @@ HORIZONS = (4, 8)
 SEEDS = (1701, 1702, 1703)
 VALIDATION_START = 496
 VALIDATION_STOP = 624
+CUDA_DEVICE_INDEX = 0
+
+
+def reset_peak_cuda_memory_stats() -> None:
+    """Reset accounting on the sole Slurm-visible logical CUDA device."""
+
+    torch.cuda.reset_peak_memory_stats(CUDA_DEVICE_INDEX)
+
+
+def peak_cuda_memory_gib() -> float:
+    """Return peak allocation on the sole Slurm-visible logical CUDA device."""
+
+    return torch.cuda.max_memory_allocated(CUDA_DEVICE_INDEX) / 2**30
 
 
 def parse_args() -> argparse.Namespace:
@@ -522,12 +535,12 @@ def main() -> None:
 
     if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
         raise RuntimeError("bounded rollout requires one allocated CUDA GPU")
-    device = torch.device("cuda", 0)
+    device = torch.device("cuda", CUDA_DEVICE_INDEX)
     torch.backends.cudnn.benchmark = False
     torch.backends.cudnn.allow_tf32 = False
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.set_float32_matmul_precision("highest")
-    torch.cuda.reset_peak_memory_stats(device)
+    reset_peak_cuda_memory_stats()
     catalog = load_official_catalog(args.artifact_root)
     states = load_validation_states(catalog)
 
@@ -716,7 +729,7 @@ def main() -> None:
                 "row_count": len(rows),
             },
             "gpu": torch.cuda.get_device_name(device),
-            "peak_cuda_memory_GiB": torch.cuda.max_memory_allocated(device) / 2**30,
+            "peak_cuda_memory_GiB": peak_cuda_memory_gib(),
             "wall_seconds_before_wandb_verification": time.perf_counter() - started,
             "numeric_precision": {
                 "cudnn_allow_tf32": torch.backends.cudnn.allow_tf32,
