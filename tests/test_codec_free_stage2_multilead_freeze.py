@@ -47,10 +47,12 @@ def _inputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict:
     }
     model, config = build_model(architecture)
     checkpoint = root / "checkpoint_epoch_012.pt"
+    legacy_config = config.to_record()
+    legacy_config.pop("auxiliary_context_channels")
     torch.save(
         {
             "model": model.state_dict(),
-            "config": config.to_record(),
+            "config": legacy_config,
             "family": "c5p",
             "seed": 1701,
             "epoch": 12,
@@ -102,6 +104,9 @@ def test_freeze_authorizes_exactly_one_c5p_screen(
     assert manifest["split"]["lead_steps"] == [1, 2, 4, 8, 16]
     assert manifest["optimization"]["expected_optimizer_updates"] == 2132
     assert manifest["three_seed_scaling_authorized"] is False
+    assert manifest["parent"]["checkpoint_config_validation"][
+        "inserted_legacy_defaults"
+    ] == ["auxiliary_context_channels"]
     assert manifest["screen_gates"]["maximum_lead1_shared_mse"] == pytest.approx(
         freezer.PARENT_ONE_STEP_SHARED_MSE * 1.05
     )

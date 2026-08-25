@@ -11,6 +11,7 @@ from paper0.tools.train_codec_free_stage2_multilead import (
     LEADS,
     authorize_manifest,
     screen_decision,
+    validate_parent_config,
 )
 from tcv_diagnostics.state_operator_data import plan_lead_pairs
 
@@ -92,6 +93,18 @@ def test_manifest_rejects_scaling_or_another_seed() -> None:
         authorize_manifest(manifest, seed=1701)
     with pytest.raises(ValueError, match="seed"):
         authorize_manifest(_manifest(), seed=1702)
+
+
+def test_legacy_config_accepts_only_explicit_zero_auxiliary_default() -> None:
+    expected = {"width": 24, "auxiliary_context_channels": 0}
+    legacy = validate_parent_config({"width": 24}, expected)
+    assert legacy["inserted_legacy_defaults"] == ["auxiliary_context_channels"]
+    with pytest.raises(ValueError, match="architecture"):
+        validate_parent_config(
+            {"width": 24, "auxiliary_context_channels": 1}, expected
+        )
+    with pytest.raises(ValueError, match="architecture"):
+        validate_parent_config({}, expected)
 
 
 def test_screen_decision_requires_every_prospective_gate() -> None:

@@ -195,6 +195,32 @@ def build_model(architecture: Mapping[str, Any]) -> tuple[
     return CodecFreeIncrementOperator3D(config), config
 
 
+def validate_parent_config(
+    stored: Mapping[str, Any],
+    expected: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Validate one legacy checkpoint without weakening architecture identity.
+
+    The optional auxiliary-context channel count was added to config
+    serialization after the frozen Stage-1 checkpoint was written.  Its
+    historical absence has exactly one valid interpretation: the default of
+    zero channels.  No other missing, extra, or changed field is accepted.
+    """
+
+    canonical = dict(stored)
+    inserted: list[str] = []
+    if "auxiliary_context_channels" not in canonical:
+        canonical["auxiliary_context_channels"] = 0
+        inserted.append("auxiliary_context_channels")
+    if canonical != dict(expected):
+        raise ValueError("parent checkpoint architecture differs")
+    return {
+        "stored_config_matches_after_explicit_legacy_default": True,
+        "inserted_legacy_defaults": inserted,
+        "legacy_default_values": {"auxiliary_context_channels": 0},
+    }
+
+
 def load_parent_model(
     *,
     manifest: Mapping[str, Any],
@@ -205,8 +231,9 @@ def load_parent_model(
     payload = torch.load(checkpoint_path, map_location=device, weights_only=True)
     if payload.get("family") != FAMILY or int(payload.get("seed", -1)) != 1701:
         raise ValueError("parent checkpoint identity differs")
-    if payload.get("config") != config.to_record():
-        raise ValueError("parent checkpoint architecture differs")
+    config_validation = validate_parent_config(
+        payload.get("config", {}), config.to_record()
+    )
     if float(payload.get("selection_metric", float("nan"))) != float(
         manifest["parent"]["one_step_selection_metric"]
     ):
@@ -225,6 +252,7 @@ def load_parent_model(
         "checkpoint_paper0_commit": payload.get("paper0_commit"),
         "checkpoint_epoch": int(payload["epoch"]),
         "checkpoint_optimizer_updates": int(payload["optimizer_updates"]),
+        "checkpoint_config_validation": config_validation,
     }
 
 

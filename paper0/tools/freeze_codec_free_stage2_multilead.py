@@ -14,6 +14,7 @@ from paper0.tools.train_codec_free_stage1_pilot import atomic_json
 from paper0.tools.train_codec_free_stage2_multilead import (
     LEADS,
     build_model,
+    validate_parent_config,
     verify_prerequisites,
 )
 from tcv_diagnostics.codec_training import sha256_path
@@ -100,8 +101,9 @@ def freeze_manifest(
     payload = torch.load(parent_checkpoint, map_location="cpu", weights_only=True)
     if payload.get("family") != "c5p" or int(payload.get("seed", -1)) != 1701:
         raise ValueError("parent checkpoint identity differs")
-    if payload.get("config") != config.to_record():
-        raise ValueError("parent checkpoint architecture differs")
+    config_validation = validate_parent_config(
+        payload.get("config", {}), config.to_record()
+    )
     if float(payload.get("selection_metric", float("nan"))) != (
         PARENT_ONE_STEP_SHARED_MSE
     ):
@@ -135,6 +137,7 @@ def freeze_manifest(
             "one_step_selection_metric": PARENT_ONE_STEP_SHARED_MSE,
             "load_state_dictionary_strictly": True,
             "require_bitwise_weight_equality": True,
+            "checkpoint_config_validation": config_validation,
         },
         "split": {
             "training_frames": [0, 432],
