@@ -650,3 +650,24 @@ data-access rule changes.  Jobs `6948497` and `6948536` produced no elliptic
 output and remain retained as stalled execution evidence; one clean retry of
 the same seven frozen causal solves is authorized at a new immutable result
 path.
+
+## A029 - Bind exact-phi solver steps explicitly to the batch allocation
+
+**Status:** dated mechanical amendment after stalled job `6948560` and before
+any predicted-state elliptic output on 2026-08-27.
+
+Job `6948560` used the A028 overlap flag, verified every frozen input and
+dependency, passed preflight tests, and compiled the pinned solver.  Its first
+implicit nested step again stalled before launching a rank.  On that same live
+allocation and worker, four-rank known-answer `hostname` steps launched
+immediately when passed both `--jobid=6948560` and `--overlap`.  This isolates
+the remaining failure to implicit batch-allocation discovery in the current
+Rocky 9 Slurm client, not MPI, the solver, or the forecast candidate.
+
+This amendment passes `--jobid="${SLURM_JOB_ID}"` explicitly to each of the
+seven sequential solver steps while retaining `--overlap`.  A regression test
+locks the complete invocation.  No executable source, solver input, candidate,
+field, boundary, geometry, model, checkpoint, metric, threshold, or
+data-access rule changes.  Job `6948560` produced no elliptic output and
+remains retained as stalled execution evidence; one clean retry of the same
+seven frozen causal solves is authorized at a new immutable result path.

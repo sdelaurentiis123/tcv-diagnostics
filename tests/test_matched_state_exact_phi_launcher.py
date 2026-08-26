@@ -22,7 +22,7 @@ def test_launcher_is_cpu_only_and_right_sized() -> None:
 
 def test_launcher_allows_solver_step_to_overlap_batch_step() -> None:
     source = LAUNCHER.read_text(encoding="utf-8")
-    assert "srun --overlap --ntasks=4" in source
+    assert 'srun --jobid="${SLURM_JOB_ID}" --overlap --ntasks=4' in source
 
 
 def test_launcher_hash_locks_validated_elliptic_stack() -> None:
