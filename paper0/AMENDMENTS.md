@@ -696,3 +696,24 @@ candidate, field, boundary, geometry, checkpoint, metric, threshold, or
 data-access rule changes.  Job `6948563` produced no elliptic output and is
 retained as stalled execution evidence; one clean retry of the same seven
 frozen causal solves is authorized at a new immutable result path.
+
+## A031 - Keep exact-phi assembly independent of the training environment
+
+**Status:** dated mechanical amendment after post-solve failure `6948569` and
+before common-view physics scoring on 2026-08-27.
+
+Job `6948569` successfully completed all seven pinned four-rank Hermes/BOUT++
+elliptic solves and wrote seven validated causal `derived_phi.h5` artifacts.
+It then failed during final summary assembly because the lightweight data
+environment does not install PyTorch, while the assembler imported constants
+and helpers indirectly from forecast/training modules that import PyTorch.
+
+This amendment makes the assembler self-contained: it defines the already
+frozen generation scope literal locally, uses the lightweight file-hash helper,
+and provides the same exclusive atomic-JSON write sequence locally.  A
+regression test prohibits imports from forecast/training or PyTorch modules.
+No solver input or source, forecast, candidate, derived field, model,
+checkpoint, metric, threshold, or data-access rule changes.  The seven
+successful job-`6948569` outputs remain preserved as evidence.  One clean
+end-to-end retry is authorized at a new immutable result path so the final
+summary and every per-candidate artifact share an unambiguous job root.

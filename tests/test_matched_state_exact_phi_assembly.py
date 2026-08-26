@@ -108,3 +108,13 @@ def test_exact_phi_launcher_separates_test_and_data_environments() -> None:
     assert 'readonly TEST_PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"' in text
     assert '"${TEST_PYTHON}" -m pytest' in text
     assert '"${PYTHON}" -m pytest' not in text
+
+
+def test_exact_phi_assembler_has_no_training_or_torch_imports() -> None:
+    assembler = (
+        ROOT / "paper0/tools/assemble_matched_state_exact_phi.py"
+    ).read_text(encoding="utf-8")
+    assert "generate_matched_state_bounded_forecasts" not in assembler
+    assert "train_codec_free_stage1_pilot" not in assembler
+    assert "tcv_diagnostics.codec_training" not in assembler
+    assert "import torch" not in assembler

@@ -5,19 +5,22 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import Any, Mapping
 
 import h5py
 import numpy as np
 
-from paper0.tools.generate_matched_state_bounded_forecasts import SCOPE as GENERATION_SCOPE
-from paper0.tools.train_codec_free_stage1_pilot import atomic_json
-from tcv_diagnostics.codec_training import sha256_path
-from tcv_diagnostics.model_data import assert_development_path, load_strict_json
+from tcv_diagnostics.model_data import (
+    assert_development_path,
+    load_strict_json,
+    sha256_file as sha256_path,
+)
 
 
 SCOPE = "post_ecrd_old_85604_matched_state_exact_phi"
+GENERATION_SCOPE = "post_ecrd_old_85604_matched_state_bounded_generation"
 EXPECTED_CANDIDATES = (
     "h4_direct_predicted_e6b_native81.h5",
     "h4_autoregressive_lead1_predicted_e6b_native81.h5",
@@ -27,6 +30,19 @@ EXPECTED_CANDIDATES = (
     "h8_autoregressive_lead2_predicted_e6b_native81.h5",
     "h8_autoregressive_lead4_predicted_e6b_native81.h5",
 )
+
+
+def atomic_json(path: Path, value: Mapping[str, Any]) -> None:
+    if path.exists():
+        raise FileExistsError(path)
+    temporary = path.with_name(f".{path.name}.partial")
+    if temporary.exists():
+        raise FileExistsError(temporary)
+    temporary.write_text(
+        json.dumps(dict(value), indent=2, sort_keys=True, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+    os.replace(temporary, path)
 
 
 def locked_json(path: Path, digest: str, *, label: str) -> dict[str, Any]:
