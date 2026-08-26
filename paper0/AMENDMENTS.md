@@ -671,3 +671,28 @@ field, boundary, geometry, model, checkpoint, metric, threshold, or
 data-access rule changes.  Job `6948560` produced no elliptic output and
 remains retained as stalled execution evidence; one clean retry of the same
 seven frozen causal solves is authorized at a new immutable result path.
+
+## A030 - Sanitize inherited Slurm task context for exact-phi solver steps
+
+**Status:** dated mechanical amendment after stalled job `6948563` and before
+any predicted-state elliptic output on 2026-08-27.
+
+Job `6948563` included the explicit allocation ID and overlap flag, verified
+all frozen inputs and dependencies, passed preflight tests, and compiled the
+pinned solver, but its first batch-origin step still stalled before rank
+launch.  A controlled reproduction on the same allocation showed that a
+four-rank step launched immediately from the worker when only
+`SLURM_JOB_ID` and `SLURM_RESERVATION` were retained, whereas replaying the
+complete batch environment reproduced the stall.  This identifies inherited
+Slurm task-context variables as the remaining launch conflict.
+
+This amendment runs each solver step in a subshell that preserves the
+allocation identity, clears all other inherited `SLURM_*` variables, and then
+uses the already-required explicit job ID and overlap flag.  Compiler, MPI,
+Hermes/BOUT++, model, and data variables are untouched; the parent batch
+environment is unchanged after the subshell returns.  A regression test locks
+the sanitization and launch contract.  No executable source, solver input,
+candidate, field, boundary, geometry, checkpoint, metric, threshold, or
+data-access rule changes.  Job `6948563` produced no elliptic output and is
+retained as stalled execution evidence; one clean retry of the same seven
+frozen causal solves is authorized at a new immutable result path.

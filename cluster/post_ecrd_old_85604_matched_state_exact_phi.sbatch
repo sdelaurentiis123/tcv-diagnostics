@@ -211,11 +211,22 @@ for record in "${CANDIDATE_RECORDS[@]}"; do
   mkdir -p "${run_dir}"
   cp "${BOUT_INPUT}" "${run_dir}/BOUT.inp"
   echo "Solving exact phi for ${stem}"
-  srun --jobid="${SLURM_JOB_ID}" --overlap --ntasks=4 \
-    "${EXECUTABLE}" \
-    -d "${run_dir}" \
-    "paper0:input_file=${candidate}" \
-    "paper0:truth_layout=false"
+  (
+    # Rocky 9 batch tasks currently inherit task-context variables that make
+    # a nested srun wait forever before slurmstepd starts.  Retain the
+    # enclosing allocation identity and clear only the inherited task context.
+    while IFS= read -r slurm_name; do
+      case "${slurm_name}" in
+        SLURM_JOB_ID|SLURM_RESERVATION) ;;
+        *) unset "${slurm_name}" ;;
+      esac
+    done < <(compgen -v SLURM_)
+    srun --jobid="${SLURM_JOB_ID}" --overlap --ntasks=4 \
+      "${EXECUTABLE}" \
+      -d "${run_dir}" \
+      "paper0:input_file=${candidate}" \
+      "paper0:truth_layout=false"
+  )
   mapfile -t outputs < <(
     find "${run_dir}" -maxdepth 1 -name 'BOUT.dmp.*.nc' -type f | sort -V
   )
