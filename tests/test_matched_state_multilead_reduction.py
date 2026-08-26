@@ -38,6 +38,7 @@ def _reduce(c5p: dict, e6b: dict) -> dict:
         e6b_lock={"path": "e6b.json", "sha256": "b" * 64},
         manifest_lock={"path": "manifest.json", "sha256": "c" * 64},
         paper0_commit="d" * 40,
+        training_commit="e" * 40,
         slurm_job_id="known-answer",
     )
 

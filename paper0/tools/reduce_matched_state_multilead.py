@@ -31,6 +31,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--paper0-root", type=Path, required=True)
     parser.add_argument("--paper0-commit", required=True)
+    parser.add_argument("--training-commit", required=True)
     parser.add_argument("--slurm-job-id", required=True)
     return parser.parse_args()
 
@@ -126,6 +127,7 @@ def reduce_pair(
     e6b_lock: Mapping[str, str],
     manifest_lock: Mapping[str, str],
     paper0_commit: str,
+    training_commit: str,
     slurm_job_id: str,
 ) -> dict[str, Any]:
     mechanical = {
@@ -168,6 +170,7 @@ def reduce_pair(
         "diagnostic_ranking_performed": False,
         "steering_performed": False,
         "paper0_commit": paper0_commit,
+        "training_commit": training_commit,
         "slurm_job_id": slurm_job_id,
         "manifest": dict(manifest_lock),
         "results": {"c5p": dict(c5p_lock), "e6b": dict(e6b_lock)},
@@ -217,14 +220,14 @@ def main() -> None:
         args.c5p_result_sha256,
         family="c5p",
         manifest_sha256=args.manifest_sha256,
-        paper0_commit=args.paper0_commit,
+        paper0_commit=args.training_commit,
     )
     e6b = locked_result(
         args.e6b_result,
         args.e6b_result_sha256,
         family="e6b",
         manifest_sha256=args.manifest_sha256,
-        paper0_commit=args.paper0_commit,
+        paper0_commit=args.training_commit,
     )
     result = reduce_pair(
         c5p=c5p,
@@ -236,6 +239,7 @@ def main() -> None:
             "sha256": args.manifest_sha256,
         },
         paper0_commit=args.paper0_commit,
+        training_commit=args.training_commit,
         slurm_job_id=args.slurm_job_id,
     )
     atomic_json(args.output, result)
