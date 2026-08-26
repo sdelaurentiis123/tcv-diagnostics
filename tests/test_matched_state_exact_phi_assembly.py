@@ -15,6 +15,12 @@ from paper0.tools.assemble_matched_state_exact_phi import (
 )
 
 
+ROOT = Path(__file__).resolve().parents[1]
+EXACT_PHI_LAUNCHER = (
+    ROOT / "cluster/post_ecrd_old_85604_matched_state_exact_phi.sbatch"
+)
+
+
 def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -94,3 +100,11 @@ def test_assembly_accepts_only_truth_free_predicted_boundary_outputs(
         record["candidate"]["frame_interval"][0] in (500, 504)
         for record in result["outputs"]
     )
+
+
+def test_exact_phi_launcher_separates_test_and_data_environments() -> None:
+    text = EXACT_PHI_LAUNCHER.read_text(encoding="utf-8")
+    assert 'readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-data/bin/python"' in text
+    assert 'readonly TEST_PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"' in text
+    assert '"${TEST_PYTHON}" -m pytest' in text
+    assert '"${PYTHON}" -m pytest' not in text

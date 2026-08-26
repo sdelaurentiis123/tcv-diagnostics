@@ -22,6 +22,7 @@ set -euo pipefail
 
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-data/bin/python"
+readonly TEST_PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
 readonly BOUT_INSTALL="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/builds/bout_7d28d67_job_6890766/install"
 readonly BOUT_SOURCE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/BOUT-dev-7d28d67"
 readonly HERMES_SOURCE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/external/hermes-3-920ba829"
@@ -56,8 +57,8 @@ if [[ -n "$(git -C "${PAPER0_ROOT}" status --porcelain --untracked-files=all)" ]
   git -C "${PAPER0_ROOT}" status --short >&2
   exit 2
 fi
-if [[ ! -x "${PYTHON}" || ! -f "${PAPER0_E6B_GENERATION_RESULT}" ]]; then
-  echo "Audited Python or E6B generation result is unavailable" >&2
+if [[ ! -x "${PYTHON}" || ! -x "${TEST_PYTHON}" || ! -f "${PAPER0_E6B_GENERATION_RESULT}" ]]; then
+  echo "Audited data/test Python or E6B generation result is unavailable" >&2
   exit 2
 fi
 
@@ -170,7 +171,7 @@ scontrol show job -dd "${SLURM_JOB_ID}" > "${JOB_ROOT}/slurm_job.txt"
 } > "${JOB_ROOT}/environment.txt" 2>&1
 
 cd "${PAPER0_ROOT}"
-"${PYTHON}" -m pytest -p no:cacheprovider -q \
+"${TEST_PYTHON}" -m pytest -p no:cacheprovider -q \
   tests/test_matched_state_exact_phi_assembly.py \
   tests/test_phase2_matched_e6b_candidate_phi_r2_launcher.py \
   | tee "${JOB_ROOT}/test_output.txt"

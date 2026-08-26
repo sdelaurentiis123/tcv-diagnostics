@@ -606,3 +606,24 @@ set, metrics, protocol thresholds, data-access restrictions, and all
 scientific logic are unchanged.  Array `6948347` produced no forecast
 artifact and remains retained as failed execution evidence; one clean retry
 of both frozen arms is authorized at a new immutable result path.
+
+## A027 - Separate exact-phi test and data environments
+
+**Status:** dated mechanical amendment after failed job `6948486` and before
+any predicted-state elliptic solve on 2026-08-27.
+
+Exact-phi job `6948486` verified the E6B generation result, all seven local
+source/dependency hashes, the pinned BOUT++ and Hermes revisions, the geometry,
+and the Rocky 9 runtime.  It then failed before compilation or candidate data
+access because the dedicated NetCDF/BOUT data environment does not install
+`pytest`.
+
+This amendment retains that data environment for preflight parsing,
+compilation support, extraction, and final assembly, while running the two
+repository preflight test files with the already-audited LOLA environment
+that contains `pytest`.  A regression test locks the environment separation.
+No solver input, executable source, candidate, field, boundary, geometry,
+metric, threshold, model, or data-access rule changes.  Job `6948486`
+produced no elliptic output and remains retained as failed execution evidence;
+one clean retry of the seven frozen causal solves is authorized at a new
+immutable result path.
