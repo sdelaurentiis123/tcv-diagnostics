@@ -211,7 +211,7 @@ for record in "${CANDIDATE_RECORDS[@]}"; do
   mkdir -p "${run_dir}"
   cp "${BOUT_INPUT}" "${run_dir}/BOUT.inp"
   echo "Solving exact phi for ${stem}"
-  srun --ntasks=4 \
+  srun --overlap --ntasks=4 \
     "${EXECUTABLE}" \
     -d "${run_dir}" \
     "paper0:input_file=${candidate}" \

@@ -627,3 +627,26 @@ metric, threshold, model, or data-access rule changes.  Job `6948486`
 produced no elliptic output and remains retained as failed execution evidence;
 one clean retry of the seven frozen causal solves is authorized at a new
 immutable result path.
+
+## A028 - Permit exact-phi solver steps to overlap the Rocky 9 batch step
+
+**Status:** dated mechanical amendment after stalled jobs `6948497` and
+`6948536` and before any predicted-state elliptic output on 2026-08-27.
+
+Both retries verified the frozen inputs and dependencies, passed all preflight
+tests, compiled the pinned Hermes/BOUT++ oracle, and then stalled at the first
+nested `srun` without launching a solver process.  Slurm created a nominal
+step record, but `scontrol listpids` reported that the step did not exist on
+the allocated worker and node inspection showed only the sleeping `srun`
+client.  The failure reproduced on two workers.  A one-rank known-answer
+`hostname` step launched immediately inside job `6948536` when invoked with
+Slurm's explicit `--overlap` flag.
+
+This amendment adds `--overlap` only to the seven sequential solver launches
+so that the Rocky 9 job steps may share the enclosing batch allocation.  A
+regression test locks the flag.  No executable source, solver input, candidate,
+field, boundary, geometry, model, checkpoint, metric, threshold, or
+data-access rule changes.  Jobs `6948497` and `6948536` produced no elliptic
+output and remain retained as stalled execution evidence; one clean retry of
+the same seven frozen causal solves is authorized at a new immutable result
+path.
