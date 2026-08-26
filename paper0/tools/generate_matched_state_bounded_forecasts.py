@@ -603,6 +603,18 @@ def generate(
     }
 
 
+def reset_allocated_cuda_peak_memory() -> None:
+    """Reset counters on Slurm's current GPU without an explicit MIG index.
+
+    The Rocky 9 PyTorch/CUDA stack accepts the allocated MIG device for tensor
+    placement but rejects an explicitly indexed ``torch.device`` in
+    ``reset_peak_memory_stats``.  The no-argument form addresses the current
+    CUDA device selected by Slurm and is used only for compute accounting.
+    """
+
+    torch.cuda.reset_peak_memory_stats()
+
+
 def main() -> None:
     args = parse_args()
     for path in (args.artifact_root, args.manifest, args.output, args.paper0_root):
@@ -630,7 +642,7 @@ def main() -> None:
     torch.backends.cudnn.allow_tf32 = False
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.set_float32_matmul_precision("highest")
-    torch.cuda.reset_peak_memory_stats(device)
+    reset_allocated_cuda_peak_memory()
 
     catalog = load_official_catalog(args.artifact_root)
     model, model_record = load_model(manifest, family=args.family, device=device)

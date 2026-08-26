@@ -9,6 +9,7 @@ import pytest
 from paper0.tools.generate_matched_state_bounded_forecasts import (
     E6BCandidateWriter,
     NATIVE_SHAPE,
+    reset_allocated_cuda_peak_memory,
 )
 from tcv_diagnostics.matched_codec_evaluation import NATIVE81_FIELDS
 
@@ -84,3 +85,18 @@ def test_e6b_candidate_refuses_partial_or_overlapping_output(tmp_path) -> None:
             boundary=np.ones((1, 2, 32), dtype=np.float32),
         )
     overlap.abort()
+
+
+def test_peak_memory_reset_uses_the_current_slurm_cuda_device(monkeypatch) -> None:
+    calls: list[bool] = []
+
+    def reset_without_explicit_device() -> None:
+        calls.append(True)
+
+    monkeypatch.setattr(
+        "paper0.tools.generate_matched_state_bounded_forecasts."
+        "torch.cuda.reset_peak_memory_stats",
+        reset_without_explicit_device,
+    )
+    reset_allocated_cuda_peak_memory()
+    assert calls == [True]

@@ -585,3 +585,24 @@ passing pilot may authorize two confirmation seeds. The pilot does not open
 85606, newer NERSC data, assimilation, diagnostic ranking, steering, stochastic
 claims, or any physics loss. See
 `POST_ECRD_OLD_85604_BOUNDED_ROLLOUT_READOUT.md` for the complete evidence.
+
+## A026 - Make bounded-generation memory accounting compatible with Rocky 9 MIG
+
+**Status:** dated mechanical amendment after failed array `6948347` and before
+any matched-state forecast was generated on 2026-08-27.
+
+Both arms of bounded-generation array `6948347` passed all 41 frozen preflight
+tests and then failed before checkpoint loading or forecast-data access.  The
+Rocky 9 PyTorch/CUDA runtime raised `RuntimeError: Invalid device argument`
+when the compute-accounting call `reset_peak_memory_stats` received an
+explicitly indexed CUDA device inside the Slurm MIG allocation.
+
+This amendment changes only that bookkeeping call to the no-argument form,
+which resets counters on Slurm's current allocated CUDA device and matches the
+device-selection behavior already exercised successfully by the training
+jobs.  A regression test requires the reset helper to pass no explicit device
+argument.  The model, checkpoint, state, forecast compositions, target-frame
+set, metrics, protocol thresholds, data-access restrictions, and all
+scientific logic are unchanged.  Array `6948347` produced no forecast
+artifact and remains retained as failed execution evidence; one clean retry
+of both frozen arms is authorized at a new immutable result path.
