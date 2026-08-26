@@ -1,0 +1,120 @@
+{
+  "assimilation_performed": false,
+  "checkpoint_selection_performed": false,
+  "decision": {
+    "conditions": {
+      "all_primary_scalars_finite": true,
+      "causal_exact_phi_provenance_passed": true,
+      "complex_cross_spectrum_strictly_better": false,
+      "separatrix_transport_at_least_10_percent_better": false,
+      "shared_state_not_worse_by_more_than_10_percent": true,
+      "spectral_power_not_worse_by_more_than_10_percent": false
+    },
+    "e6b_over_c5p_median_ratios": {
+      "complex_cross_spectrum_relative_l2": 1.1732804665421765,
+      "separatrix_transport_relative_l2": 5.872325428250911,
+      "shared_state_standardized_rmse": 1.0580551572711785,
+      "spectral_power_absolute_log_ratio": 1.237140452749717
+    },
+    "favor_e6b_saved_state": false,
+    "next_action": "retain_c5p_control_and_stop_saved_state_branch",
+    "primary_summaries": {
+      "c5p": {
+        "complex_cross_spectrum_relative_l2": {
+          "all_finite": true,
+          "count": 189,
+          "maximum": 0.9682022957052395,
+          "median": 0.7620966766161809,
+          "minimum": 0.1251996591917273
+        },
+        "separatrix_transport_relative_l2": {
+          "all_finite": true,
+          "count": 84,
+          "maximum": 0.941747602355645,
+          "median": 0.5221623163695527,
+          "minimum": 0.2851121221404847
+        },
+        "shared_state_standardized_rmse": {
+          "all_finite": true,
+          "count": 63,
+          "maximum": 0.2130506358670953,
+          "median": 0.13505747825809564,
+          "minimum": 0.0968642885026715
+        },
+        "spectral_power_absolute_log_ratio": {
+          "all_finite": true,
+          "count": 315,
+          "maximum": 2.8539454106764923,
+          "median": 1.2824918089192614,
+          "minimum": 0.0044806562525175776
+        }
+      },
+      "e6b": {
+        "complex_cross_spectrum_relative_l2": {
+          "all_finite": true,
+          "count": 189,
+          "maximum": 2.4590068125656996,
+          "median": 0.894153144290475,
+          "minimum": 0.15482723288953867
+        },
+        "separatrix_transport_relative_l2": {
+          "all_finite": true,
+          "count": 84,
+          "maximum": 15.615473612394634,
+          "median": 3.0663070480913213,
+          "minimum": 1.0252743007059857
+        },
+        "shared_state_standardized_rmse": {
+          "all_finite": true,
+          "count": 63,
+          "maximum": 0.22245424403548808,
+          "median": 0.14289826139901815,
+          "minimum": 0.1094503579220161
+        },
+        "spectral_power_absolute_log_ratio": {
+          "all_finite": true,
+          "count": 315,
+          "maximum": 4.4631655121731075,
+          "median": 1.5866224971341785,
+          "minimum": 0.005183435148574043
+        }
+      }
+    },
+    "three_seed_confirmation_authorized": false
+  },
+  "development_run": "85604",
+  "diagnostic_ranking_performed": false,
+  "examples": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_matched_state_bounded_physics/job_6948598/scoring/example_common_physical_target560.npz",
+    "sha256": "9696357a3633868a9299a8394e741b77a90acb492555e3071d1dadb4a8ec3707"
+  },
+  "guard_frames_read": false,
+  "held_out_85606_read": false,
+  "manifest": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_matched_state_physics_freeze/job_6948589/matched_state_physics_manifest.json",
+    "sha256": "1e7199f5cda4855b96bf9c9943ecd00b1fde76b2d94ba4ccb595a112acb428d7"
+  },
+  "new_nersc_data_read": false,
+  "paper0_commit": "176749b7d7b1aa1238704cf73953a75137947a50",
+  "physics_derived_loss_used": false,
+  "physics_metrics": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_matched_state_bounded_physics/job_6948598/scoring/physics_metrics.json",
+    "sha256": "59ac8a29845570178ce097b9eab8e9d90fd2c34fe9ab2d6f85fc7e8bd84e88d0"
+  },
+  "primary_metrics": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_matched_state_bounded_physics/job_6948598/scoring/primary_metrics.csv",
+    "row_count": 1302,
+    "sha256": "86d2838da2c99293602fb2b96b507f1483235ba80ed08b1eaf4c53b469cba8ed"
+  },
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_matched_state_bounded_physics",
+  "separatrix_transport_series": {
+    "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_matched_state_bounded_physics/job_6948598/scoring/separatrix_transport_series.npz",
+    "sha256": "2ec57fecd8fea4fea13c060f86cf546a35cc48cd40100390df19fa252cdaebe2"
+  },
+  "slurm_job_id": "6948598",
+  "status": "paired_bounded_physics_scored",
+  "steering_performed": false,
+  "training_performed": false,
+  "wall_seconds_before_wandb_verification": 469.4450429640128
+}
