@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "scope": "post_ecrd_old_85604_matched_state_multilead_pilot",
+  "protocol": "paper0/protocol/POST_ECRD_OLD_85604_MATCHED_STATE_MULTILEAD_PROTOCOL_2026-08-26.md",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "held_out_85606_access_allowed": false,
+  "new_nersc_data_access_allowed": false,
+  "guard_frames_read_allowed": false,
+  "paired_pilot_training_authorized": true,
+  "three_seed_scaling_authorized": false,
+  "physics_derived_training_loss_allowed": false,
+  "paired_physics_evaluation_authorized_after_both_arms_pass": true,
+  "state_views": {
+    "c5p": {
+      "volume_fields": ["Ne", "Pe", "Pi", "phi", "Vi"],
+      "boundary": null,
+      "interpretation": "reduced_derived_five_field_control"
+    },
+    "e6b": {
+      "volume_fields": ["Ne", "Pe", "Pi", "NVe", "NVi", "Vort"],
+      "boundary": "Bphi",
+      "interpretation": "saved_evolved_state_view_not_claimed_complete_solver_state"
+    }
+  },
+  "prerequisites": {
+    "model_dataset_result": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/phase2_model_dataset_6893525.json",
+      "sha256": "27816929afde84b1666a15a06bc5dc7f8c82a9435078839c5641465275e4ec18"
+    },
+    "persistent_global_local_physics_result": {
+      "path": "/mnt/home/sdelaurentiis/tcv-diagnostics/paper0/results/post_ecrd_old_85604_persistent_global_local_physics_6938348.json",
+      "sha256": "ad9f9d4ac63fee3da2d6e0d1cf7844f72368c0233123169617c20eb5a2b598af"
+    }
+  },
+  "parents": {
+    "c5p": {
+      "family": "c5p",
+      "seed": 1701,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_full/array_6933635/task_0_seed_1701_job_6933636/c5p/result.json",
+        "sha256": "6e2a426a9a2c069863e056b3f61a7547f036282d7b708aca1669b226e4d8061d"
+      },
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_full/array_6933635/task_0_seed_1701_job_6933636/c5p/checkpoint_epoch_012.pt",
+        "sha256": "887dfcbe37e214f7217a5d4b900381cea370ca2e2c96687d2d6cd92c9e951c33"
+      },
+      "one_step_selection_metric": 0.005322341561633884,
+      "load_state_dictionary_strictly": true,
+      "require_bitwise_weight_equality": true
+    },
+    "e6b": {
+      "family": "e6b",
+      "seed": 1701,
+      "result": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_full/array_6933635/task_0_seed_1701_job_6933636/e6b/result.json",
+        "sha256": "2e51fa018117567093a1205036aa4147e65ad8da76f40108bad8789c8beaf3dd"
+      },
+      "checkpoint": {
+        "path": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_stage1_full/array_6933635/task_0_seed_1701_job_6933636/e6b/checkpoint_epoch_012.pt",
+        "sha256": "020367a9a8a964c6ce9f2cdf0e9850fd7b8ee4ff82f936f6c6153bee7d269bea"
+      },
+      "one_step_selection_metric": 0.007772147896373167,
+      "load_state_dictionary_strictly": true,
+      "require_bitwise_weight_equality": true
+    }
+  },
+  "split": {
+    "training_frames": [0, 432],
+    "guard_frames": [432, 496],
+    "validation_frames": [496, 624],
+    "history_frames": 1,
+    "lead_steps": [1, 2, 4, 8, 16],
+    "training_pair_count": 2129,
+    "validation_pair_count": 609,
+    "training_pairs_by_lead": {
+      "1": 431,
+      "2": 430,
+      "4": 428,
+      "8": 424,
+      "16": 416
+    },
+    "validation_pairs_by_lead": {
+      "1": 127,
+      "2": 126,
+      "4": 124,
+      "8": 120,
+      "16": 112
+    }
+  },
+  "architecture": {
+    "base_channels": 24,
+    "channel_multipliers": [1, 2, 4],
+    "blocks_per_level": 2,
+    "lead_embedding_channels": 128,
+    "group_norm_maximum_groups": 8,
+    "kernel_size": 3,
+    "zero_initialize_output": true,
+    "toroidal_stride": 1,
+    "downsample_nonperiodic_axes_only": true,
+    "latent_codec": false
+  },
+  "optimization": {
+    "pilot_seed": 1701,
+    "initialize_from_parent_model_only": true,
+    "restore_parent_optimizer": false,
+    "epochs": 12,
+    "sample_batch_size": 1,
+    "gradient_accumulation_samples": 4,
+    "expected_optimizer_updates": 6396,
+    "optimizer": "AdamW",
+    "peak_learning_rate": 0.00005,
+    "minimum_learning_rate": 0.000005,
+    "weight_decay": 0.0001,
+    "warmup_fraction": 0.05,
+    "gradient_clip_norm": 1.0,
+    "autocast": "bfloat16",
+    "cudnn_tf32": false,
+    "matmul_tf32": false,
+    "same_pair_order_and_augmentation_seed_across_families": true
+  },
+  "loss": {
+    "name": "train_derivative_rms_persistence_normalized_direct_state_mse",
+    "scale_fit_split": "train",
+    "scale_fit_leads": [1, 2, 4, 8, 16],
+    "e6b_components_include_boundary_sides": true,
+    "checkpoint_selection": "unweighted_mean_q_l_over_shared_Ne_Pe_Pi",
+    "physics_derived_quantities_used": false
+  },
+  "transition_gates": {
+    "mechanical_and_equivariance_gates_required": true,
+    "every_predicted_volume_field_positive_skill_at_every_lead": true,
+    "every_e6b_boundary_side_positive_skill_at_every_lead": true,
+    "selected_at_epoch_12_requires_censored_duration_statement": true
+  },
+  "derived_evaluation": {
+    "Vi": "NVi/(2*softFloor(Ne,1e-7))",
+    "phi": "pinned_Hermes_BOUTpp_elliptic_solve_from_predicted_Ne_Pi_Vort_Bphi",
+    "future_truth_allowed_during_generation": false,
+    "terminal_horizons": [4, 8],
+    "composition_paths": {
+      "4": ["persistence", "direct_4", "lead1_x4", "lead2_x2"],
+      "8": ["persistence", "direct_8", "lead1_x8", "lead2_x4", "lead4_x2"]
+    }
+  },
+  "wandb_required": true
+}
