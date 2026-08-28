@@ -42,8 +42,8 @@ if [[ -n "$(git -C "${PAPER0_ROOT}" status --porcelain --untracked-files=all)" ]
 fi
 
 source /etc/os-release
-if [[ "${ID}" != "rocky" || "${VERSION_ID%%.*}" != "9" ]]; then
-  echo "Physics-first forecast figures require Rocky Linux 9" >&2
+if [[ "${ID}" != "rocky" || ( "${VERSION_ID%%.*}" != "8" && "${VERSION_ID%%.*}" != "9" ) ]]; then
+  echo "Physics-first forecast figures require a supported Rocky Linux 8 or 9 node" >&2
   exit 2
 fi
 nvidia-smi --query-gpu=index,name,uuid,driver_version,memory.total --format=csv,noheader
@@ -64,6 +64,7 @@ export MKL_NUM_THREADS="${SLURM_CPUS_PER_TASK}"
 {
   echo "captured_at=$(date --iso-8601=seconds)"
   echo "host=$(hostname --fqdn)"
+  echo "operating_system=${PRETTY_NAME}"
   echo "paper0_commit=${PAPER0_COMMIT}"
   "${PYTHON}" --version
   "${PYTHON}" -c 'import h5py,matplotlib,numpy,scipy,torch; print("h5py="+h5py.__version__); print("matplotlib="+matplotlib.__version__); print("numpy="+numpy.__version__); print("scipy="+scipy.__version__); print("torch="+torch.__version__); print("cuda="+str(torch.version.cuda))'
