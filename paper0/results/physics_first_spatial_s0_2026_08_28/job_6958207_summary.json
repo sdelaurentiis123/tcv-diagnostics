@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "scope": "simultaneous_spatial_reconstruction_no_temporal_forecast",
+  "development_run": "85604",
+  "held_out_85606_read": false,
+  "slurm_job_id": "6958207",
+  "paper0_execution_commit": "fb679a4603908e8ffb2b40065156e31065f5b714",
+  "status": "completed",
+  "raw_result_root": "/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/physics_first_spatial_s0_2026_08_28/job_6958207/run",
+  "result_json_sha256": "9e7ca78afd541651234e9e09d664079563c4209f2d04ca15f12a23149b6ddfd8",
+  "run_manifest_sha256": "afece718bde31c16fbcbe3d8e142afe9f16d8376047261d7caa6c3ffab668b23",
+  "splits": {
+    "internal_fit": [0, 320],
+    "internal_guard": [320, 336],
+    "internal_tune": [336, 432],
+    "official_guard": [432, 496],
+    "validation": [496, 624]
+  },
+  "task": "geometry plus simultaneous synthetic density diagnostics A and B to four full fluctuation fields and separated held-out density diagnostic C",
+  "methods": [
+    "train-only zero-fluctuation climatology",
+    "closed-form regularized linear ridge reconstruction"
+  ],
+  "selected_ridge_regularization": 0.01,
+  "heldout_diagnostic_c": {
+    "channel_count": 6,
+    "sample_count": 768,
+    "pearson_correlation": 0.5628276069245267,
+    "normalized_rmse": 0.8896234897140768,
+    "relative_mse_skill_vs_zero": 0.3465216259470666
+  },
+  "full_state_relative_mse_skill_vs_zero": {
+    "Ne": 0.29669034606168,
+    "Pe": 0.2679622538318549,
+    "Pi": 0.25925534773337866,
+    "phi": 0.23197656292996038
+  },
+  "retained_power_ratio_n20_to_n35": {
+    "Ne": 0.40573763612192415,
+    "Pe": 0.402062790060386,
+    "Pi": 0.4188570357433478,
+    "phi": 0.476789695565252
+  },
+  "retained_power_ratio_n_ge_40": {
+    "Ne": 0.03746698180149343,
+    "Pe": 0.04000593462230919,
+    "Pi": 0.04109559518257263,
+    "phi": 0.03787770378946832
+  },
+  "interpretation": "Sparse simultaneous measurements contain reproducible nonlocal information, but this linear test recovers only part of the evaluated coherent toroidal band and almost none of the higher-mode fluctuation power. This is a simultaneous spatial result, not temporal forecasting or a faithful experimental diagnostic forward model."
+}
