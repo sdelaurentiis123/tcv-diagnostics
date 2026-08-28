@@ -555,7 +555,12 @@ def main() -> int:
         float(np.sum(np.mean(target_transport["b5_context"], axis=0)))
         - float(np.sum(truth_local[PHYSICS_FIGURE_TARGET]))
     )
-    if not np.isclose(b5_wedge_error, expected_selected_error, rtol=2.0e-10, atol=1.0e-12):
+    # The stored score reconstructs absolute error from JSON-serialized summary
+    # factors, whereas this path repeats the float32 88->81 resampling and
+    # nonlinear transport evaluation.  Require agreement to one part per
+    # million; bit-level agreement is neither available nor scientifically
+    # meaningful across those two reduction paths.
+    if not np.isclose(b5_wedge_error, expected_selected_error, rtol=1.0e-6, atol=1.0e-9):
         raise RuntimeError(
             "recomputed conditioned target-selection transport error differs "
             f"({b5_wedge_error} != {expected_selected_error})"
