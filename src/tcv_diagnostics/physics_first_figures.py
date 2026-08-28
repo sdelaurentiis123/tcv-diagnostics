@@ -781,12 +781,13 @@ def save_transport_variogram_figure(
         ax.grid(True, which="both", color="#E5E7EB", linewidth=0.55)
 
     draw(axes[0], h1, "one frame · 3.1319 µs")
+    axes[0].legend(frameon=False, loc="best", fontsize=7.2)
     if pgl_h4 is not None:
         if tuple(pgl_h4) != ("truth", "persistent"):
             raise ValueError("h4 variogram model order differs")
         draw(axes[1], pgl_h4, "four frames · 12.5276 µs")
+        axes[1].legend(frameon=False, loc="best", fontsize=8.0)
     axes[0].set_ylabel("first-order $|\\Delta\\Gamma_{cell}|$ (Hermes transport units)")
-    axes[-1].legend(frameon=False, loc="best")
     fig.suptitle("Spatial scale of confined-separatrix particle-transport coherence", fontsize=12, fontweight="normal")
     path = Path(path)
     fig.savefig(path, dpi=300)
