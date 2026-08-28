@@ -52,8 +52,8 @@ def build_document(*, figures: dict[str, str], s0: dict, forecast: dict, commit:
     band = s0["retained_power_ratio_n20_to_n35"]
     high = s0["retained_power_ratio_n_ge_40"]
     target = int(forecast["representative_target_frame"])
-    cadence = float(forecast["cadence_microseconds"])
-    starts = int(forecast["shared_one_step_target_count"])
+    cadence = float(forecast["shared_horizon_microseconds"])
+    starts = int(forecast["shared_target_count"])
     report_status = html.escape(str(forecast.get("status", "complete")))
     template = r'''<!doctype html>
 <html lang="en">
