@@ -99,6 +99,7 @@ export MKL_NUM_THREADS=8
 cd "${PAPER0_ROOT}"
 "${PYTHON}" -m pytest -p no:cacheprovider -q \
   tests/test_pgl_hierarchical_evaluation.py \
+  tests/test_pgl_hierarchical_validation.py \
   tests/test_persistent_global_local_sparse_metrics.py \
   tests/test_persistent_global_local_gates.py \
   tests/test_ecrd_scoring.py \

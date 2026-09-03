@@ -33,6 +33,11 @@ from tcv_diagnostics.pgl_hierarchical_evaluation import (
     authorize_hierarchical_training_result,
 )
 from tcv_diagnostics.pgl_hierarchical_training import PGL_HIERARCHICAL_ARMS
+from tcv_diagnostics.pgl_hierarchical_validation import (
+    collect_hierarchical_local_transport,
+    score_hierarchical_validation_arrays,
+)
+from tcv_diagnostics.pgl_variogram_training import load_pair_banks
 from tcv_diagnostics.wandb_tracking import WandbRunSpec
 
 
@@ -120,7 +125,7 @@ def main() -> int:
     )
     if paths["model_dataset"] != args.artifact_root.resolve(strict=True):
         raise ValueError("hierarchical scoring model dataset differs")
-    authorize_hierarchical_training_result(
+    training = authorize_hierarchical_training_result(
         result_path=args.training_result,
         result_sha256=args.training_result_sha256,
         checkpoint_path=args.checkpoint,
@@ -128,6 +133,27 @@ def main() -> int:
         arm=args.arm,
         optimizer_update=args.optimizer_update,
     )
+    preflight_info = training.get("preflight", {})
+    preflight_path = Path(str(preflight_info.get("path", "")))
+    assert_development_path(preflight_path)
+    if (
+        not preflight_path.is_file()
+        or sha256_path(preflight_path) != preflight_info.get("sha256")
+    ):
+        raise ValueError("hierarchical scoring preflight identity differs")
+    preflight = load_strict_json(preflight_path)
+    if (
+        preflight.get("scope")
+        != "post_ecrd_old_85604_pgl_hierarchical_transport_preflight"
+        or preflight.get("status") != "passed"
+        or preflight.get("held_out_85606_read") is not False
+        or preflight.get("new_nersc_data_read") is not False
+    ):
+        raise ValueError("hierarchical scoring preflight contract differs")
+    pair_record = preflight["pair_banks"]
+    pair_path = Path(str(pair_record["path"]))
+    assert_development_path(pair_path)
+    pair_banks = load_pair_banks(pair_path, expected_sha256=pair_record["sha256"])
     generation = verify_generation(args)
     environment = require_runtime()
     args.output.mkdir(parents=True)
@@ -209,6 +235,22 @@ def main() -> int:
                 geometry=geometry,
                 event_threshold_record=thresholds,
             )
+            local_members, local_truth, current_truth, closure = (
+                collect_hierarchical_local_transport(
+                    catalog=catalog,
+                    forecast_artifact=artifact,
+                    native_truth=native_truth,
+                    geometry=geometry,
+                )
+            )
+            hierarchy = score_hierarchical_validation_arrays(
+                local_members=local_members,
+                local_truth=local_truth,
+                current_truth=current_truth,
+                spatial_bank=pair_banks["transport_spatial"],
+                temporal_bank=pair_banks["transport_temporal"],
+            )
+            hierarchy["maximum_relative_exact_separatrix_closure_error"] = closure
             timing = artifact.timing_record()
         score.update(
             {
@@ -221,6 +263,7 @@ def main() -> int:
                     if physics_loss
                     else "ordinary_probabilistic_loss_control"
                 ),
+                "hierarchical_transport_evaluation": hierarchy,
             }
         )
         score_path = args.output / "score.json"
