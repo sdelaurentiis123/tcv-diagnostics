@@ -49,8 +49,11 @@ def verify_checkout(root: Path, expected: str) -> None:
         raise RuntimeError("hierarchical reduction requires the locked clean checkout")
 
 
-def load_six_results(root: Path, *, commit: str) -> tuple[dict, list[dict]]:
+def load_six_results(
+    root: Path, *, commit: str
+) -> tuple[dict, dict, list[dict]]:
     records = {}
+    scores = {}
     artifacts = []
     task = 0
     for arm in PGL_HIERARCHICAL_ARMS:
@@ -86,7 +89,21 @@ def load_six_results(root: Path, *, commit: str) -> tuple[dict, list[dict]]:
             assert_development_path(score_path)
             if sha256_path(score_path) != result["score"]["sha256"]:
                 raise ValueError(f"hierarchical score SHA differs for task {task}")
+            score = load_strict_json(score_path)
+            hierarchy = score.get("hierarchical_transport_evaluation", {})
+            if (
+                score.get("scope")
+                != "old_85604_pgl_hierarchical_truth_separated_physics_scoring"
+                or score.get("arm") != arm
+                or score.get("optimizer_update") != update
+                or hierarchy.get("scope")
+                != "old_85604_pgl_hierarchical_validation_scores"
+                or hierarchy.get("held_out_85606_read") is not False
+                or hierarchy.get("new_nersc_data_read") is not False
+            ):
+                raise ValueError(f"hierarchical detailed score differs for task {task}")
             records[(arm, update)] = result
+            scores[(arm, update)] = score
             artifacts.append(
                 {
                     "task": task,
@@ -97,7 +114,165 @@ def load_six_results(root: Path, *, commit: str) -> tuple[dict, list[dict]]:
                 }
             )
             task += 1
-    return records, artifacts
+    return records, scores, artifacts
+
+
+def _ratio(record: dict) -> float | None:
+    value = record.get("spread_skill_ratio")
+    return None if value is None else float(value)
+
+
+def write_hierarchy_tables(scores: dict, output: Path) -> tuple[Path, Path]:
+    """Write tidy tables for every score scale and variogram group."""
+
+    hierarchy_path = output / "hierarchy_metrics.csv"
+    names = (
+        "arm",
+        "optimizer_update",
+        "equivalent_epochs",
+        "quantity",
+        "local_spatial_variogram",
+        "local_temporal_variogram",
+        "regional_energy",
+        "fourier_low_n5_15_energy",
+        "fourier_n20_35_energy",
+        "global_crps",
+        "regional_spread_skill",
+        "fourier_low_n5_15_spread_skill",
+        "fourier_n20_35_spread_skill",
+        "global_n0_spread_skill",
+        "regional_covariance_relative_frobenius_error",
+        "fourier_low_n5_15_covariance_relative_frobenius_error",
+        "fourier_n20_35_covariance_relative_frobenius_error",
+    )
+    with hierarchy_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=names)
+        writer.writeheader()
+        for arm in PGL_HIERARCHICAL_ARMS:
+            for update in PGL_HIERARCHICAL_CHECKPOINT_UPDATES:
+                hierarchy = scores[(arm, update)]["hierarchical_transport_evaluation"]
+                for quantity, record in hierarchy["quantities"].items():
+                    fair = record["fair_scores"]
+                    spread = record["spread_skill"]
+                    covariance = record["covariance_match"]
+                    writer.writerow(
+                        {
+                            "arm": arm,
+                            "optimizer_update": update,
+                            "equivalent_epochs": update / 214,
+                            "quantity": quantity,
+                            "local_spatial_variogram": fair[
+                                "local_spatial_variogram"
+                            ],
+                            "local_temporal_variogram": fair[
+                                "local_temporal_variogram"
+                            ],
+                            "regional_energy": fair["regional_energy"],
+                            "fourier_low_n5_15_energy": fair[
+                                "fourier_low_energy"
+                            ],
+                            "fourier_n20_35_energy": fair[
+                                "fourier_n20_35_energy"
+                            ],
+                            "global_crps": fair["global_crps"],
+                            "regional_spread_skill": _ratio(spread["regional"]),
+                            "fourier_low_n5_15_spread_skill": _ratio(
+                                spread["fourier_low_n5_15"]
+                            ),
+                            "fourier_n20_35_spread_skill": _ratio(
+                                spread["fourier_n20_35"]
+                            ),
+                            "global_n0_spread_skill": _ratio(spread["global_n0"]),
+                            "regional_covariance_relative_frobenius_error": covariance[
+                                "regional_12_sector"
+                            ]["relative_frobenius_error"],
+                            "fourier_low_n5_15_covariance_relative_frobenius_error": covariance[
+                                "fourier_low_n5_15"
+                            ]["relative_frobenius_error"],
+                            "fourier_n20_35_covariance_relative_frobenius_error": covariance[
+                                "fourier_n20_35"
+                            ]["relative_frobenius_error"],
+                        }
+                    )
+
+    curve_path = output / "variogram_curves.csv"
+    with curve_path.open("w", encoding="utf-8", newline="") as handle:
+        names = (
+            "arm",
+            "optimizer_update",
+            "equivalent_epochs",
+            "quantity",
+            "axis",
+            "group_index",
+            "group_value",
+            "fair_variogram_score",
+        )
+        writer = csv.DictWriter(handle, fieldnames=names)
+        writer.writeheader()
+        for arm in PGL_HIERARCHICAL_ARMS:
+            for update in PGL_HIERARCHICAL_CHECKPOINT_UPDATES:
+                hierarchy = scores[(arm, update)]["hierarchical_transport_evaluation"]
+                groups = (
+                    (
+                        "physical_distance_m",
+                        hierarchy["spatial_distance_bin_upper_edges_m"],
+                        "spatial_variogram_by_distance_bin",
+                    ),
+                    (
+                        "temporal_lag_microseconds",
+                        hierarchy["temporal_lags_microseconds"],
+                        "temporal_variogram_by_lag",
+                    ),
+                )
+                for quantity, record in hierarchy["quantities"].items():
+                    for axis, values, score_name in groups:
+                        for index, (value, score) in enumerate(
+                            zip(values, record[score_name], strict=True)
+                        ):
+                            writer.writerow(
+                                {
+                                    "arm": arm,
+                                    "optimizer_update": update,
+                                    "equivalent_epochs": update / 214,
+                                    "quantity": quantity,
+                                    "axis": axis,
+                                    "group_index": index,
+                                    "group_value": value,
+                                    "fair_variogram_score": score,
+                                }
+                            )
+    return hierarchy_path, curve_path
+
+
+def write_decision_readout(decision: dict, output: Path) -> Path:
+    """Write a concise, generated interpretation of the frozen decision."""
+
+    control = decision["metrics"]["CONTROL_update_428"]
+    treatment = decision["metrics"]["TRANSPORT_update_428"]
+    delta = decision["epoch_two_matched_difference"]
+    lines = [
+        "# Hierarchical transport-loss screen\n",
+        "Old 85604 only; matched two-epoch warm starts; M32 validation. "
+        "The TRANSPORT arm is explicitly transport-supervised.\n",
+        "| Two-epoch metric | Control | Transport-aware | Required |\n",
+        "| --- | ---: | ---: | ---: |\n",
+        f"| Integrated spread--skill | {control['integrated_spread_skill']:.4f} | "
+        f"{treatment['integrated_spread_skill']:.4f} | gain >= 0.05 |\n",
+        f"| Spatial covariance error | {control['spatial_covariance_error']:.4f} | "
+        f"{treatment['spatial_covariance_error']:.4f} | reduction >= 0.01 |\n",
+        f"| Local spread--skill (median) | {control['local_spread_skill_median']:.4f} | "
+        f"{treatment['local_spread_skill_median']:.4f} | production gate |\n",
+        f"| Mean transport relative L2 | {control['mean_transport_relative_l2']:.4f} | "
+        f"{treatment['mean_transport_relative_l2']:.4f} | must remain stable |\n",
+        "\n",
+        f"Integrated spread gain: `{delta['integrated_spread_skill_gain']:.4f}`.  \n",
+        f"Covariance-error reduction: `{delta['spatial_covariance_error_reduction']:.4f}`.  \n",
+        f"Decision: **{decision['next_action']}**.\n",
+        "\nNo 85606 or new NERSC data were read.\n",
+    ]
+    path = output / "DECISION_READOUT.md"
+    path.write_text("".join(lines), encoding="utf-8")
+    return path
 
 
 def main() -> int:
@@ -107,7 +282,9 @@ def main() -> int:
     if args.output.exists():
         raise FileExistsError(args.output)
     verify_checkout(args.paper0_root, args.paper0_commit)
-    records, artifacts = load_six_results(args.score_root, commit=args.paper0_commit)
+    records, scores, artifacts = load_six_results(
+        args.score_root, commit=args.paper0_commit
+    )
     decision = evaluate_two_epoch_decision(records)
     decision.update(
         {
@@ -152,6 +329,8 @@ def main() -> int:
                         **{name: metric[name] for name in names[3:]},
                     }
                 )
+    hierarchy_path, curve_path = write_hierarchy_tables(scores, args.output)
+    readout_path = write_decision_readout(decision, args.output)
     manifest = {
         "schema_version": 1,
         "scope": "old_85604_pgl_hierarchical_screen_reduction_manifest",
@@ -161,8 +340,26 @@ def main() -> int:
         "score_root": str(args.score_root),
         "inputs": artifacts,
         "outputs": {
-            "decision": {"path": str(decision_path), "sha256": sha256_path(decision_path)},
-            "metrics_csv": {"path": str(csv_path), "sha256": sha256_path(csv_path)},
+            "decision": {
+                "path": str(decision_path),
+                "sha256": sha256_path(decision_path),
+            },
+            "metrics_csv": {
+                "path": str(csv_path),
+                "sha256": sha256_path(csv_path),
+            },
+            "hierarchy_metrics_csv": {
+                "path": str(hierarchy_path),
+                "sha256": sha256_path(hierarchy_path),
+            },
+            "variogram_curves_csv": {
+                "path": str(curve_path),
+                "sha256": sha256_path(curve_path),
+            },
+            "decision_readout": {
+                "path": str(readout_path),
+                "sha256": sha256_path(readout_path),
+            },
         },
         "held_out_85606_read": False,
         "new_nersc_data_read": False,

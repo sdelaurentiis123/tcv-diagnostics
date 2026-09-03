@@ -43,7 +43,10 @@ export PYTHONNOUSERSITE=1
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPATH="${PAPER0_ROOT}/src:${PAPER0_ROOT}"
 cd "${PAPER0_ROOT}"
-"${PYTHON}" -m pytest -p no:cacheprovider -q tests/test_pgl_hierarchical_decision.py | tee "${JOB_ROOT}/test_output.txt"
+"${PYTHON}" -m pytest -p no:cacheprovider -q \
+  tests/test_pgl_hierarchical_decision.py \
+  tests/test_pgl_hierarchical_reduction.py \
+  | tee "${JOB_ROOT}/test_output.txt"
 
 COMMAND=(
   "${PYTHON}" -u "${ENTRYPOINT}"
@@ -58,5 +61,5 @@ printf '\n' >> "${JOB_ROOT}/command.sh"
 "${COMMAND[@]}" | tee "${JOB_ROOT}/stdout.jsonl"
 
 jq -e '.status == "completed" and .checkpoint_selection_performed == false and .held_out_85606_read == false and .new_nersc_data_read == false' "${RUN_OUTPUT}/decision.json" >/dev/null
-sha256sum "${JOB_ROOT}/command.sh" "${JOB_ROOT}/score_sacct.txt" "${JOB_ROOT}/slurm_job.txt" "${JOB_ROOT}/test_output.txt" "${RUN_OUTPUT}/decision.json" "${RUN_OUTPUT}/checkpoint_metrics.csv" "${RUN_OUTPUT}/manifest.json" > "${JOB_ROOT}/artifact_sha256.txt"
+sha256sum "${JOB_ROOT}/command.sh" "${JOB_ROOT}/score_sacct.txt" "${JOB_ROOT}/slurm_job.txt" "${JOB_ROOT}/test_output.txt" "${RUN_OUTPUT}/decision.json" "${RUN_OUTPUT}/checkpoint_metrics.csv" "${RUN_OUTPUT}/hierarchy_metrics.csv" "${RUN_OUTPUT}/variogram_curves.csv" "${RUN_OUTPUT}/DECISION_READOUT.md" "${RUN_OUTPUT}/manifest.json" > "${JOB_ROOT}/artifact_sha256.txt"
 jq -c '{status,longer_4_to_8_epoch_extension_authorized,transport_arm_passed_production_gate,next_action,epoch_two_matched_difference}' "${RUN_OUTPUT}/decision.json"
