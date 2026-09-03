@@ -25,9 +25,9 @@ def test_launchers_are_bounded_one_gpu_jobs() -> None:
         assert "#SBATCH --partition=gpu" in source
         assert "#SBATCH --qos=gen" in source
         assert "#SBATCH --gres=gpu:1" in source
+        assert "#SBATCH --constraint=h100" in source
         assert "#SBATCH --mem=32G" in source
         assert "#SBATCH --no-requeue" in source
-        assert "h100" not in source.lower()
         assert "sbatch" not in source
     assert "#SBATCH --time=03:00:00" in preflight
     assert "#SBATCH --time=01:00:00" in smoke
@@ -82,6 +82,7 @@ def test_evaluation_is_all_six_fixed_checkpoints_and_truth_separated() -> None:
         assert "status --porcelain --untracked-files=all" in source
         assert "Refusing to overwrite" in source
         assert "sbatch" not in source
+    assert "#SBATCH --constraint=h100" in forecast
     assert ".target_truth_read == false" in forecast
     assert ".physics_diagnostics_scored == false" in forecast
     assert "PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_ID" in score

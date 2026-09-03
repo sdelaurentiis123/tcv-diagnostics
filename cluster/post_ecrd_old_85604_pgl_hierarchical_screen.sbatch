@@ -4,6 +4,7 @@
 #SBATCH --partition=gpu
 #SBATCH --qos=gen
 #SBATCH --gres=gpu:1
+#SBATCH --constraint=h100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
