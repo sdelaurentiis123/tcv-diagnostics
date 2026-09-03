@@ -125,6 +125,7 @@ def evaluate_two_epoch_decision(
         },
         "longer_4_to_8_epoch_extension_authorized": extension,
         "transport_arm_passed_production_gate": production,
+        "confirmation_seeds_authorized": production,
         "next_action": (
             "advance_to_confirmation_seeds_without_extending_duration"
             if production

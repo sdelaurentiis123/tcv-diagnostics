@@ -65,6 +65,7 @@ def test_extension_requires_both_material_deltas_and_stability() -> None:
     }
     decision = evaluate_two_epoch_decision(records)
     assert decision["longer_4_to_8_epoch_extension_authorized"] is True
+    assert decision["confirmation_seeds_authorized"] is False
     assert decision["next_action"] == "write_dated_longer_duration_amendment"
 
     unstable = deepcopy(records)
@@ -81,3 +82,14 @@ def test_missing_checkpoint_blocks_decision() -> None:
     records.pop(("CONTROL", 107))
     with pytest.raises(ValueError, match="six"):
         evaluate_two_epoch_decision(records)
+
+
+def test_only_matched_reduction_authorizes_confirmation_seeds() -> None:
+    records = _records()
+    records[("TRANSPORT", 428)] = {
+        "gate": _gate(integrated=0.7, covariance=0.8)
+    }
+    decision = evaluate_two_epoch_decision(records)
+    assert decision["transport_arm_passed_production_gate"] is True
+    assert decision["confirmation_seeds_authorized"] is True
+    assert decision["next_action"] == "advance_to_confirmation_seeds_without_extending_duration"

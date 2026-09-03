@@ -1,11 +1,20 @@
 from __future__ import annotations
 
+from dataclasses import replace
+import json
+
 import numpy as np
+import pytest
 
 from tcv_diagnostics.pgl_hierarchical_validation import (
     score_hierarchical_validation_arrays,
+    validate_hierarchical_pair_banks,
 )
-from tcv_diagnostics.pgl_variogram import IndexedPairBank
+from tcv_diagnostics.pgl_variogram import (
+    IndexedPairBank,
+    build_spatial_pair_bank,
+    build_temporal_pair_bank,
+)
 
 
 def _bank(name: str, values: tuple[float, ...]) -> IndexedPairBank:
@@ -31,6 +40,26 @@ def _temporal_bank() -> IndexedPairBank:
         group_name="lag_frames",
         group_values=(1.0, 2.0, 3.0, 4.0),
         metadata={"test": True},
+    )
+
+
+def _production_pair_banks() -> tuple[IndexedPairBank, IndexedPairBank]:
+    cells = 16 * 81
+    positions = np.zeros((cells, 3), dtype=np.float64)
+    positions[:, 0] = np.linspace(0.8, 1.2, cells)
+    positions[:, 1] = np.sin(np.linspace(0.0, 2.0 * np.pi, cells))
+    positions[:, 2] = np.tile(2.0 * np.pi * np.arange(81) / (5.0 * 81.0), 16)
+    eligible = np.arange(cells, dtype=np.int64)
+    return (
+        build_spatial_pair_bank(
+            positions, eligible, future_times=4, variables=1
+        ),
+        build_temporal_pair_bank(
+            eligible,
+            cells=cells,
+            trajectory_times=5,
+            variables=1,
+        ),
     )
 
 
@@ -61,6 +90,7 @@ def test_truth_like_validation_reports_all_physical_scales() -> None:
         assert len(quantity["spatial_variogram_by_distance_bin"]) == 2
         assert len(quantity["temporal_variogram_by_lag"]) == 4
         assert quantity["spread_skill"]["global_n0"]["spread_skill_ratio"] is None
+    json.dumps(result, allow_nan=False)
 
 
 def test_hierarchy_exposes_common_transport_bias_hidden_from_spatial_variogram() -> None:
@@ -86,3 +116,14 @@ def test_hierarchy_exposes_common_transport_bias_hidden_from_spatial_variogram()
             ["relative_frobenius_error"]
             == 1.0
         )
+
+
+def test_production_pair_semantics_are_enforced() -> None:
+    spatial, temporal = _production_pair_banks()
+    validate_hierarchical_pair_banks(spatial, temporal)
+    broken = replace(
+        temporal,
+        metadata={**temporal.metadata, "trajectory_times_including_current": 4},
+    )
+    with pytest.raises(ValueError, match="temporal"):
+        validate_hierarchical_pair_banks(spatial, broken)

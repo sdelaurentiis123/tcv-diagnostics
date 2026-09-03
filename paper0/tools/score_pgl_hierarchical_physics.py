@@ -36,6 +36,7 @@ from tcv_diagnostics.pgl_hierarchical_training import PGL_HIERARCHICAL_ARMS
 from tcv_diagnostics.pgl_hierarchical_validation import (
     collect_hierarchical_local_transport,
     score_hierarchical_validation_arrays,
+    validate_hierarchical_pair_banks,
 )
 from tcv_diagnostics.pgl_variogram_training import load_pair_banks
 from tcv_diagnostics.wandb_tracking import WandbRunSpec
@@ -154,6 +155,17 @@ def main() -> int:
     pair_path = Path(str(pair_record["path"]))
     assert_development_path(pair_path)
     pair_banks = load_pair_banks(pair_path, expected_sha256=pair_record["sha256"])
+    validate_hierarchical_pair_banks(
+        pair_banks["transport_spatial"], pair_banks["transport_temporal"]
+    )
+    matching_history = [
+        record
+        for record in training.get("history", [])
+        if record.get("optimizer_update") == args.optimizer_update
+    ]
+    if len(matching_history) != 1 or matching_history[0].get("gradient_audit") is None:
+        raise ValueError("hierarchical checkpoint gradient audit is absent")
+    checkpoint_gradient_audit = matching_history[0]["gradient_audit"]
     generation = verify_generation(args)
     environment = require_runtime()
     args.output.mkdir(parents=True)
@@ -264,6 +276,7 @@ def main() -> int:
                     else "ordinary_probabilistic_loss_control"
                 ),
                 "hierarchical_transport_evaluation": hierarchy,
+                "checkpoint_training_gradient_audit": checkpoint_gradient_audit,
             }
         )
         score_path = args.output / "score.json"
@@ -302,7 +315,8 @@ def main() -> int:
             "physics_derived_training_loss_used": physics_loss,
             "held_out_85606_read": False,
             "new_nersc_data_read": False,
-            "confirmation_seeds_authorized": bool(gate["passed"]),
+            # Only the matched update-428 reducer may authorize new seeds.
+            "confirmation_seeds_authorized": False,
             "assimilation_performed": False,
             "diagnostic_ranking_performed": False,
             "steering_performed": False,
@@ -314,6 +328,27 @@ def main() -> int:
             "scope/physics_derived_training_loss_used": physics_loss,
             "scope/held_out_85606_read": False,
         }
+        for quantity, record in hierarchy["quantities"].items():
+            for name, value in record["fair_scores"].items():
+                summary[f"hierarchy/{quantity}/fair/{name}"] = float(value)
+            for name, value in record["spread_skill"].items():
+                ratio = value["spread_skill_ratio"]
+                if ratio is not None:
+                    summary[f"hierarchy/{quantity}/spread_skill/{name}"] = float(
+                        ratio
+                    )
+            for name, value in record["covariance_match"].items():
+                error = value["relative_frobenius_error"]
+                if error is not None:
+                    summary[f"hierarchy/{quantity}/covariance/{name}"] = float(error)
+        for loss_name, loss_record in checkpoint_gradient_audit["losses"].items():
+            summary[f"checkpoint_gradient/{loss_name}/total"] = float(
+                loss_record["total_gradient_norm"]
+            )
+            for branch, branch_record in loss_record["branches"].items():
+                summary[f"checkpoint_gradient/{loss_name}/{branch}"] = float(
+                    branch_record["gradient_norm"]
+                )
         run.summary.update(summary)
         run.log(summary)
         run_url = str(run.url)

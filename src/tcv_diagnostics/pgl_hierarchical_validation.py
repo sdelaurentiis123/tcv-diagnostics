@@ -31,6 +31,44 @@ from .pgl_hierarchical_transport import (
 from .pgl_variogram import IndexedPairBank, fair_variogram_score
 
 
+def validate_hierarchical_pair_banks(
+    spatial_bank: IndexedPairBank,
+    temporal_bank: IndexedPairBank,
+) -> None:
+    """Fail closed unless the frozen transport pair semantics are exact."""
+
+    spatial = spatial_bank.metadata
+    temporal = temporal_bank.metadata
+    if (
+        spatial_bank.group_name != "physical_distance_m"
+        or len(spatial_bank.group_values) != 6
+        or spatial_bank.count != 4 * 6 * 1024
+        or spatial.get("distance_bins") != 6
+        or spatial.get("pairs_per_bin_per_time_variable") != 1024
+        or spatial.get("future_times") != 4
+        or spatial.get("variables") != 1
+        or max(int(np.max(spatial_bank.left)), int(np.max(spatial_bank.right)))
+        >= 4 * 16 * 81
+    ):
+        raise ValueError("hierarchical spatial pair-bank semantics differ")
+    if (
+        temporal_bank.group_name != "temporal_lag_microseconds"
+        or tuple(temporal.get("lags_frames", ())) != (1, 2, 3, 4)
+        or temporal.get("pairs_per_time_variable") != 1024
+        or temporal.get("trajectory_times_including_current") != 5
+        or temporal.get("variables") != 1
+        or not np.isclose(
+            float(temporal.get("cadence_microseconds", np.nan)),
+            3.131905426352636,
+            rtol=0.0,
+            atol=1.0e-12,
+        )
+        or max(int(np.max(temporal_bank.left)), int(np.max(temporal_bank.right)))
+        >= 5 * 16 * 81
+    ):
+        raise ValueError("hierarchical temporal pair-bank semantics differ")
+
+
 def _truth_local_transport(
     native: dict[str, np.ndarray], geometry: CodecTransportGeometry
 ) -> dict[str, np.ndarray]:
