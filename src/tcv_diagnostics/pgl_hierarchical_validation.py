@@ -122,6 +122,45 @@ def _spread_skill(members: torch.Tensor, truth: torch.Tensor) -> dict[str, Any]:
     return summary
 
 
+def _pooled_covariance_match(
+    members: torch.Tensor, truth: torch.Tensor
+) -> dict[str, Any]:
+    """Compare pooled ensemble covariance with realized ensemble-mean errors."""
+
+    if members.ndim < 4 or truth.shape != members.shape[:1] + members.shape[2:]:
+        raise ValueError("hierarchical covariance inputs differ")
+    member_count = int(members.shape[1])
+    feature_count = int(np.prod(members.shape[3:]))
+    cases = int(members.shape[0] * members.shape[2])
+    ensemble_mean = members.mean(dim=1)
+    anomalies = (members - ensemble_mean[:, None]).permute(
+        0, 2, 1, *range(3, members.ndim)
+    ).reshape(cases, member_count, feature_count).double()
+    error = (ensemble_mean - truth).reshape(cases, feature_count).double()
+    ensemble_covariance = torch.einsum("cmd,cme->de", anomalies, anomalies)
+    ensemble_covariance /= float(cases * (member_count - 1))
+    error_covariance = error.T @ error / float(cases)
+    error_norm = float(torch.linalg.matrix_norm(error_covariance))
+    error_trace = float(torch.trace(error_covariance))
+    ensemble_trace = float(torch.trace(ensemble_covariance))
+    relative = (
+        float(torch.linalg.matrix_norm(ensemble_covariance - error_covariance))
+        / error_norm
+        if error_norm > 0.0
+        else None
+    )
+    return {
+        "case_count": cases,
+        "ensemble_size": member_count,
+        "feature_count": feature_count,
+        "ensemble_covariance_trace": ensemble_trace,
+        "realized_error_outer_product_trace": error_trace,
+        "trace_ratio": ensemble_trace / error_trace if error_trace > 0.0 else None,
+        "relative_frobenius_error": relative,
+        "pooled_over_starts_and_four_future_frames": True,
+    }
+
+
 def score_hierarchical_validation_arrays(
     *,
     local_members: np.ndarray,
@@ -182,6 +221,17 @@ def score_hierarchical_validation_arrays(
                 ),
                 "global_crps": float(hierarchy.global_crps[index]),
             },
+            "ordinary_scores": {
+                component: float(hierarchy.ordinary[f"{component}/{quantity}"])
+                for component in (
+                    "local_spatial",
+                    "local_temporal",
+                    "regional",
+                    "fourier_low",
+                    "fourier_transport_band",
+                    "global_crps",
+                )
+            },
             "spatial_variogram_by_distance_bin": [
                 float(value) for value in spatial.fair_by_group
             ],
@@ -197,6 +247,17 @@ def score_hierarchical_validation_arrays(
                     band_m[:, :, :, index], band_y[:, :, index]
                 ),
                 "global_n0": _spread_skill(global_m[:, :, :, index], global_y[:, :, index]),
+            },
+            "covariance_match": {
+                "regional_12_sector": _pooled_covariance_match(
+                    regions_m[:, :, :, index], regions_y[:, :, index]
+                ),
+                "fourier_low_n5_15": _pooled_covariance_match(
+                    low_m[:, :, :, index], low_y[:, :, index]
+                ),
+                "fourier_n20_35": _pooled_covariance_match(
+                    band_m[:, :, :, index], band_y[:, :, index]
+                ),
             },
         }
     return {

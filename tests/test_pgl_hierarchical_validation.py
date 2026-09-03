@@ -80,3 +80,9 @@ def test_hierarchy_exposes_common_transport_bias_hidden_from_spatial_variogram()
         assert scores["local_temporal_variogram"] > 0.0
         assert scores["regional_energy"] > 0.0
         assert scores["global_crps"] > 0.0
+        assert quantity["ordinary_scores"]["global_crps"] == scores["global_crps"]
+        assert (
+            quantity["covariance_match"]["regional_12_sector"]
+            ["relative_frobenius_error"]
+            == 1.0
+        )

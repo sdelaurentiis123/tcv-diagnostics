@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
-#SBATCH --time=03:00:00
+#SBATCH --time=06:00:00
 #SBATCH --array=0-5%3
 #SBATCH --no-requeue
 #SBATCH --output=/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/logs/old_85604_pgl_hierarchical_score_%A_%a.log
