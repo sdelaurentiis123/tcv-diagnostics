@@ -18,6 +18,7 @@ set -euo pipefail
 : "${PAPER0_PGL_EVALUATION_MANIFEST_SHA256:?set frozen manifest SHA-256}"
 : "${PAPER0_PGL_HIERARCHICAL_SCREEN_JOB_ID:?set completed screen job ID}"
 : "${PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_IDS:?set six comma-separated generation job IDs}"
+: "${PAPER0_PGL_HIERARCHICAL_GENERATION_COMMIT:?set the locked forecast-generation commit}"
 
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
@@ -91,6 +92,7 @@ sacct -j "${GENERATION_JOB_ID}" --format=JobID,JobName,State,Elapsed,ExitCode,No
   echo "host=$(hostname --fqdn)"
   echo "operating_system=${PRETTY_NAME}"
   echo "paper0_commit=${PAPER0_COMMIT}"
+  echo "generation_paper0_commit=${PAPER0_PGL_HIERARCHICAL_GENERATION_COMMIT}"
   echo "arm=${ARM}"
   echo "optimizer_update=${UPDATE}"
   echo "generation_source_job_id=${GENERATION_JOB_ID}"
@@ -135,6 +137,7 @@ COMMAND=(
   --output "${RUN_OUTPUT}"
   --paper0-root "${PAPER0_ROOT}"
   --paper0-commit "${PAPER0_COMMIT}"
+  --generation-paper0-commit "${PAPER0_PGL_HIERARCHICAL_GENERATION_COMMIT}"
   --slurm-job-id "${SLURM_JOB_ID}"
   --wandb-entity "${WANDB_ENTITY}"
   --wandb-project "${WANDB_PROJECT}"

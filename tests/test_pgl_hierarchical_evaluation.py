@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
@@ -19,6 +20,7 @@ from tcv_diagnostics.pgl_hierarchical_evaluation import (
     authorize_hierarchical_training_result,
     load_hierarchical_checkpoint_state,
 )
+from paper0.tools.score_pgl_hierarchical_physics import verify_generation
 
 
 def _model() -> PersistentGlobalLocalEDM:
@@ -35,6 +37,51 @@ def _model() -> PersistentGlobalLocalEDM:
     return PersistentGlobalLocalEDM(
         config, residual_scales=torch.ones((4, 5)), noise_config=noise
     )
+
+
+def test_generation_and_scoring_commits_are_separate_authorities(tmp_path: Path) -> None:
+    forecast = tmp_path / "forecast.h5"
+    forecast.write_bytes(b"immutable forecast")
+    generation_commit = "a" * 40
+    scoring_commit = "b" * 40
+    result = {
+        "scope": "old_85604_pgl_hierarchical_truth_free_forecast_generation",
+        "status": "truth_free_forecast_completed_and_hash_closed",
+        "arm": "CONTROL",
+        "optimizer_update": 107,
+        "paper0_commit": generation_commit,
+        "manifest": {"sha256": "manifest"},
+        "training_result": {"sha256": "training"},
+        "checkpoint": {"sha256": "checkpoint"},
+        "forecast": {"path": str(forecast), "sha256": sha256_path(forecast)},
+        "start_count": 36,
+        "ensemble_members": 32,
+        "future_frames": 4,
+        "target_truth_read": False,
+        "physics_diagnostics_scored": False,
+        "checkpoint_selection_performed": False,
+        "held_out_85606_read": False,
+        "new_nersc_data_read": False,
+    }
+    result_path = tmp_path / "generation.json"
+    result_path.write_text(json.dumps(result), encoding="utf-8")
+    args = SimpleNamespace(
+        generation_result=result_path,
+        generation_result_sha256=sha256_path(result_path),
+        forecast=forecast,
+        forecast_sha256=sha256_path(forecast),
+        arm="CONTROL",
+        optimizer_update=107,
+        paper0_commit=scoring_commit,
+        generation_paper0_commit=generation_commit,
+        manifest_sha256="manifest",
+        training_result_sha256="training",
+        checkpoint_sha256="checkpoint",
+    )
+    assert verify_generation(args)["paper0_commit"] == generation_commit
+    args.generation_paper0_commit = "c" * 40
+    with pytest.raises(ValueError, match="contract differs"):
+        verify_generation(args)
 
 
 def _artifacts(

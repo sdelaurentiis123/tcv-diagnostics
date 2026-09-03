@@ -60,6 +60,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--paper0-root", type=Path, required=True)
     parser.add_argument("--paper0-commit", required=True)
+    parser.add_argument("--generation-paper0-commit", required=True)
     parser.add_argument("--slurm-job-id", required=True)
     parser.add_argument("--wandb-entity", required=True)
     parser.add_argument("--wandb-project", required=True)
@@ -81,7 +82,7 @@ def verify_generation(args: argparse.Namespace) -> dict:
         or result.get("status") != "truth_free_forecast_completed_and_hash_closed"
         or result.get("arm") != args.arm
         or result.get("optimizer_update") != args.optimizer_update
-        or result.get("paper0_commit") != args.paper0_commit
+        or result.get("paper0_commit") != args.generation_paper0_commit
         or result.get("manifest", {}).get("sha256") != args.manifest_sha256
         or result.get("training_result", {}).get("sha256")
         != args.training_result_sha256
@@ -217,6 +218,7 @@ def main() -> int:
             "arm": args.arm,
             "optimizer_update": args.optimizer_update,
             "paper0_commit": args.paper0_commit,
+            "generation_paper0_commit": args.generation_paper0_commit,
             "manifest_sha256": args.manifest_sha256,
             "forecast_sha256": args.forecast_sha256,
             "physics_derived_training_loss_used": physics_loss,
@@ -303,6 +305,7 @@ def main() -> int:
             "generation": {
                 "path": str(args.generation_result),
                 "sha256": args.generation_result_sha256,
+                "paper0_commit": args.generation_paper0_commit,
                 "forecast": {"path": str(args.forecast), "sha256": args.forecast_sha256},
                 "timing": timing,
             },
