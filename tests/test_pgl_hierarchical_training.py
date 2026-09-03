@@ -70,6 +70,20 @@ def test_hierarchical_objective_keeps_original_and_adds_all_scales() -> None:
     assert treatment.item() == 5.75
 
 
+def test_control_magnitudes_survive_sorted_json_key_order() -> None:
+    record = _controls().to_record()
+    for name in (
+        "local_spatial",
+        "local_temporal",
+        "regional",
+        "fourier_low",
+        "fourier_transport_band",
+        "global_crps",
+    ):
+        record[name] = dict(sorted(record[name].items()))
+    assert HierarchicalControlMagnitudes.from_record(record) == _controls()
+
+
 def test_parameter_branches_are_complete_and_disjoint() -> None:
     mean = nn.Sequential(nn.Conv3d(5, 5, 1), nn.SiLU(), nn.Conv3d(5, 5, 1))
     edm = PersistentGlobalLocalEDM(residual_scales=torch.ones((4, 5)))

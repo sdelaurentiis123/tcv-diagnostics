@@ -198,7 +198,7 @@ class HierarchicalControlMagnitudes:
 
         def values(name: str) -> tuple[float, ...]:
             mapping = record.get(name, {})
-            if tuple(mapping) != PGL_TRANSPORT_QUANTITIES:
+            if set(mapping) != set(PGL_TRANSPORT_QUANTITIES):
                 raise ValueError(f"hierarchical control quantities differ for {name}")
             return tuple(float(mapping[quantity]) for quantity in PGL_TRANSPORT_QUANTITIES)
 
