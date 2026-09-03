@@ -83,6 +83,8 @@ def test_evaluation_is_all_six_fixed_checkpoints_and_truth_separated() -> None:
         assert "Refusing to overwrite" in source
         assert "sbatch" not in source
     assert "#SBATCH --gres=gpu:h100_pcie:1" in forecast
+    assert "#SBATCH --mem=32G" in score
+    assert "#SBATCH --time=06:00:00" in score
     assert ".target_truth_read == false" in forecast
     assert ".physics_diagnostics_scored == false" in forecast
     assert "PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_ID" in score
