@@ -8,6 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PREFLIGHT = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_preflight.sbatch"
 SMOKE = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_smoke.sbatch"
 SCREEN = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_screen.sbatch"
+FORECAST = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_forecast.sbatch"
+SCORE = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_score.sbatch"
 
 
 def _text(path: Path) -> str:
@@ -63,3 +65,24 @@ def test_training_chain_requires_preflight_smoke_and_online_wandb() -> None:
     assert ".completed_optimizer_updates == 1" in smoke
     assert ".completed_optimizer_updates == 428" in screen
     assert "[107,214,428]" in screen
+
+
+def test_evaluation_is_all_six_fixed_checkpoints_and_truth_separated() -> None:
+    forecast = _text(FORECAST)
+    score = _text(SCORE)
+    assert "#SBATCH --array=0-5%3" in forecast
+    assert "#SBATCH --array=0-5%3" in score
+    for source in (forecast, score):
+        assert "ARMS=(CONTROL TRANSPORT)" in source
+        assert "UPDATES=(107 214 428)" in source
+        assert "PAPER0_PGL_HIERARCHICAL_SCREEN_JOB_ID" in source
+        assert ".held_out_85606_read == false" in source
+        assert ".new_nersc_data_read == false" in source
+        assert "WANDB_MODE=online" in source
+        assert "status --porcelain --untracked-files=all" in source
+        assert "Refusing to overwrite" in source
+        assert "sbatch" not in source
+    assert ".target_truth_read == false" in forecast
+    assert ".physics_diagnostics_scored == false" in forecast
+    assert "PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_ID" in score
+    assert ".target_truth_used_during_generation == false" in score
