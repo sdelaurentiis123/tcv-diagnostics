@@ -10,6 +10,7 @@ SMOKE = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_smoke.sbatch"
 SCREEN = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_screen.sbatch"
 FORECAST = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_forecast.sbatch"
 SCORE = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_score.sbatch"
+REDUCE = ROOT / "cluster/post_ecrd_old_85604_pgl_hierarchical_reduce.sbatch"
 
 
 def _text(path: Path) -> str:
@@ -86,3 +87,17 @@ def test_evaluation_is_all_six_fixed_checkpoints_and_truth_separated() -> None:
     assert ".physics_diagnostics_scored == false" in forecast
     assert "PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_ID" in score
     assert ".target_truth_used_during_generation == false" in score
+
+
+def test_reducer_is_tiny_cpu_only_and_cannot_train_or_select() -> None:
+    source = _text(REDUCE)
+    assert "#SBATCH --partition=gen" in source
+    assert "#SBATCH --gres" not in source
+    assert "#SBATCH --cpus-per-task=1" in source
+    assert "#SBATCH --mem=2G" in source
+    assert "#SBATCH --time=00:15:00" in source
+    assert "PAPER0_PGL_HIERARCHICAL_SCORE_JOB_ID" in source
+    assert ".checkpoint_selection_performed == false" in source
+    assert ".held_out_85606_read == false" in source
+    assert ".new_nersc_data_read == false" in source
+    assert "sbatch" not in source
