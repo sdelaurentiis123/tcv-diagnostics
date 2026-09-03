@@ -121,7 +121,11 @@ class HierarchicalTrainingConfig:
         record["betas"] = list(self.betas)
         record.update(
             {
-                "epochs": 0.5 / 107 if self.mode == "smoke" else 2.0,
+                "epochs": (
+                    1.0 / PGL_HIERARCHICAL_UPDATES_PER_EPOCH
+                    if self.mode == "smoke"
+                    else 2.0
+                ),
                 "training_windows": self.training_windows,
                 "optimizer_updates": self.optimizer_updates,
                 "checkpoint_updates": list(self.checkpoints),
@@ -399,8 +403,9 @@ def loss_gradient_audit(
             for gradient, (_, parameter) in zip(selected, values):
                 if gradient is not None:
                     squared = squared + gradient.detach().double().square().sum()
-                    tensors += 1
-                    parameters += int(parameter.numel())
+                    if bool(torch.count_nonzero(gradient.detach())):
+                        tensors += 1
+                        parameters += int(parameter.numel())
             norm = torch.sqrt(squared)
             total_squared = total_squared + squared
             branch_records[branch_name] = {
