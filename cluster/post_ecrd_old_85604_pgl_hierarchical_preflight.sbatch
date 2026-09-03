@@ -4,8 +4,7 @@
 #SBATCH --job-name=p0_pgl_hier_pre
 #SBATCH --partition=gpu
 #SBATCH --qos=gen
-#SBATCH --gres=gpu:1
-#SBATCH --constraint=h100
+#SBATCH --gres=gpu:h100_pcie:1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
