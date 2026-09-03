@@ -17,7 +17,7 @@ set -euo pipefail
 : "${PAPER0_EXPECTED_COMMIT:?set PAPER0_EXPECTED_COMMIT}"
 : "${PAPER0_PGL_EVALUATION_MANIFEST_SHA256:?set frozen manifest SHA-256}"
 : "${PAPER0_PGL_HIERARCHICAL_SCREEN_JOB_ID:?set completed screen job ID}"
-: "${PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_ID:?set completed generation job ID}"
+: "${PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_IDS:?set six comma-separated generation job IDs}"
 
 readonly PAPER0_ROOT="${PAPER0_ROOT:-/mnt/home/sdelaurentiis/tcv-diagnostics}"
 readonly PYTHON="/mnt/home/sdelaurentiis/tcv-gaot-3d/.venv-lola/bin/python"
@@ -26,15 +26,25 @@ readonly MANIFEST="${PAPER0_ROOT}/paper0/manifests/post_ecrd_old_85604_persisten
 readonly ENTRYPOINT="${PAPER0_ROOT}/paper0/tools/score_pgl_hierarchical_physics.py"
 readonly RESULT_BASE="/mnt/home/sdelaurentiis/ceph/tcv_diagnostics/paper0/post_ecrd_old_85604_pgl_hierarchical_transport"
 readonly SCREEN_ROOT="${RESULT_BASE}/screen_job_${PAPER0_PGL_HIERARCHICAL_SCREEN_JOB_ID}"
-readonly GENERATION_ROOT="${RESULT_BASE}/evaluation/generation_job_${PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_ID}"
 readonly EVALUATION_BASE="${RESULT_BASE}/evaluation"
 readonly ARMS=(CONTROL TRANSPORT)
 readonly UPDATES=(107 214 428)
+IFS=',' read -r -a GENERATION_JOB_IDS <<< "${PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_IDS}"
+if [[ "${#GENERATION_JOB_IDS[@]}" -ne 6 ]]; then
+  echo "Expected exactly six generation source job IDs" >&2
+  exit 2
+fi
 readonly TRAIN_TASK=$((SLURM_ARRAY_TASK_ID / 3))
 readonly CHECKPOINT_INDEX=$((SLURM_ARRAY_TASK_ID % 3))
 readonly ARM="${ARMS[${TRAIN_TASK}]}"
 readonly UPDATE="${UPDATES[${CHECKPOINT_INDEX}]}"
 readonly UPDATE_PADDED="$(printf '%04d' "${UPDATE}")"
+readonly GENERATION_JOB_ID="${GENERATION_JOB_IDS[${SLURM_ARRAY_TASK_ID}]}"
+if [[ ! "${GENERATION_JOB_ID}" =~ ^[0-9]+$ ]]; then
+  echo "Generation source job ID must be numeric" >&2
+  exit 2
+fi
+readonly GENERATION_ROOT="${RESULT_BASE}/evaluation/generation_job_${GENERATION_JOB_ID}"
 readonly TRAINING_RESULT="${SCREEN_ROOT}/task_${TRAIN_TASK}_${ARM}/run/result.json"
 readonly CHECKPOINT="${SCREEN_ROOT}/task_${TRAIN_TASK}_${ARM}/run/training/checkpoints/fixed_update_${UPDATE_PADDED}.pt"
 readonly GENERATION_TASK="${GENERATION_ROOT}/task_${SLURM_ARRAY_TASK_ID}_${ARM}_u${UPDATE_PADDED}/generation"
@@ -75,7 +85,7 @@ jq -e --arg arm "${ARM}" --argjson update "${UPDATE}" --arg forecast "${FORECAST
 
 source /etc/os-release
 scontrol show job -dd "${SLURM_JOB_ID}" > "${JOB_ROOT}/slurm_job.txt"
-sacct -j "${PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_ID}" --format=JobID,JobName,State,Elapsed,ExitCode,NodeList -n -P > "${JOB_ROOT}/generation_sacct.txt"
+sacct -j "${GENERATION_JOB_ID}" --format=JobID,JobName,State,Elapsed,ExitCode,NodeList -n -P > "${JOB_ROOT}/generation_sacct.txt"
 {
   echo "captured_at=$(date --iso-8601=seconds)"
   echo "host=$(hostname --fqdn)"
@@ -83,6 +93,7 @@ sacct -j "${PAPER0_PGL_HIERARCHICAL_GENERATION_JOB_ID}" --format=JobID,JobName,S
   echo "paper0_commit=${PAPER0_COMMIT}"
   echo "arm=${ARM}"
   echo "optimizer_update=${UPDATE}"
+  echo "generation_source_job_id=${GENERATION_JOB_ID}"
   echo "forecast_sha256=${FORECAST_SHA}"
   "${PYTHON}" --version
 } > "${JOB_ROOT}/environment.txt" 2>&1
